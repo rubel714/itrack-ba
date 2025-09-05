@@ -1,0 +1,23 @@
+.control-row {
+  display: flex;
+  gap: 16px; /* space between controls */
+  flex-wrap: wrap;
+}
+
+.control-row label{
+  width: 10%;
+}
+.control-row input {
+   width: 20%;
+}
+ 
+.control-row .chosen_dropdown {
+   width: 20%;
+}
+
+.saveCancelRow {
+    display: flex; 
+    padding: 16px;
+    justify-content: center !important;
+    /* border: var(--box-border); */
+}
