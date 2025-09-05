@@ -19,7 +19,7 @@ import {
 } from "../../../actions/api";
 import ExecuteQueryHook from "../../../components/hooks/ExecuteQueryHook";
 import moment from "moment";
-import SalesPersonInputAddEditModal from "./SalesPersonInputAddEditModal";
+// import SalesPersonInputAddEditModal from "./SalesPersonInputAddEditModal";
 import "../../../assets/css/audit.css";
 const SalesPersonInput = (props) => {
   const serverpage = "salespersoninput"; // this is .php server page
