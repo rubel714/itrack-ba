@@ -762,14 +762,24 @@ const SalesPersonInput = (props) => {
                 )}
               />
 
-              <label>Group Name</label>
+              <label>Group Name {currentRow.id}</label>
               <input
                 type="text"
                 id="FactoryGroupName"
                 name="FactoryGroupName"
                 // class={errorObject.FactoryGroupName}
                 placeholder="Enter Factory Group"
-                value={currentRow.FactoryGroupName}
+                disabled={true}
+                // value={currentRow.FactoryGroupName}
+                value={
+                  currFactoryId
+                    ? FactoryList[
+                        FactoryList.findIndex(
+                          (list) => list.id === currFactoryId
+                        )
+                      ].FactoryGroupName
+                    : ""
+                }
                 // onChange={(e) => handleChange(e)}
               />
 
@@ -780,7 +790,17 @@ const SalesPersonInput = (props) => {
                 name="FactoryAddress"
                 // class={errorObject.FactoryAddress}
                 placeholder="Enter Factory Location"
-                value={currentRow.FactoryAddress}
+                disabled={true}
+                // value={currentRow.FactoryAddress}
+                value={
+                  currFactoryId
+                    ? FactoryList[
+                        FactoryList.findIndex(
+                          (list) => list.id === currFactoryId
+                        )
+                      ].Address
+                    : ""
+                }
                 // onChange={(e) => handleChange(e)}
               />
             </div>
