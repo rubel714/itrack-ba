@@ -1,6 +1,6 @@
 
 =================Domai================================================
-URL: https://inspection.ng-pl.com
+URL: https://itrackba.ng-ssl.com
 User: admin
 Password: Net@pp096
 
@@ -10,17 +10,17 @@ Password: Net@pp096
 
 FAST_REFRESH = false
 CHOKIDAR_USEPOLLING=true
-REACT_APP_BASE_NAME=/inspection
-REACT_APP_API_URL=http://localhost/inspection/backend/
-REACT_APP_FRONT_URL= http://localhost/inspection/
+REACT_APP_BASE_NAME=/itrack-ba
+REACT_APP_API_URL=http://localhost/itrack-ba/backend/
+REACT_APP_FRONT_URL= http://localhost/itrack-ba/
 
 
 =================Local env.php================================================
-define("DB_NAME", "inspection_db");
+define("DB_NAME", "itrack_ba_db");
 define("DB_USER", "root");
 define("DB_PASSWORD", "");
 define("DB_SERVER", "localhost");
-define("sitetitleeng", "Inspection");
+define("sitetitleeng", "iTrack BA");
 define("domainurl", "http://localhost");
 define("reportsitetitleeng", "Inspection");
 define("loginonlyadmin", "0");  /*0=production mode, 1=maintanance mode*/
@@ -31,15 +31,15 @@ define("loginonlyadmin", "0");  /*0=production mode, 1=maintanance mode*/
 FAST_REFRESH = false
 CHOKIDAR_USEPOLLING=true
 REACT_APP_BASE_NAME=
-REACT_APP_API_URL=https://inspection.ng-pl.com/backend/
-REACT_APP_FRONT_URL=https://inspection.ng-pl.com/
+REACT_APP_API_URL=https://itrackba.ng-ssl.com/backend/
+REACT_APP_FRONT_URL=https://itrackba.ng-ssl.com/
 
 =================Web env.php================================================
-define("DB_NAME", "ngplcom_inspection_db");
-define("DB_USER", "ngplcom_ngplcom");
-define("DB_PASSWORD", "12@ASasdfghjkl");
+define("DB_NAME", "itrack_ba_db");
+define("DB_USER", "dysin_db_user");
+define("DB_PASSWORD", "t2A6K7L0Xqpy");
 define("DB_SERVER", "localhost");
-define("sitetitleeng", "Inspection");
+define("sitetitleeng", "iTrack BA");
 define("domainurl", "http://localhost");
-define("reportsitetitleeng", "Inspection");
+define("reportsitetitleeng", "iTrack BA");
 define("loginonlyadmin", "0");  /*0=production mode, 1=maintanance mode*/

@@ -140,13 +140,12 @@ function deleteData($data) {
 		$UserId = trim($data->UserId); 
 
 		try{
-
 			$dbh = new Db();
 			
             $d = new deleteq();
             $d->table = 't_auditor';
-            $d->pks = ['AuditorId '];
-            $d->pk_values = [$AuditorId ];
+            $d->pks = ['AuditorId'];
+            $d->pk_values = [$AuditorId];
             $d->build_query();
             $aQuerys = array($d);
 
