@@ -88,31 +88,32 @@ function UserExport()
 
 	global $sql, $tableProperties, $TEXT, $siteTitle;
 
-	$ClientId = $_REQUEST['ClientId'];
-	$BranchId = $_REQUEST['BranchId'];
-	$sql = "SELECT a.UserCode,a.`UserName`,a.LoginName,a.Email,a.PhoneNo,c.RoleName,d.DesignationName,
-	e.DepartmentName,h.BusinessLineName,g.`UserName` as LinemanUserName,a.Address,
-	case when a.IsActive=1 then 'Yes' else 'No' end Status
-
-	FROM t_users a
-	inner join t_user_role_map b on a.UserId=b.UserId
-	inner join t_roles c on b.RoleId=c.RoleId
-	inner join t_designation d on a.DesignationId=d.DesignationId
+	
+	$sql = "SELECT a.`UserName`, a.Address,h.OfficeName,e.DepartmentName, b.DesignationName,i.UserZoneName,
+	f.GenderName,a.PhoneNo,d.RoleName, a.NID, a.LoginName, a.`Email`,a.UserCode,
+	CASE WHEN a.IsActive=1 THEN 'Yes' ELSE 'No' END IsActiveName
+	FROM `t_users` a
+	INNER JOIN `t_designation` b ON a.`DesignationId` = b.`DesignationId`
+	INNER JOIN `t_user_role_map` c ON a.`UserId` = c.`UserId`
+	INNER JOIN `t_roles` d ON c.`RoleId` = d.`RoleId`
 	INNER JOIN `t_department` e ON a.`DepartmentId` = e.`DepartmentId`
-	INNER JOIN `t_businessline` h ON a.`BusinessLineId` = h.`BusinessLineId`
-	LEFT JOIN `t_users` g ON a.`LinemanUserId` = g.`UserId`
-	where a.ClientId=$ClientId 
-	and a.BranchId=$BranchId 
-	ORDER BY a.UserName;";
+	INNER JOIN `t_gender` f ON a.`GenderId` = f.`GenderId`
+	INNER JOIN `t_office` h ON a.`OfficeId` = h.`OfficeId`
+	INNER JOIN `t_user_zone` i ON a.`UserZoneId` = i.`UserZoneId`
+	ORDER BY a.`UserName` ASC;";
 
-	$tableProperties["query_field"] = array("UserCode", "UserName", "LoginName", "Email", "PhoneNo", "RoleName", "DesignationName", "DepartmentName", "BusinessLineName", "LinemanUserName", "Address", "Status");
-	$tableProperties["table_header"] = array('User Id', 'User Name', 'Login Name', 'Email', 'Phone No', 'Role Name', 'Designation', "Department", "Business Line", "Lineman (N+1)", "Address", 'Active');
-	$tableProperties["align"] = array("left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left");
-	$tableProperties["width_print_pdf"] = array("15%", "30%",  "20%", "20%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%"); //when exist serial then here total 95% and 5% use for serial
-	$tableProperties["width_excel"] = array("15", "30", "20", "20", "20", "20", "15", "15",  "15", "15", "15", "10");
-	$tableProperties["precision"] = array("string", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string"); //string,date,datetime,0,1,2,3,4
-	$tableProperties["total"] = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); //not total=0, total=1
-	$tableProperties["color_code"] = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); //colorcode field = 1 not color code field = 0
+	
+
+
+
+	$tableProperties["query_field"] = array("UserName", "Address", "OfficeName", "DepartmentName", "DesignationName", "UserZoneName", "GenderName", "PhoneNo", "RoleName", "NID", "LoginName", "Email","UserCode","IsActiveName");
+	$tableProperties["table_header"] = array('Full Name', 'Address', 'Office', 'Department', 'Designation', 'User Zone', 'Gender', "Phone", "Role", "NID", "Login Name", 'Email','Employee Id','Status');
+	$tableProperties["align"] = array("left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left");
+	$tableProperties["width_print_pdf"] = array("15%", "30%",  "20%", "20%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%"); //when exist serial then here total 95% and 5% use for serial
+	$tableProperties["width_excel"] = array("15", "30", "20", "20", "20", "20", "15", "15",  "15", "15", "15", "18", "15", "10");
+	$tableProperties["precision"] = array("string", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string"); //string,date,datetime,0,1,2,3,4
+	$tableProperties["total"] = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); //not total=0, total=1
+	$tableProperties["color_code"] = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); //colorcode field = 1 not color code field = 0
 	$tableProperties["header_logo"] = 0; //include header left and right logo. 0 or 1
 	$tableProperties["footer_signatory"] = 0; //include footer signatory. 0 or 1
 	// exit;

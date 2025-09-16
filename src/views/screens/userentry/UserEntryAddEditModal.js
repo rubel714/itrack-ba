@@ -23,13 +23,21 @@ const UserEntryAddEditModal = (props) => {
   const [DepartmentList, setDepartmentList] = useState(null);
   // const [BusinessLineList, setBusinessLineList] = useState(null);
   const [currDepartmentId, setCurrDepartmentId] = useState(null);
-  // const [currBusinessLineId, setCurrBusinessLineId] = useState(null);
 
-  const [TeamList, setTeamList] = useState(null);
-  const [currTeamId, setCurrTeamId] = useState(null);
+  const [OfficeList, setOfficeList] = useState(null);
+  const [currOfficeId, setCurrOfficeId] = useState(null);
 
-  const [UserList, setUserList] = useState(null);
-  const [currLinemanUserId, setCurrLinemanUserId] = useState(null);
+  const [UserZoneList, setUserZoneList] = useState(null);
+  const [currUserZoneId, setCurrUserZoneId] = useState(null);
+
+  const [GenderList, setGenderList] = useState(null);
+  const [currGenderId, setCurrGenderId] = useState(null);
+  
+  // const [TeamList, setTeamList] = useState(null);
+  // const [currTeamId, setCurrTeamId] = useState(null);
+
+  // const [UserList, setUserList] = useState(null);
+  // const [currLinemanUserId, setCurrLinemanUserId] = useState(null);
 
   const [RoleList, setRoleList] = useState(null);
   const [currRoleId, setCurrRoleId] = useState(null);
@@ -47,9 +55,12 @@ const UserEntryAddEditModal = (props) => {
     getDesignation(props.currentRow.DesignationId);
     getRole(props.currentRow.RoleId);
     getDepartment(props.currentRow.DepartmentId);
+    getOffice(props.currentRow.OfficeId);
+    getUserZone(props.currentRow.UserZoneId);
+    getGender(props.currentRow.GenderId);
     // getBusinessLine(props.currentRow.BusinessLineId);
-    getTeam(props.currentRow.TeamId);
-    getUser(props.currentRow.LinemanUserId);
+    // getTeam(props.currentRow.TeamId);
+    // getUser(props.currentRow.LinemanUserId);
 
     // console.log("call useEffect");
   }, []);
@@ -59,8 +70,6 @@ const UserEntryAddEditModal = (props) => {
       action: "DesignationList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
     };
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
@@ -77,8 +86,6 @@ const UserEntryAddEditModal = (props) => {
       action: "RoleList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
     };
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
@@ -93,8 +100,6 @@ const UserEntryAddEditModal = (props) => {
       action: "DepartmentList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
     };
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
@@ -103,6 +108,54 @@ const UserEntryAddEditModal = (props) => {
       );
 
       setCurrDepartmentId(selectDepartmentId);
+    });
+  }
+
+  function getOffice(selectOfficeId) {
+    let params = {
+      action: "OfficeList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+    };
+
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      setOfficeList(
+        [{ id: "", name: "Select Office" }].concat(res.data.datalist)
+      );
+
+      setCurrOfficeId(selectOfficeId);
+    });
+  }
+
+  function getUserZone(selectUserZoneId) {
+    let params = {
+      action: "UserZoneList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+    };
+
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      setUserZoneList(
+        [{ id: "", name: "Select User Zone" }].concat(res.data.datalist)
+      );
+
+      setCurrUserZoneId(selectUserZoneId);
+    });
+  }
+
+  function getGender(selectGenderId) {
+    let params = {
+      action: "GenderList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+    };
+
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      setGenderList(
+        [{ id: "", name: "Select Gender" }].concat(res.data.datalist)
+      );
+
+      setCurrGenderId(selectGenderId);
     });
   }
 
@@ -124,37 +177,37 @@ const UserEntryAddEditModal = (props) => {
   //   });
   // }
 
-  function getTeam(selectTeamId) {
-    let params = {
-      action: "TeamList",
-      lan: language(),
-      UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
-    };
+  // function getTeam(selectTeamId) {
+  //   let params = {
+  //     action: "TeamList",
+  //     lan: language(),
+  //     UserId: UserInfo.UserId,
+  //     ClientId: UserInfo.ClientId,
+  //     BranchId: UserInfo.BranchId,
+  //   };
 
-    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
-      setTeamList([{ id: "", name: "Select Team" }].concat(res.data.datalist));
+  //   apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+  //     setTeamList([{ id: "", name: "Select Team" }].concat(res.data.datalist));
 
-      setCurrTeamId(selectTeamId);
-    });
-  }
+  //     setCurrTeamId(selectTeamId);
+  //   });
+  // }
 
-  function getUser(selectLinemanUserId) {
-    let params = {
-      action: "UserList",
-      lan: language(),
-      UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
-    };
+  // function getUser(selectLinemanUserId) {
+  //   let params = {
+  //     action: "UserList",
+  //     lan: language(),
+  //     UserId: UserInfo.UserId,
+  //     ClientId: UserInfo.ClientId,
+  //     BranchId: UserInfo.BranchId,
+  //   };
 
-    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
-      setUserList([{ id: "", name: "Select User" }].concat(res.data.datalist));
+  //   apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+  //     setUserList([{ id: "", name: "Select User" }].concat(res.data.datalist));
 
-      setCurrLinemanUserId(selectLinemanUserId);
-    });
-  }
+  //     setCurrLinemanUserId(selectLinemanUserId);
+  //   });
+  // }
 
   /*  const handleChange = (e) => {
     const { name, value } = e.target;
@@ -191,22 +244,21 @@ const UserEntryAddEditModal = (props) => {
     //   setCurrBusinessLineId(value);
     // }
 
-    if (name === "TeamId") {
-      setCurrTeamId(value);
-    }
+    // if (name === "TeamId") {
+    //   setCurrTeamId(value);
+    // }
 
-    if (name === "LinemanUserId") {
-      setCurrLinemanUserId(value);
-    }
+    // if (name === "LinemanUserId") {
+    //   setCurrLinemanUserId(value);
+    // }
   };
 
-  
   const handleChangeFilterDropDown = (name, value) => {
     let data = { ...currentRow };
-    if (name === "LinemanUserId") {
-      data["LinemanUserId"] = value;
-      setCurrLinemanUserId(value);
-    }
+    // if (name === "LinemanUserId") {
+    //   data["LinemanUserId"] = value;
+    //   setCurrLinemanUserId(value);
+    // }
     if (name === "RoleId") {
       data["RoleId"] = value;
       setCurrRoleId(value);
@@ -219,19 +271,25 @@ const UserEntryAddEditModal = (props) => {
       data["DepartmentId"] = value;
       setCurrDepartmentId(value);
     }
-    // if (name === "BusinessLineId") {
-    //   data["BusinessLineId"] = value;
-    //   setCurrBusinessLineId(value);
-    // }
-    
+    if (name === "OfficeId") {
+      data["OfficeId"] = value;
+      setCurrOfficeId(value);
+    }
+    if (name === "UserZoneId") {
+      data["UserZoneId"] = value;
+      setCurrUserZoneId(value);
+    }
+    if (name === "GenderId") {
+      data["GenderId"] = value;
+      setCurrGenderId(value);
+    }
+
     // if (name === "UserId") {
     //   setCurrUserId(value);
     // }
     setErrorObject({ ...errorObject, [name]: null });
     setCurrentRow(data);
- 
   };
-
 
   function handleChangeCheck(e) {
     // console.log('e.target.checked: ', e.target.checked);
@@ -257,6 +315,10 @@ const UserEntryAddEditModal = (props) => {
         "DesignationId",
         "RoleId",
         "DepartmentId",
+        "OfficeId",
+        "UserZoneId",
+        "GenderId",
+        "PhoneNo",
       ];
     } else {
       validateFields = [
@@ -268,6 +330,11 @@ const UserEntryAddEditModal = (props) => {
         "DesignationId",
         "RoleId",
         "DepartmentId",
+        "Address",
+        "OfficeId",
+        "UserZoneId",
+        "GenderId",
+        "PhoneNo",
       ];
     }
 
@@ -342,8 +409,6 @@ const UserEntryAddEditModal = (props) => {
         action: "dataAddEdit",
         lan: language(),
         UserId: UserInfo.UserId,
-        ClientId: UserInfo.ClientId,
-        BranchId: UserInfo.BranchId,
         rowData: currentRow,
       };
 
@@ -419,31 +484,282 @@ const UserEntryAddEditModal = (props) => {
           <div class="modalHeader">
             <h4>Add/Edit User</h4>
           </div>
-          <div class="contactmodalBody pt-10">
-            <label>User Id *</label>
-            <input
-              type="text"
-              id="UserCode"
-              name="UserCode"
-              class={errorObject.UserCode}
-              placeholder="Enter User Id"
-              value={currentRow.UserCode}
-              onChange={(e) => handleChange(e)}
-            />
-          </div>
 
           <div class="contactmodalBody pt-10">
-            <label>User Name *</label>
+            <label>Full Name *</label>
             <input
               type="text"
               id="UserName"
               name="UserName"
               class={errorObject.UserName}
-              placeholder="Enter User Name"
+              placeholder="Enter Full Name"
               value={currentRow.UserName}
               onChange={(e) => handleChange(e)}
             />
 
+            <label>Address *</label>
+            <input
+              type="text"
+              id="Address"
+              name="Address"
+              class={errorObject.Address}
+              placeholder="Enter Address"
+              value={currentRow.Address}
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
+
+          <div class="contactmodalBody pt-10">
+            <label>Office *</label>
+            <Autocomplete
+              autoHighlight
+              disableClearable
+              className="chosen_dropdown"
+              id="OfficeId"
+              name="OfficeId"
+              autoComplete
+              class={errorObject.OfficeId}
+              options={OfficeList ? OfficeList : []}
+              getOptionLabel={(option) => option.name}
+              defaultValue={{ id: 0, name: "Select Office" }}
+              value={
+                OfficeList
+                  ? OfficeList[
+                      OfficeList.findIndex((list) => list.id === currOfficeId)
+                    ]
+                  : null
+              }
+              onChange={(event, valueobj) =>
+                handleChangeFilterDropDown(
+                  "OfficeId",
+                  valueobj ? valueobj.id : ""
+                )
+              }
+              renderOption={(option) => (
+                <Typography className="chosen_dropdown_font">
+                  {option.name}
+                </Typography>
+              )}
+              renderInput={(params) => (
+                <TextField {...params} variant="standard" fullWidth />
+              )}
+            />
+
+            <label>Department *</label>
+            <Autocomplete
+              autoHighlight
+              disableClearable
+              className="chosen_dropdown"
+              id="DepartmentId"
+              name="DepartmentId"
+              autoComplete
+              class={errorObject.DepartmentId}
+              options={DepartmentList ? DepartmentList : []}
+              getOptionLabel={(option) => option.name}
+              defaultValue={{ id: 0, name: "Select Department" }}
+              value={
+                DepartmentList
+                  ? DepartmentList[
+                      DepartmentList.findIndex(
+                        (list) => list.id === currDepartmentId
+                      )
+                    ]
+                  : null
+              }
+              onChange={(event, valueobj) =>
+                handleChangeFilterDropDown(
+                  "DepartmentId",
+                  valueobj ? valueobj.id : ""
+                )
+              }
+              renderOption={(option) => (
+                <Typography className="chosen_dropdown_font">
+                  {option.name}
+                </Typography>
+              )}
+              renderInput={(params) => (
+                <TextField {...params} variant="standard" fullWidth />
+              )}
+            />
+          </div>
+
+          <div class="contactmodalBody pt-10">
+            <label>Designation *</label>
+            <Autocomplete
+              autoHighlight
+              disableClearable
+              className="chosen_dropdown"
+              id="DesignationId"
+              name="DesignationId"
+              autoComplete
+              class={errorObject.DesignationId}
+              options={DesignationList ? DesignationList : []}
+              getOptionLabel={(option) => option.name}
+              defaultValue={{ id: 0, name: "Select Designation" }}
+              value={
+                DesignationList
+                  ? DesignationList[
+                      DesignationList.findIndex(
+                        (list) => list.id === currDesignationId
+                      )
+                    ]
+                  : null
+              }
+              onChange={(event, valueobj) =>
+                handleChangeFilterDropDown(
+                  "DesignationId",
+                  valueobj ? valueobj.id : ""
+                )
+              }
+              renderOption={(option) => (
+                <Typography className="chosen_dropdown_font">
+                  {option.name}
+                </Typography>
+              )}
+              renderInput={(params) => (
+                <TextField {...params} variant="standard" fullWidth />
+              )}
+            />
+
+            <label>User Zone *</label>
+            <Autocomplete
+              autoHighlight
+              disableClearable
+              className="chosen_dropdown"
+              id="UserZoneId"
+              name="UserZoneId"
+              autoComplete
+              class={errorObject.UserZoneId}
+              options={UserZoneList ? UserZoneList : []}
+              getOptionLabel={(option) => option.name}
+              defaultValue={{ id: 0, name: "Select User Zone" }}
+              value={
+                UserZoneList
+                  ? UserZoneList[
+                      UserZoneList.findIndex(
+                        (list) => list.id === currUserZoneId
+                      )
+                    ]
+                  : null
+              }
+              onChange={(event, valueobj) =>
+                handleChangeFilterDropDown(
+                  "UserZoneId",
+                  valueobj ? valueobj.id : ""
+                )
+              }
+              renderOption={(option) => (
+                <Typography className="chosen_dropdown_font">
+                  {option.name}
+                </Typography>
+              )}
+              renderInput={(params) => (
+                <TextField {...params} variant="standard" fullWidth />
+              )}
+            />
+          </div>
+
+
+          <div class="contactmodalBody pt-10">
+
+            <label>Gender *</label>
+            <Autocomplete
+              autoHighlight
+              disableClearable
+              className="chosen_dropdown"
+              id="GenderId"
+              name="GenderId"
+              autoComplete
+              class={errorObject.GenderId}
+              options={GenderList ? GenderList : []}
+              getOptionLabel={(option) => option.name}
+              defaultValue={{ id: 0, name: "Select Gender" }}
+              value={
+                GenderList
+                  ? GenderList[
+                      GenderList.findIndex(
+                        (list) => list.id === currGenderId
+                      )
+                    ]
+                  : null
+              }
+              onChange={(event, valueobj) =>
+                handleChangeFilterDropDown(
+                  "GenderId",
+                  valueobj ? valueobj.id : ""
+                )
+              }
+              renderOption={(option) => (
+                <Typography className="chosen_dropdown_font">
+                  {option.name}
+                </Typography>
+              )}
+              renderInput={(params) => (
+                <TextField {...params} variant="standard" fullWidth />
+              )}
+            />
+                  <label>Phone No *</label>
+            <input
+              type="text"
+              id="PhoneNo"
+              name="PhoneNo"
+              placeholder="Enter Phone No"
+              class={errorObject.PhoneNo}
+              value={currentRow.PhoneNo}
+              onChange={(e) => handleChange(e)}
+            ></input>
+          </div>
+
+
+          <div class="contactmodalBody pt-10">
+            <label>Role Name *</label>
+            <Autocomplete
+              autoHighlight
+              disableClearable
+              className="chosen_dropdown"
+              id="RoleId"
+              name="RoleId"
+              autoComplete
+              class={errorObject.RoleId}
+              options={RoleList ? RoleList : []}
+              getOptionLabel={(option) => option.name}
+              defaultValue={{ id: 0, name: "Select Role" }}
+              value={
+                RoleList
+                  ? RoleList[
+                      RoleList.findIndex((list) => list.id === currRoleId)
+                    ]
+                  : null
+              }
+              onChange={(event, valueobj) =>
+                handleChangeFilterDropDown(
+                  "RoleId",
+                  valueobj ? valueobj.id : ""
+                )
+              }
+              renderOption={(option) => (
+                <Typography className="chosen_dropdown_font">
+                  {option.name}
+                </Typography>
+              )}
+              renderInput={(params) => (
+                <TextField {...params} variant="standard" fullWidth />
+              )}
+            />
+
+                  <label>NID</label>
+            <input
+              type="text"
+              id="NID"
+              name="NID"
+              placeholder="Enter NID"
+              // class={errorObject.PhoneNo}
+              value={currentRow.NID}
+              onChange={(e) => handleChange(e)}
+            ></input>
+          </div>
+
+          <div class="contactmodalBody pt-10">
             <label>Login Name *</label>
             <input
               type="text"
@@ -454,9 +770,7 @@ const UserEntryAddEditModal = (props) => {
               value={currentRow.LoginName}
               onChange={(e) => handleChange(e)}
             />
-          </div>
 
-          <div class="contactmodalBody pt-10">
             <label>Password *</label>
             <input
               id="Password"
@@ -478,10 +792,8 @@ const UserEntryAddEditModal = (props) => {
               value={currentRow.confirmChangePassword}
               onChange={(e) => handleChange(e)}
             />
-          </div>
 
-          <div class="contactmodalBody pt-10">
-            <label>Email *</label>
+                   <label>Email *</label>
             <input
               type="text"
               id="Email"
@@ -491,276 +803,62 @@ const UserEntryAddEditModal = (props) => {
               value={currentRow.Email}
               onChange={(e) => handleChange(e)}
             ></input>
-
-            <label>Phone No</label>
-            <input
-              type="text"
-              id="PhoneNo"
-              name="PhoneNo"
-              placeholder="Enter Phone No"
-              // class={errorObject.PhoneNo}
-              value={currentRow.PhoneNo}
-              onChange={(e) => handleChange(e)}
-            ></input>
           </div>
 
+     
+
+{/* 
           <div class="contactmodalBody pt-10">
-            <label>Role Name *</label>
-            {/* <select
-              id="RoleId"
-              name="RoleId"
-              class={errorObject.RoleId}
-              value={currRoleId}
-              onChange={(e) => handleChange(e)}
-            >
-              {RoleList &&
-                RoleList.map((item, index) => {
-                  return <option value={item.id}>{item.name}</option>;
-                })}
-            </select> */}
-
+            <label>Lineman (N+1)</label>
             <Autocomplete
-                autoHighlight
-                disableClearable
-                className="chosen_dropdown"
-                id="RoleId"
-                name="RoleId"
-                autoComplete
-                class={errorObject.RoleId}
-                options={RoleList ? RoleList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Role" }}
-                value={
-                  RoleList
-                    ? RoleList[
-                      RoleList.findIndex(
-                          (list) => list.id === currRoleId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeFilterDropDown(
-                    "RoleId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
-
-
-
-            <label>Designation *</label>
-            {/* <select
-              id="DesignationId"
-              name="DesignationId"
-              class={errorObject.DesignationId}
-              value={currDesignationId}
-              onChange={(e) => handleChange(e)}
-            >
-              {DesignationList &&
-                DesignationList.map((item, index) => {
-                  return <option value={item.id}>{item.name}</option>;
-                })}
-            </select> */}
-            
-            <Autocomplete
-                autoHighlight
-                disableClearable
-                className="chosen_dropdown"
-                id="DesignationId"
-                name="DesignationId"
-                autoComplete
-                class={errorObject.DesignationId}
-                options={DesignationList ? DesignationList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Designation" }}
-                value={
-                  DesignationList
-                    ? DesignationList[
-                      DesignationList.findIndex(
-                          (list) => list.id === currDesignationId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeFilterDropDown(
-                    "DesignationId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
-
-          </div>
-
-          <div class="contactmodalBody pt-10">
-            {/*  <label>Team</label>
-            <select
-              id="TeamId"
-              name="TeamId"
-              value={currTeamId}
-              onChange={(e) => handleChange(e)}
-            >
-              {TeamList &&
-                TeamList.map((item, index) => {
-                  return <option value={item.id}>{item.name}</option>;
-                })}
-            </select>*/}
-
-            <label>Department *</label>
-            {/* <select
-              id="DepartmentId"
-              name="DepartmentId"
-              class={errorObject.DepartmentId}
-              value={currDepartmentId}
-              onChange={(e) => handleChange(e)}
-            >
-              {DepartmentList &&
-                DepartmentList.map((item, index) => {
-                  return <option value={item.id}>{item.name}</option>;
-                })}
-            </select> */}
-            
-            <Autocomplete
-                autoHighlight
-                disableClearable
-                className="chosen_dropdown"
-                id="DepartmentId"
-                name="DepartmentId"
-                autoComplete
-                class={errorObject.DepartmentId}
-                options={DepartmentList ? DepartmentList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Department" }}
-                value={
-                  DepartmentList
-                    ? DepartmentList[
-                      DepartmentList.findIndex(
-                          (list) => list.id === currDepartmentId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeFilterDropDown(
-                    "DepartmentId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
-
-            {/* <label>Business Line *</label> */}
-            {/* <Autocomplete
-                autoHighlight
-                disableClearable
-                className="chosen_dropdown"
-                id="BusinessLineId"
-                name="BusinessLineId"
-                autoComplete
-                class={errorObject.BusinessLineId}
-                options={BusinessLineList ? BusinessLineList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Business Line" }}
-                value={
-                  BusinessLineList
-                    ? BusinessLineList[
-                      BusinessLineList.findIndex(
-                          (list) => list.id === currBusinessLineId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeFilterDropDown(
-                    "BusinessLineId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              /> */}
-
-<label>Lineman (N+1)</label>
-            <Autocomplete
-                autoHighlight
-                disableClearable
-                className="chosen_dropdown"
-                id="LinemanUserId"
-                name="LinemanUserId"
-                autoComplete
-                options={UserList ? UserList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select User" }}
-                value={
-                  UserList
-                    ? UserList[
+              autoHighlight
+              disableClearable
+              className="chosen_dropdown"
+              id="LinemanUserId"
+              name="LinemanUserId"
+              autoComplete
+              options={UserList ? UserList : []}
+              getOptionLabel={(option) => option.name}
+              defaultValue={{ id: 0, name: "Select User" }}
+              value={
+                UserList
+                  ? UserList[
                       UserList.findIndex(
-                          (list) => list.id === currLinemanUserId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeFilterDropDown(
-                    "LinemanUserId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
-
-          </div>
+                        (list) => list.id === currLinemanUserId
+                      )
+                    ]
+                  : null
+              }
+              onChange={(event, valueobj) =>
+                handleChangeFilterDropDown(
+                  "LinemanUserId",
+                  valueobj ? valueobj.id : ""
+                )
+              }
+              renderOption={(option) => (
+                <Typography className="chosen_dropdown_font">
+                  {option.name}
+                </Typography>
+              )}
+              renderInput={(params) => (
+                <TextField {...params} variant="standard" fullWidth />
+              )}
+            />
+          </div> */}
 
           <div class="contactmodalBody pt-10">
-            <label>Address</label>
+            <label>Employee Id *</label>
             <input
               type="text"
-              id="Address"
-              name="Address"
-              // class={errorObject.Address}
-              placeholder="Enter Address"
-              value={currentRow.Address}
+              id="UserCode"
+              name="UserCode"
+              class={errorObject.UserCode}
+              placeholder="Enter Employee Id"
+              value={currentRow.UserCode}
               onChange={(e) => handleChange(e)}
             />
-
-          <label> Is Active?</label>
+      
+            <label> Is Active?</label>
             <input
               id="IsActive"
               name="IsActive"
@@ -768,9 +866,7 @@ const UserEntryAddEditModal = (props) => {
               checked={currentRow.IsActive}
               onChange={handleChangeCheck}
             />
-
           </div>
- 
 
           <div className="contactmodalBody pt-10">
             <label>Photo</label>

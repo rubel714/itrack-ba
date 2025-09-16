@@ -26,25 +26,23 @@ switch($task){
 
 function getDataList($data){
 
-	$ClientId = trim($data->ClientId); 
-	$BranchId = trim($data->BranchId); 
 
 	try{
 		$dbh = new Db();
 
-		$query = "SELECT a.UserId AS id,a.ClientId ,a.BranchId, a.`UserName`, a.Password,a.LoginName,
+		$query = "SELECT a.UserId AS id, a.`UserName`, a.Password,a.LoginName,
 		 a.`Email`,a.PhoneNo,a.`IsActive`, CASE WHEN a.IsActive=1 THEN 'Yes' ELSE 'No' END IsActiveName, 
 		a.DesignationId, b.DesignationName, c.RoleId, d.RoleName,a.PhotoUrl,a.DepartmentId,e.DepartmentName,
-		a.TeamId,f.TeamName,a.`LinemanUserId`,g.`UserName` as LinemanUserName,a.Address,a.BusinessLineId,a.UserCode
+		a.Address,a.BusinessLineId,a.UserCode
+		,a.OfficeId, h.OfficeName,a.UserZoneId, i.UserZoneName, a.`GenderId`, f.GenderName,a.NID
 	   FROM `t_users` a
 	   INNER JOIN `t_designation` b ON a.`DesignationId` = b.`DesignationId`
 	   INNER JOIN `t_user_role_map` c ON a.`UserId` = c.`UserId`
 	   INNER JOIN `t_roles` d ON c.`RoleId` = d.`RoleId`
 	   INNER JOIN `t_department` e ON a.`DepartmentId` = e.`DepartmentId`
-	   LEFT JOIN `t_team` f ON a.`TeamId` = f.`TeamId`
-	   LEFT JOIN `t_users` g ON a.`LinemanUserId` = g.`UserId`
-	   where a.ClientId=$ClientId
-	   and a.BranchId=$BranchId
+	   INNER JOIN `t_gender` f ON a.`GenderId` = f.`GenderId`
+	   INNER JOIN `t_office` h ON a.`OfficeId` = h.`OfficeId`
+	   INNER JOIN `t_user_zone` i ON a.`UserZoneId` = i.`UserZoneId`
 	   ORDER BY a.`UserName` ASC;";
 		
 		$resultdata = $dbh->query($query);
@@ -74,9 +72,7 @@ function dataAddEdit($data) {
 		// echo "<pre>";
 		// print_r($data);
 		$lan = trim($data->lan); 
-		$UserId = trim($data->UserId); 
-		$ClientId = trim($data->ClientId); 
-		$BranchId = trim($data->BranchId); 
+		$UserId = trim($data->UserId);  
 
 		$id = $data->rowData->id;
 		$UserCode = $data->rowData->UserCode;
@@ -92,11 +88,15 @@ function dataAddEdit($data) {
 		$DesignationId = $data->rowData->DesignationId;
 		$RoleId = $data->rowData->RoleId;
 		$DepartmentId = $data->rowData->DepartmentId;
+		$OfficeId = $data->rowData->OfficeId;
+		$UserZoneId = $data->rowData->UserZoneId;
+		$GenderId = $data->rowData->GenderId;
 		// $BusinessLineId = $data->rowData->BusinessLineId;
 		$IsActive = $data->rowData->IsActive ? $data->rowData->IsActive : 0;
-		$TeamId = $data->rowData->TeamId? $data->rowData->TeamId : null;
-		$LinemanUserId = $data->rowData->LinemanUserId? $data->rowData->LinemanUserId : null;
+		// $TeamId = $data->rowData->TeamId? $data->rowData->TeamId : null;
+		// $LinemanUserId = $data->rowData->LinemanUserId? $data->rowData->LinemanUserId : null;
 		$Address = $data->rowData->Address? $data->rowData->Address : null;
+		$NID = $data->rowData->NID? $data->rowData->NID : null;
 
 		$Cpassword =  empty($data->rowData->Password) ?  '':$data->rowData->Password;	
 		$PhotoUrl =  $data->rowData->PhotoUrl? $data->rowData->PhotoUrl : "placeholder.png";
@@ -109,8 +109,8 @@ function dataAddEdit($data) {
 			if($id == ""){
 				$q = new insertq();
 				$q->table = 't_users';
-				$q->columns = ['ClientId','BranchId','UserCode','UserName','LoginName','Password','Email','PhoneNo','IsActive','DesignationId','PhotoUrl','DepartmentId','TeamId','LinemanUserId','Address'];
-				$q->values = [$ClientId,$BranchId,$UserCode,$UserName,$LoginName,$Password,$Email,$PhoneNo,$IsActive,$DesignationId,$PhotoUrl,$DepartmentId,$TeamId,$LinemanUserId,$Address];
+				$q->columns = ['UserCode','UserName','LoginName','Password','Email','PhoneNo','IsActive','DesignationId','PhotoUrl','DepartmentId','OfficeId','UserZoneId','NID','GenderId','Address'];
+				$q->values = [$UserCode,$UserName,$LoginName,$Password,$Email,$PhoneNo,$IsActive,$DesignationId,$PhotoUrl,$DepartmentId,$OfficeId,$UserZoneId,$NID,$GenderId,$Address];
 				$q->pks = ['UserId'];
 				$q->bUseInsetId = true;
 				$q->build_query();
@@ -130,12 +130,12 @@ function dataAddEdit($data) {
 				$u->table = 't_users';
 
 					if($Cpassword != ''){
-						$u->columns = ['ClientId','BranchId','UserCode','UserName','LoginName','Password','Email','PhoneNo','IsActive','DesignationId','PhotoUrl','DepartmentId','TeamId','LinemanUserId','Address'];
-						$u->values = [$ClientId,$BranchId,$UserCode,$UserName,$LoginName,$Password,$Email,$PhoneNo,$IsActive,$DesignationId,$PhotoUrl,$DepartmentId,$TeamId,$LinemanUserId,$Address];
+						$u->columns = ['UserCode','UserName','LoginName','Password','Email','PhoneNo','IsActive','DesignationId','PhotoUrl','DepartmentId','OfficeId','UserZoneId','NID','GenderId','Address'];
+						$u->values = [$UserCode,$UserName,$LoginName,$Password,$Email,$PhoneNo,$IsActive,$DesignationId,$PhotoUrl,$DepartmentId,$OfficeId,$UserZoneId,$NID,$GenderId,$Address];
 						
 					}else{
-						$u->columns = ['ClientId','BranchId','UserCode','UserName','LoginName','Email','PhoneNo','IsActive','DesignationId','PhotoUrl','DepartmentId','TeamId','LinemanUserId','Address'];
-						$u->values = [$ClientId,$BranchId,$UserCode, $UserName,$LoginName,$Email,$PhoneNo,$IsActive,$DesignationId,$PhotoUrl,$DepartmentId,$TeamId,$LinemanUserId,$Address];
+						$u->columns = ['UserCode','UserName','LoginName','Email','PhoneNo','IsActive','DesignationId','PhotoUrl','DepartmentId','OfficeId','UserZoneId','NID','GenderId','Address'];
+						$u->values = [$UserCode, $UserName,$LoginName,$Email,$PhoneNo,$IsActive,$DesignationId,$PhotoUrl,$DepartmentId,$OfficeId,$UserZoneId,$NID,$GenderId,$Address];
 				
 					}
 

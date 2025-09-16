@@ -30,8 +30,6 @@ const UserEntry = (props) => {
       finalUrl +
         "?action=UserExport" +
         "&reportType=excel" +
-        "&ClientId=" + UserInfo.ClientId +
-        "&BranchId=" + UserInfo.BranchId +
         "&TimeStamp=" +
         Date.now()
     );
@@ -131,15 +129,15 @@ const UserEntry = (props) => {
     //   sort: true,
     //   filter: true,
     // },
-    {
-      field: "LinemanUserName",
-      label: "Lineman (N+1)",
-      align: "left",
-      visible: true,
-      width: "8%",
-      sort: true,
-      filter: true,
-    },
+    // {
+    //   field: "LinemanUserName",
+    //   label: "Lineman (N+1)",
+    //   align: "left",
+    //   visible: true,
+    //   width: "8%",
+    //   sort: true,
+    //   filter: true,
+    // },
     {
       field: "Address",
       label: "Address",
@@ -184,8 +182,6 @@ const UserEntry = (props) => {
       action: "getDataList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
     };
     // console.log('LoginUserInfo params: ', params);
 
@@ -231,9 +227,13 @@ const UserEntry = (props) => {
             DesignationId: "",
             confirmPassword: "",
             DepartmentId: "",
+            OfficeId: "",
+            UserZoneId: "",
             Address: "",
-            TeamId: "",
-            LinemanUserId: "",
+            GenderId: "",
+            NID: "",
+            // TeamId: "",
+            // LinemanUserId: "",
             // BusinessLineId: "",
             IsActive: false,
             FormData: null,
@@ -299,8 +299,6 @@ const UserEntry = (props) => {
       action: "deleteData",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       rowData: rowData,
     };
 
