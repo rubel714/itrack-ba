@@ -83,8 +83,18 @@ function AfterLoginNavbar(props) {
                   {" "}
                   Basic Setup
                   <ul class="dropdownList">
+                    {menuShowPermision("programs") === 1 && (
+                      <li>
+                        <a
+                          href="javascript:void(0)"
+                          onClick={() => props.history.push("programs")}
+                        >
+                          Programs
+                        </a>
+                      </li>
+                    )}
 
-                         {menuShowPermision("auditors") === 1 && (
+                    {menuShowPermision("auditors") === 1 && (
                       <li>
                         <a
                           href="javascript:void(0)"
@@ -128,7 +138,6 @@ function AfterLoginNavbar(props) {
                       </li>
                     )}
 
-               
                     {menuShowPermision("factorygroups") === 1 && (
                       <li>
                         <a
@@ -139,7 +148,7 @@ function AfterLoginNavbar(props) {
                         </a>
                       </li>
                     )}
-                    
+
                     {menuShowPermision("factory") === 1 && (
                       <li>
                         <a
@@ -147,18 +156,6 @@ function AfterLoginNavbar(props) {
                           onClick={() => props.history.push("factory")}
                         >
                           Factory
-                        </a>
-                      </li>
-                    )}
-
-                    
-                    {menuShowPermision("programs") === 1 && (
-                      <li>
-                        <a
-                          href="javascript:void(0)"
-                          onClick={() => props.history.push("programs")}
-                        >
-                          Programs
                         </a>
                       </li>
                     )}
@@ -314,14 +311,11 @@ function AfterLoginNavbar(props) {
                   {" "}
                   Audit
                   <ul class="dropdownList">
-
-                     {menuShowPermision("salespersoninput") === 1 && (
+                    {menuShowPermision("salespersoninput") === 1 && (
                       <li>
                         <a
                           href="javascript:void(0)"
-                          onClick={() =>
-                            props.history.push("salespersoninput")
-                          }
+                          onClick={() => props.history.push("salespersoninput")}
                         >
                           Sales Person Input
                         </a>
@@ -340,13 +334,9 @@ function AfterLoginNavbar(props) {
                         </a>
                       </li>
                     )} */}
-
-
                   </ul>
                 </li>
               )}
-
-           
 
               {menuShowPermision("reports") === 1 && (
                 <li class="dropdownMenu">

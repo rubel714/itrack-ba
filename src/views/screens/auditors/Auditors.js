@@ -51,7 +51,7 @@ const Auditors = (props) => {
     // { field: 'SL', label: 'SL',width:'10%',align:'center',visible:true,sort:false,filter:false },
     {
       field: "AuditorCode",
-      label: "Auditor Code",
+      label: "Emp Id",
       align: "left",
       visible: true,
       sort: true,
@@ -60,23 +60,24 @@ const Auditors = (props) => {
 
     {
       field: "AuditorName",
-      label: "Auditor Name",
+      label: "Name",
       align: "left",
       visible: true,
       sort: true,
       filter: true,
     },
-    {
-      field: "PhoneNo",
-      label: "PhoneNo",
-      align: "left",
-      visible: true,
-      sort: true,
-      filter: true,
-    },
+
     {
       field: "Email",
       label: "Email",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+    },
+        {
+      field: "PhoneNo",
+      label: "Phone Number",
       align: "left",
       visible: true,
       sort: true,

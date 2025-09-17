@@ -406,12 +406,12 @@ function AuditorExport()
 	global $sql, $tableProperties, $TEXT, $siteTitle;
 	// $ClientId = $_REQUEST['ClientId'];
 
-	$sql = "SELECT `AuditorCode`,AuditorName,PhoneNo,Email
+	$sql = "SELECT `AuditorCode`,AuditorName,Email,PhoneNo
 	FROM t_auditor 
 	ORDER BY `AuditorCode`;";
 
-	$tableProperties["query_field"] = array("AuditorCode", "AuditorName", "PhoneNo", "Email", "Address");
-	$tableProperties["table_header"] = array('Auditor Code', 'Auditor Name', 'PhoneNo', 'Email', 'Address');
+	$tableProperties["query_field"] = array("AuditorCode", "AuditorName",  "Email", "PhoneNo","Address");
+	$tableProperties["table_header"] = array('Emp Id', 'Name', 'Email', 'PhoneNo', 'Address');
 	$tableProperties["align"] = array("left", "left", "left", "left", "left");
 	$tableProperties["width_print_pdf"] = array("10%", "20%", "15%", "15%", "40%"); //when exist serial then here total 95% and 5% use for serial
 	$tableProperties["width_excel"] = array("15", "25", "15", "15", "30");

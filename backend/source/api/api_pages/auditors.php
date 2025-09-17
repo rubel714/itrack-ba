@@ -36,8 +36,30 @@ function getDataList($data){
 		FROM t_auditor 
 		ORDER BY `AuditorCode` ASC;";		
 		
-		$resultdata = $dbh->query($query);
-		
+		$dataList = $dbh->query($query);
+
+		$resultdata = array();
+		foreach($dataList as $key => $row) {
+
+
+			$query1 = "SELECT ProgramId FROM t_auditor_lead_program where AuditorId = ".$row['id'].";";		
+			$LeadListResult = $dbh->query($query1);
+			$LeadList = array();
+			foreach($LeadListResult as $r1) {
+				$LeadList[] = $r1['ProgramId'];
+			}
+			$row['LeadAuditorProgram'] = $LeadList;
+
+			$query1 = "SELECT ProgramId FROM t_auditor_member_program where AuditorId = ".$row['id'].";";		
+			$TeamMemberListResult = $dbh->query($query1);
+			$TeamMemberList = array();
+			foreach($TeamMemberListResult as $r1) {
+				$TeamMemberList[] = $r1['ProgramId'];
+			}
+			$row['TeamAuditorProgram'] = $TeamMemberList;
+			
+			$resultdata[] = $row;
+		}	
 		$returnData = [
 			"success" => 1,
 			"status" => 200,
@@ -63,9 +85,6 @@ function dataAddEdit($data) {
 		
 		$lan = trim($data->lan); 
 		$UserId = trim($data->UserId); 
-		// $ClientId = trim($data->ClientId); 
-		//$BranchId = trim($data->BranchId); 
-
 		$AuditorId = $data->rowData->id;
 		$AuditorCode = $data->rowData->AuditorCode;
 		$AuditorName = $data->rowData->AuditorName;
@@ -74,6 +93,8 @@ function dataAddEdit($data) {
 		$PhoneNo = $data->rowData->PhoneNo;
 		$IsActive = 1;// $data->rowData->IsActive;
 
+		$LeadAuditorProgram = $data->rowData->LeadAuditorProgram;
+		$TeamAuditorProgram = $data->rowData->TeamAuditorProgram;
 
 
 		try{
@@ -101,7 +122,48 @@ function dataAddEdit($data) {
 				$u->pks = ['AuditorId'];
 				$u->pk_values = [$AuditorId];
 				$u->build_query();
-				$aQuerys = array($u);
+				$aQuerys[] = $u;
+
+				$d = new deleteq();
+				$d->table = 't_auditor_lead_program';
+				$d->pks = ['AuditorId'];
+				$d->pk_values = [$AuditorId];
+				$d->build_query();
+				$aQuerys[] = $d;
+
+				$d = new deleteq();
+				$d->table = 't_auditor_member_program';
+				$d->pks = ['AuditorId'];
+				$d->pk_values = [$AuditorId];
+				$d->build_query();
+				$aQuerys[] = $d;
+
+
+				if($LeadAuditorProgram && count($LeadAuditorProgram)>0){
+					foreach($LeadAuditorProgram as $p){
+						$q = new insertq();
+						$q->table = 't_auditor_lead_program';
+						$q->columns = ['AuditorId','ProgramId'];
+						$q->values = [$AuditorId,$p];
+						$q->pks = ['AuditorLeadProgramId'];
+						$q->bUseInsetId = false;
+						$q->build_query();
+						$aQuerys[] = $q; 
+					}
+				}
+				if($TeamAuditorProgram && count($TeamAuditorProgram)>0){
+					foreach($TeamAuditorProgram as $p){
+						$q = new insertq();
+						$q->table = 't_auditor_member_program';
+						$q->columns = ['AuditorId','ProgramId'];
+						$q->values = [$AuditorId,$p];
+						$q->pks = ['AuditorMemberProgramId'];
+						$q->bUseInsetId = false;
+						$q->build_query();
+						$aQuerys[] = $q; 
+					}
+				}
+
 			}
 			
 			$res = exec_query($aQuerys, $UserId, $lan);  
@@ -140,7 +202,6 @@ function deleteData($data) {
 		$UserId = trim($data->UserId); 
 
 		try{
-			$dbh = new Db();
 			
             $d = new deleteq();
             $d->table = 't_auditor';

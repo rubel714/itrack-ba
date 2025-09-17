@@ -32,7 +32,7 @@ const UserEntryAddEditModal = (props) => {
 
   const [GenderList, setGenderList] = useState(null);
   const [currGenderId, setCurrGenderId] = useState(null);
-  
+
   // const [TeamList, setTeamList] = useState(null);
   // const [currTeamId, setCurrTeamId] = useState(null);
 
@@ -659,9 +659,7 @@ const UserEntryAddEditModal = (props) => {
             />
           </div>
 
-
           <div class="contactmodalBody pt-10">
-
             <label>Gender *</label>
             <Autocomplete
               autoHighlight
@@ -677,9 +675,7 @@ const UserEntryAddEditModal = (props) => {
               value={
                 GenderList
                   ? GenderList[
-                      GenderList.findIndex(
-                        (list) => list.id === currGenderId
-                      )
+                      GenderList.findIndex((list) => list.id === currGenderId)
                     ]
                   : null
               }
@@ -698,7 +694,7 @@ const UserEntryAddEditModal = (props) => {
                 <TextField {...params} variant="standard" fullWidth />
               )}
             />
-                  <label>Phone No *</label>
+            <label>Phone No *</label>
             <input
               type="text"
               id="PhoneNo"
@@ -709,7 +705,6 @@ const UserEntryAddEditModal = (props) => {
               onChange={(e) => handleChange(e)}
             ></input>
           </div>
-
 
           <div class="contactmodalBody pt-10">
             <label>Role Name *</label>
@@ -747,7 +742,7 @@ const UserEntryAddEditModal = (props) => {
               )}
             />
 
-                  <label>NID</label>
+            <label>NID</label>
             <input
               type="text"
               id="NID"
@@ -793,7 +788,7 @@ const UserEntryAddEditModal = (props) => {
               onChange={(e) => handleChange(e)}
             />
 
-                   <label>Email *</label>
+            <label>Email *</label>
             <input
               type="text"
               id="Email"
@@ -805,9 +800,7 @@ const UserEntryAddEditModal = (props) => {
             ></input>
           </div>
 
-     
-
-{/* 
+          {/* 
           <div class="contactmodalBody pt-10">
             <label>Lineman (N+1)</label>
             <Autocomplete
@@ -857,7 +850,7 @@ const UserEntryAddEditModal = (props) => {
               value={currentRow.UserCode}
               onChange={(e) => handleChange(e)}
             />
-      
+
             <label> Is Active?</label>
             <input
               id="IsActive"

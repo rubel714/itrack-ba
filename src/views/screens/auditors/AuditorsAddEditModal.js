@@ -6,7 +6,9 @@ import {
   LoginUserInfo,
   language,
 } from "../../../actions/api";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
+import { Typography, TextField } from "@material-ui/core";
 const AuditorsAddEditModal = (props) => {
   // console.log('props modal: ', props);
   const serverpage = "auditors"; // this is .php server page
@@ -14,6 +16,10 @@ const AuditorsAddEditModal = (props) => {
   const [errorObject, setErrorObject] = useState({});
   const UserInfo = LoginUserInfo();
 
+  const [ProgramList, setProgramList] = useState(null);
+  const [currProgramId, setCurrProgramId] = useState(null);
+
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     let data = { ...currentRow };
@@ -70,6 +76,33 @@ const AuditorsAddEditModal = (props) => {
     props.modalCallback("close");
   }
 
+
+
+  React.useEffect(() => {
+    getProgram("");
+    // getProgram(props.currentRow.DesignationId);
+
+  }, []);
+
+  
+    function getProgram(selectProgramId) {
+      let params = {
+        action: "ProgramList",
+        lan: language(),
+        UserId: UserInfo.UserId,
+      };
+  
+      apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+        setProgramList(res.data.datalist
+        );
+        //         setProgramList(
+        //   [{ id: "", name: "Select Program" }].concat(res.data.datalist)
+        // );
+  
+        setCurrProgramId(selectProgramId);
+      });
+    }
+  
   return (
     <>
       {/* <!-- GROUP MODAL START --> */}
@@ -81,40 +114,27 @@ const AuditorsAddEditModal = (props) => {
           </div>
 
           <div class="modalItem">
-            <label>Auditor Code</label>
+            <label>Emp Id</label>
             <input
               type="text"
               id="AuditorCode"
               name="AuditorCode"
               // class={errorObject.AuditorCode}
-              placeholder="Enter Auditor Code"
+              placeholder="Enter Emp Id"
               value={currentRow.AuditorCode }
               onChange={(e) => handleChange(e)}
             />
           </div>
 
           <div class="modalItem">
-            <label>Auditor Name *</label>
+            <label>Name *</label>
             <input
               type="text"
               id="AuditorName"
               name="AuditorName"
               class={errorObject.AuditorName}
-              placeholder="Enter Auditor Name"
+              placeholder="Enter Name"
               value={currentRow.AuditorName}
-              onChange={(e) => handleChange(e)}
-            />
-          </div>
-
-         <div class="modalItem">
-            <label>PhoneNo *</label>
-            <input
-              type="text"
-              id="PhoneNo"
-              name="PhoneNo"
-              class={errorObject.PhoneNo}
-              placeholder="Enter PhoneNo"
-              value={currentRow.PhoneNo}
               onChange={(e) => handleChange(e)}
             />
           </div>
@@ -132,6 +152,19 @@ const AuditorsAddEditModal = (props) => {
             />
           </div>
 
+         <div class="modalItem">
+            <label>Phone Number *</label>
+            <input
+              type="text"
+              id="PhoneNo"
+              name="PhoneNo"
+              class={errorObject.PhoneNo}
+              placeholder="Enter Phone Number"
+              value={currentRow.PhoneNo}
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
+
           <div class="modalItem">
             <label>Address</label>
             <input
@@ -143,6 +176,80 @@ const AuditorsAddEditModal = (props) => {
               value={currentRow.Address}
               onChange={(e) => handleChange(e)}
             />
+          </div>
+
+          <div class="modalItem" style={{ display: "inline-block", alignItems: "left", marginBottom: 4 }}>
+
+            <label>Capability of Lead Auditor Program Name</label>
+            {ProgramList &&
+              ProgramList.map((program) => (
+                // <div style={{ display: "grid", flexDirection: "row", gap: "4px", marginBottom: "8px" }}>
+                
+                 <div key={program.id} >
+                  <input
+                    type="checkbox"
+                    id={`program_${program.id}`}
+                    checked={(currentRow.LeadAuditorProgram || []).includes(program.id)}
+                    onChange={(e) => {
+                      const selected = currentRow.LeadAuditorProgram || [];
+                      let newSelected;
+                      if (e.target.checked) {
+                        newSelected = [...selected, program.id];
+                      } else {
+                        newSelected = selected.filter((id) => id !== program.id);
+                      }
+                      handleChange({
+                        target: {
+                          name: "LeadAuditorProgram",
+                          value: newSelected,
+                        },
+                      });
+                    }}
+                  />
+                  <span htmlFor={`program_${program.id}`}>
+                    {program.name}
+                  </span>
+                </div>
+              ))
+            }
+          </div>
+
+
+          <div class="modalItem" style={{ display: "inline-block", alignItems: "left", marginBottom: 4 }}>
+            
+            <label>Capability of Team Auditor Program Name</label>
+            {ProgramList &&
+              ProgramList.map((program) => (
+                // <div style={{ display: "grid", flexDirection: "row", gap: "4px", marginBottom: "8px" }}>
+                
+                 <div key={program.id} >
+                  <input
+                    type="checkbox"
+                    id={`program_${program.id}`}
+                    checked={(currentRow.TeamAuditorProgram || []).includes(program.id)}
+                    onChange={(e) => {
+                      const selected = currentRow.TeamAuditorProgram || [];
+                      let newSelected;
+                      if (e.target.checked) {
+                        newSelected = [...selected, program.id];
+                      } else {
+                        newSelected = selected.filter((id) => id !== program.id);
+                      }
+                      handleChange({
+                        target: {
+                          name: "TeamAuditorProgram",
+                          value: newSelected,
+                        },
+                      });
+                    }}
+                  />
+                  <span htmlFor={`program_${program.id}`}>
+                    {program.name}
+                  </span>
+                </div>
+              ))
+            }
+
           </div>
 
          
