@@ -26,20 +26,28 @@ switch($task){
 
 function getDataList($data){
 
-	
-	$ClientId = trim($data->ClientId); 
-	//$BranchId = trim($data->BranchId); 
-
 	try{
 		$dbh = new Db();
 		$query = "SELECT a.FactoryId AS id,b.FactoryGroupName, a.FactoryGroupId,
-		a.FactoryName,a.PhoneNo,a.Email,a.Address
+		a.FactoryName,a.PhoneNo,a.Email,a.Address, a.FactoryCode,a.Locations,a.ContactInfo
 		FROM t_factory a
 		INNER JOIN t_factorygroup b on a.FactoryGroupId=b.FactoryGroupId
-		ORDER BY b.FactoryGroupName,a.`FactoryName` ASC;";		
+		ORDER BY a.`FactoryName` ASC;";		
 		
-		$resultdata = $dbh->query($query);
-		
+		$resultdataresult = $dbh->query($query);
+		$resultdata = array();
+		foreach($resultdataresult as $key => $row){
+
+			// $row["Locations"]= array("Dhaka","Jamalpur","Chittagong","Khulna","Rajshahi");
+			// $ContactInfo = array();
+			// $ContactInfo[] = array("ContactPerson" => "Rubel", "ContactNumber" => "01538198763", "Designation" => "NA", "Email" => "rubel714@gmail.com");
+			// $ContactInfo[] = array("ContactPerson" => "Rubel01", "ContactNumber" => "01538198700", "Designation" => "NA1", "Email" => "1rubel714@gmail.com");
+			// $ContactInfo[] = array("ContactPerson" => "Rubel02", "ContactNumber" => "01538198711", "Designation" => "NA1", "Email" => "2rubel714@gmail.com");
+			// $row["ContactInfo"] = $ContactInfo;
+			$row["Locations"] = $row["Locations"] ? json_decode($row["Locations"], true) : [];
+			$row["ContactInfo"] = $row["ContactInfo"] ? json_decode($row["ContactInfo"], true) : [];
+			$resultdata[] = $row;
+		}
 		$returnData = [
 			"success" => 1,
 			"status" => 200,
@@ -68,9 +76,9 @@ function dataAddEdit($data) {
 		$FactoryId = $data->rowData->id;
 		$FactoryGroupId = $data->rowData->FactoryGroupId;
 		$FactoryName = $data->rowData->FactoryName;
-		$PhoneNo = $data->rowData->PhoneNo;
-		$Email = $data->rowData->Email;
-		$Address = $data->rowData->Address;
+		$FactoryCode = $data->rowData->FactoryCode;
+		// $Email = $data->rowData->Email;
+		// $Address = $data->rowData->Address;
 
 		try{
 
@@ -82,8 +90,8 @@ function dataAddEdit($data) {
 			if($FactoryId == ""){
 				$q = new insertq();
 				$q->table = 't_factory';
-				$q->columns = ['FactoryGroupId','FactoryName','PhoneNo','Email','Address'];
-				$q->values = [$FactoryGroupId,$FactoryName,$PhoneNo,$Email,$Address];
+				$q->columns = ['FactoryGroupId','FactoryName','FactoryCode'];
+				$q->values = [$FactoryGroupId,$FactoryName,$FactoryCode];
 				$q->pks = ['FactoryId'];
 				$q->bUseInsetId = false;
 				$q->build_query();
@@ -91,8 +99,8 @@ function dataAddEdit($data) {
 			}else{
 				$u = new updateq();
 				$u->table = 't_factory';
-				$u->columns = ['FactoryGroupId','FactoryName','PhoneNo','Email','Address'];
-				$u->values = [$FactoryGroupId,$FactoryName,$PhoneNo,$Email,$Address];
+				$u->columns = ['FactoryGroupId','FactoryName','FactoryCode'];
+				$u->values = [$FactoryGroupId,$FactoryName,$FactoryCode];
 				$u->pks = ['FactoryId'];
 				$u->pk_values = [$FactoryId];
 				$u->build_query();
@@ -136,8 +144,6 @@ function deleteData($data) {
 
 		try{
 
-			$dbh = new Db();
-			
             $d = new deleteq();
             $d->table = 't_factory';
             $d->pks = ['FactoryId'];

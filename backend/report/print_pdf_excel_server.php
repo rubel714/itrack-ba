@@ -222,20 +222,20 @@ function FactoryExport()
 {
 	global $sql, $tableProperties, $TEXT, $siteTitle;
 
-	$sql = "SELECT b.FactoryGroupName, a.FactoryName,a.PhoneNo,a.Email,a.Address
+	$sql = "SELECT a.FactoryName,a.FactoryCode, b.FactoryGroupName
 		FROM t_factory a
 		INNER JOIN t_factorygroup b on a.FactoryGroupId=b.FactoryGroupId
-		ORDER BY b.FactoryGroupName, a.`FactoryName` ASC;";
+		ORDER BY a.`FactoryName` ASC;";
 
 
-	$tableProperties["query_field"] = array("FactoryGroupName", "FactoryName", "PhoneNo", "Email", "Address");
-	$tableProperties["table_header"] = array('Factory Group', 'Factory Name', 'PhoneNo', 'Email', 'Address');
-	$tableProperties["align"] = array("left", "left", "left", "left", "left");
-	$tableProperties["width_print_pdf"] = array("15%", "15%", "15%", "15%", "40%"); //when exist serial then here total 95% and 5% use for serial
-	$tableProperties["width_excel"] = array("18", "25", "18", "18", "35");
-	$tableProperties["precision"] = array("string", "string", "string", "string", "string"); //string,date,datetime,0,1,2,3,4
-	$tableProperties["total"] = array(0, 0, 0, 0, 0); //not total=0, total=1
-	$tableProperties["color_code"] = array(0, 0, 0, 0, 0); //colorcode field = 1 not color code field = 0
+	$tableProperties["query_field"] = array("FactoryName", "FactoryCode","FactoryGroupName");
+	$tableProperties["table_header"] = array('Factory Name', 'Factory Code','Factory Group');
+	$tableProperties["align"] = array("left", "left", "left");
+	$tableProperties["width_print_pdf"] = array("15%", "15%", "15%"); //when exist serial then here total 95% and 5% use for serial
+	$tableProperties["width_excel"] = array("25", "20", "20");
+	$tableProperties["precision"] = array("string", "string", "string"); //string,date,datetime,0,1,2,3,4
+	$tableProperties["total"] = array(0, 0, 0); //not total=0, total=1
+	$tableProperties["color_code"] = array(0, 0, 0); //colorcode field = 1 not color code field = 0
 	$tableProperties["header_logo"] = 0; //include header left and right logo. 0 or 1
 	$tableProperties["footer_signatory"] = 0; //include footer signatory. 0 or 1
 
@@ -376,18 +376,18 @@ function BuyerExport()
 	global $sql, $tableProperties, $TEXT, $siteTitle;
 	// $ClientId = $_REQUEST['ClientId'];
 
-	$sql = "SELECT `BuyerName`,Phone,Email,Address
+	$sql = "SELECT BuyerName, ClientType, Country, SunCode,EbitzCode, ItsCode, RegisterNo, CustomerCode
 	FROM t_buyer 
 	ORDER BY `BuyerName`;";
 
-	$tableProperties["query_field"] = array("BuyerName", "Phone", "Email", "Address");
-	$tableProperties["table_header"] = array('Buyer Name', 'PhoneNo', 'Email', 'Address');
-	$tableProperties["align"] = array("left", "left", "left", "left");
-	$tableProperties["width_print_pdf"] = array("20%", "20%", "20%",  "40%"); //when exist serial then here total 95% and 5% use for serial
-	$tableProperties["width_excel"] = array("25", "20", "20", "30");
-	$tableProperties["precision"] = array("string", "string", "string", "string"); //string,date,datetime,0,1,2,3,4
-	$tableProperties["total"] = array(0, 0, 0, 0); //not total=0, total=1
-	$tableProperties["color_code"] = array(0, 0, 0, 0); //colorcode field = 1 not color code field = 0
+	$tableProperties["query_field"] = array('BuyerName', 'ClientType', 'Country', 'SunCode','EbitzCode', 'ItsCode', 'RegisterNo', 'CustomerCode');
+	$tableProperties["table_header"] = array('Buyer Name', 'Client Type', 'Country', 'Sun Code','Ebitz Code', 'ITS Code', 'Register No', 'Customer Code');
+	$tableProperties["align"] = array("left", "left", "left", "left","left", "left", "left", "left");
+	$tableProperties["width_print_pdf"] = array("10%", "10%", "10%", "10%","10%", "10%", "10%",  "10%"); //when exist serial then here total 95% and 5% use for serial
+	$tableProperties["width_excel"] = array("25", "15", "18", "15","15", "15", "20", "20");
+	$tableProperties["precision"] = array("string", "string", "string", "string","string", "string", "string", "string"); //string,date,datetime,0,1,2,3,4
+	$tableProperties["total"] = array(0, 0, 0, 0,0, 0, 0, 0); //not total=0, total=1
+	$tableProperties["color_code"] = array(0, 0, 0, 0,0, 0, 0, 0); //colorcode field = 1 not color code field = 0
 	$tableProperties["header_logo"] = 0; //include header left and right logo. 0 or 1
 	$tableProperties["footer_signatory"] = 0; //include footer signatory. 0 or 1
 

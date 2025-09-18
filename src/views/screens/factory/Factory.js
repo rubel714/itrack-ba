@@ -42,15 +42,7 @@ const Factory = (props) => {
   const columnList = [
     { field: "rownumber", label: "SL", align: "center", width: "3%" },
     // { field: 'SL', label: 'SL',width:'10%',align:'center',visible:true,sort:false,filter:false },
-    {
-      field: "FactoryGroupName",
-      label: "Factory Group",
-      align: "left",
-      visible: true,
-      sort: true,
-      filter: true,
-      width: "10%",
-    },
+   
     {
       field: "FactoryName",
       label: "Factory Name",
@@ -60,31 +52,22 @@ const Factory = (props) => {
       filter: true,
     },
     {
-      field: "PhoneNo",
-      label: "PhoneNo",
+      field: "FactoryCode",
+      label: "FactoryCode",
       align: "left",
       visible: true,
       sort: true,
       filter: true,
-      width: "8%",
+      width: "20%",
     },
-    {
-      field: "Email",
-      label: "Email",
+     {
+      field: "FactoryGroupName",
+      label: "Factory Group",
       align: "left",
       visible: true,
-      width: "10%",
       sort: true,
       filter: true,
-    },
-    {
-      field: "Address",
-      label: "Address",
-      align: "left",
-      visible: true,
-      // width: "7%",
-      sort: true,
-      filter: true,
+      width: "20%",
     },
     {
       field: "custom",
@@ -112,8 +95,6 @@ const Factory = (props) => {
       action: "getDataList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
     };
     // console.log('LoginUserInfo params: ', params);
 
@@ -149,9 +130,7 @@ const Factory = (props) => {
             id: "",
             FactoryGroupId:"",
             FactoryName: "",
-            PhoneNo: "",
-            Email: "",
-            Address: "",
+            FactoryCode: "",
             FormData: null,
           });
     openModal();
@@ -220,7 +199,6 @@ const Factory = (props) => {
 
     // apiCall.post("productgroup", { params }, apiOption()).then((res) => {
     apiCall.post(serverpage, { params }, apiOption()).then((res) => {
-      console.log('res: ', res);
       props.openNoticeModal({
         isOpen: true,
         msg: res.data.message,

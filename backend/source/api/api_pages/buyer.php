@@ -26,14 +26,10 @@ switch ($task) {
 
 function getDataList($data)
 {
-
-
-	$ClientId = trim($data->ClientId);
-	//$BranchId = trim($data->BranchId); 
-
 	try {
 		$dbh = new Db();
-		$query = "SELECT BuyerId AS id, BuyerName ,Phone,Email,Address
+		$query = "SELECT BuyerId AS id, BuyerName ,Phone,Email,Address,
+		 `ClientType`, `Country`, `SunCode`, `EbitzCode`, `ItsCode`, `RegisterNo`, `CustomerCode`
 		FROM t_buyer 
 		ORDER BY `BuyerName` ASC;";
 
@@ -67,9 +63,18 @@ function dataAddEdit($data)
 
 		$BuyerId = $data->rowData->id;
 		$BuyerName = $data->rowData->BuyerName;
-		$Phone = $data->rowData->Phone;
-		$Email = $data->rowData->Email;
-		$Address = $data->rowData->Address;
+		$ClientType = $data->rowData->ClientType ? $data->rowData->ClientType : null;
+		$Country = $data->rowData->Country ? $data->rowData->Country : null;
+		$SunCode = $data->rowData->SunCode ? $data->rowData->SunCode : null;
+		$EbitzCode = $data->rowData->EbitzCode ? $data->rowData->EbitzCode : null;
+		$ItsCode = $data->rowData->ItsCode ? $data->rowData->ItsCode : null;
+		$RegisterNo = $data->rowData->RegisterNo ? $data->rowData->RegisterNo : null;
+		$CustomerCode = $data->rowData->CustomerCode ? $data->rowData->CustomerCode : null;
+
+		// $Phone = $data->rowData->Phone;
+		// $Email = $data->rowData->Email;
+		// $Address = $data->rowData->Address;
+
 
 		try {
 
@@ -80,8 +85,8 @@ function dataAddEdit($data)
 
 				$q = new insertq();
 				$q->table = 't_buyer';
-				$q->columns = ['BuyerName', 'Phone', 'Email', 'Address'];
-				$q->values = [$BuyerName, $Phone, $Email, $Address];
+				$q->columns = ['BuyerName', 'ClientType', 'Country', 'SunCode','EbitzCode', 'ItsCode', 'RegisterNo', 'CustomerCode'];
+				$q->values = [$BuyerName, $ClientType, $Country, $SunCode,$EbitzCode, $ItsCode, $RegisterNo, $CustomerCode];
 				$q->pks = ['BuyerId'];
 				$q->bUseInsetId = false;
 				$q->build_query();
@@ -89,8 +94,8 @@ function dataAddEdit($data)
 			} else {
 				$u = new updateq();
 				$u->table = 't_buyer';
-				$u->columns = ['BuyerName', 'Phone', 'Email', 'Address'];
-				$u->values = [$BuyerName, $Phone, $Email, $Address];
+				$u->columns = ['BuyerName', 'ClientType', 'Country', 'SunCode','EbitzCode', 'ItsCode', 'RegisterNo', 'CustomerCode'];
+				$u->values = [$BuyerName, $ClientType, $Country, $SunCode,$EbitzCode, $ItsCode, $RegisterNo, $CustomerCode];
 				$u->pks = ['BuyerId'];
 				$u->pk_values = [$BuyerId];
 				$u->build_query();
@@ -133,8 +138,6 @@ function deleteData($data)
 		$UserId = trim($data->UserId);
 
 		try {
-
-			$dbh = new Db();
 
 			$d = new deleteq();
 			$d->table = 't_buyer';

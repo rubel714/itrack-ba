@@ -77,7 +77,6 @@ const BuyerAddEditModal = (props) => {
           <div class="modalHeader">
             <h4>Add/Edit Buyer</h4>
           </div>
- 
 
           <div class="modalItem">
             <label>Buyer Name *</label>
@@ -92,46 +91,94 @@ const BuyerAddEditModal = (props) => {
             />
           </div>
 
-         <div class="modalItem">
-            <label>Phone No</label>
+          <div class="modalItem">
+            <label>Client Type</label>
             <input
               type="text"
-              id="Phone"
-              name="Phone"
-              // class={errorObject.Phone}
-              placeholder="Enter Phone No"
-              value={currentRow.Phone}
+              id="ClientType"
+              name="ClientType"
+              // class={errorObject.ClientType}
+              placeholder="Enter Client Type"
+              value={currentRow.ClientType}
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
+          <div class="modalItem">
+            <label>Country</label>
+            <input
+              type="text"
+              id="Country"
+              name="Country"
+              // class={errorObject.Country}
+              placeholder="Enter Country"
+              value={currentRow.Country}
               onChange={(e) => handleChange(e)}
             />
           </div>
 
           <div class="modalItem">
-            <label>Email</label>
+            <label>Sun Code</label>
             <input
               type="text"
-              id="Email"
-              name="Email"
-              // class={errorObject.Email}
-              placeholder="Enter Email"
-              value={currentRow.Email}
+              id="SunCode"
+              name="SunCode"
+              // class={errorObject.SunCode}
+              placeholder="Enter Sun Code"
+              value={currentRow.SunCode}
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
+          <div class="modalItem">
+            <label>Ebitz Code</label>
+            <input
+              type="text"
+              id="EbitzCode"
+              name="EbitzCode"
+              // class={errorObject.EbitzCode}
+              placeholder="Enter Ebitz Code"
+              value={currentRow.EbitzCode}
               onChange={(e) => handleChange(e)}
             />
           </div>
 
           <div class="modalItem">
-            <label>Address</label>
+            <label>ITS Code</label>
             <input
               type="text"
-              id="Address"
-              name="Address"
-              // class={errorObject.Address}
-              placeholder="Enter Address"
-              value={currentRow.Address}
+              id="ItsCode"
+              name="ItsCode"
+              // class={errorObject.ItsCode}
+              placeholder="Enter ITS Code"
+              value={currentRow.ItsCode}
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
+          <div class="modalItem">
+            <label>Register No</label>
+            <input
+              type="text"
+              id="RegisterNo"
+              name="RegisterNo"
+              // class={errorObject.RegisterNo}
+              placeholder="Enter Register No"
+              value={currentRow.RegisterNo}
               onChange={(e) => handleChange(e)}
             />
           </div>
 
-         
+          <div class="modalItem">
+            <label>Customer Code</label>
+            <input
+              type="text"
+              id="CustomerCode"
+              name="CustomerCode"
+              // class={errorObject.CustomerCode}
+              placeholder="Enter Customer Code"
+              value={currentRow.CustomerCode}
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
+
           <div class="modalItem">
             <Button label={"Close"} class={"btnClose"} onClick={modalClose} />
             {props.currentRow.id && (

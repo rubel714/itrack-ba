@@ -59,30 +59,62 @@ const Buyer = (props) => {
     },
 
     {
-      field: "Phone",
-      label: "Phone",
+      field: "ClientType",
+      label: "Client Type",
       align: "left",
       visible: true,
       sort: true,
       filter: true,
     },
     {
-      field: "Email",
-      label: "Email",
+      field: "Country",
+      label: "Country",
       align: "left",
       visible: true,
       sort: true,
       filter: true,
     },
     {
-      field: "Address",
-      label: "Address",
+      field: "SunCode",
+      label: "Sun Code",
       align: "left",
       visible: true,
       sort: true,
       filter: true,
     },
 
+    {
+      field: "EbitzCode",
+      label: "Ebitz Code",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+    },
+    {
+      field: "ItsCode",
+      label: "ITS Code",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+    },
+    {
+      field: "RegisterNo",
+      label: "Register No",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+    },
+    {
+      field: "CustomerCode",
+      label: "Customer Code",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+    },
     {
       field: "custom",
       label: "Action",
@@ -144,15 +176,18 @@ const Buyer = (props) => {
     setCurrentRow({
       id: "",
       BuyerName: "",
-      Phone: "",
-      Email: "",
-      Address: "",
+      ClientType: "",
+      Country: "",
+      SunCode: "",
+      EbitzCode: "",
+      ItsCode: "",
+      RegisterNo: "",
+      CustomerCode: "",
     });
     openModal();
   };
 
   const editData = (rowData) => {
-
     setCurrentRow(rowData);
     openModal();
   };

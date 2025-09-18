@@ -158,7 +158,6 @@ const FactoryAddEditModal = (props) => {
     // if (name === "DesignationId") {
     //   setCurrDesignationId(value);
     // }
-
   };
 
   const handleChangeFilterDropDown = (name, value) => {
@@ -173,27 +172,20 @@ const FactoryAddEditModal = (props) => {
     setCurrentRow(data);
   };
 
-
-  
   const validateForm = () => {
-
-    let validateFields = [
-        "FactoryGroupId",
-        "FactoryName"
-      ];
-    let errorData = {}
-    let isValid = true
+    let validateFields = ["FactoryGroupId", "FactoryName", "FactoryCode"];
+    let errorData = {};
+    let isValid = true;
     validateFields.map((field) => {
       if (!currentRow[field]) {
         errorData[field] = "validation-style";
-        isValid = false
+        isValid = false;
       }
-    })
+    });
     setErrorObject(errorData);
-    return isValid
-  }
+    return isValid;
+  };
 
- 
   function addEditAPICall() {
     if (validateForm()) {
       let params = {
@@ -224,7 +216,7 @@ const FactoryAddEditModal = (props) => {
     // console.log("props modal: ", props);
     props.modalCallback("close");
   }
-  
+
   return (
     <>
       {/* <!-- GROUP MODAL START --> */}
@@ -236,6 +228,28 @@ const FactoryAddEditModal = (props) => {
           </div>
 
           <div class="contactmodalBody pt-10">
+            <label>Factory Name *</label>
+            <input
+              type="text"
+              id="FactoryName"
+              name="FactoryName"
+              class={errorObject.FactoryName}
+              placeholder="Enter Factory Name"
+              value={currentRow.FactoryName}
+              onChange={(e) => handleChange(e)}
+            />
+
+            <label>Factory Code *</label>
+            <input
+              type="text"
+              id="FactoryCode"
+              name="FactoryCode"
+              placeholder="Enter Factory Code"
+              class={errorObject.FactoryCode}
+              value={currentRow.FactoryCode}
+              onChange={(e) => handleChange(e)}
+            ></input>
+
             <label>Factory Group *</label>
             <Autocomplete
               autoHighlight
@@ -272,32 +286,11 @@ const FactoryAddEditModal = (props) => {
                 <TextField {...params} variant="standard" fullWidth />
               )}
             />
-
-            <label>Factory Name *</label>
-            <input
-              type="text"
-              id="FactoryName"
-              name="FactoryName"
-              class={errorObject.FactoryName}
-              placeholder="Enter Factory Name"
-              value={currentRow.FactoryName}
-              onChange={(e) => handleChange(e)}
-            />
           </div>
 
-          <div class="contactmodalBody pt-10">
-            <label>Phone No</label>
-            <input
-              type="text"
-              id="PhoneNo"
-              name="PhoneNo"
-              placeholder="Enter Phone No"
-              // class={errorObject.PhoneNo}
-              value={currentRow.PhoneNo}
-              onChange={(e) => handleChange(e)}
-            ></input>
+          {/* <div class="contactmodalBody pt-10"> */}
 
-            <label>Email</label>
+          {/* <label>Email</label>
             <input
               type="text"
               id="Email"
@@ -306,9 +299,9 @@ const FactoryAddEditModal = (props) => {
               // class={errorObject.Email}
               value={currentRow.Email}
               onChange={(e) => handleChange(e)}
-            ></input>
-          </div>
-
+            ></input> */}
+          {/* </div> */}
+          {/* 
           <div class="contactmodalBody pt-10">
             <label>Address</label>
             <input
@@ -320,7 +313,7 @@ const FactoryAddEditModal = (props) => {
               value={currentRow.Address}
               onChange={(e) => handleChange(e)}
             />
-          </div>
+          </div> */}
 
           <div class="modalItem">
             <Button label={"Close"} class={"btnClose"} onClick={modalClose} />
