@@ -9,6 +9,12 @@ import {
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
 import { Typography, TextField } from "@material-ui/core";
+import { DeleteOutline, Edit } from "@material-ui/icons";
+
+import CustomTable from "components/CustomTable/CustomTable";
+// import ExecuteQueryHook from "../../../components/hooks/ExecuteQueryHook";
+import swal from "sweetalert";
+import { set } from "date-fns";
 
 const FactoryAddEditModal = (props) => {
   //console.log("props modal: ", props);
@@ -18,22 +24,16 @@ const FactoryAddEditModal = (props) => {
   // const [currentFile, setCurrentFile] = useState(null);
   const UserInfo = LoginUserInfo();
 
+  const [isLocationList, setIsLocationList] = useState(true);//when true show location list otherwise show edit
+  const [LocationId, setLocationId] = useState("");
+  const [LocationName, setLocationName] = useState("");
+
+  const [isContactInfoList, setIsContactInfoList] = useState(true);//when true show contact list otherwise show edit
+
   const [FactoryGroupList, setFactoryGroupList] = useState(null);
   const [currFactoryGroupId, setCurrFactoryGroupId] = useState(null);
 
-  // const [DepartmentList, setDepartmentList] = useState(null);
-  // const [BusinessLineList, setBusinessLineList] = useState(null);
-  // const [currDepartmentId, setCurrDepartmentId] = useState(null);
-  // const [currBusinessLineId, setCurrBusinessLineId] = useState(null);
-
-  // const [TeamList, setTeamList] = useState(null);
-  // const [currTeamId, setCurrTeamId] = useState(null);
-
-  // const [UserList, setUserList] = useState(null);
-  // const [currLinemanUserId, setCurrLinemanUserId] = useState(null);
-
-  // const [RoleList, setRoleList] = useState(null);
-  // const [currRoleId, setCurrRoleId] = useState(null);
+  // const { isLoading, data: dataList, error, ExecuteQuery } = ExecuteQueryHook(); //Fetch data
 
   const baseUrl = process.env.REACT_APP_FRONT_URL;
   const [previewImage, setPreviewImage] = useState(
@@ -46,10 +46,6 @@ const FactoryAddEditModal = (props) => {
 
   React.useEffect(() => {
     getFactoryGroupList(props.currentRow.FactoryGroupId);
-    // getRole(props.currentRow.RoleId);
-    // getDepartment(props.currentRow.DepartmentId);
-    // getTeam(props.currentRow.TeamId);
-    // getUser(props.currentRow.LinemanUserId);
   }, []);
 
   function getFactoryGroupList(selectFactoryGroupId) {
@@ -69,83 +65,6 @@ const FactoryAddEditModal = (props) => {
       setCurrFactoryGroupId(selectFactoryGroupId);
     });
   }
-
-  // function getRole(selectRoleId) {
-  //   let params = {
-  //     action: "RoleList",
-  //     lan: language(),
-  //     UserId: UserInfo.UserId,
-  //     ClientId: UserInfo.ClientId,
-  //     BranchId: UserInfo.BranchId,
-  //   };
-
-  //   apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
-  //     setRoleList([{ id: "", name: "Select Role" }].concat(res.data.datalist));
-
-  //     setCurrRoleId(selectRoleId);
-  //   });
-  // }
-
-  // function getDepartment(selectDepartmentId) {
-  //   let params = {
-  //     action: "DepartmentList",
-  //     lan: language(),
-  //     UserId: UserInfo.UserId,
-  //     ClientId: UserInfo.ClientId,
-  //     BranchId: UserInfo.BranchId,
-  //   };
-
-  //   apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
-  //     setDepartmentList(
-  //       [{ id: "", name: "Select Department" }].concat(res.data.datalist)
-  //     );
-
-  //     setCurrDepartmentId(selectDepartmentId);
-  //   });
-  // }
-
-  // function getTeam(selectTeamId) {
-  //   let params = {
-  //     action: "TeamList",
-  //     lan: language(),
-  //     UserId: UserInfo.UserId,
-  //     ClientId: UserInfo.ClientId,
-  //     BranchId: UserInfo.BranchId,
-  //   };
-
-  //   apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
-  //     setTeamList([{ id: "", name: "Select Team" }].concat(res.data.datalist));
-
-  //     setCurrTeamId(selectTeamId);
-  //   });
-  // }
-
-  // function getUser(selectLinemanUserId) {
-  //   let params = {
-  //     action: "UserList",
-  //     lan: language(),
-  //     UserId: UserInfo.UserId,
-  //     ClientId: UserInfo.ClientId,
-  //     BranchId: UserInfo.BranchId,
-  //   };
-
-  //   apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
-  //     setUserList([{ id: "", name: "Select User" }].concat(res.data.datalist));
-
-  //     setCurrLinemanUserId(selectLinemanUserId);
-  //   });
-  // }
-
-  /*  const handleChange = (e) => {
-    const { name, value } = e.target;
-    let data = { ...currentRow };
-    data[name] = value;
-    setCurrentRow(data);
-    // console.log('aaa data: ', data);
-
-    setErrorObject({ ...errorObject, [name]: null });
-
-  }; */
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -216,6 +135,219 @@ const FactoryAddEditModal = (props) => {
     // console.log("props modal: ", props);
     props.modalCallback("close");
   }
+
+  const columnListLocation = [
+    { field: "rownumber", label: "SL", align: "center", width: "3%" },
+    {
+      field: "Location",
+      label: "Location",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+    },
+
+    {
+      field: "custom",
+      label: "Action",
+      width: "4%",
+      align: "center",
+      visible: true,
+      sort: false,
+      filter: false,
+    },
+  ];
+
+  /** Action from table row buttons*/
+  function actioncontrollocation(rowData) {
+    return (
+      <>
+        <Edit
+          className={"table-edit-icon"}
+          onClick={() => {
+            editDataLocation(rowData);
+          }}
+        />
+
+        <DeleteOutline
+          className={"table-delete-icon"}
+          onClick={() => {
+            deleteDataLocation(rowData);
+          }}
+        />
+      </>
+    );
+  }
+
+  const editDataLocation = (rowData) => {
+    console.log('rowData: ', rowData);
+    // setLocationId(value);
+    // setLocationName(value);
+
+    setIsLocationList(false);
+    // setCurrentRow(rowData);
+  };
+
+  const handleChangeLocation = (e) => {
+    const { name, value } = e.target;
+    // let data = { ...currentRow };
+    // data[name] = value;
+    setLocationName(value);
+
+    // setCurrentRow(data);
+    // setErrorObject({ ...errorObject, [name]: null });
+
+  };
+
+    const addEditLocation = (rowData) => {
+    if(LocationId){
+      //update
+    }else{
+      //add new
+    }
+      setIsLocationList(true);
+    // setCurrentRow(rowData);
+  };
+
+
+  const CloseLocationEdit = (rowData) => {
+    setIsLocationList(true);
+  };
+
+  const deleteDataLocation = (rowData) => {
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this data!",
+      icon: "warning",
+      buttons: {
+        confirm: {
+          text: "Yes",
+          value: true,
+          visible: true,
+          className: "",
+          closeModal: true,
+        },
+        cancel: {
+          text: "No",
+          value: null,
+          visible: true,
+          className: "",
+          closeModal: true,
+        },
+      },
+      dangerMode: true,
+    }).then((allowAction) => {
+      if (allowAction) {
+        // deleteApi(rowData);
+      }
+    });
+  };
+
+
+
+
+  const columnListContactInfo = [
+    { field: "rownumber", label: "SL", align: "center", width: "3%" },
+    {
+      field: "ContactPerson",
+      label: "Contact Person",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+    },
+    {
+      field: "ContactNumber",
+      label: "Contact Number",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "20%",
+    },
+    {
+      field: "Designation",
+      label: "Designation",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "20%",
+    },
+    {
+      field: "Email",
+      label: "Email",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "20%",
+    },
+    {
+      field: "custom",
+      label: "Action",
+      width: "4%",
+      align: "center",
+      visible: true,
+      sort: false,
+      filter: false,
+    },
+  ];
+
+  /** Action from table row buttons*/
+  function actioncontrolContactInfo(rowData) {
+    return (
+      <>
+        <Edit
+          className={"table-edit-icon"}
+          onClick={() => {
+            editDataContactInfo(rowData);
+          }}
+        />
+
+        <DeleteOutline
+          className={"table-delete-icon"}
+          onClick={() => {
+            deleteDataContactInfo(rowData);
+          }}
+        />
+      </>
+    );
+  }
+
+  const editDataContactInfo = (rowData) => {
+    // setCurrentRow(rowData);
+    // openModal();
+  };
+
+  const deleteDataContactInfo = (rowData) => {
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this data!",
+      icon: "warning",
+      buttons: {
+        confirm: {
+          text: "Yes",
+          value: true,
+          visible: true,
+          className: "",
+          closeModal: true,
+        },
+        cancel: {
+          text: "No",
+          value: null,
+          visible: true,
+          className: "",
+          closeModal: true,
+        },
+      },
+      dangerMode: true,
+    }).then((allowAction) => {
+      if (allowAction) {
+        // deleteApi(rowData);
+      }
+    });
+  };
 
   return (
     <>
@@ -288,32 +420,103 @@ const FactoryAddEditModal = (props) => {
             />
           </div>
 
-          {/* <div class="contactmodalBody pt-10"> */}
+          <div class="pt-10">
+            {/* <label>Contact Locations</label> */}
+            {isLocationList && (<CustomTable
+              columns={columnListLocation}
+              rows={currentRow.Locations ? currentRow.Locations : {}}
+              actioncontrol={actioncontrollocation}
+              ispagination={false}
+            />)}
 
-          {/* <label>Email</label>
-            <input
-              type="text"
-              id="Email"
-              name="Email"
-              placeholder="Enter Email"
-              // class={errorObject.Email}
-              value={currentRow.Email}
-              onChange={(e) => handleChange(e)}
-            ></input> */}
-          {/* </div> */}
-          {/* 
-          <div class="contactmodalBody pt-10">
-            <label>Address</label>
-            <input
-              type="text"
-              id="Address"
-              name="Address"
-              // class={errorObject.Address}
-              placeholder="Enter Address"
-              value={currentRow.Address}
-              onChange={(e) => handleChange(e)}
-            />
-          </div> */}
+             {!isLocationList && (<div class="contactmodalBody pt-10">
+              <label>Location *</label>
+              <input
+                type="text"
+                id="Location"
+                name="Location"
+                // class={errorObject.Location}
+                placeholder="Enter Location"
+                value={LocationName}
+                onChange={(e) => handleChangeLocation(e)}
+              />
+
+
+            <div class="modalItem">
+                <Button label={"Cancel"} class={"btnClose"} onClick={CloseLocationEdit} />
+                {LocationId && (
+                  <Button
+                    label={"Update"}
+                    class={"btnUpdate"}
+                    onClick={addEditLocation}
+                  />
+                )}
+                {!LocationId && (
+                  <Button
+                    label={"Save"}
+                    class={"btnSave"}
+                    onClick={addEditLocation}
+                  />
+                )}
+              </div>
+            </div>)}
+          </div>
+
+
+          <div class="pt-10">
+            {/* <label>Contact Information</label> */}
+            {isContactInfoList && (<CustomTable
+              columns={columnListContactInfo}
+              rows={currentRow.ContactInfo ? currentRow.ContactInfo : {}}
+              actioncontrol={actioncontrolContactInfo}
+              ispagination={false}
+            />)}
+
+             {!isContactInfoList && (<div class="contactmodalBody pt-10">
+              <label>Contact Person *</label>
+              <input
+                type="text"
+                id="ContactPerson"
+                name="ContactPerson"
+                // class={errorObject.ContactPerson}
+                placeholder="Enter Contact Person"
+                // value={currentRow.ContactPerson}
+                // onChange={(e) => handleChange(e)}
+              />
+                 <label>Contact Number *</label>
+              <input
+                type="text"
+                id="ContactNumber"
+                name="ContactNumber"
+                // class={errorObject.ContactNumber}
+                placeholder="Enter Contact Number"
+                // value={currentRow.ContactNumber}
+                // onChange={(e) => handleChange(e)}
+              />
+
+                 <label>Designation *</label>
+              <input
+                type="text"
+                id="Designation"
+                name="Designation"
+                // class={errorObject.Designation}
+                placeholder="Enter Designation"
+                // value={currentRow.Designation}
+                // onChange={(e) => handleChange(e)}
+              />
+
+                               <label>Email *</label>
+              <input
+                type="text"
+                id="Email"
+                name="Email"
+                // class={errorObject.Email}
+                placeholder="Enter Email"
+                // value={currentRow.Email}
+                // onChange={(e) => handleChange(e)}
+              />
+            </div>)}
+          </div>
 
           <div class="modalItem">
             <Button label={"Close"} class={"btnClose"} onClick={modalClose} />
