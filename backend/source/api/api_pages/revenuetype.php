@@ -26,16 +26,12 @@ switch($task){
 
 function getDataList($data){
 
-	
-	$ClientId = trim($data->ClientId); 
-	//$BranchId = trim($data->BranchId); 
 
 	try{
 		$dbh = new Db();
-		$query = "SELECT ProgramId AS id, ProgramName,TATDayType,StandardTATDay,StrategiceTATDay,t_program.TATDayTypeId,IsitMultiple
-		FROM t_program 
-		inner join t_tat_day_type on t_program.TATDayTypeId=t_tat_day_type.TATDayTypeId
-		ORDER BY `ProgramName` ASC;";		
+		$query = "SELECT RevenueTypeId AS id, RevenueTypeName,Rate
+		FROM t_revenue_type 
+		ORDER BY `RevenueTypeName` ASC;";		
 		
 		$resultdata = $dbh->query($query);
 		
@@ -64,39 +60,32 @@ function dataAddEdit($data) {
 		
 		$lan = trim($data->lan); 
 		$UserId = trim($data->UserId); 
-		// $ClientId = trim($data->ClientId); 
-		//$BranchId = trim($data->BranchId); 
 
-		$ProgramId = $data->rowData->id;
-		$ProgramName = $data->rowData->ProgramName;
-		$TATDayTypeId = $data->rowData->TATDayTypeId;
-		$StandardTATDay = $data->rowData->StandardTATDay ? $data->rowData->StandardTATDay : null;
-		$StrategiceTATDay = $data->rowData->StrategiceTATDay ? $data->rowData->StrategiceTATDay : null;
-		$IsitMultiple = $data->rowData->IsitMultiple ? $data->rowData->IsitMultiple : null;
+		$RevenueTypeId = $data->rowData->id;
+		$RevenueTypeName = $data->rowData->RevenueTypeName;
+		$Rate = $data->rowData->Rate;
 
 		try{
 
 			$dbh = new Db();
 			$aQuerys = array();
 
- 
-
-			if($ProgramId == ""){
+			if($RevenueTypeId == ""){
 				$q = new insertq();
-				$q->table = 't_program';
-				$q->columns = ['ProgramName','TATDayTypeId','StandardTATDay','StrategiceTATDay','IsitMultiple'];
-				$q->values = [$ProgramName,$TATDayTypeId,$StandardTATDay,$StrategiceTATDay,$IsitMultiple];
-				$q->pks = ['ProgramId'];
+				$q->table = 't_revenue_type';
+				$q->columns = ['RevenueTypeName','Rate'];
+				$q->values = [$RevenueTypeName,$Rate];
+				$q->pks = ['RevenueTypeId'];
 				$q->bUseInsetId = false;
 				$q->build_query();
 				$aQuerys = array($q); 
 			}else{
 				$u = new updateq();
-				$u->table = 't_program';
-				$u->columns = ['ProgramName','TATDayTypeId','StandardTATDay','StrategiceTATDay','IsitMultiple'];
-				$u->values = [$ProgramName,$TATDayTypeId,$StandardTATDay,$StrategiceTATDay,$IsitMultiple];
-				$u->pks = ['ProgramId'];
-				$u->pk_values = [$ProgramId];
+				$u->table = 't_revenue_type';
+				$u->columns = ['RevenueTypeName','Rate'];
+				$u->values = [$RevenueTypeName,$Rate];
+				$u->pks = ['RevenueTypeId'];
+				$u->pk_values = [$RevenueTypeId];
 				$u->build_query();
 				$aQuerys = array($u);
 			}
@@ -132,7 +121,7 @@ function deleteData($data) {
 		return $returnData = msg(0,422,'Please Fill in all Required Fields!',$fields);
 	}else{
 		
-		$ProgramId = $data->rowData->id;
+		$RevenueTypeId = $data->rowData->id;
 		$lan = trim($data->lan); 
 		$UserId = trim($data->UserId); 
 
@@ -141,9 +130,9 @@ function deleteData($data) {
 			$dbh = new Db();
 			
             $d = new deleteq();
-            $d->table = 't_program';
-            $d->pks = ['ProgramId'];
-            $d->pk_values = [$ProgramId];
+            $d->table = 't_revenue_type';
+            $d->pks = ['RevenueTypeId'];
+            $d->pk_values = [$RevenueTypeId];
             $d->build_query();
             $aQuerys = array($d);
 

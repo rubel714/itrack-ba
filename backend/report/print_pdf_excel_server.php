@@ -56,7 +56,9 @@ switch ($task) {
 	case "DepartmentExport":
 		DepartmentExport();
 		break;
-
+	case "RevenueTypeExport":
+		RevenueTypeExport();
+		break;
 	case "SalesPersonInputExport":
 		SalesPersonInputExport();
 		break;
@@ -163,18 +165,19 @@ function ProgramExport()
 	global $sql, $tableProperties, $TEXT, $siteTitle;
 
 
-	$sql = "SELECT `ProgramName`
+	$sql = "SELECT `ProgramName`,TATDayType,StandardTATDay,StrategiceTATDay
 	FROM t_program 
+	inner join t_tat_day_type on t_program.TATDayTypeId=t_tat_day_type.TATDayTypeId
 	ORDER BY `ProgramName`;";
 
-	$tableProperties["query_field"] = array("ProgramName");
-	$tableProperties["table_header"] = array('Program Name');
-	$tableProperties["align"] = array("left");
-	$tableProperties["width_print_pdf"] = array("100%"); //when exist serial then here total 95% and 5% use for serial
-	$tableProperties["width_excel"] = array("80");
-	$tableProperties["precision"] = array("string"); //string,date,datetime,0,1,2,3,4
-	$tableProperties["total"] = array(0); //not total=0, total=1
-	$tableProperties["color_code"] = array(0); //colorcode field = 1 not color code field = 0
+	$tableProperties["query_field"] = array("ProgramName","TATDayType","StandardTATDay","StrategiceTATDay");
+	$tableProperties["table_header"] = array('Program Name','TAT Day Type','Standard TAT Day','Strategice TAT Day');
+	$tableProperties["align"] = array("left","left","right","right");
+	$tableProperties["width_print_pdf"] = array("40%","20%","20%","20%"); //when exist serial then here total 95% and 5% use for serial
+	$tableProperties["width_excel"] = array("30","20","20","20");
+	$tableProperties["precision"] = array("string","string",0,0); //string,date,datetime,0,1,2,3,4
+	$tableProperties["total"] = array(0,0,0,0); //not total=0, total=1
+	$tableProperties["color_code"] = array(0,0,0,0); //colorcode field = 1 not color code field = 0
 	$tableProperties["header_logo"] = 0; //include header left and right logo. 0 or 1
 	$tableProperties["footer_signatory"] = 0; //include footer signatory. 0 or 1
 
@@ -458,6 +461,36 @@ function DepartmentExport()
 
 	//Report save name. Not allow any type of special character
 	$tableProperties["report_save_name"] = 'Department';
+}
+
+function RevenueTypeExport()
+{
+
+	global $sql, $tableProperties, $TEXT, $siteTitle;
+	$ClientId = $_REQUEST['ClientId'];
+
+	$sql = "SELECT `RevenueTypeName`,Rate
+	FROM t_revenue_type 
+	ORDER BY `RevenueTypeName`;";
+
+	$tableProperties["query_field"] = array("RevenueTypeName","Rate");
+	$tableProperties["table_header"] = array('Revenue Type','Rate');
+	$tableProperties["align"] = array("left","right");
+	$tableProperties["width_print_pdf"] = array("60%","40%"); //when exist serial then here total 95% and 5% use for serial
+	$tableProperties["width_excel"] = array("30","25");
+	$tableProperties["precision"] = array("string",2); //string,date,datetime,0,1,2,3,4
+	$tableProperties["total"] = array(0,0); //not total=0, total=1
+	$tableProperties["color_code"] = array(0,0); //colorcode field = 1 not color code field = 0
+	$tableProperties["header_logo"] = 0; //include header left and right logo. 0 or 1
+	$tableProperties["footer_signatory"] = 0; //include footer signatory. 0 or 1
+
+	//Report header list
+	$tableProperties["header_list"][0] = $siteTitle;
+	$tableProperties["header_list"][1] = 'Revenue Type';
+	// $tableProperties["header_list"][1] = 'Heading 2';
+
+	//Report save name. Not allow any type of special character
+	$tableProperties["report_save_name"] = 'RevenueType';
 }
 
 

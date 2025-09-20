@@ -27,6 +27,7 @@ import FactoryGroups from "views/screens/factorygroups/index.js";
 import Factory from "views/screens/factory/index.js";
 import AuditStage from "views/screens/auditstage/index.js";
 import LeadStatus from "views/screens/leadstatus/index.js";
+import RevenueType from "views/screens/revenuetype/index.js";
 
 import Designation from "views/screens/designation/index.js";
 
@@ -86,6 +87,7 @@ ReactDOM.render(
             <Route path="/factory" render={(props) => <Factory {...props} />} />
             <Route path="/auditstage" render={(props) => <AuditStage {...props} />} />
             <Route path="/leadstatus" render={(props) => <LeadStatus {...props} />} />
+            <Route path="/revenuetype" render={(props) => <RevenueType {...props} />} />
 
 
             <Route path="/designation" render={(props) => <Designation {...props} />} />

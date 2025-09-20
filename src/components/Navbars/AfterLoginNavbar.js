@@ -180,7 +180,16 @@ function AfterLoginNavbar(props) {
                         </a>
                       </li>
                     )}
-
+                    {menuShowPermision("revenuetype") === 1 && (
+                      <li>
+                        <a
+                          href="javascript:void(0)"
+                          onClick={() => props.history.push("revenuetype")}
+                        >
+                          Revenue Type
+                        </a>
+                      </li>
+                    )}
                     {menuShowPermision("designation") === 1 && (
                       <li>
                         <a

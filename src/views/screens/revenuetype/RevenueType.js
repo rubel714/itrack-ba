@@ -7,10 +7,10 @@ import CustomTable from "components/CustomTable/CustomTable";
 import { apiCall, apiOption, LoginUserInfo, language } from "../../../actions/api";
 import ExecuteQueryHook from "../../../components/hooks/ExecuteQueryHook";
 
-import ProgramsAddEditModal from "./ProgramsAddEditModal";
+import RevenueTypeAddEditModal from "./RevenueTypeAddEditModal";
 
-const Programs = (props) => {
-  const serverpage = "programs"; // this is .php server page
+const RevenueType = (props) => {
+  const serverpage = "revenuetype"; // this is .php server page
 
   const permissionType = props.permissionType;
   const { useState } = React;
@@ -29,10 +29,8 @@ const Programs = (props) => {
 
     window.open(
       finalUrl +
-      "?action=ProgramExport" +
+      "?action=RevenueTypeExport" +
       "&reportType=excel" +
-      "&ClientId=" + UserInfo.ClientId +
-      "&BranchId=" + UserInfo.BranchId +
       "&TimeStamp=" +
       Date.now()
     );
@@ -42,49 +40,23 @@ const Programs = (props) => {
 
   const columnList = [
     { field: "rownumber", label: "SL", align: "center", width: "5%" },
+    // { field: 'SL', label: 'SL',width:'10%',align:'center',visible:true,sort:false,filter:false },
     {
-      field: "ProgramName",
-      label: "Program mName",
+      field: "RevenueTypeName",
+      label: "Revenue Type",
       align: "left",
       visible: true,
       sort: true,
       filter: true,
     },
         {
-      field: "TATDayType",
-      label: "TAT Day Type",
+      field: "Rate",
+      label: "Rate",
       align: "left",
       visible: true,
       sort: true,
       filter: true,
-       width: "20%",
-    },
-        {
-      field: "StandardTATDay",
-      label: "Standard TAT Day",
-      align: "right",
-      visible: true,
-      sort: true,
-      filter: true,
-       width: "20%",
-    },
-        {
-      field: "StrategiceTATDay",
-      label: "Strategice TAT Day",
-      align: "right",
-      visible: true,
-      sort: true,
-      filter: true,
-       width: "20%",
-    },
-        {
-      field: "IsitMultiple",
-      label: "Is it Multiple",
-      align: "left",
-      visible: true,
-      sort: true,
-      filter: true,
-       width: "10%",
+      width: "25%"
     },
     // {
     //   field: "IsActiveName",
@@ -120,7 +92,7 @@ const Programs = (props) => {
     let params = {
       action: "getDataList",
       lan: language(),
-      UserId: UserInfo.UserId, 
+      UserId: UserInfo.UserId,
     };
     // console.log('LoginUserInfo params: ', params);
 
@@ -154,11 +126,8 @@ const Programs = (props) => {
 
     setCurrentRow({
       id: "",
-      ProgramName: "",
-      TATDayTypeId: "",
-      StandardTATDay: "",
-      StrategiceTATDay: "",
-      IsitMultiple: "",
+      RevenueTypeName: "",
+      Rate: "",
     });
     openModal();
   };
@@ -174,8 +143,11 @@ const Programs = (props) => {
   }
 
   function modalCallback(response) {
+    //response = close, addedit
+    // console.log('response: ', response);
     getDataList();
     setShowModal(false); //true=modal show, false=modal hide
+
   }
 
   const deleteData = (rowData) => {
@@ -215,13 +187,12 @@ const Programs = (props) => {
       action: "deleteData",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       rowData: rowData,
     };
 
+    // apiCall.post("productgroup", { params }, apiOption()).then((res) => {
     apiCall.post(serverpage, { params }, apiOption()).then((res) => {
-      console.log('res: ', res);
+     // console.log('res: ', res);
       props.openNoticeModal({
         isOpen: true,
         msg: res.data.message,
@@ -239,7 +210,7 @@ const Programs = (props) => {
         {/* <!-- ######-----TOP HEADER-----####### --> */}
         <div class="topHeader">
           <h4>
-            <a href="#">Home</a> ❯ Basic Setup ❯ Programs
+            <a href="#">Home</a> ❯ Basic Setup ❯ Revenue Type
           </h4>
         </div>
 
@@ -252,8 +223,8 @@ const Programs = (props) => {
         </div>
 
         {/* <!-- ####---THIS CLASS IS USE FOR TABLE GRID PRODUCT INFORMATION---####s --> */}
-        {/* <div class="subContainer">
-          <div className="App tableHeight"> */}
+        {/* <div class="subContainer tableHeight">
+          <div className="App"> */}
             <CustomTable
               columns={columnList}
               rows={dataList ? dataList : {}}
@@ -265,11 +236,11 @@ const Programs = (props) => {
       {/* <!-- BODY CONTAINER END --> */}
 
 
-      {showModal && (<ProgramsAddEditModal masterProps={props} currentRow={currentRow} modalCallback={modalCallback} />)}
+      {showModal && (<RevenueTypeAddEditModal masterProps={props} currentRow={currentRow} modalCallback={modalCallback} />)}
 
 
     </>
   );
 };
 
-export default Programs;
+export default RevenueType;
