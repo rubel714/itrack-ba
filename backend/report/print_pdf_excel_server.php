@@ -56,6 +56,9 @@ switch ($task) {
 	case "DepartmentExport":
 		DepartmentExport();
 		break;
+	case "HoliDyExport":
+		HoliDyExport();
+		break;
 	case "RevenueTypeExport":
 		RevenueTypeExport();
 		break;
@@ -90,7 +93,7 @@ function UserExport()
 
 	global $sql, $tableProperties, $TEXT, $siteTitle;
 
-	
+
 	$sql = "SELECT a.`UserName`, a.Address,h.OfficeName,e.DepartmentName, b.DesignationName,i.UserZoneName,
 	f.GenderName,a.PhoneNo,d.RoleName, a.NID, a.LoginName, a.`Email`,a.UserCode,
 	CASE WHEN a.IsActive=1 THEN 'Yes' ELSE 'No' END IsActiveName
@@ -104,12 +107,12 @@ function UserExport()
 	INNER JOIN `t_user_zone` i ON a.`UserZoneId` = i.`UserZoneId`
 	ORDER BY a.`UserName` ASC;";
 
-	
 
 
 
-	$tableProperties["query_field"] = array("UserName", "Address", "OfficeName", "DepartmentName", "DesignationName", "UserZoneName", "GenderName", "PhoneNo", "RoleName", "NID", "LoginName", "Email","UserCode","IsActiveName");
-	$tableProperties["table_header"] = array('Full Name', 'Address', 'Office', 'Department', 'Designation', 'User Zone', 'Gender', "Phone", "Role", "NID", "Login Name", 'Email','Employee Id','Status');
+
+	$tableProperties["query_field"] = array("UserName", "Address", "OfficeName", "DepartmentName", "DesignationName", "UserZoneName", "GenderName", "PhoneNo", "RoleName", "NID", "LoginName", "Email", "UserCode", "IsActiveName");
+	$tableProperties["table_header"] = array('Full Name', 'Address', 'Office', 'Department', 'Designation', 'User Zone', 'Gender', "Phone", "Role", "NID", "Login Name", 'Email', 'Employee Id', 'Status');
 	$tableProperties["align"] = array("left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left");
 	$tableProperties["width_print_pdf"] = array("15%", "30%",  "20%", "20%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%"); //when exist serial then here total 95% and 5% use for serial
 	$tableProperties["width_excel"] = array("15", "30", "20", "20", "20", "20", "15", "15",  "15", "15", "15", "18", "15", "10");
@@ -170,14 +173,14 @@ function ProgramExport()
 	inner join t_tat_day_type on t_program.TATDayTypeId=t_tat_day_type.TATDayTypeId
 	ORDER BY `ProgramName`;";
 
-	$tableProperties["query_field"] = array("ProgramName","TATDayType","StandardTATDay","StrategiceTATDay");
-	$tableProperties["table_header"] = array('Program Name','TAT Day Type','Standard TAT Day','Strategice TAT Day');
-	$tableProperties["align"] = array("left","left","right","right");
-	$tableProperties["width_print_pdf"] = array("40%","20%","20%","20%"); //when exist serial then here total 95% and 5% use for serial
-	$tableProperties["width_excel"] = array("30","20","20","20");
-	$tableProperties["precision"] = array("string","string",0,0); //string,date,datetime,0,1,2,3,4
-	$tableProperties["total"] = array(0,0,0,0); //not total=0, total=1
-	$tableProperties["color_code"] = array(0,0,0,0); //colorcode field = 1 not color code field = 0
+	$tableProperties["query_field"] = array("ProgramName", "TATDayType", "StandardTATDay", "StrategiceTATDay");
+	$tableProperties["table_header"] = array('Program Name', 'TAT Day Type', 'Standard TAT Day', 'Strategice TAT Day');
+	$tableProperties["align"] = array("left", "left", "right", "right");
+	$tableProperties["width_print_pdf"] = array("40%", "20%", "20%", "20%"); //when exist serial then here total 95% and 5% use for serial
+	$tableProperties["width_excel"] = array("30", "20", "20", "20");
+	$tableProperties["precision"] = array("string", "string", 0, 0); //string,date,datetime,0,1,2,3,4
+	$tableProperties["total"] = array(0, 0, 0, 0); //not total=0, total=1
+	$tableProperties["color_code"] = array(0, 0, 0, 0); //colorcode field = 1 not color code field = 0
 	$tableProperties["header_logo"] = 0; //include header left and right logo. 0 or 1
 	$tableProperties["footer_signatory"] = 0; //include footer signatory. 0 or 1
 
@@ -231,8 +234,8 @@ function FactoryExport()
 		ORDER BY a.`FactoryName` ASC;";
 
 
-	$tableProperties["query_field"] = array("FactoryName", "FactoryCode","FactoryGroupName");
-	$tableProperties["table_header"] = array('Factory Name', 'Factory Code','Factory Group');
+	$tableProperties["query_field"] = array("FactoryName", "FactoryCode", "FactoryGroupName");
+	$tableProperties["table_header"] = array('Factory Name', 'Factory Code', 'Factory Group');
 	$tableProperties["align"] = array("left", "left", "left");
 	$tableProperties["width_print_pdf"] = array("15%", "15%", "15%"); //when exist serial then here total 95% and 5% use for serial
 	$tableProperties["width_excel"] = array("25", "20", "20");
@@ -346,30 +349,30 @@ function MemberExport()
 {
 
 	global $sql, $tableProperties, $TEXT, $siteTitle;
-	// $ClientId = $_REQUEST['ClientId'];
 
-	$sql = "SELECT `MemberCode`,MemberName,PhoneNo,Email,Address
+	$sql = "SELECT `MemberCode`,MemberName,DepartmentName,PhoneNo,Email,Address
 	FROM t_member 
+	inner join t_department on t_department.DepartmentId=t_member.DepartmentId
 	ORDER BY `MemberCode`;";
 
-	$tableProperties["query_field"] = array("MemberCode", "MemberName", "PhoneNo", "Email", "Address");
-	$tableProperties["table_header"] = array('Member Code', 'Member Name', 'PhoneNo', 'Email', 'Address');
-	$tableProperties["align"] = array("left", "left", "left", "left", "left");
-	$tableProperties["width_print_pdf"] = array("10%", "20%", "15%", "15%", "40%"); //when exist serial then here total 95% and 5% use for serial
-	$tableProperties["width_excel"] = array("15", "25", "15", "15", "30");
-	$tableProperties["precision"] = array("string", "string", "string", "string", "string"); //string,date,datetime,0,1,2,3,4
-	$tableProperties["total"] = array(0, 0, 0, 0, 0); //not total=0, total=1
-	$tableProperties["color_code"] = array(0, 0, 0, 0, 0); //colorcode field = 1 not color code field = 0
+	$tableProperties["query_field"] = array("MemberCode", "MemberName", "DepartmentName", "PhoneNo", "Email", "Address");
+	$tableProperties["table_header"] = array('Member Code', 'Member Name', 'Department', 'PhoneNo', 'Email', 'Address');
+	$tableProperties["align"] = array("left", "left", "left", "left", "left", "left");
+	$tableProperties["width_print_pdf"] = array("10%", "20%", "20%", "15%", "15%", "40%"); //when exist serial then here total 95% and 5% use for serial
+	$tableProperties["width_excel"] = array("15", "25", "25", "15", "15", "30");
+	$tableProperties["precision"] = array("string", "string",  "string", "string", "string", "string"); //string,date,datetime,0,1,2,3,4
+	$tableProperties["total"] = array(0, 0, 0, 0, 0, 0); //not total=0, total=1
+	$tableProperties["color_code"] = array(0, 0, 0, 0, 0, 0); //colorcode field = 1 not color code field = 0
 	$tableProperties["header_logo"] = 0; //include header left and right logo. 0 or 1
 	$tableProperties["footer_signatory"] = 0; //include footer signatory. 0 or 1
 
 	//Report header list
 	$tableProperties["header_list"][0] = $siteTitle;
-	$tableProperties["header_list"][1] = 'Members';
+	$tableProperties["header_list"][1] = 'Employee';
 	// $tableProperties["header_list"][1] = 'Heading 2';
 
 	//Report save name. Not allow any type of special character
-	$tableProperties["report_save_name"] = 'Members';
+	$tableProperties["report_save_name"] = 'Employee';
 }
 
 
@@ -383,14 +386,14 @@ function BuyerExport()
 	FROM t_buyer 
 	ORDER BY `BuyerName`;";
 
-	$tableProperties["query_field"] = array('BuyerName', 'ClientType', 'Country', 'SunCode','EbitzCode', 'ItsCode', 'RegisterNo', 'CustomerCode');
-	$tableProperties["table_header"] = array('Buyer Name', 'Client Type', 'Country', 'Sun Code','Ebitz Code', 'ITS Code', 'Register No', 'Customer Code');
-	$tableProperties["align"] = array("left", "left", "left", "left","left", "left", "left", "left");
-	$tableProperties["width_print_pdf"] = array("10%", "10%", "10%", "10%","10%", "10%", "10%",  "10%"); //when exist serial then here total 95% and 5% use for serial
-	$tableProperties["width_excel"] = array("25", "15", "18", "15","15", "15", "20", "20");
-	$tableProperties["precision"] = array("string", "string", "string", "string","string", "string", "string", "string"); //string,date,datetime,0,1,2,3,4
-	$tableProperties["total"] = array(0, 0, 0, 0,0, 0, 0, 0); //not total=0, total=1
-	$tableProperties["color_code"] = array(0, 0, 0, 0,0, 0, 0, 0); //colorcode field = 1 not color code field = 0
+	$tableProperties["query_field"] = array('BuyerName', 'ClientType', 'Country', 'SunCode', 'EbitzCode', 'ItsCode', 'RegisterNo', 'CustomerCode');
+	$tableProperties["table_header"] = array('Buyer Name', 'Client Type', 'Country', 'Sun Code', 'Ebitz Code', 'ITS Code', 'Register No', 'Customer Code');
+	$tableProperties["align"] = array("left", "left", "left", "left", "left", "left", "left", "left");
+	$tableProperties["width_print_pdf"] = array("10%", "10%", "10%", "10%", "10%", "10%", "10%",  "10%"); //when exist serial then here total 95% and 5% use for serial
+	$tableProperties["width_excel"] = array("25", "15", "18", "15", "15", "15", "20", "20");
+	$tableProperties["precision"] = array("string", "string", "string", "string", "string", "string", "string", "string"); //string,date,datetime,0,1,2,3,4
+	$tableProperties["total"] = array(0, 0, 0, 0, 0, 0, 0, 0); //not total=0, total=1
+	$tableProperties["color_code"] = array(0, 0, 0, 0, 0, 0, 0, 0); //colorcode field = 1 not color code field = 0
 	$tableProperties["header_logo"] = 0; //include header left and right logo. 0 or 1
 	$tableProperties["footer_signatory"] = 0; //include footer signatory. 0 or 1
 
@@ -413,7 +416,7 @@ function AuditorExport()
 	FROM t_auditor 
 	ORDER BY `AuditorCode`;";
 
-	$tableProperties["query_field"] = array("AuditorCode", "AuditorName",  "Email", "PhoneNo","Address");
+	$tableProperties["query_field"] = array("AuditorCode", "AuditorName",  "Email", "PhoneNo", "Address");
 	$tableProperties["table_header"] = array('Emp Id', 'Name', 'Email', 'PhoneNo', 'Address');
 	$tableProperties["align"] = array("left", "left", "left", "left", "left");
 	$tableProperties["width_print_pdf"] = array("10%", "20%", "15%", "15%", "40%"); //when exist serial then here total 95% and 5% use for serial
@@ -463,6 +466,35 @@ function DepartmentExport()
 	$tableProperties["report_save_name"] = 'Department';
 }
 
+function HoliDyExport()
+{
+
+	global $sql, $tableProperties, $TEXT, $siteTitle;
+
+	$sql = "SELECT `HoliDate`, Year(HoliDate) YearName, DATE_FORMAT(HoliDate, '%M') MonthName, DATE_FORMAT(HoliDate, '%W') DayName
+	FROM t_holiday 
+	ORDER BY `HoliDate` DESC;";
+
+	$tableProperties["query_field"] = array("HoliDate","YearName","MonthName","DayName");
+	$tableProperties["table_header"] = array('Holidate', 'Year', 'Month', 'Day');
+	$tableProperties["align"] = array("left", "left", "left", "left");
+	$tableProperties["width_print_pdf"] = array("30%","20%","20%","20%"); //when exist serial then here total 95% and 5% use for serial
+	$tableProperties["width_excel"] = array("20", "15", "20", "20");
+	$tableProperties["precision"] = array("string","string","string","string"); //string,date,datetime,0,1,2,3,4
+	$tableProperties["total"] = array(0,0,0,0); //not total=0, total=1
+	$tableProperties["color_code"] = array(0,0,0,0); //colorcode field = 1 not color code field = 0
+	$tableProperties["header_logo"] = 0; //include header left and right logo. 0 or 1
+	$tableProperties["footer_signatory"] = 0; //include footer signatory. 0 or 1
+
+	//Report header list
+	$tableProperties["header_list"][0] = $siteTitle;
+	$tableProperties["header_list"][1] = 'Holidays';
+	// $tableProperties["header_list"][1] = 'Heading 2';
+
+	//Report save name. Not allow any type of special character
+	$tableProperties["report_save_name"] = 'Holidays';
+}
+
 function RevenueTypeExport()
 {
 
@@ -473,14 +505,14 @@ function RevenueTypeExport()
 	FROM t_revenue_type 
 	ORDER BY `RevenueTypeName`;";
 
-	$tableProperties["query_field"] = array("RevenueTypeName","Rate");
-	$tableProperties["table_header"] = array('Revenue Type','Rate');
-	$tableProperties["align"] = array("left","right");
-	$tableProperties["width_print_pdf"] = array("60%","40%"); //when exist serial then here total 95% and 5% use for serial
-	$tableProperties["width_excel"] = array("30","25");
-	$tableProperties["precision"] = array("string",2); //string,date,datetime,0,1,2,3,4
-	$tableProperties["total"] = array(0,0); //not total=0, total=1
-	$tableProperties["color_code"] = array(0,0); //colorcode field = 1 not color code field = 0
+	$tableProperties["query_field"] = array("RevenueTypeName", "Rate");
+	$tableProperties["table_header"] = array('Revenue Type', 'Rate');
+	$tableProperties["align"] = array("left", "right");
+	$tableProperties["width_print_pdf"] = array("60%", "40%"); //when exist serial then here total 95% and 5% use for serial
+	$tableProperties["width_excel"] = array("30", "25");
+	$tableProperties["precision"] = array("string", 2); //string,date,datetime,0,1,2,3,4
+	$tableProperties["total"] = array(0, 0); //not total=0, total=1
+	$tableProperties["color_code"] = array(0, 0); //colorcode field = 1 not color code field = 0
 	$tableProperties["header_logo"] = 0; //include header left and right logo. 0 or 1
 	$tableProperties["footer_signatory"] = 0; //include footer signatory. 0 or 1
 

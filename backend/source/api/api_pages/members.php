@@ -27,14 +27,12 @@ switch ($task) {
 function getDataList($data)
 {
 
-
-	$ClientId = trim($data->ClientId);
-	//$BranchId = trim($data->BranchId); 
-
 	try {
 		$dbh = new Db();
-		$query = "SELECT MemberId AS id, MemberCode,MemberName,Email,Address,PhoneNo,IsActive
+		$query = "SELECT MemberId AS id, MemberCode,MemberName,Email,Address,PhoneNo,IsActive,
+		t_member.DepartmentId, t_department.DepartmentName
 		FROM t_member 
+		Inner Join t_department on t_department.DepartmentId=t_member.DepartmentId
 		ORDER BY `MemberCode` ASC;";
 
 		$resultdata = $dbh->query($query);
@@ -61,7 +59,6 @@ function dataAddEdit($data)
 		return $returnData = msg(0, 404, 'Page Not Found!');
 	} else {
 
-
 		$lan = trim($data->lan);
 		$UserId = trim($data->UserId);
 		// $ClientId = trim($data->ClientId); 
@@ -70,12 +67,11 @@ function dataAddEdit($data)
 		$MemberId = $data->rowData->id;
 		$MemberCode = $data->rowData->MemberCode;
 		$MemberName = $data->rowData->MemberName;
-		$Email = $data->rowData->Email;
-		$Address = $data->rowData->Address;
+		$Email = $data->rowData->Email?$data->rowData->Email:null;
+		$Address = $data->rowData->Address?$data->rowData->Address:null;
 		$PhoneNo = $data->rowData->PhoneNo;
+		$DepartmentId = $data->rowData->DepartmentId;
 		$IsActive = 1; // $data->rowData->IsActive;
-
-
 
 		try {
 
@@ -89,17 +85,17 @@ function dataAddEdit($data)
 
 				$q = new insertq();
 				$q->table = 't_member';
-				$q->columns = ['MemberCode', 'MemberName', 'Email', 'Address', 'PhoneNo', 'IsActive'];
-				$q->values = [$MemberCode, $MemberName, $Email, $Address, $PhoneNo, $IsActive];
-				$q->pks = ['CheckId'];
+				$q->columns = ['MemberCode', 'MemberName','DepartmentId', 'Email', 'Address', 'PhoneNo', 'IsActive'];
+				$q->values = [$MemberCode, $MemberName,$DepartmentId, $Email, $Address, $PhoneNo, $IsActive];
+				$q->pks = ['MemberId'];
 				$q->bUseInsetId = false;
 				$q->build_query();
 				$aQuerys = array($q);
 			} else {
 				$u = new updateq();
 				$u->table = 't_member';
-				$u->columns = ['MemberCode', 'MemberName', 'Email', 'Address', 'PhoneNo', 'IsActive'];
-				$u->values = [$MemberCode, $MemberName, $Email, $Address, $PhoneNo, $IsActive];
+				$u->columns = ['MemberCode', 'MemberName','DepartmentId', 'Email', 'Address', 'PhoneNo', 'IsActive'];
+				$u->values = [$MemberCode, $MemberName,$DepartmentId, $Email, $Address, $PhoneNo, $IsActive];
 				$u->pks = ['MemberId'];
 				$u->pk_values = [$MemberId];
 				$u->build_query();
@@ -143,7 +139,7 @@ function deleteData($data)
 
 		try {
 
-			$dbh = new Db();
+			// $dbh = new Db();
 
 			$d = new deleteq();
 			$d->table = 't_member';

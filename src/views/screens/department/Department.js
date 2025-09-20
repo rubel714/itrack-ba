@@ -209,7 +209,7 @@ const Department = (props) => {
         {/* <!-- ######-----TOP HEADER-----####### --> */}
         <div class="topHeader">
           <h4>
-            <a href="#">Home</a> ❯ Basic Setup > Department
+            <a href="#">Home</a> ❯ Basic Setup ❯ Department
           </h4>
         </div>
 

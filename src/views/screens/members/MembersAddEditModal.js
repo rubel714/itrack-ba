@@ -6,6 +6,8 @@ import {
   LoginUserInfo,
   language,
 } from "../../../actions/api";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import { Typography, TextField } from "@material-ui/core";
 
 const MembersAddEditModal = (props) => {
   // console.log('props modal: ', props);
@@ -13,6 +15,33 @@ const MembersAddEditModal = (props) => {
   const [currentRow, setCurrentRow] = useState(props.currentRow);
   const [errorObject, setErrorObject] = useState({});
   const UserInfo = LoginUserInfo();
+
+  const [DepartmentList, setDepartmentList] = useState(null);
+  const [currDepartmentId, setCurrDepartmentId] = useState(null);
+
+
+  
+    React.useEffect(() => {
+      getDepartmentList(props.currentRow.DepartmentId);
+    }, []);
+  
+    function getDepartmentList(selectDepartmentId) {
+      let params = {
+        action: "DepartmentList",
+        lan: language(),
+        UserId: UserInfo.UserId,
+      };
+  
+      apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+        setDepartmentList(
+          [{ id: "", name: "Select Department" }].concat(res.data.datalist)
+        );
+  
+        setCurrDepartmentId(selectDepartmentId);
+      });
+    }
+  
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,7 +53,7 @@ const MembersAddEditModal = (props) => {
   };
 
   const validateForm = () => {
-    let validateFields = ["MemberName","PhoneNo"];
+    let validateFields = ["MemberName","PhoneNo","DepartmentId"];
     let errorData = {};
     let isValid = true;
     validateFields.map((field) => {
@@ -70,6 +99,19 @@ const MembersAddEditModal = (props) => {
     props.modalCallback("close");
   }
 
+  
+  const handleChangeFilterDropDown = (name, value) => {
+    let data = { ...currentRow };
+
+    if (name === "DepartmentId") {
+      data["DepartmentId"] = value;
+      setCurrDepartmentId(value);
+    }
+
+    setErrorObject({ ...errorObject, [name]: null });
+    setCurrentRow(data);
+  };
+
   return (
     <>
       {/* <!-- GROUP MODAL START --> */}
@@ -77,33 +119,71 @@ const MembersAddEditModal = (props) => {
         {/* <!-- Modal content --> */}
         <div class="modal-content">
           <div class="modalHeader">
-            <h4>Add/Edit Member</h4>
+            <h4>Add/Edit Employee</h4>
           </div>
 
           <div class="modalItem">
-            <label>Member Code</label>
+            <label>Code</label>
             <input
               type="text"
               id="MemberCode"
               name="MemberCode"
               // class={errorObject.MemberCode}
-              placeholder="Enter Member Code"
+              placeholder="Enter Code"
               value={currentRow.MemberCode}
               onChange={(e) => handleChange(e)}
             />
           </div>
 
           <div class="modalItem">
-            <label>Member Name *</label>
+            <label>Name *</label>
             <input
               type="text"
               id="MemberName"
               name="MemberName"
               class={errorObject.MemberName}
-              placeholder="Enter Member Name"
+              placeholder="Enter Name"
               value={currentRow.MemberName}
               onChange={(e) => handleChange(e)}
             />
+          </div>
+          <div class="modalItem">
+            <label>Department *</label>
+                       <Autocomplete
+                         autoHighlight
+                         disableClearable
+                         className="chosen_dropdown"
+                         id="DepartmentId"
+                         name="DepartmentId"
+                         autoComplete
+                         class={errorObject.DepartmentId}
+                         options={DepartmentList ? DepartmentList : []}
+                         getOptionLabel={(option) => option.name}
+                         defaultValue={{ id: 0, name: "Select Department" }}
+                         value={
+                           DepartmentList
+                             ? DepartmentList[
+                                 DepartmentList.findIndex(
+                                   (list) => list.id === currDepartmentId
+                                 )
+                               ]
+                             : null
+                         }
+                         onChange={(event, valueobj) =>
+                           handleChangeFilterDropDown(
+                             "DepartmentId",
+                             valueobj ? valueobj.id : ""
+                           )
+                         }
+                         renderOption={(option) => (
+                           <Typography className="chosen_dropdown_font">
+                             {option.name}
+                           </Typography>
+                         )}
+                         renderInput={(params) => (
+                           <TextField {...params} variant="standard" fullWidth />
+                         )}
+                       />
           </div>
 
          <div class="modalItem">

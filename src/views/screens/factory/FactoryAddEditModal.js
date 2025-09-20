@@ -59,8 +59,6 @@ const FactoryAddEditModal = (props) => {
       action: "FactoryGroupList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
     };
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {

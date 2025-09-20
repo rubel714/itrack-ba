@@ -4,18 +4,13 @@ import { DeleteOutline, Edit } from "@material-ui/icons";
 import { Button } from "../../../components/CustomControl/Button";
 
 import CustomTable from "components/CustomTable/CustomTable";
-import {
-  apiCall,
-  apiOption,
-  LoginUserInfo,
-  language,
-} from "../../../actions/api";
+import { apiCall, apiOption, LoginUserInfo, language } from "../../../actions/api";
 import ExecuteQueryHook from "../../../components/hooks/ExecuteQueryHook";
 
-import MembersAddEditModal from "./MembersAddEditModal";
+import HolidayAddEditModal from "./HolidayAddEditModal";
 
-const Members = (props) => {
-  const serverpage = "members"; // this is .php server page
+const Holiday = (props) => {
+  const serverpage = "holiday"; // this is .php server page
 
   const permissionType = props.permissionType;
   const { useState } = React;
@@ -34,73 +29,52 @@ const Members = (props) => {
 
     window.open(
       finalUrl +
-        "?action=MemberExport" +
-        "&reportType=excel" +
-        "&ClientId=" +
-        UserInfo.ClientId +
-        "&BranchId=" +
-        UserInfo.BranchId +
-        "&TimeStamp=" +
-        Date.now()
+      "?action=HoliDyExport" +
+      "&reportType=excel" +
+      "&ClientId=" + UserInfo.ClientId +
+      "&BranchId=" + UserInfo.BranchId +
+      "&TimeStamp=" +
+      Date.now()
     );
   };
   /* =====End of Excel Export Code==== */
+
 
   const columnList = [
     { field: "rownumber", label: "SL", align: "center", width: "5%" },
     // { field: 'SL', label: 'SL',width:'10%',align:'center',visible:true,sort:false,filter:false },
     {
-      field: "MemberCode",
-      label: "Code",
-      align: "left",
-      visible: true,
-      sort: true,
-      filter: true,
-    },
-
-    {
-      field: "MemberName",
-      label: "Name",
+      field: "HoliDate",
+      label: "Holidate",
       align: "left",
       visible: true,
       sort: true,
       filter: true,
     },
     {
-      field: "PhoneNo",
-      label: "PhoneNo",
+      field: "YearName",
+      label: "Year",
       align: "left",
       visible: true,
       sort: true,
       filter: true,
     },
     {
-      field: "Email",
-      label: "Email",
+      field: "MonthName",
+      label: "Month",
       align: "left",
       visible: true,
       sort: true,
       filter: true,
     },
-    {
-      field: "Address",
-      label: "Address",
+        {
+      field: "DayName",
+      label: "Day",
       align: "left",
       visible: true,
       sort: true,
       filter: true,
     },
-
-
-    // {
-    //   field: "IsActiveName",
-    //   label: "Status",
-    //   width: "10%",
-    //   align: "center",
-    //   visible: false,
-    //   sort: true,
-    //   filter: true,
-    // },
     {
       field: "custom",
       label: "Action",
@@ -112,6 +86,7 @@ const Members = (props) => {
     },
   ];
 
+
   if (bFirst) {
     /**First time call for datalist */
     getDataList();
@@ -120,10 +95,12 @@ const Members = (props) => {
 
   /**Get data for table list */
   function getDataList() {
+
+
     let params = {
       action: "getDataList",
       lan: language(),
-      UserId: UserInfo.UserId, 
+      UserId: UserInfo.UserId,
     };
     // console.log('LoginUserInfo params: ', params);
 
@@ -134,60 +111,46 @@ const Members = (props) => {
   function actioncontrol(rowData) {
     return (
       <>
-        {permissionType === 0 && (
-          <Edit
-            className={"table-edit-icon"}
-            onClick={() => {
-              editData(rowData);
-            }}
-          />
-        )}
+        {permissionType === 0 && (<Edit
+          className={"table-edit-icon"}
+          onClick={() => {
+            editData(rowData);
+          }}
+        />)}
 
-        {permissionType === 0 && (
-          <DeleteOutline
-            className={"table-delete-icon"}
-            onClick={() => {
-              deleteData(rowData);
-            }}
-          />
-        )}
+        {permissionType === 0 && (<DeleteOutline
+          className={"table-delete-icon"}
+          onClick={() => {
+            deleteData(rowData);
+          }}
+        />)}
       </>
     );
   }
 
   const addData = () => {
-    // console.log("rowData: ", rowData);
-    // console.log("dataList: ", dataList);
-
     setCurrentRow({
       id: "",
-      MemberCode: "",
-      MemberName: "",
-      Email: "",
-      Address: "",
-      PhoneNo: "",
-      DepartmentId: "",
+      HoliDate: "",
+      Comments: "",
     });
     openModal();
   };
 
   const editData = (rowData) => {
-    // console.log("rowData: ", rowData);
-    // console.log("dataList: ", dataList);
-
     setCurrentRow(rowData);
     openModal();
   };
+
 
   function openModal() {
     setShowModal(true); //true=modal show, false=modal hide
   }
 
   function modalCallback(response) {
-    //response = close, addedit
-    // console.log('response: ', response);
     getDataList();
     setShowModal(false); //true=modal show, false=modal hide
+
   }
 
   const deleteData = (rowData) => {
@@ -220,18 +183,17 @@ const Members = (props) => {
   };
 
   function deleteApi(rowData) {
+
     let params = {
       action: "deleteData",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       rowData: rowData,
     };
 
     // apiCall.post("productgroup", { params }, apiOption()).then((res) => {
     apiCall.post(serverpage, { params }, apiOption()).then((res) => {
-      // console.log('res: ', res);
+     // console.log('res: ', res);
       props.openNoticeModal({
         isOpen: true,
         msg: res.data.message,
@@ -239,7 +201,9 @@ const Members = (props) => {
       });
       getDataList();
     });
+
   }
+
 
   return (
     <>
@@ -247,47 +211,37 @@ const Members = (props) => {
         {/* <!-- ######-----TOP HEADER-----####### --> */}
         <div class="topHeader">
           <h4>
-            <a href="#">Home</a> ❯ Basic Setup ❯ Employee
+            <a href="#">Home</a> ❯ Basic Setup ❯ Holiday
           </h4>
         </div>
 
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
         <div class="searchAdd">
-          <Button
-            label={"Export"}
-            class={"btnPrint"}
-            onClick={PrintPDFExcelExportFunction}
-          />
-          <Button
-            disabled={permissionType}
-            label={"ADD"}
-            class={"btnAdd"}
-            onClick={addData}
-          />
+        
+          <Button label={"Export"} class={"btnPrint"} onClick={PrintPDFExcelExportFunction} />
+          <Button disabled={permissionType} label={"ADD"} class={"btnAdd"} onClick={addData} />
+   
         </div>
 
         {/* <!-- ####---THIS CLASS IS USE FOR TABLE GRID PRODUCT INFORMATION---####s --> */}
         {/* <div class="subContainer tableHeight">
           <div className="App"> */}
-        <CustomTable
-          columns={columnList}
-          rows={dataList ? dataList : {}}
-          actioncontrol={actioncontrol}
-        />
-        {/* </div>
+            <CustomTable
+              columns={columnList}
+              rows={dataList ? dataList : {}}
+              actioncontrol={actioncontrol}
+            />
+          {/* </div>
         </div> */}
       </div>
       {/* <!-- BODY CONTAINER END --> */}
 
-      {showModal && (
-        <MembersAddEditModal
-          masterProps={props}
-          currentRow={currentRow}
-          modalCallback={modalCallback}
-        />
-      )}
+
+      {showModal && (<HolidayAddEditModal masterProps={props} currentRow={currentRow} modalCallback={modalCallback} />)}
+
+
     </>
   );
 };
 
-export default Members;
+export default Holiday;

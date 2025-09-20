@@ -105,7 +105,7 @@ function AfterLoginNavbar(props) {
                       </li>
                     )}
 
-                    {menuShowPermision("team") === 1 && (
+                    {/* {menuShowPermision("team") === 1 && (
                       <li>
                         <a
                           href="javascript:void(0)"
@@ -114,7 +114,7 @@ function AfterLoginNavbar(props) {
                           Team
                         </a>
                       </li>
-                    )}
+                    )} */}
 
                     {menuShowPermision("members") === 1 && (
                       <li>
@@ -127,7 +127,7 @@ function AfterLoginNavbar(props) {
                       </li>
                     )}
 
-                    {menuShowPermision("teammemberassign") === 1 && (
+                    {/* {menuShowPermision("teammemberassign") === 1 && (
                       <li>
                         <a
                           href="javascript:void(0)"
@@ -136,7 +136,7 @@ function AfterLoginNavbar(props) {
                           Team Member Assign
                         </a>
                       </li>
-                    )}
+                    )} */}
 
                     {menuShowPermision("factorygroups") === 1 && (
                       <li>
@@ -218,6 +218,16 @@ function AfterLoginNavbar(props) {
                           onClick={() => props.history.push("buyer")}
                         >
                           Buyer
+                        </a>
+                      </li>
+                    )}
+                    {menuShowPermision("holiday") === 1 && (
+                      <li>
+                        <a
+                          href="javascript:void(0)"
+                          onClick={() => props.history.push("holiday")}
+                        >
+                          Holiday
                         </a>
                       </li>
                     )}

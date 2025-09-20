@@ -592,14 +592,13 @@ function FactoryList($data)
 function getMemberList($data)
 {
 	
-    $TeamId = trim($data->TeamId);
+    $DepartmentId = trim($data->DepartmentId);
 	try {
 		$dbh = new Db();
-		$query = "SELECT b.`MemberId` id, b.MemberName `name`
-	 			 	FROM t_team_member_map a
-					inner join `t_member` b on a.MemberId=b.MemberId
-					where (a.TeamId = $TeamId)
-					ORDER BY b.MemberName;";
+		$query = "SELECT a.`MemberId` id, a.MemberName `name`
+	 			 	FROM t_member a
+					where (a.DepartmentId = $DepartmentId)
+					ORDER BY a.MemberName;";
 
 		$resultdata = $dbh->query($query);
 

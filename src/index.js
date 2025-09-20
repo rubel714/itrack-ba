@@ -20,8 +20,8 @@ import Dashboard from "views/screens/dashboard/index.js";
 import BusinessLine from "views/screens/businessline/index.js";
 import Buyer from "views/screens/buyer/index.js";
 import UserEntry from "views/screens/userentry/index.js";
-import Team from "views/screens/team/index.js";
-import TeamMemberAssign from "views/screens/teammemberassign/index.js";
+// import Team from "views/screens/team/index.js";
+// import TeamMemberAssign from "views/screens/teammemberassign/index.js";
 import Programs from "views/screens/programs/index.js";
 import FactoryGroups from "views/screens/factorygroups/index.js";
 import Factory from "views/screens/factory/index.js";
@@ -32,6 +32,7 @@ import RevenueType from "views/screens/revenuetype/index.js";
 import Designation from "views/screens/designation/index.js";
 
 import Department from "views/screens/department/index.js";
+import Holiday from "views/screens/holiday/index.js";
 import Members from "views/screens/members/index.js";
 import Auditors from "views/screens/auditors/index.js";
 import UserRole from "views/screens/userrole/index.js";
@@ -79,8 +80,8 @@ ReactDOM.render(
             <Route path="/businessline" render={(props) => <BusinessLine {...props} />} />
             <Route path="/buyer" render={(props) => <Buyer {...props} />} />
             <Route path="/userentry" render={(props) => <UserEntry {...props} />} />
-            <Route path="/team" render={(props) => <Team {...props} />} />
-            <Route path="/teammemberassign" render={(props) => <TeamMemberAssign {...props} />} />
+            {/* <Route path="/team" render={(props) => <Team {...props} />} />
+            <Route path="/teammemberassign" render={(props) => <TeamMemberAssign {...props} />} /> */}
 
             <Route path="/programs" render={(props) => <Programs {...props} />} />
             <Route path="/factorygroups" render={(props) => <FactoryGroups {...props} />} />
@@ -92,6 +93,7 @@ ReactDOM.render(
 
             <Route path="/designation" render={(props) => <Designation {...props} />} />
             <Route path="/department" render={(props) => <Department {...props} />} />
+            <Route path="/holiday" render={(props) => <Holiday {...props} />} />
             <Route path="/members" render={(props) => <Members {...props} />} />
             <Route path="/auditors" render={(props) => <Auditors {...props} />} />
             <Route path="/userrole" render={(props) => <UserRole {...props} />} />
