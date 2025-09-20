@@ -24,11 +24,17 @@ const FactoryAddEditModal = (props) => {
   // const [currentFile, setCurrentFile] = useState(null);
   const UserInfo = LoginUserInfo();
 
-  const [isLocationList, setIsLocationList] = useState(true);//when true show location list otherwise show edit
+  const [isLocationList, setIsLocationList] = useState(true); //when true show location list otherwise show edit
   const [LocationId, setLocationId] = useState("");
   const [LocationName, setLocationName] = useState("");
 
-  const [isContactInfoList, setIsContactInfoList] = useState(true);//when true show contact list otherwise show edit
+  const [isContactInfoList, setIsContactInfoList] = useState(true); //when true show contact list otherwise show edit
+  const [ContactInfoId, setContactInfoId] = useState("");
+  const [ContactPerson, setContactPerson] = useState("");
+  const [ContactNumber, setContactNumber] = useState("");
+  const [Designation, setDesignation] = useState("");
+  const [Email, setEmail] = useState("");
+
 
   const [FactoryGroupList, setFactoryGroupList] = useState(null);
   const [currFactoryGroupId, setCurrFactoryGroupId] = useState(null);
@@ -179,42 +185,64 @@ const FactoryAddEditModal = (props) => {
     );
   }
 
-  const editDataLocation = (rowData) => {
-    console.log('rowData: ', rowData);
-    // setLocationId(value);
-    // setLocationName(value);
-
+// addDataCOntactInfo
+  const addDataLocation = () => {
+    // console.log('rowData: ', rowData);
+    setLocationId("");
+    // console.log('rowData.LocationId: ', rowData.Id);
+    setLocationName("");
+    // console.log('rowData.LocationName: ', rowData.Location);
     setIsLocationList(false);
-    // setCurrentRow(rowData);
+  };
+
+  const editDataLocation = (rowData) => {
+    // console.log('rowData: ', rowData);
+    setLocationId(rowData.Id);
+    // console.log('rowData.LocationId: ', rowData.Id);
+    setLocationName(rowData.Location);
+    // console.log('rowData.LocationName: ', rowData.Location);
+    setIsLocationList(false);
   };
 
   const handleChangeLocation = (e) => {
     const { name, value } = e.target;
-    // let data = { ...currentRow };
-    // data[name] = value;
     setLocationName(value);
-
-    // setCurrentRow(data);
-    // setErrorObject({ ...errorObject, [name]: null });
-
   };
 
-    const addEditLocation = (rowData) => {
-    if(LocationId){
-      //update
-    }else{
-      //add new
+  const addEditLocation = () => {
+    if (LocationName == "") {
+      swal("Warning", "Location name is required!", "warning");
+      return;
     }
-      setIsLocationList(true);
-    // setCurrentRow(rowData);
+
+    let data = { ...currentRow };
+    let Locations = data.Locations ? data.Locations : [];
+
+    if (LocationId) {
+      Locations.forEach((element, i) => {
+        if (element.Id == LocationId) {
+          // console.log("i=",i);
+          data.Locations[i].Location = LocationName;
+        }
+      });
+      //update
+    } else {
+      //add new
+      data.Locations.push({
+        Id: Date.now(), // Math.floor(Math.random() * 1000000), //temporary id for react key
+        Location: LocationName,
+      });
+    }
+    setIsLocationList(true);
+    setCurrentRow(data);
   };
 
-
-  const CloseLocationEdit = (rowData) => {
+  const CloseLocationEdit = () => {
     setIsLocationList(true);
   };
 
   const deleteDataLocation = (rowData) => {
+    console.log("rowData: ", rowData);
     swal({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this data!",
@@ -239,12 +267,22 @@ const FactoryAddEditModal = (props) => {
     }).then((allowAction) => {
       if (allowAction) {
         // deleteApi(rowData);
+        let data = { ...currentRow };
+        let Locations = data.Locations ? data.Locations : [];
+
+        let newArr = Locations.filter((item) => item.Id !== rowData.Id);
+        data.Locations = newArr;
+        setCurrentRow(data);
+
+        // Locations.forEach((element, i) => {
+        //   if (element.Id == rowData.Id) {
+        //     // console.log("i=",i);
+        //     data.Locations[i].Location = LocationName;
+        //   }
+        // });
       }
     });
   };
-
-
-
 
   const columnListContactInfo = [
     { field: "rownumber", label: "SL", align: "center", width: "3%" },
@@ -315,12 +353,88 @@ const FactoryAddEditModal = (props) => {
     );
   }
 
+
+  
+// addDataCOntactInfo
+  const addDataCOntactInfo = () => {
+    // console.log('rowData: ', rowData);
+    setContactInfoId("");
+    setContactPerson("");
+    setContactNumber("");
+    setDesignation("");
+    setEmail("");
+    setIsContactInfoList(false);
+  };
+
   const editDataContactInfo = (rowData) => {
-    // setCurrentRow(rowData);
-    // openModal();
+    // console.log('rowData: ', rowData);
+    setContactInfoId(rowData.Id);
+    // console.log('rowData.LocationId: ', rowData.Id);
+    setContactPerson(rowData.ContactPerson);
+    setContactNumber(rowData.ContactNumber);
+    setDesignation(rowData.Designation);
+    setEmail(rowData.Email);
+    setIsContactInfoList(false);
+  };
+
+  const handleChangeContactInfo = (e) => {
+    const { name, value } = e.target;
+
+    if(name=="ContactPerson"){
+        setContactPerson(value);
+    }
+    if(name=="ContactNumber"){
+        setContactNumber(value);
+    }
+    if(name=="Designation"){
+        setDesignation(value);
+    }
+    if(name=="Email"){
+        setEmail(value);
+    }
+ 
+  };
+
+  const addEditContactInfo = () => {
+    if (ContactPerson == "" && ContactNumber=="" && Designation=="" && Email=="") {
+      swal("Warning", "Contact Information is required!", "warning");
+      return;
+    }
+
+    let data = { ...currentRow };
+    let ContactInfo = data.ContactInfo ? data.ContactInfo : [];
+
+    if (ContactInfoId) {
+      ContactInfo.forEach((element, i) => {
+        if (element.Id == ContactInfoId) {
+          // console.log("i=",i);
+          data.ContactInfo[i].ContactPerson = ContactPerson;
+          data.ContactInfo[i].ContactNumber = ContactNumber;
+          data.ContactInfo[i].Designation = Designation;
+          data.ContactInfo[i].Email = Email;  
+        }
+      });
+      //update
+    } else {
+      //add new
+      data.ContactInfo.push({
+        Id: Date.now(), // Math.floor(Math.random() * 1000000), //temporary id for react key
+        ContactPerson: ContactPerson,
+        ContactNumber: ContactNumber,
+        Designation: Designation,
+        Email: Email,
+      });
+    }
+    setIsContactInfoList(true);
+    setCurrentRow(data);
+  };
+
+  const CloseContactInfoEdit = () => {
+    setIsContactInfoList(true);
   };
 
   const deleteDataContactInfo = (rowData) => {
+    console.log("rowData: ", rowData);
     swal({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this data!",
@@ -345,9 +459,49 @@ const FactoryAddEditModal = (props) => {
     }).then((allowAction) => {
       if (allowAction) {
         // deleteApi(rowData);
+        let data = { ...currentRow };
+        let ContactInfo = data.ContactInfo ? data.ContactInfo : [];
+
+        let newArr = ContactInfo.filter((item) => item.Id !== rowData.Id);
+        data.ContactInfo = newArr;
+        setCurrentRow(data);
       }
     });
   };
+
+  // const editDataContactInfo = (rowData) => {
+  //   // setCurrentRow(rowData);
+  //   // openModal();
+  // };
+
+  // const deleteDataContactInfo = (rowData) => {
+  //   swal({
+  //     title: "Are you sure?",
+  //     text: "Once deleted, you will not be able to recover this data!",
+  //     icon: "warning",
+  //     buttons: {
+  //       confirm: {
+  //         text: "Yes",
+  //         value: true,
+  //         visible: true,
+  //         className: "",
+  //         closeModal: true,
+  //       },
+  //       cancel: {
+  //         text: "No",
+  //         value: null,
+  //         visible: true,
+  //         className: "",
+  //         closeModal: true,
+  //       },
+  //     },
+  //     dangerMode: true,
+  //   }).then((allowAction) => {
+  //     if (allowAction) {
+  //       // deleteApi(rowData);
+  //     }
+  //   });
+  // };
 
   return (
     <>
@@ -420,105 +574,157 @@ const FactoryAddEditModal = (props) => {
             />
           </div>
 
-          <div class="pt-10">
+<div class="pt-10">
+<hr ></hr>
+     </div>
+          <div class="pt-10" style={{"text-align": "right"}}>
+            {isLocationList && (<Button label={"ADD Location"} class={"btnAdd"} onClick={addDataLocation} />)}
+
             {/* <label>Contact Locations</label> */}
-            {isLocationList && (<CustomTable
-              columns={columnListLocation}
-              rows={currentRow.Locations ? currentRow.Locations : {}}
-              actioncontrol={actioncontrollocation}
-              ispagination={false}
-            />)}
-
-             {!isLocationList && (<div class="contactmodalBody pt-10">
-              <label>Location *</label>
-              <input
-                type="text"
-                id="Location"
-                name="Location"
-                // class={errorObject.Location}
-                placeholder="Enter Location"
-                value={LocationName}
-                onChange={(e) => handleChangeLocation(e)}
+            {isLocationList && (
+              <CustomTable
+                columns={columnListLocation}
+                rows={currentRow.Locations ? currentRow.Locations : {}}
+                actioncontrol={actioncontrollocation}
+                ispagination={false}
               />
+            )}
+
+            {!isLocationList && (
+              <div class="contactmodalBody pt-10">
+                <label>Location *</label>
+                <input
+                  type="text"
+                  id="Location"
+                  name="Location"
+                  // class={errorObject.Location}
+                  placeholder="Enter Location"
+                  value={LocationName}
+                  onChange={(e) => handleChangeLocation(e)}
+                />
+            
+
+                <div class="modalItem" style={{"padding-top": "40px"}}>
+                  <Button
+                    label={"Cancel"}
+                    class={"btnClose"}
+                    onClick={CloseLocationEdit}
+                  />
+                  {LocationId && (
+                    <Button
+                      label={"Update"}
+                      class={"btnUpdate"}
+                      onClick={addEditLocation}
+                    />
+                  )}
+                  {!LocationId && (
+                    <Button
+                      label={"Save"}
+                      class={"btnSave"}
+                      onClick={addEditLocation}
+                    />
+                  )}
+                </div>
 
 
-            <div class="modalItem">
-                <Button label={"Cancel"} class={"btnClose"} onClick={CloseLocationEdit} />
-                {LocationId && (
-                  <Button
-                    label={"Update"}
-                    class={"btnUpdate"}
-                    onClick={addEditLocation}
-                  />
-                )}
-                {!LocationId && (
-                  <Button
-                    label={"Save"}
-                    class={"btnSave"}
-                    onClick={addEditLocation}
-                  />
-                )}
               </div>
-            </div>)}
+            )}
           </div>
-
-
-          <div class="pt-10">
+<div class="pt-10">
+<hr ></hr>
+     </div>
+            <div class="pt-10" style={{"text-align": "right"}}>
+            {isContactInfoList && (<Button label={"ADD Contact Information"} class={"btnAdd"} onClick={addDataCOntactInfo} />)}
             {/* <label>Contact Information</label> */}
-            {isContactInfoList && (<CustomTable
-              columns={columnListContactInfo}
-              rows={currentRow.ContactInfo ? currentRow.ContactInfo : {}}
-              actioncontrol={actioncontrolContactInfo}
-              ispagination={false}
-            />)}
+            {isContactInfoList && (
+              <CustomTable
+                columns={columnListContactInfo}
+                rows={currentRow.ContactInfo ? currentRow.ContactInfo : {}}
+                actioncontrol={actioncontrolContactInfo}
+                ispagination={false}
+              />
+            )}
 
-             {!isContactInfoList && (<div class="contactmodalBody pt-10">
-              <label>Contact Person *</label>
-              <input
-                type="text"
-                id="ContactPerson"
-                name="ContactPerson"
-                // class={errorObject.ContactPerson}
-                placeholder="Enter Contact Person"
-                // value={currentRow.ContactPerson}
-                // onChange={(e) => handleChange(e)}
-              />
-                 <label>Contact Number *</label>
-              <input
-                type="text"
-                id="ContactNumber"
-                name="ContactNumber"
-                // class={errorObject.ContactNumber}
-                placeholder="Enter Contact Number"
-                // value={currentRow.ContactNumber}
-                // onChange={(e) => handleChange(e)}
-              />
+            {!isContactInfoList && (
+              <div class="contactmodalBody pt-10">
+                <label>Contact Person</label>
+                <input
+                  type="text"
+                  id="ContactPerson"
+                  name="ContactPerson"
+                  // class={errorObject.ContactPerson}
+                  placeholder="Enter Contact Person"
+                  value={ContactPerson}
+                  onChange={(e) => handleChangeContactInfo(e)}
+                />
+                <label>Contact Number</label>
+                <input
+                  type="text"
+                  id="ContactNumber"
+                  name="ContactNumber"
+                  // class={errorObject.ContactNumber}
+                  placeholder="Enter Contact Number"
+                  value={ContactNumber}
+                  onChange={(e) => handleChangeContactInfo(e)}
+                />
 
-                 <label>Designation *</label>
-              <input
-                type="text"
-                id="Designation"
-                name="Designation"
-                // class={errorObject.Designation}
-                placeholder="Enter Designation"
-                // value={currentRow.Designation}
-                // onChange={(e) => handleChange(e)}
-              />
+                <label>Designation</label>
+                <input
+                  type="text"
+                  id="Designation"
+                  name="Designation"
+                  // class={errorObject.Designation}
+                  placeholder="Enter Designation"
+                  value={Designation}
+                  onChange={(e) => handleChangeContactInfo(e)}
+                />
 
-                               <label>Email *</label>
-              <input
-                type="text"
-                id="Email"
-                name="Email"
-                // class={errorObject.Email}
-                placeholder="Enter Email"
-                // value={currentRow.Email}
-                // onChange={(e) => handleChange(e)}
-              />
-            </div>)}
+                <label>Email</label>
+                <input
+                  type="text"
+                  id="Email"
+                  name="Email"
+                  // class={errorObject.Email}
+                  placeholder="Enter Email"
+                  value={Email}
+                  onChange={(e) => handleChangeContactInfo(e)}
+                />
+
+
+                
+                <div class="modalItem">
+                  <Button
+                    label={"Cancel"}
+                    class={"btnClose"}
+                    onClick={CloseContactInfoEdit}
+                  />
+                  {ContactInfoId && (
+                    <Button
+                      label={"Update"}
+                      class={"btnUpdate"}
+                      onClick={addEditContactInfo}
+                    />
+                  )}
+                  {!ContactInfoId && (
+                    <Button
+                      label={"Save"}
+                      class={"btnSave"}
+                      onClick={addEditContactInfo}
+                    />
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
-          <div class="modalItem">
+
+
+
+
+
+
+
+         {isLocationList && isContactInfoList && (<div class="modalItem">
             <Button label={"Close"} class={"btnClose"} onClick={modalClose} />
             {props.currentRow.id && (
               <Button
@@ -534,7 +740,10 @@ const FactoryAddEditModal = (props) => {
                 onClick={addEditAPICall}
               />
             )}
-          </div>
+          </div>)}
+
+
+
         </div>
       </div>
       {/* <!-- GROUP MODAL END --> */}

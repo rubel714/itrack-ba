@@ -80,9 +80,21 @@ function dataAddEdit($data) {
 		// $Email = $data->rowData->Email;
 		// $Address = $data->rowData->Address;
 
+		$Locations = json_encode($data->rowData->Locations);
+		$ContactInfo = json_encode($data->rowData->ContactInfo);
+
+		// echo "<pre>";
+		// echo json_encode($Locations);
+		// exit;
+
+		// $row["Locations"] = $row["Locations"] ? json_decode($row["Locations"], true) : [];
+		// $row["ContactInfo"] = $row["ContactInfo"] ? json_decode($row["ContactInfo"], true) : [];
+		// $resultdata[] = $row;
+
+
 		try{
 
-			$dbh = new Db();
+			// $dbh = new Db();
 			$aQuerys = array();
 
  
@@ -90,8 +102,8 @@ function dataAddEdit($data) {
 			if($FactoryId == ""){
 				$q = new insertq();
 				$q->table = 't_factory';
-				$q->columns = ['FactoryGroupId','FactoryName','FactoryCode'];
-				$q->values = [$FactoryGroupId,$FactoryName,$FactoryCode];
+				$q->columns = ['FactoryGroupId','FactoryName','FactoryCode','Locations','ContactInfo'];
+				$q->values = [$FactoryGroupId,$FactoryName,$FactoryCode,$Locations,$ContactInfo];
 				$q->pks = ['FactoryId'];
 				$q->bUseInsetId = false;
 				$q->build_query();
@@ -99,8 +111,8 @@ function dataAddEdit($data) {
 			}else{
 				$u = new updateq();
 				$u->table = 't_factory';
-				$u->columns = ['FactoryGroupId','FactoryName','FactoryCode'];
-				$u->values = [$FactoryGroupId,$FactoryName,$FactoryCode];
+				$u->columns = ['FactoryGroupId','FactoryName','FactoryCode','Locations','ContactInfo'];
+				$u->values = [$FactoryGroupId,$FactoryName,$FactoryCode,$Locations,$ContactInfo];
 				$u->pks = ['FactoryId'];
 				$u->pk_values = [$FactoryId];
 				$u->build_query();
