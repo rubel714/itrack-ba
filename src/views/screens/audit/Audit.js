@@ -18,9 +18,6 @@ import {
 } from "../../../actions/api";
 import ExecuteQueryHook from "../../../components/hooks/ExecuteQueryHook";
 
-// import { useReactToPrint } from "react-to-print";
-// import { SalesToPrint } from "./SalesToPrint";
-
 const Audit = (props) => {
   const serverpage = "audit"; // this is .php server page
   const permissionType = props.permissionType;
@@ -81,10 +78,6 @@ const Audit = (props) => {
       finalUrl +
         "?action=SalesExport" +
         "&reportType=excel" +
-        "&ClientId=" +
-        UserInfo.ClientId +
-        "&BranchId=" +
-        UserInfo.BranchId +
         "&StartDate=" +
         StartDate +
         "&EndDate=" +
@@ -103,8 +96,6 @@ const Audit = (props) => {
       action: "NextInvoiceNumber",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       TransactionTypeId: 25,
     };
 
@@ -143,8 +134,6 @@ const Audit = (props) => {
       action: "getDataList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       TransactionTypeId: 25,
       StartDate: StartDate,
       EndDate: EndDate,
@@ -160,8 +149,6 @@ const Audit = (props) => {
   //     action: "getHoldDataList",
   //     lan: language(),
   //     UserId: UserInfo.UserId,
-  //     ClientId: UserInfo.ClientId,
-  //     BranchId: UserInfo.BranchId,
   //     TransactionTypeId: 25,
   //   };
   //   // console.log('LoginUserInfo params: ', params);
@@ -199,8 +186,6 @@ const Audit = (props) => {
       action: "UserList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
     };
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
@@ -215,8 +200,6 @@ const Audit = (props) => {
       action: "ExpenseTypeList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
     };
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
@@ -231,8 +214,6 @@ const Audit = (props) => {
   //     action: "ReferenceList",
   //     lan: language(),
   //     UserId: UserInfo.UserId,
-  //     ClientId: UserInfo.ClientId,
-  //     BranchId: UserInfo.BranchId,
   //   };
 
   //   apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
@@ -247,8 +228,6 @@ const Audit = (props) => {
   //     action: "CustomerList",
   //     lan: language(),
   //     UserId: UserInfo.UserId,
-  //     ClientId: UserInfo.ClientId,
-  //     BranchId: UserInfo.BranchId,
   //   };
 
   //   apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
@@ -263,8 +242,6 @@ const Audit = (props) => {
   //     action: "PaymentModeList",
   //     lan: language(),
   //     UserId: UserInfo.UserId,
-  //     ClientId: UserInfo.ClientId,
-  //     BranchId: UserInfo.BranchId,
   //   };
 
   //   apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
@@ -279,8 +256,6 @@ const Audit = (props) => {
   //     action: "ProductList",
   //     lan: language(),
   //     UserId: UserInfo.UserId,
-  //     ClientId: UserInfo.ClientId,
-  //     BranchId: UserInfo.BranchId,
   //   };
 
   //   apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
@@ -295,8 +270,6 @@ const Audit = (props) => {
   //     action: "ProductVirtualList",
   //     lan: language(),
   //     UserId: UserInfo.UserId,
-  //     ClientId: UserInfo.ClientId,
-  //     BranchId: UserInfo.BranchId,
   //   };
 
   //   apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
@@ -410,8 +383,6 @@ const Audit = (props) => {
       action: "getDataSingle",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       id: id,
     };
 
@@ -552,8 +523,6 @@ const Audit = (props) => {
       action: "deleteData",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       rowData: rowData,
     };
 
@@ -1189,8 +1158,6 @@ const Audit = (props) => {
       action: "dataAddEdit",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       InvoiceMaster: cInvoiceMaster,
       InvoiceItems: manyDataList,
       DeletedItems: deletedItems,
@@ -1210,8 +1177,6 @@ const Audit = (props) => {
       action: "dataAddEdit",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       InvoiceMaster: currentInvoice,
       InvoiceItems: manyDataList,
       DeletedItems: deletedItems,

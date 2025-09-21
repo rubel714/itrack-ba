@@ -27,14 +27,11 @@ switch($task){
 function getDataList($data){
 
 	
-	$ClientId = trim($data->ClientId); //client which are assigned under login user
-	//$BranchId = trim($data->BranchId); 
 
 	try{
 		$dbh = new Db();
 		$query = "SELECT a.BranchId AS id,a.ClientId,a.BranchName, a.PhoneNo, a.BranchAddress, a.Email
 		FROM t_branch a
-		where a.ClientId=$ClientId
 		ORDER BY a.BranchName ASC;";		
 		
 		$resultdata = $dbh->query($query);
@@ -63,9 +60,6 @@ function dataAddEdit($data) {
 		
 		
 		$lan = trim($data->lan); 
-		$UserId = trim($data->UserId); 
-		$ClientId = trim($data->ClientId); 
-		//$BranchId = trim($data->BranchId); 
 
 		$BranchId = $data->rowData->id;
 		$BranchName = $data->rowData->BranchName;
@@ -82,8 +76,8 @@ function dataAddEdit($data) {
 			if($BranchId == ""){
 				$q = new insertq();
 				$q->table = 't_branch';
-				$q->columns = ['ClientId','BranchName','PhoneNo','Email','BranchAddress'];
-				$q->values = [$ClientId,$BranchName,$PhoneNo,$Email,$BranchAddress];
+				$q->columns = ['BranchName','PhoneNo','Email','BranchAddress'];
+				$q->values = [$BranchName,$PhoneNo,$Email,$BranchAddress];
 				$q->pks = ['BranchId'];
 				$q->bUseInsetId = false;
 				$q->build_query();
@@ -133,8 +127,6 @@ function deleteData($data) {
 		$BranchId = $data->rowData->id;
 		$lan = trim($data->lan); 
 		$UserId = trim($data->UserId); 
-		//$ClientId = trim($data->ClientId); 
-		//$BranchId = trim($data->BranchId); 
 
 		try{
 

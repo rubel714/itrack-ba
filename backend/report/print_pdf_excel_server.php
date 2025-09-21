@@ -135,7 +135,6 @@ function TeamExport()
 {
 
 	global $sql, $tableProperties, $TEXT, $siteTitle;
-	$ClientId = $_REQUEST['ClientId'];
 
 	$sql = "SELECT `TeamName`
 	FROM t_team 
@@ -318,7 +317,6 @@ function DesignationExport()
 {
 
 	global $sql, $tableProperties, $TEXT, $siteTitle;
-	$ClientId = $_REQUEST['ClientId'];
 
 	$sql = "SELECT `DesignationName`
 	FROM t_designation 
@@ -380,7 +378,6 @@ function BuyerExport()
 {
 
 	global $sql, $tableProperties, $TEXT, $siteTitle;
-	// $ClientId = $_REQUEST['ClientId'];
 
 	$sql = "SELECT BuyerName, ClientType, Country, SunCode,EbitzCode, ItsCode, RegisterNo, CustomerCode
 	FROM t_buyer 
@@ -410,7 +407,6 @@ function AuditorExport()
 {
 
 	global $sql, $tableProperties, $TEXT, $siteTitle;
-	// $ClientId = $_REQUEST['ClientId'];
 
 	$sql = "SELECT `AuditorCode`,AuditorName,Email,PhoneNo
 	FROM t_auditor 
@@ -440,7 +436,6 @@ function DepartmentExport()
 {
 
 	global $sql, $tableProperties, $TEXT, $siteTitle;
-	$ClientId = $_REQUEST['ClientId'];
 
 	$sql = "SELECT `DepartmentName`
 	FROM t_department 
@@ -499,7 +494,6 @@ function RevenueTypeExport()
 {
 
 	global $sql, $tableProperties, $TEXT, $siteTitle;
-	$ClientId = $_REQUEST['ClientId'];
 
 	$sql = "SELECT `RevenueTypeName`,Rate
 	FROM t_revenue_type 
@@ -530,7 +524,6 @@ function BusinessLinetExport()
 {
 
 	global $sql, $tableProperties, $TEXT, $siteTitle;
-	$ClientId = $_REQUEST['ClientId'];
 
 	$sql = "SELECT `BusinessLineName`
 	FROM t_businessline 
@@ -628,7 +621,6 @@ function RoleExport()
 
 	global $sql, $tableProperties, $TEXT, $siteTitle;
 
-	// $ClientId = $_REQUEST['ClientId'];
 	$sql = "SELECT a.`RoleName`,a.DefaultRedirect
 	FROM t_roles a
 	ORDER BY a.RoleName;";
@@ -661,8 +653,7 @@ function RoleToMenuPermissionExport()
 
 	global $sql, $tableProperties, $TEXT, $siteTitle;
 
-	$ClientId = $_REQUEST['ClientId'];
-	$BranchId = $_REQUEST['BranchId'];
+
 	$RoleId = $_REQUEST['RoleId'];
 	$RoleName = $_REQUEST['RoleName'];
 
@@ -673,8 +664,7 @@ function RoleToMenuPermissionExport()
 
 			   FROM `t_menu` a
 			   LEFT JOIN t_role_menu_map b ON b.`MenuId` = a.`MenuId` 
-				AND b.ClientId = $ClientId 
-				AND b.BranchId = $BranchId 
+			
 				and b.RoleId = $RoleId
 		ORDER BY MenuType DESC, SortOrder ASC;";
 

@@ -64,29 +64,11 @@ function LoginPage(props) {
     setState(data);
   };
 
-  // const handleChangeChoosenMaster = (name, value) => {
-  //   let data = { ...state };
-  //   data[name] = value;
-  //   console.log("data: ", data);
-
-  //   if (name === "ClientId") {
-  //     getBranchList(value);
-  //   }
-
-  //   setState(data);
-  // };
 
   const LoginPage = (data) => {
     if (state.email.length > 0 && state.password.length > 0) {
-      //if (!regex.test(state.email)) {
-      // swal("Oops Error!", "Your email is not valid!", "error");
-      //} else {
-
-      setLoading(true);
-
+       setLoading(true);
       const body = {
-        ClientId: state.ClientId,
-        BranchId: state.BranchId,
         email: state.email,
         password: state.password,
       };
@@ -128,27 +110,9 @@ function LoginPage(props) {
     }
   };
 
-  // function getClientList() {
-  //   state.service.default
-  //     .postApi("source/combo_script.php?action=ClientList")
-  //     .then((res) => {
-  //       setClientList([{ id: "", name: "Select client" }].concat(res));
-  //     })
-  //     .catch((err) => {});
-  // }
-
-  // function getBranchList(ClientId) {
-  //   state.service.default
-  //     .postApi("source/combo_script.php?action=BranchList&ClientId=" + ClientId)
-  //     .then((res) => {
-  //       setBranchList([{ id: "", name: "Select branch" }].concat(res));
-  //     })
-  //     .catch((err) => {});
-  // }
 
   if (bFirst) {
     /**First time call for datalist */
-    // getClientList();
     setBFirst(false);
   }
 
@@ -164,78 +128,7 @@ function LoginPage(props) {
             <h3>User Login</h3>
           </div>
           <div class="userLogin">
-            {/* <label>Client</label>
-            <div class="">
-              <Autocomplete
-                autoHighlight
-                className="chosen_dropdown"
-                id="ClientId"
-                name="ClientId"
-                autoComplete
-                options={clientList ? clientList : []}
-                getOptionLabel={(option) => option.name}
-                value={
-                  clientList
-                    ? clientList[
-                      clientList.findIndex(
-                          (list) => list.id === state.ClientId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeChoosenMaster(
-                    "ClientId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" />
-                )}
-              />
-            </div> */}
-
-            {/* <label>Branch</label>
-            <div class="">
-              <Autocomplete
-                autoHighlight
-                className="chosen_dropdown"
-                id="BranchId"
-                name="BranchId"
-                autoComplete
-                options={branchList ? branchList : []}
-                getOptionLabel={(option) => option.name}
-                value={
-                  branchList
-                    ? branchList[
-                      branchList.findIndex(
-                          (list) => list.id === state.BranchId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeChoosenMaster(
-                    "BranchId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" />
-                )}
-              />
-            </div> */}
-
+           
             <label>User Name</label>
             <input
               type="text"

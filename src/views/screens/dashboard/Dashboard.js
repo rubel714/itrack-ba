@@ -86,8 +86,6 @@ const Dashboard = (props) => {
       action: "MonthList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
     };
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
@@ -100,8 +98,6 @@ const Dashboard = (props) => {
       action: "YearList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
     };
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
@@ -115,8 +111,6 @@ const Dashboard = (props) => {
       action: "getBasicData",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       MonthId: selectedMonthId,
       YearId: selectedYearId,
     };
@@ -131,8 +125,6 @@ const Dashboard = (props) => {
       action: "getSalesTrendData",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       MonthId: selectedMonthId,
       YearId: selectedYearId,
     };
@@ -187,8 +179,6 @@ const Dashboard = (props) => {
       action: "getExpenseByMonth",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       MonthId: selectedMonthId,
       YearId: selectedYearId,
     };

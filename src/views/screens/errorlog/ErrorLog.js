@@ -38,8 +38,6 @@ const ErrorLog = (props) => {
       finalUrl +
         "?action=ErrorLogExport" +
         "&reportType=excel" +
-        "&ClientId=" + UserInfo.ClientId +
-        "&BranchId=" + UserInfo.BranchId +
         "&TimeStamp=" +
         Date.now()
     );
@@ -165,8 +163,6 @@ const ErrorLog = (props) => {
       action: "getDataList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       StartDate: StartDate,
       EndDate: EndDate,
       TableName: TableName,
@@ -258,8 +254,6 @@ const ErrorLog = (props) => {
   //     action: "deleteData",
   //     lan: language(),
   //     UserId: UserInfo.UserId,
-  //     ClientId: UserInfo.ClientId,
-  //     BranchId: UserInfo.BranchId,
   //     rowData: rowData,
   //   };
 

@@ -32,8 +32,6 @@ const Branch = (props) => {
       finalUrl +
         "?action=BranchExport" +
         "&reportType=excel" +
-        "&ClientId=" + UserInfo.ClientId +
-        // "&BranchId=" + UserInfo.BranchId +
         "&TimeStamp=" +
         Date.now()
     );
@@ -113,8 +111,6 @@ const Branch = (props) => {
       action: "getDataList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
     };
     // console.log('LoginUserInfo params: ', params);
 
@@ -208,8 +204,6 @@ const Branch = (props) => {
       action: "deleteData",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       rowData: rowData,
     };
 

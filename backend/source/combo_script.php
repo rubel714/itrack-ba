@@ -39,17 +39,12 @@ $conn = $db_connection->dbConnection();
 $data = json_decode(file_get_contents("php://input"));
 $returnData = [];
 
-// echo "<pre>";
-// print_r($_SERVER);
-//$_SERVER["QUERY_STRING"]; action=BranchList&ClientId=2
-// echo $_SERVER["QUERY_STRING"]; 
 $params = explode("&", $_SERVER["QUERY_STRING"]);
 $data = array();
 foreach ($params as $p) {
     $pl = explode("=", $p);
     $data[$pl[0]] = $pl[1];
 }
-// print_r($data);
 
 if ($data["action"] === "ClientList") {
     $sql = "SELECT  ClientId as id, ClientName as name

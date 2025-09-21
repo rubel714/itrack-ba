@@ -26,8 +26,6 @@ const ClientAddEditModal = (props) => {
   //     action: "SupplierTypeList",
   //     lan: language(),
   //     UserId: UserInfo.UserId,
-  //     ClientId: UserInfo.ClientId,
-  //     BranchId: UserInfo.BranchId,
   //     // rowData: rowData,
   //   };
 
@@ -79,8 +77,6 @@ const ClientAddEditModal = (props) => {
         action: "dataAddEdit",
         lan: language(),
         UserId: UserInfo.UserId,
-        ClientId: UserInfo.ClientId,
-        BranchId: UserInfo.BranchId,
         rowData: currentRow,
       };
 

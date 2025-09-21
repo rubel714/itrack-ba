@@ -59,8 +59,6 @@ const MyProfile = (props) => {
       action: "DesignationList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
     };
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
@@ -182,8 +180,6 @@ const MyProfile = (props) => {
         action: "dataAddEdit",
         lan: language(),
         UserId: UserInfo.UserId,
-        ClientId: UserInfo.ClientId,
-        BranchId: UserInfo.BranchId,
         rowData: currentRow,
       };
 
@@ -217,8 +213,6 @@ const MyProfile = (props) => {
       action: "getDataList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
     };
     // console.log('LoginUserInfo params: ', params);
 

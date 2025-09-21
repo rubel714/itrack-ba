@@ -164,8 +164,6 @@ const UserEntryAddEditModal = (props) => {
   //     action: "BusinessLineList",
   //     lan: language(),
   //     UserId: UserInfo.UserId,
-  //     ClientId: UserInfo.ClientId,
-  //     BranchId: UserInfo.BranchId,
   //   };
 
   //   apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
@@ -182,8 +180,6 @@ const UserEntryAddEditModal = (props) => {
   //     action: "TeamList",
   //     lan: language(),
   //     UserId: UserInfo.UserId,
-  //     ClientId: UserInfo.ClientId,
-  //     BranchId: UserInfo.BranchId,
   //   };
 
   //   apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
@@ -198,8 +194,6 @@ const UserEntryAddEditModal = (props) => {
   //     action: "UserList",
   //     lan: language(),
   //     UserId: UserInfo.UserId,
-  //     ClientId: UserInfo.ClientId,
-  //     BranchId: UserInfo.BranchId,
   //   };
 
   //   apiCall.post("combo_generic", { params }, apiOption()).then((res) => {

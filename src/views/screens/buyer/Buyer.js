@@ -36,10 +36,7 @@ const Buyer = (props) => {
       finalUrl +
         "?action=BuyerExport" +
         "&reportType=excel" +
-        "&ClientId=" +
-        UserInfo.ClientId +
-        "&BranchId=" +
-        UserInfo.BranchId +
+
         "&TimeStamp=" +
         Date.now()
     );

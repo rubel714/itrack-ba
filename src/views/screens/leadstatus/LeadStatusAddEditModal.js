@@ -45,8 +45,6 @@ const LeadStatusAddEditModal = (props) => {
         action: "dataAddEdit",
         lan: language(),
         UserId: UserInfo.UserId,
-        ClientId: UserInfo.ClientId,
-        BranchId: UserInfo.BranchId,
         rowData: currentRow,
       };
 

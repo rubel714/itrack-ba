@@ -38,8 +38,6 @@ const AuditLog = (props) => {
       finalUrl +
         "?action=AuditLogExport" +
         "&reportType=excel" +
-        "&ClientId=" + UserInfo.ClientId +
-        "&BranchId=" + UserInfo.BranchId +
         "&TimeStamp=" +
         Date.now()
     );
@@ -136,8 +134,6 @@ const AuditLog = (props) => {
       action: "getDataList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       StartDate: StartDate,
       EndDate: EndDate,
       TableName: TableName,
@@ -229,8 +225,6 @@ const AuditLog = (props) => {
   //     action: "deleteData",
   //     lan: language(),
   //     UserId: UserInfo.UserId,
-  //     ClientId: UserInfo.ClientId,
-  //     BranchId: UserInfo.BranchId,
   //     rowData: rowData,
   //   };
 

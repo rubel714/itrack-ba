@@ -52,8 +52,6 @@ const RoleToMenuPermission = (props) => {
         finalUrl +
           "?action=RoleToMenuPermissionExport" +
           "&reportType=excel" +
-          "&ClientId=" + UserInfo.ClientId +
-          "&BranchId=" + UserInfo.BranchId +
           "&RoleId=" + currRoleId +   
           "&RoleName=" + curRoleName[0].name +   
           "&TimeStamp=" +
@@ -69,9 +67,7 @@ const RoleToMenuPermission = (props) => {
       action: "getDataList",
       lan: language(),
       UserId: UserInfo.UserId,
-      RoleId: currRoleId,     
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
+      RoleId: currRoleId,
     };
     // console.log('LoginUserInfo params: ', params);
 
@@ -324,8 +320,6 @@ const RoleToMenuPermission = (props) => {
       action: "assignData",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       RoleId: currRoleId,
       rowData: rowData,
     };

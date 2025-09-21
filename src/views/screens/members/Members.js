@@ -36,10 +36,7 @@ const Members = (props) => {
       finalUrl +
         "?action=MemberExport" +
         "&reportType=excel" +
-        "&ClientId=" +
-        UserInfo.ClientId +
-        "&BranchId=" +
-        UserInfo.BranchId +
+
         "&TimeStamp=" +
         Date.now()
     );
@@ -224,8 +221,6 @@ const Members = (props) => {
       action: "deleteData",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       rowData: rowData,
     };
 

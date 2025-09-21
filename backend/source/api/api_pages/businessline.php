@@ -27,8 +27,6 @@ switch($task){
 function getDataList($data){
 
 	
-	$ClientId = trim($data->ClientId); 
-	//$BranchId = trim($data->BranchId); 
 
 	try{
 		$dbh = new Db();
@@ -63,8 +61,6 @@ function dataAddEdit($data) {
 		
 		$lan = trim($data->lan); 
 		$UserId = trim($data->UserId); 
-		// $ClientId = trim($data->ClientId); 
-		//$BranchId = trim($data->BranchId); 
 
 		$BusinessLineId = $data->rowData->id;
 		$BusinessLineName = $data->rowData->BusinessLineName;

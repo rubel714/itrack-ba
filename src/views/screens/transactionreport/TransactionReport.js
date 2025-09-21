@@ -320,8 +320,6 @@ const TransactionReport = (props) => {
       action: "DepartmentList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
     };
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
@@ -336,8 +334,6 @@ const TransactionReport = (props) => {
       action: "UserList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       DepartmentId: deptId,
     };
 
@@ -353,8 +349,6 @@ const TransactionReport = (props) => {
       action: "TransactionList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       DepartmentId: deptId,
       VisitorId: visitorId,
       StartDate: sDate,
@@ -1115,8 +1109,6 @@ const TransactionReport = (props) => {
       action: "getDataList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       ReportTypeId: currReportTypeId,
       DepartmentId: currDepartmentId,
       VisitorId: currUserId,
@@ -1218,8 +1210,6 @@ const TransactionReport = (props) => {
   //     action: "deleteData",
   //     lan: language(),
   //     UserId: UserInfo.UserId,
-  //     ClientId: UserInfo.ClientId,
-  //     BranchId: UserInfo.BranchId,
   //     rowData: rowData,
   //   };
 

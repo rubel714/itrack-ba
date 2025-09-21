@@ -53,8 +53,6 @@ const TeamMemberAssign = (props) => {
     //     finalUrl +
     //       "?action=RoleToMenuPermissionExport" +
     //       "&reportType=excel" +
-    //       "&ClientId=" + UserInfo.ClientId +
-    //       "&BranchId=" + UserInfo.BranchId +
     //       "&TeamId=" + currTeamId +   
     //       "&RoleName=" + curRoleName[0].name +   
     //       "&TimeStamp=" +

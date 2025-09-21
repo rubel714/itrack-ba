@@ -30,8 +30,6 @@ const Factory = (props) => {
       finalUrl +
         "?action=FactoryExport" +
         "&reportType=excel" +
-        "&ClientId=" + UserInfo.ClientId +
-        "&BranchId=" + UserInfo.BranchId +
         "&TimeStamp=" +
         Date.now()
     );
@@ -192,8 +190,6 @@ const Factory = (props) => {
       action: "deleteData",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       rowData: rowData,
     };
 

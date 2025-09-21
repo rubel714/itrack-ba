@@ -26,9 +26,6 @@ switch($task){
 
 function getDataList($data){
 
-	
-	// $ClientId = trim($data->ClientId); 
-	//$BranchId = trim($data->BranchId); 
 
 	try{
 		$dbh = new Db();

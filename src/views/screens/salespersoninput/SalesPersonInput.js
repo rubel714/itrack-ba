@@ -82,10 +82,7 @@ const SalesPersonInput = (props) => {
       finalUrl +
         "?action=SalesPersonInputExport" +
         "&reportType=excel" +
-        "&ClientId=" +
-        UserInfo.ClientId +
-        "&BranchId=" +
-        UserInfo.BranchId +
+
         "&TimeStamp=" +
         Date.now()
     );
@@ -496,8 +493,6 @@ const SalesPersonInput = (props) => {
       action: "getDataList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
     };
     // console.log('LoginUserInfo params: ', params);
 
@@ -618,8 +613,6 @@ const SalesPersonInput = (props) => {
       action: "deleteData",
       lan: language(),
       UserId: UserInfo.UserId,
-      ClientId: UserInfo.ClientId,
-      BranchId: UserInfo.BranchId,
       rowData: rowData,
     };
 

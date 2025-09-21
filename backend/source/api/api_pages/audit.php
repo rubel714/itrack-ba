@@ -35,8 +35,7 @@ switch ($task) {
 
 function getDataList($data)
 {
-	$ClientId = trim($data->ClientId);
-	$BranchId = trim($data->BranchId);
+
 	$TransactionTypeId = trim($data->TransactionTypeId);
 	$StartDate = trim($data->StartDate);
 	$EndDate = trim($data->EndDate)." 23-59-59";
@@ -51,9 +50,7 @@ function getDataList($data)
 		INNER JOIN t_users b on a.UserId=b.UserId
 		INNER JOIN t_users c on a.EntryByUserId=c.UserId
 		INNER JOIN t_users d on a.ApproveByUserId=d.UserId
-		where a.ClientId=$ClientId
-		and a.BranchId=$BranchId
-		and a.TransactionTypeId=$TransactionTypeId
+		where a.TransactionTypeId=$TransactionTypeId
 		and (a.TransactionDate between '$StartDate' and '$EndDate')
 		ORDER BY a.TransactionDate DESC, a.`InvoiceNo` DESC;";
 
@@ -77,9 +74,6 @@ function getDataList($data)
 function getDataSingle($data)
 {
 	$TransactionId = trim($data->id);
-	// $ClientId = trim($data->ClientId); 
-	// $BranchId = trim($data->BranchId); 
-	// $TransactionTypeId = trim($data->TransactionTypeId); 
 
 	try {
 		$dbh = new Db();
@@ -132,12 +126,8 @@ function dataAddEdit($data)
 			$data = $data->params;
 			$lan = trim($data->lan);
 			$UserId = trim($data->UserId);
-			$ClientId = trim($data->ClientId);
-			$BranchId = trim($data->BranchId);
 
 			$InvoiceMaster = isset($data->InvoiceMaster) ? ($data->InvoiceMaster) : [];
-			// $InvoiceItems = isset($data->InvoiceItems) ? ($data->InvoiceItems) : [];
-			// $DeletedItems = isset($data->DeletedItems) ? ($data->DeletedItems) : [];
 
 			$TransactionId = $InvoiceMaster->id;
 			$TransactionTypeId = $InvoiceMaster->TransactionTypeId;
@@ -156,8 +146,8 @@ function dataAddEdit($data)
 				/**Invoice Master */
 				$q = new insertq();
 				$q->table = 't_audit';
-				$q->columns = ['ClientId', 'BranchId', 'TransactionTypeId', 'TransactionDate', 'InvoiceNo', 'UserId','EntryByUserId','ApproveByUserId'];
-				$q->values = [$ClientId, $BranchId, $TransactionTypeId, $TransactionDate, $InvoiceNo, $UserId,$EntryByUserId,$ApproveByUserId];
+				$q->columns = ['TransactionTypeId', 'TransactionDate', 'InvoiceNo', 'UserId','EntryByUserId','ApproveByUserId'];
+				$q->values = [$TransactionTypeId, $TransactionDate, $InvoiceNo, $UserId,$EntryByUserId,$ApproveByUserId];
 				$q->pks = ['TransactionId'];
 				$q->bUseInsetId = true;
 				$q->build_query();
@@ -168,9 +158,7 @@ function dataAddEdit($data)
 				$query = "SELECT a.`ProductId`,b.ProductName,SUM(a.`Quantity`) Quantity
 				FROM `t_productstock` a
 				inner join t_product b ON a.ProductId=b.ProductId
-				WHERE a.ClientId=$ClientId
-				AND a.BranchId=$BranchId
-				AND a.Quantity>0
+				WHERE a.Quantity>0
 				GROUP BY a.ProductId,b.ProductName;";
 				$re = $dbh->query($query);
 				$productStockList = array();
@@ -324,8 +312,6 @@ function deleteData($data)
 		$TransactionId = $data->rowData->id;
 		$lan = trim($data->lan);
 		$UserId = trim($data->UserId);
-		//$ClientId = trim($data->ClientId); 
-		//$BranchId = trim($data->BranchId); 
 
 		try {
 

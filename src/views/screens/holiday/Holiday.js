@@ -31,8 +31,6 @@ const Holiday = (props) => {
       finalUrl +
       "?action=HoliDyExport" +
       "&reportType=excel" +
-      "&ClientId=" + UserInfo.ClientId +
-      "&BranchId=" + UserInfo.BranchId +
       "&TimeStamp=" +
       Date.now()
     );
