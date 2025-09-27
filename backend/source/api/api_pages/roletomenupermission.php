@@ -29,9 +29,7 @@ function getDataList($data)
 {
 
 	$RoleId = trim($data->RoleId);
-	$ClientId = trim($data->ClientId);
-	$BranchId = trim($data->BranchId);
-	
+
 	try {
 		$dbh = new Db();
 
@@ -40,13 +38,9 @@ function getDataList($data)
 		IF(MenuLevel='menu_level_3',CONCAT(' --', a.MenuTitle),a.MenuTitle)) menuname,
 					CASE WHEN b.MenuId IS NULL THEN 0 ELSE b.PermissionType END PermissionType, RoleMenuId,a.MenuType
 			   FROM `t_menu` a
-			   LEFT JOIN t_role_menu_map b ON b.`MenuId` = a.`MenuId` AND b.ClientId = $ClientId AND b.BranchId = $BranchId and b.RoleId = $RoleId
+			   LEFT JOIN t_role_menu_map b ON b.`MenuId` = a.`MenuId` and b.RoleId = $RoleId
 			   ORDER BY a.MenuType desc, SortOrder asc;";
-
-	/* 	echo $query ;
-		exit; 
-		*/
-
+ 
 		$resultdata = $dbh->query($query);
 
 		$returnData = [
@@ -77,10 +71,8 @@ function assignData($data)
 		$lan = trim($data->lan);
 		$UserId = trim($data->UserId);
 		$RoleId = trim($data->RoleId);
-		$ClientId = trim($data->ClientId);
-		$BranchId = trim($data->BranchId);
-
-
+		$ClientId=1;
+		$BranchId=1;
 		try {
 
 			$dbh = new Db();

@@ -70,6 +70,18 @@ switch ($task) {
 	case "getMemberList":
 		$returnData = getMemberList($data);
 		break;
+	case "getCountryList":
+		$returnData = getCountryList($data);
+		break;
+	case "getLeadAuditorList":
+		$returnData = getLeadAuditorList($data);
+		break;
+	case "getTeamAuditorList":
+		$returnData = getTeamAuditorList($data);
+		break;
+	case "getAuditTypeList":
+		$returnData = getAuditTypeList($data);
+		break;
 
 
 	case "MonthList":
@@ -615,6 +627,105 @@ function getMemberList($data)
 	return $returnData;
 }
 
+function getCountryList($data)
+{
+	
+	try {
+		$dbh = new Db();
+		$query = "SELECT a.`CountryId` id, a.CountryName `name`
+	 			 	FROM t_country a
+					ORDER BY a.CountryName;";
+
+		$resultdata = $dbh->query($query);
+
+		$returnData = [
+			"success" => 1,
+			"status" => 200,
+			"message" => "",
+			"datalist" => $resultdata
+		];
+	} catch (PDOException $e) {
+		$returnData = msg(0, 500, $e->getMessage());
+	}
+
+	return $returnData;
+}
+
+
+function getLeadAuditorList($data)
+{
+	
+	try {
+		$dbh = new Db();
+		$query = "SELECT distinct a.`AuditorId` id, b.AuditorName `name`
+	 			 	FROM t_auditor_lead_program a
+					INNER JOIN t_auditor b on a.AuditorId=b.AuditorId
+					ORDER BY b.AuditorName;";
+
+		$resultdata = $dbh->query($query);
+
+		$returnData = [
+			"success" => 1,
+			"status" => 200,
+			"message" => "",
+			"datalist" => $resultdata
+		];
+	} catch (PDOException $e) {
+		$returnData = msg(0, 500, $e->getMessage());
+	}
+
+	return $returnData;
+}
+
+
+function getTeamAuditorList($data)
+{
+	
+	try {
+		$dbh = new Db();
+		$query = "SELECT distinct a.`AuditorId` id, b.AuditorName `name`
+	 			 	FROM t_auditor_member_program a
+					INNER JOIN t_auditor b on a.AuditorId=b.AuditorId
+					ORDER BY b.AuditorName;";
+
+		$resultdata = $dbh->query($query);
+
+		$returnData = [
+			"success" => 1,
+			"status" => 200,
+			"message" => "",
+			"datalist" => $resultdata
+		];
+	} catch (PDOException $e) {
+		$returnData = msg(0, 500, $e->getMessage());
+	}
+
+	return $returnData;
+}
+
+function getAuditTypeList($data)
+{
+	
+	try {
+		$dbh = new Db();
+		$query = "SELECT distinct a.`AuditTypeId` id, a.AuditTypeName `name`
+	 			 	FROM t_audittype a
+					ORDER BY a.AuditTypeName;";
+
+		$resultdata = $dbh->query($query);
+
+		$returnData = [
+			"success" => 1,
+			"status" => 200,
+			"message" => "",
+			"datalist" => $resultdata
+		];
+	} catch (PDOException $e) {
+		$returnData = msg(0, 500, $e->getMessage());
+	}
+
+	return $returnData;
+}
 
 function MonthList($data)
 {

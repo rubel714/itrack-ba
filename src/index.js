@@ -40,6 +40,7 @@ import RoleToMenuPermission from "views/screens/roletomenupermission/index.js";
 import AuditLog from "views/screens/auditlog/index.js";
 import ErrorLog from "views/screens/errorlog/index.js";
 import SalesPersonInput from "views/screens/salespersoninput/index.js";
+import CoordinatorInput from "views/screens/coordinatorinput/index.js";
 import UserContextProvider from './context/user-info-context';
 
 // import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
@@ -102,6 +103,7 @@ ReactDOM.render(
             <Route path="/errorlog" render={(props) => <ErrorLog {...props} />} />
 
             <Route path="/salespersoninput" render={(props) => <SalesPersonInput {...props} />} />
+            <Route path="/coordinatorinput" render={(props) => <CoordinatorInput {...props} />} />
 
             <Route path="/" render={(props) => <Index {...props} />} />
 

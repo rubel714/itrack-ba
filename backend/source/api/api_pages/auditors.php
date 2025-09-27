@@ -198,15 +198,31 @@ function deleteData($data) {
 		$AuditorId  = $data->rowData->id;
 		$lan = trim($data->lan); 
 		$UserId = trim($data->UserId); 
+		$aQuerys = array();
 
 		try{
 			
+
+			$d = new deleteq();
+			$d->table = 't_auditor_lead_program';
+			$d->pks = ['AuditorId'];
+			$d->pk_values = [$AuditorId];
+			$d->build_query();
+			$aQuerys[] = $d;
+
+			$d = new deleteq();
+			$d->table = 't_auditor_member_program';
+			$d->pks = ['AuditorId'];
+			$d->pk_values = [$AuditorId];
+			$d->build_query();
+			$aQuerys[] = $d;
+
             $d = new deleteq();
             $d->table = 't_auditor';
             $d->pks = ['AuditorId'];
             $d->pk_values = [$AuditorId];
             $d->build_query();
-            $aQuerys = array($d);
+            $aQuerys[] = $d;
 
 			$res = exec_query($aQuerys, $UserId, $lan);  
 			$success=($res['msgType']=='success')?1:0;

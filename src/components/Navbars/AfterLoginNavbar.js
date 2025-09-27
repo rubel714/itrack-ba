@@ -340,6 +340,16 @@ function AfterLoginNavbar(props) {
                         </a>
                       </li>
                     )}
+                    {menuShowPermision("coordinatorinput") === 1 && (
+                      <li>
+                        <a
+                          href="javascript:void(0)"
+                          onClick={() => props.history.push("coordinatorinput")}
+                        >
+                          Coordinator Input
+                        </a>
+                      </li>
+                    )}
 
                     {/* {menuShowPermision("inspectionreportentry") === 1 && (
                       <li>

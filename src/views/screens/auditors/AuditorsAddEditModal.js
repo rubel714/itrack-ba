@@ -176,6 +176,7 @@ const AuditorsAddEditModal = (props) => {
             />
           </div>
 
+          {props.currentRow.id && (
           <div class="modalItem" style={{ display: "inline-block", alignItems: "left", marginBottom: 4 }}>
 
             <label>Capability of Lead Auditor Program Name</label>
@@ -210,9 +211,9 @@ const AuditorsAddEditModal = (props) => {
                 </div>
               ))
             }
-          </div>
+          </div>)}
 
-
+ {props.currentRow.id && (
           <div class="modalItem" style={{ display: "inline-block", alignItems: "left", marginBottom: 4 }}>
             
             <label>Capability of Team Auditor Program Name</label>
@@ -248,7 +249,7 @@ const AuditorsAddEditModal = (props) => {
               ))
             }
 
-          </div>
+          </div>)}
 
          
           <div class="modalItem">

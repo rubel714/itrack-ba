@@ -19,16 +19,14 @@ import {
 } from "../../../actions/api";
 import ExecuteQueryHook from "../../../components/hooks/ExecuteQueryHook";
 import moment from "moment";
-// import SalesPersonInputAddEditModal from "./SalesPersonInputAddEditModal";
 import "../../../assets/css/audit.css";
-const SalesPersonInput = (props) => {
-  const serverpage = "salespersoninput"; // this is .php server page
+
+const CoordinatorInput = (props) => {
+  const serverpage = "coordinatorinput"; // this is .php server page
 
   const { useState } = React;
   const [bFirst, setBFirst] = useState(true);
   const [currentRow, setCurrentRow] = useState([]);
-  // const [currentRowDelete, setCurrentRowDelete] = useState([]);
-  // const [showModal, setShowModal] = useState(false); //true=show modal, false=hide modal
   const [toggle, setToggle] = useState(true); //true=show tabel, false= show add/edit form
 
   const [errorObject, setErrorObject] = useState({});
@@ -55,14 +53,25 @@ const SalesPersonInput = (props) => {
   const [BuyerList, setBuyerList] = useState(null);
   const [currBuyerId, setCurrBuyerId] = useState(null);
 
-  // const [TeamList, setTeamList] = useState(null);
-  // const [currTeamId, setCurrTeamId] = useState(null);
-
   const [DepartmentList, setDepartmentList] = useState(null);
   const [currDepartmentId, setCurrDepartmentId] = useState(null);
 
   const [MemberList, setMemberList] = useState(null);
   const [currMemberId, setCurrMemberId] = useState(null);
+
+  const [CountryList, setCountryList] = useState(null);
+  const [currCountryId, setCurrCountryId] = useState(null);
+
+  const [LeadAuditorList, setLeadAuditorList] = useState(null);
+  const [currLeadAuditorId, setCurrLeadAuditorId] = useState(null);
+
+  const [TeamAuditorList, setTeamAuditorList] = useState(null);
+  const [currTeamAuditorId, setCurrTeamAuditorId] = useState(null);
+
+  const [AuditTypeList, setAuditTypeList] = useState(null);
+  const [currAuditTypeId, setCurrAuditTypeId] = useState(null);
+
+  const [currReportWriterId, setCurrReportWriterId] = useState(null);
 
   // handleChangeWidthHeight
   const { isLoading, data: dataList, error, ExecuteQuery } = ExecuteQueryHook(); //Fetch data
@@ -82,7 +91,6 @@ const SalesPersonInput = (props) => {
       finalUrl +
         "?action=SalesPersonInputExport" +
         "&reportType=excel" +
-
         "&TimeStamp=" +
         Date.now()
     );
@@ -99,6 +107,10 @@ const SalesPersonInput = (props) => {
     getBuyerList("");
     getDepartmentList("");
     getMemberList("", "");
+    getCountryList("");
+    getLeadAuditorList("");
+    getTeamAuditorList("");
+    getAuditTypeList("");
 
     // console.log("calling use effect");
   }, []);
@@ -160,7 +172,7 @@ const SalesPersonInput = (props) => {
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
       setCoordinatorList(
-        [{ id: "", name: "Select Coordinator" }].concat(res.data.datalist)
+        [{ id: "", name: "Select" }].concat(res.data.datalist)
       );
 
       setCurrCoordinatorId(selectCoordinatorId);
@@ -223,14 +235,15 @@ const SalesPersonInput = (props) => {
     };
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
-      setDepartmentList([{ id: "", name: "Select Department" }].concat(res.data.datalist));
+      setDepartmentList(
+        [{ id: "", name: "Select Department" }].concat(res.data.datalist)
+      );
 
       setCurrDepartmentId(selectDepartmentId);
     });
   }
 
   function getMemberList(pDepartmentId, selectMemberId) {
-
     let params = {
       action: "getMemberList",
       lan: language(),
@@ -248,6 +261,70 @@ const SalesPersonInput = (props) => {
     });
   }
 
+  function getCountryList(selectCountryId) {
+    let params = {
+      action: "getCountryList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+    };
+
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      setCountryList(
+        [{ id: "", name: "Select Country" }].concat(res.data.datalist)
+      );
+
+      setCurrCountryId(selectCountryId);
+    });
+  }
+
+  function getLeadAuditorList(selectLeadAuditorId) {
+    let params = {
+      action: "getLeadAuditorList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+    };
+
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      setLeadAuditorList(
+        [{ id: "", name: "Select Lead Auditor" }].concat(res.data.datalist)
+      );
+
+      setCurrLeadAuditorId(selectLeadAuditorId);
+    });
+  }
+
+  function getTeamAuditorList(selectTeamAuditorId) {
+    let params = {
+      action: "getTeamAuditorList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+    };
+
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      setTeamAuditorList(
+        [{ id: "", name: "Select Team Auditor" }].concat(res.data.datalist)
+      );
+
+      setCurrTeamAuditorId(selectTeamAuditorId);
+    });
+  }
+
+  function getAuditTypeList(selectAuditTypeId) {
+    let params = {
+      action: "getAuditTypeList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+    };
+
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      setAuditTypeList(
+        [{ id: "", name: "Select Audit Type" }].concat(res.data.datalist)
+      );
+
+      setCurrAuditTypeId(selectAuditTypeId);
+    });
+  }
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     let data = { ...currentRow };
@@ -255,6 +332,27 @@ const SalesPersonInput = (props) => {
     setCurrentRow(data);
     setErrorObject({ ...errorObject, [name]: null });
   };
+
+  function handleChangeCheck(e) {
+    // console.log('e.target.checked: ', e.target.checked);
+    const { name, value } = e.target;
+
+    let data = { ...currentRow };
+    data[name] = e.target.checked;
+    setCurrentRow(data);
+    //  console.log('aaa data: ', data);
+  }
+
+  function handleChangeRadio(e) {
+    // console.log('e.target.checked: ', e.target.id);
+    // console.log('e.target.checked: ', e.target.value);
+    // const { name, value } = e.target;
+
+    let data = { ...currentRow };
+    data[e.target.id] = e.target.value;
+    setCurrentRow(data);
+    //  console.log('aaa data: ', data);
+  }
 
   const handleChangeDropDown = (name, value) => {
     let data = { ...currentRow };
@@ -308,6 +406,31 @@ const SalesPersonInput = (props) => {
       setCurrMemberId(value);
     }
 
+    if (name === "CountryId") {
+      data["CountryId"] = value;
+      setCurrCountryId(value);
+    }
+
+    if (name === "LeadAuditorId") {
+      data["LeadAuditorId"] = value;
+      setCurrLeadAuditorId(value);
+    }
+
+    if (name === "TeamAuditorId") {
+      data["TeamAuditorId"] = value;
+      setCurrTeamAuditorId(value);
+    }
+
+    if (name === "AuditTypeId") {
+      data["AuditTypeId"] = value;
+      setCurrAuditTypeId(value);
+    }
+
+    if (name === "ReportWriterId") {
+      data["ReportWriterId"] = value;
+      setCurrReportWriterId(value);
+    }
+
     setErrorObject({ ...errorObject, [name]: null });
     setCurrentRow(data);
   };
@@ -358,24 +481,6 @@ const SalesPersonInput = (props) => {
 
   const columnList = [
     { field: "rownumber", label: "SL", align: "center", width: "3%" },
-    // { field: 'SL', label: 'SL',width:'10%',align:'center',visible:true,sort:false,filter:false },
-    // {
-    //   field: "InvoiceNo",
-    //   label: "Audit Number",
-    //   align: "left",
-    //   visible: true,
-    //   sort: true,
-    //   filter: true,
-    // },
-    // {
-    //   field: "TransactionDate",
-    //   label: "Report Date",
-    //   align: "left",
-    //   visible: true,
-    //   sort: true,
-    //   filter: true,
-    //   width: "25%",
-    // },
     {
       field: "ActivityName",
       label: "Activity",
@@ -383,7 +488,7 @@ const SalesPersonInput = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "10%",
+      width: "13%",
     },
     {
       field: "FactoryName",
@@ -394,16 +499,6 @@ const SalesPersonInput = (props) => {
       filter: true,
       width: "12%",
     },
-    // {
-    //   field: "FactoryGroupName",
-    //   label: "Factory Group",
-    //   align: "left",
-    //   visible: true,
-    //   sort: true,
-    //   filter: true,
-    //   width: "8%",
-    // },
-
     {
       field: "ProgramName",
       label: "Program",
@@ -411,7 +506,7 @@ const SalesPersonInput = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "8%",
+      width: "7%",
     },
 
     {
@@ -431,7 +526,7 @@ const SalesPersonInput = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "8%",
+      width: "6%",
     },
 
     {
@@ -441,7 +536,7 @@ const SalesPersonInput = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "8%",
+      width: "6%",
     },
     {
       field: "LeadStatusName",
@@ -450,7 +545,7 @@ const SalesPersonInput = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "6%",
+      width: "7%",
     },
     {
       field: "BuyerName",
@@ -459,7 +554,7 @@ const SalesPersonInput = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "10%",
+      width: "7%",
     },
     {
       field: "NextFollowupDate",
@@ -468,12 +563,48 @@ const SalesPersonInput = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "10%",
+      width: "6%",
+    },
+    {
+      field: "AssessmentNo",
+      label: "Assessment No",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "6%",
+    },
+    {
+      field: "AuditStartDate",
+      label: "Audit Start Date",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "5%",
+    },
+    {
+      field: "AuditEndDate",
+      label: "Audit End Date",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "5%",
+    },
+    {
+      field: "RevenueBDT",
+      label: "Revenue (BDT)",
+      align: "right",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "5%",
     },
     {
       field: "custom",
       label: "Action",
-      width: "8%",
+      width: "5%",
       align: "center",
       visible: true,
       sort: false,
@@ -510,12 +641,12 @@ const SalesPersonInput = (props) => {
           }}
         />
 
-        <DeleteOutline
+        {/* <DeleteOutline
           className={"table-delete-icon"}
           onClick={() => {
             deleteData(rowData);
           }}
-        />
+        /> */}
       </>
     );
   }
@@ -531,6 +662,12 @@ const SalesPersonInput = (props) => {
     setCurrDepartmentId("");
     // setCurrMemberId(rowData.MemberId);
     getMemberList("", "");
+
+    setCurrCountryId("");
+    setCurrLeadAuditorId("");
+    setCurrTeamAuditorId("");
+    setCurrAuditTypeId("");
+    setCurrReportWriterId("");
 
     setCurrentRow({
       id: "",
@@ -556,6 +693,26 @@ const SalesPersonInput = (props) => {
       MemberId: "",
       Remarks: "",
       StatusId: 5,
+
+      AssessmentNo: "",
+      AuditStartDate: "",
+      AuditEndDate: "",
+      CountryId: "",
+      LeadAuditorId: "",
+      TeamAuditorId: "",
+      AuditTypeId: "",
+      Window: "",
+      PaymentStatus: "No",
+      ReportWriterId: "",
+      NoOfEmployee: "",
+      AuditFee: "",
+      OPE: "",
+      PINo: "",
+      AttachedDocuments: "",
+      AuditTypeId: "",
+      IsSendMail: 0,
+      ReportReleaseStatus: "No",
+
       FormData: null,
     });
     // openModal();
@@ -574,6 +731,12 @@ const SalesPersonInput = (props) => {
     // setCurrMemberId(rowData.MemberId);
 
     getMemberList(rowData.DepartmentId, rowData.MemberId);
+    setCurrCountryId(rowData.CountryId);
+
+    setCurrLeadAuditorId(rowData.LeadAuditorId);
+    setCurrTeamAuditorId(rowData.TeamAuditorId);
+    setCurrAuditTypeId(rowData.AuditTypeId);
+    setCurrReportWriterId(rowData.ReportWriterId);
 
     setCurrentRow(rowData);
     setToggle(false); // true=show tabel, false= show add/edit form
@@ -633,21 +796,11 @@ const SalesPersonInput = (props) => {
       <div class="bodyContainer">
         {/* <!-- ######-----TOP HEADER-----####### --> */}
         <div class="topHeader">
-          <h4>Home ❯ Audit ❯ Sales Person Input</h4>
+          <h4>Home ❯ Audit ❯ Coordinator Input</h4>
         </div>
 
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
         <div class="searchAdd">
-          {/* <input type="text" placeholder="Search Product Group"/> */}
-          {/* <button
-            onClick={() => {
-              addData();
-            }}
-            className="btnAdd"
-          >
-            ADD
-          </button> */}
-
           {toggle && (
             <>
               <Button
@@ -655,7 +808,7 @@ const SalesPersonInput = (props) => {
                 class={"btnPrint"}
                 onClick={PrintPDFExcelExportFunction}
               />
-              <Button label={"ADD"} class={"btnAdd"} onClick={addData} />
+              {/* <Button label={"ADD"} class={"btnAdd"} onClick={addData} /> */}
             </>
           )}
 
@@ -679,7 +832,7 @@ const SalesPersonInput = (props) => {
         )}
 
         {!toggle && (
-          <div>
+          <>
             {/* <!-- GROUP MODAL START --> */}
 
             <div class="pt-10 control-row">
@@ -721,9 +874,7 @@ const SalesPersonInput = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
-            </div>
 
-            <div class="control-row pt-10">
               <label>Factory *</label>
               <Autocomplete
                 autoHighlight
@@ -761,6 +912,30 @@ const SalesPersonInput = (props) => {
                 )}
               />
 
+              <label>Assessment No.</label>
+              <input
+                type="text"
+                id="AssessmentNo"
+                name="AssessmentNo"
+                // class={errorObject.AssessmentNo}
+                placeholder="Enter Assessment No"
+                value={currentRow.AssessmentNo}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Audit Start Date</label>
+              <input
+                type="date"
+                id="AuditStartDate"
+                name="AuditStartDate"
+                // class={errorObject.AuditStartDate}
+                placeholder="Enter Audit Start Date"
+                value={currentRow.AuditStartDate}
+                onChange={(e) => handleChange(e)}
+              />
+            </div>
+
+            <div class="control-row pt-10">
               <label>Group Name {currentRow.id}</label>
               <input
                 type="text"
@@ -802,6 +977,51 @@ const SalesPersonInput = (props) => {
                 }
                 // onChange={(e) => handleChange(e)}
               />
+
+              <label>Audit End Date</label>
+              <input
+                type="date"
+                id="AuditEndDate"
+                name="AuditEndDate"
+                // class={errorObject.AuditEndDate}
+                placeholder="Enter Audit End Date"
+                value={currentRow.AuditEndDate}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Country</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                className="chosen_dropdown"
+                id="CountryId"
+                name="CountryId"
+                autoComplete
+                // class={errorObject.CountryId}
+                options={CountryList ? CountryList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Country" }}
+                value={
+                  CountryList
+                    ? CountryList[
+                        CountryList.findIndex(
+                          (list) => list.id === currCountryId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown("CountryId", valueobj ? valueobj.id : "")
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
             </div>
 
             <div class="control-row pt-10">
@@ -841,7 +1061,6 @@ const SalesPersonInput = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
-
               <label>Expire Date</label>
               <input
                 type="date"
@@ -853,6 +1072,82 @@ const SalesPersonInput = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
+              <label>Lead Auditor</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                className="chosen_dropdown"
+                id="LeadAuditorId"
+                name="LeadAuditorId"
+                autoComplete
+                // class={errorObject.LeadAuditorId}
+                options={LeadAuditorList ? LeadAuditorList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Lead Auditor" }}
+                value={
+                  LeadAuditorList
+                    ? LeadAuditorList[
+                        LeadAuditorList.findIndex(
+                          (list) => list.id === currLeadAuditorId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown(
+                    "LeadAuditorId",
+                    valueobj ? valueobj.id : ""
+                  )
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+              <label>Team Auditor</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                className="chosen_dropdown"
+                id="TeamAuditorId"
+                name="TeamAuditorId"
+                autoComplete
+                // class={errorObject.TeamAuditorId}
+                options={TeamAuditorList ? TeamAuditorList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Team Auditor" }}
+                value={
+                  TeamAuditorList
+                    ? TeamAuditorList[
+                        TeamAuditorList.findIndex(
+                          (list) => list.id === currTeamAuditorId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown(
+                    "TeamAuditorId",
+                    valueobj ? valueobj.id : ""
+                  )
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+            </div>
+
+            <div class="control-row pt-10">
               <label>Opportunity Date</label>
               <input
                 type="date"
@@ -863,9 +1158,6 @@ const SalesPersonInput = (props) => {
                 value={currentRow.OpportunityDate}
                 onChange={(e) => handleChange(e)}
               />
-            </div>
-
-            <div class="control-row pt-10">
               <label>Tentative Offer Price</label>
               <input
                 type="number"
@@ -877,6 +1169,56 @@ const SalesPersonInput = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
+              <label>Audit Type</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                className="chosen_dropdown"
+                id="AuditTypeId"
+                name="AuditTypeId"
+                autoComplete
+                // class={errorObject.AuditTypeId}
+                options={AuditTypeList ? AuditTypeList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Audit Type" }}
+                value={
+                  AuditTypeList
+                    ? AuditTypeList[
+                        AuditTypeList.findIndex(
+                          (list) => list.id === currAuditTypeId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown(
+                    "AuditTypeId",
+                    valueobj ? valueobj.id : ""
+                  )
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+              <label>Window</label>
+              <input
+                type="date"
+                id="Window"
+                name="Window"
+                // class={errorObject.Window}
+                placeholder="Enter Window"
+                value={currentRow.Window}
+                onChange={(e) => handleChange(e)}
+              />
+            </div>
+
+            <div class="control-row pt-10">
               <label>CB (Certificate Body)</label>
               <input
                 type="text"
@@ -924,6 +1266,71 @@ const SalesPersonInput = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
+
+              <label>Report Writer</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                className="chosen_dropdown"
+                id="ReportWriterId"
+                name="ReportWriterId"
+                autoComplete
+                // class={errorObject.ReportWriterId}
+                options={CoordinatorList ? CoordinatorList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select" }}
+                value={
+                  CoordinatorList
+                    ? CoordinatorList[
+                        CoordinatorList.findIndex(
+                          (list) => list.id === currReportWriterId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown(
+                    "ReportWriterId",
+                    valueobj ? valueobj.id : ""
+                  )
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+              <label>Payment Status</label>
+              <div>
+                <label>Yes</label>
+                <input
+                  style={{
+                    width: "15px",
+                    height: "15px",
+                    "margin-right": "15px",
+                  }}
+                  type="radio"
+                  id="PaymentStatus"
+                  name="PaymentStatus"
+                  value="Yes"
+                  checked={currentRow.PaymentStatus == "Yes"}
+                  onChange={handleChangeRadio}
+                ></input>
+                <label>No</label>
+                <input
+                  style={{ width: "15px", height: "15px" }}
+                  type="radio"
+                  id="PaymentStatus"
+                  name="PaymentStatus"
+                  value="No"
+                  checked={currentRow.PaymentStatus == "No"}
+                  onChange={handleChangeRadio}
+                ></input>
+              </div>
             </div>
 
             <div class="control-row pt-10">
@@ -1001,6 +1408,30 @@ const SalesPersonInput = (props) => {
                 )}
               />
 
+              <label>No Of Employee</label>
+              <input
+                type="text"
+                id="NoOfEmployee"
+                name="NoOfEmployee"
+                // class={errorObject.NoOfEmployee}
+                placeholder="Enter No Of Employee"
+                value={currentRow.NoOfEmployee}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Audit Fee</label>
+              <input
+                type="number"
+                id="AuditFee"
+                name="AuditFee"
+                // class={errorObject.AuditFee}
+                placeholder="Enter Audit Fee"
+                value={currentRow.AuditFee}
+                onChange={(e) => handleChange(e)}
+              />
+            </div>
+
+            <div class="control-row pt-10">
               <label>Man Day</label>
               <input
                 type="number"
@@ -1011,9 +1442,6 @@ const SalesPersonInput = (props) => {
                 value={currentRow.ManDay}
                 onChange={(e) => handleChange(e)}
               />
-            </div>
-
-            <div class="control-row pt-10">
               <label>Buyer</label>
               <Autocomplete
                 autoHighlight
@@ -1046,6 +1474,30 @@ const SalesPersonInput = (props) => {
                 )}
               />
 
+              <label>OPE</label>
+              <input
+                type="text"
+                id="OPE"
+                name="OPE"
+                // class={errorObject.OPE}
+                placeholder="Enter OPE"
+                value={currentRow.OPE}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>PI No</label>
+              <input
+                type="text"
+                id="PINo"
+                name="PINo"
+                // class={errorObject.PINo}
+                placeholder="Enter PI No"
+                value={currentRow.PINo}
+                onChange={(e) => handleChange(e)}
+              />
+            </div>
+
+            <div class="control-row pt-10">
               <label>Lead Generated by (Department)</label>
               <Autocomplete
                 autoHighlight
@@ -1061,12 +1513,17 @@ const SalesPersonInput = (props) => {
                 value={
                   DepartmentList
                     ? DepartmentList[
-                        DepartmentList.findIndex((list) => list.id === currDepartmentId)
+                        DepartmentList.findIndex(
+                          (list) => list.id === currDepartmentId
+                        )
                       ]
                     : null
                 }
                 onChange={(event, valueobj) =>
-                  handleChangeDropDown("DepartmentId", valueobj ? valueobj.id : "")
+                  handleChangeDropDown(
+                    "DepartmentId",
+                    valueobj ? valueobj.id : ""
+                  )
                 }
                 renderOption={(option) => (
                   <Typography className="chosen_dropdown_font">
@@ -1109,6 +1566,28 @@ const SalesPersonInput = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
+
+              <label>Revenue (BDT)</label>
+              <input
+                type="number"
+                id="RevenueBDT"
+                name="RevenueBDT"
+                // class={errorObject.RevenueBDT}
+                placeholder="Enter Revenue BDT"
+                value={currentRow.RevenueBDT}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Attached Documents</label>
+              <input
+                type="text"
+                id="AttachedDocuments"
+                name="AttachedDocuments"
+                // class={errorObject.AttachedDocuments}
+                placeholder="Enter Attached Documents"
+                value={currentRow.AttachedDocuments}
+                onChange={(e) => handleChange(e)}
+              />
             </div>
 
             <div class="control-row pt-10">
@@ -1133,6 +1612,43 @@ const SalesPersonInput = (props) => {
                 value={currentRow.Remarks}
                 onChange={(e) => handleChange(e)}
               />
+
+              <label>Send Mail</label>
+              <input
+                id="IsSendMail"
+                name="IsSendMail"
+                type="checkbox"
+                checked={currentRow.IsSendMail}
+                onChange={handleChangeCheck}
+              />
+
+              <label>Report Release</label>
+              <div>
+                <label>Yes</label>
+                <input
+                  style={{
+                    width: "15px",
+                    height: "15px",
+                    "margin-right": "15px",
+                  }}
+                  type="radio"
+                  id="ReportReleaseStatus"
+                  name="ReportReleaseStatus"
+                  value="Yes"
+                  checked={currentRow.ReportReleaseStatus == "Yes"}
+                  onChange={handleChangeRadio}
+                ></input>
+                <label>No</label>
+                <input
+                  style={{ width: "15px", height: "15px" }}
+                  type="radio"
+                  id="ReportReleaseStatus"
+                  name="ReportReleaseStatus"
+                  value="No"
+                  checked={currentRow.ReportReleaseStatus == "No"}
+                  onChange={handleChangeRadio}
+                ></input>
+              </div>
             </div>
 
             <div class="pt-10 saveCancelRow ">
@@ -1158,7 +1674,7 @@ const SalesPersonInput = (props) => {
             </div>
 
             {/* <!-- GROUP MODAL END --> */}
-          </div>
+          </>
         )}
 
         {/* </div>
@@ -1177,4 +1693,4 @@ const SalesPersonInput = (props) => {
   );
 };
 
-export default SalesPersonInput;
+export default CoordinatorInput;

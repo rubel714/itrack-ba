@@ -8,11 +8,11 @@
   width: 10%;
 }
 .control-row input {
-   width: 20%;
+   width: 12%;
 }
  
 .control-row .chosen_dropdown {
-   width: 20%;
+   width: 12%;
 }
 
 .saveCancelRow {
@@ -21,3 +21,7 @@
     justify-content: center !important;
     /* border: var(--box-border); */
 }
+
+/* .control-row input {
+   width: 12%;
+} */
