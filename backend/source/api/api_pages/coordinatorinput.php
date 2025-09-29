@@ -100,8 +100,8 @@ function dataAddEdit($data)
 
 			$u = new updateq();
 			$u->table = 't_transaction';
-			$u->columns = ["AssessmentNo", "AuditStartDate", "AuditEndDate", "CountryId", "LeadAuditorId", "TeamAuditorId", "AuditTypeId", "Window", "PaymentStatus", "ReportWriterId", "NoOfEmployee", "AuditFee", "OPE", "PINo", "RevenueBDT", "AttachedDocuments", "IsSendMail", "ReportReleaseStatus"];
-			$u->values = [$AssessmentNo,$AuditStartDate,$AuditEndDate,$CountryId,$LeadAuditorId,$TeamAuditorId,$AuditTypeId,$Window,$PaymentStatus,$ReportWriterId,$NoOfEmployee,$AuditFee,$OPE,$PINo,$RevenueBDT,$AttachedDocuments,$IsSendMail,$ReportReleaseStatus];
+			$u->columns = ["AssessmentNo", "AuditStartDate", "AuditEndDate", "CountryId", "LeadAuditorId", "TeamAuditorId", "AuditTypeId", "Window", "PaymentStatus", "ReportWriterId", "NoOfEmployee", "AuditFee", "OPE", "PINo", "RevenueBDT", "AttachedDocuments", "IsSendMail", "ReportReleaseStatus","LastUpdateUserId"];
+			$u->values = [$AssessmentNo,$AuditStartDate,$AuditEndDate,$CountryId,$LeadAuditorId,$TeamAuditorId,$AuditTypeId,$Window,$PaymentStatus,$ReportWriterId,$NoOfEmployee,$AuditFee,$OPE,$PINo,$RevenueBDT,$AttachedDocuments,$IsSendMail,$ReportReleaseStatus,$UserId];
 			$u->pks = ['TransactionId'];
 			$u->pk_values = [$id];
 			$u->build_query();

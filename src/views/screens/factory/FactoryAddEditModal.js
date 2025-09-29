@@ -35,7 +35,6 @@ const FactoryAddEditModal = (props) => {
   const [Designation, setDesignation] = useState("");
   const [Email, setEmail] = useState("");
 
-
   const [FactoryGroupList, setFactoryGroupList] = useState(null);
   const [currFactoryGroupId, setCurrFactoryGroupId] = useState(null);
 
@@ -183,7 +182,7 @@ const FactoryAddEditModal = (props) => {
     );
   }
 
-// addDataCOntactInfo
+  // addDataCOntactInfo
   const addDataLocation = () => {
     // console.log('rowData: ', rowData);
     setLocationId("");
@@ -351,9 +350,7 @@ const FactoryAddEditModal = (props) => {
     );
   }
 
-
-  
-// addDataCOntactInfo
+  // addDataCOntactInfo
   const addDataCOntactInfo = () => {
     // console.log('rowData: ', rowData);
     setContactInfoId("");
@@ -378,23 +375,27 @@ const FactoryAddEditModal = (props) => {
   const handleChangeContactInfo = (e) => {
     const { name, value } = e.target;
 
-    if(name=="ContactPerson"){
-        setContactPerson(value);
+    if (name == "ContactPerson") {
+      setContactPerson(value);
     }
-    if(name=="ContactNumber"){
-        setContactNumber(value);
+    if (name == "ContactNumber") {
+      setContactNumber(value);
     }
-    if(name=="Designation"){
-        setDesignation(value);
+    if (name == "Designation") {
+      setDesignation(value);
     }
-    if(name=="Email"){
-        setEmail(value);
+    if (name == "Email") {
+      setEmail(value);
     }
- 
   };
 
   const addEditContactInfo = () => {
-    if (ContactPerson == "" && ContactNumber=="" && Designation=="" && Email=="") {
+    if (
+      ContactPerson == "" &&
+      ContactNumber == "" &&
+      Designation == "" &&
+      Email == ""
+    ) {
       swal("Warning", "Contact Information is required!", "warning");
       return;
     }
@@ -409,7 +410,7 @@ const FactoryAddEditModal = (props) => {
           data.ContactInfo[i].ContactPerson = ContactPerson;
           data.ContactInfo[i].ContactNumber = ContactNumber;
           data.ContactInfo[i].Designation = Designation;
-          data.ContactInfo[i].Email = Email;  
+          data.ContactInfo[i].Email = Email;
         }
       });
       //update
@@ -572,11 +573,24 @@ const FactoryAddEditModal = (props) => {
             />
           </div>
 
-<div class="pt-10">
-<hr ></hr>
-     </div>
-          <div class="pt-10" style={{"text-align": "right"}}>
-            {isLocationList && (<Button label={"ADD Location"} class={"btnAdd"} onClick={addDataLocation} />)}
+
+
+
+
+
+    {props.currentRow.id && (<>
+
+          <div class="pt-10">
+            <hr></hr>
+          </div>
+          <div class="pt-10" style={{ "text-align": "right" }}>
+            {isLocationList && (
+              <Button
+                label={"ADD Location"}
+                class={"btnAdd"}
+                onClick={addDataLocation}
+              />
+            )}
 
             {/* <label>Contact Locations</label> */}
             {isLocationList && (
@@ -600,9 +614,8 @@ const FactoryAddEditModal = (props) => {
                   value={LocationName}
                   onChange={(e) => handleChangeLocation(e)}
                 />
-            
 
-                <div class="modalItem" style={{"padding-top": "40px"}}>
+                <div class="modalItem" style={{ "padding-top": "40px" }}>
                   <Button
                     label={"Cancel"}
                     class={"btnClose"}
@@ -623,16 +636,20 @@ const FactoryAddEditModal = (props) => {
                     />
                   )}
                 </div>
-
-
               </div>
             )}
           </div>
-<div class="pt-10">
-<hr ></hr>
-     </div>
-            <div class="pt-10" style={{"text-align": "right"}}>
-            {isContactInfoList && (<Button label={"ADD Contact Information"} class={"btnAdd"} onClick={addDataCOntactInfo} />)}
+          <div class="pt-10">
+            <hr></hr>
+          </div>
+          <div class="pt-10" style={{ "text-align": "right" }}>
+            {isContactInfoList && (
+              <Button
+                label={"ADD Contact Information"}
+                class={"btnAdd"}
+                onClick={addDataCOntactInfo}
+              />
+            )}
             {/* <label>Contact Information</label> */}
             {isContactInfoList && (
               <CustomTable
@@ -688,8 +705,6 @@ const FactoryAddEditModal = (props) => {
                   onChange={(e) => handleChangeContactInfo(e)}
                 />
 
-
-                
                 <div class="modalItem">
                   <Button
                     label={"Cancel"}
@@ -713,35 +728,27 @@ const FactoryAddEditModal = (props) => {
                 </div>
               </div>
             )}
-          </div>
+          </div></>)}
 
-
-
-
-
-
-
-
-         {isLocationList && isContactInfoList && (<div class="modalItem">
-            <Button label={"Close"} class={"btnClose"} onClick={modalClose} />
-            {props.currentRow.id && (
-              <Button
-                label={"Update"}
-                class={"btnUpdate"}
-                onClick={addEditAPICall}
-              />
-            )}
-            {!props.currentRow.id && (
-              <Button
-                label={"Save"}
-                class={"btnSave"}
-                onClick={addEditAPICall}
-              />
-            )}
-          </div>)}
-
-
-
+          {isLocationList && isContactInfoList && (
+            <div class="modalItem">
+              <Button label={"Close"} class={"btnClose"} onClick={modalClose} />
+              {props.currentRow.id && (
+                <Button
+                  label={"Update"}
+                  class={"btnUpdate"}
+                  onClick={addEditAPICall}
+                />
+              )}
+              {!props.currentRow.id && (
+                <Button
+                  label={"Save"}
+                  class={"btnSave"}
+                  onClick={addEditAPICall}
+                />
+              )}
+            </div>
+          )}
         </div>
       </div>
       {/* <!-- GROUP MODAL END --> */}

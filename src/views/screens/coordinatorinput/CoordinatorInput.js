@@ -840,6 +840,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={true}
                 className={`chosen_dropdown ${
                   errorObject.ActivityId ? errorObject.ActivityId : ""
                 }`}
@@ -879,6 +880,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={true}
                 // className="chosen_dropdown"
                 className={`chosen_dropdown ${
                   errorObject.FactoryId ? errorObject.FactoryId : ""
@@ -936,7 +938,7 @@ const CoordinatorInput = (props) => {
             </div>
 
             <div class="control-row pt-10">
-              <label>Group Name {currentRow.id}</label>
+              <label>Group Name</label>
               <input
                 type="text"
                 id="FactoryGroupName"
@@ -1029,6 +1031,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={true}
                 // className="chosen_dropdown"
                 className={`chosen_dropdown ${
                   errorObject.ProgramId ? errorObject.ProgramId : ""
@@ -1066,6 +1069,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="ExpireDate"
                 name="ExpireDate"
+                disabled={true}
                 // class={errorObject.ExpireDate}
                 placeholder="Enter Expire Date"
                 value={currentRow.ExpireDate}
@@ -1153,6 +1157,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="OpportunityDate"
                 name="OpportunityDate"
+                disabled={true}
                 // class={errorObject.OpportunityDate}
                 placeholder="Enter Opportunity Date"
                 value={currentRow.OpportunityDate}
@@ -1163,6 +1168,7 @@ const CoordinatorInput = (props) => {
                 type="number"
                 id="TentativeOfferPrice"
                 name="TentativeOfferPrice"
+                disabled={true}
                 // class={errorObject.TentativeOfferPrice}
                 placeholder="Enter Tentative Offer Price"
                 value={currentRow.TentativeOfferPrice}
@@ -1224,6 +1230,7 @@ const CoordinatorInput = (props) => {
                 type="text"
                 id="CertificateBody"
                 name="CertificateBody"
+                disabled={true}
                 // class={errorObject.CertificateBody}
                 placeholder="Enter Certificate Body"
                 value={currentRow.CertificateBody}
@@ -1234,6 +1241,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={true}
                 className="chosen_dropdown"
                 id="CoordinatorId"
                 name="CoordinatorId"
@@ -1338,6 +1346,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={true}
                 className="chosen_dropdown"
                 id="AuditStageId"
                 name="AuditStageId"
@@ -1375,6 +1384,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={true}
                 className="chosen_dropdown"
                 id="LeadStatusId"
                 name="LeadStatusId"
@@ -1437,6 +1447,7 @@ const CoordinatorInput = (props) => {
                 type="number"
                 id="ManDay"
                 name="ManDay"
+                disabled={true}
                 // class={errorObject.ManDay}
                 placeholder="Enter Man Day"
                 value={currentRow.ManDay}
@@ -1446,6 +1457,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={true}
                 className="chosen_dropdown"
                 id="BuyerId"
                 name="BuyerId"
@@ -1502,6 +1514,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={true}
                 className="chosen_dropdown"
                 id="DepartmentId"
                 name="DepartmentId"
@@ -1539,6 +1552,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={true}
                 className="chosen_dropdown"
                 id="MemberId"
                 name="MemberId"
@@ -1578,7 +1592,7 @@ const CoordinatorInput = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Attached Documents</label>
+              {/* <label>Attached Documents</label>
               <input
                 type="text"
                 id="AttachedDocuments"
@@ -1587,7 +1601,7 @@ const CoordinatorInput = (props) => {
                 placeholder="Enter Attached Documents"
                 value={currentRow.AttachedDocuments}
                 onChange={(e) => handleChange(e)}
-              />
+              /> */}
             </div>
 
             <div class="control-row pt-10">
@@ -1596,6 +1610,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="NextFollowupDate"
                 name="NextFollowupDate"
+                disabled={true}
                 // class={errorObject.NextFollowupDate}
                 placeholder="Enter Next Followup Date"
                 value={currentRow.NextFollowupDate}
@@ -1607,6 +1622,7 @@ const CoordinatorInput = (props) => {
                 type="text"
                 id="Remarks"
                 name="Remarks"
+                disabled={true}
                 // class={errorObject.Remarks}
                 placeholder="Enter Remarks/Note"
                 value={currentRow.Remarks}

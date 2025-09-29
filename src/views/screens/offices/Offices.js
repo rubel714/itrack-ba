@@ -1,165 +1,67 @@
 import React, { forwardRef, useRef } from "react";
 import swal from "sweetalert";
 import { DeleteOutline, Edit } from "@material-ui/icons";
-import {Button}  from "../../../components/CustomControl/Button";
+import { Button } from "../../../components/CustomControl/Button";
 
 import CustomTable from "components/CustomTable/CustomTable";
-import { apiCall, apiOption , LoginUserInfo, language} from "../../../actions/api";
+import { apiCall, apiOption, LoginUserInfo, language } from "../../../actions/api";
 import ExecuteQueryHook from "../../../components/hooks/ExecuteQueryHook";
 
-import UserEntryAddEditModal from "./UserEntryAddEditModal";
+import OfficesAddEditModal from "./OfficesAddEditModal";
 
-const UserEntry = (props) => {
-  const serverpage = "userentry"; // this is .php server page
+const Offices = (props) => {
+  const serverpage = "offices"; // this is .php server page
 
+  const permissionType = props.permissionType;
   const { useState } = React;
   const [bFirst, setBFirst] = useState(true);
   const [currentRow, setCurrentRow] = useState([]);
   const [showModal, setShowModal] = useState(false); //true=show modal, false=hide modal
 
-  const {isLoading, data: dataList, error, ExecuteQuery} = ExecuteQueryHook(); //Fetch data
+  const { isLoading, data: dataList, error, ExecuteQuery } = ExecuteQueryHook(); //Fetch data
   const UserInfo = LoginUserInfo();
 
   /* =====Start of Excel Export Code==== */
   const EXCEL_EXPORT_URL = process.env.REACT_APP_API_URL;
 
-  const PrintPDFExcelExportFunction = (reportType) => {
+  const PrintPDFExcelExportFunction = () => {
     let finalUrl = EXCEL_EXPORT_URL + "report/print_pdf_excel_server.php";
 
     window.open(
       finalUrl +
-        "?action=UserExport" +
-        "&reportType=excel" +
-        "&TimeStamp=" +
-        Date.now()
+      "?action=OfficeExport" +
+      "&reportType=excel" +
+      "&TimeStamp=" +
+      Date.now()
     );
   };
   /* =====End of Excel Export Code==== */
 
 
   const columnList = [
-    { field: "rownumber", label: "SL", align: "center", width: "3%" },
+    { field: "rownumber", label: "SL", align: "center", width: "5%" },
     // { field: 'SL', label: 'SL',width:'10%',align:'center',visible:true,sort:false,filter:false },
     {
-      field: "UserCode",
-      label: "Employee Id",
+      field: "OfficeName",
+      label: "Office Name",
       align: "left",
       visible: true,
-      sort: true,
-      filter: true,
-      width: "7%",
-    },
-    {
-      field: "UserName",
-      label: "Full Name",
-      align: "left",
-      visible: true,
-      sort: true,
-      filter: true,
-    },
-    {
-      field: "LoginName",
-      label: "Login Name",
-      align: "left",
-      visible: true,
-      sort: true,
-      filter: true,
-      width: "7%",
-    },
-    {
-      field: "Email",
-      label: "Email",
-      align: "left",
-      visible: true,
-      width: "10%",
-      sort: true,
-      filter: true,
-    },
-    {
-      field: "PhoneNo",
-      label: "Phone No",
-      align: "left",
-      visible: true,
-      width: "7%",
-      sort: true,
-      filter: true,
-    },
-    {
-      field: "RoleName",
-      label: "Role Name",
-      align: "left",
-      width: "7%",
-      visible: true,
-      sort: true,
-      filter: true,
-    },
-    {
-      field: "DesignationName",
-      label: "Designation",
-      align: "left",
-      visible: true,
-      width: "7%",
-      sort: true,
-      filter: true,
-    },
-    {
-      field: "DepartmentName",
-      label: "Department",
-      align: "left",
-      visible: true,
-      width: "7%",
       sort: true,
       filter: true,
     },
     // {
-    //   field: "BusinessLineName",
-    //   label: "Business Line",
-    //   align: "left",
-    //   visible: true,
-    //   width: "8%",
+    //   field: "IsActiveName",
+    //   label: "Status",
+    //   width: "10%",
+    //   align: "center",
+    //   visible: false,
     //   sort: true,
     //   filter: true,
     // },
-    // {
-    //   field: "TeamName",
-    //   label: "Team",
-    //   align: "left",
-    //   visible: true,
-    //   width: "6%",
-    //   sort: true,
-    //   filter: true,
-    // },
-    // {
-    //   field: "LinemanUserName",
-    //   label: "Lineman (N+1)",
-    //   align: "left",
-    //   visible: true,
-    //   width: "8%",
-    //   sort: true,
-    //   filter: true,
-    // },
-    {
-      field: "Address",
-      label: "Address",
-      align: "left",
-      visible: true,
-      // width: "10%",
-      sort: true,
-      filter: true,
-    },
-    {
-      field: "IsActiveName",
-      label: "Active",
-      align: "center",
-      visible: true,
-      sort: true,
-      filter: true,
-      width: "4%",
-    },
     {
       field: "custom",
       label: "Action",
-      width: "4%",
+      width: "7%",
       align: "center",
       visible: true,
       sort: false,
@@ -167,7 +69,7 @@ const UserEntry = (props) => {
     },
   ];
 
-  
+
   if (bFirst) {
     /**First time call for datalist */
     getDataList();
@@ -175,9 +77,9 @@ const UserEntry = (props) => {
   }
 
   /**Get data for table list */
-  function getDataList(){
+  function getDataList() {
 
-   
+
     let params = {
       action: "getDataList",
       lan: language(),
@@ -192,19 +94,19 @@ const UserEntry = (props) => {
   function actioncontrol(rowData) {
     return (
       <>
-        <Edit
+        {permissionType === 0 && (<Edit
           className={"table-edit-icon"}
           onClick={() => {
             editData(rowData);
           }}
-        />
+        />)}
 
-        <DeleteOutline
+        {permissionType === 0 && (<DeleteOutline
           className={"table-delete-icon"}
           onClick={() => {
             deleteData(rowData);
           }}
-        />
+        />)}
       </>
     );
   }
@@ -214,30 +116,9 @@ const UserEntry = (props) => {
     // console.log("dataList: ", dataList);
 
     setCurrentRow({
-            id: "",
-            UserCode:"",
-            UserName: "",
-            LoginName: "",
-            Password: "",
-            // DivisionId: "",
-            // DistrictId: "",
-            RoleId: "",
-            Email: "",
-            PhoneNo: "",
-            DesignationId: "",
-            confirmPassword: "",
-            DepartmentId: "",
-            OfficeId: "",
-            UserZoneId: "",
-            Address: "",
-            GenderId: "",
-            NID: "",
-            // TeamId: "",
-            // LinemanUserId: "",
-            // BusinessLineId: "",
-            IsActive: false,
-            FormData: null,
-          });
+      id: "",
+      OfficeName: "",
+    });
     openModal();
   };
 
@@ -249,7 +130,7 @@ const UserEntry = (props) => {
     openModal();
   };
 
-  
+
   function openModal() {
     setShowModal(true); //true=modal show, false=modal hide
   }
@@ -293,8 +174,8 @@ const UserEntry = (props) => {
 
   function deleteApi(rowData) {
 
-        
- 
+
+
     let params = {
       action: "deleteData",
       lan: language(),
@@ -316,43 +197,30 @@ const UserEntry = (props) => {
   }
 
 
-
   return (
     <>
       <div class="bodyContainer">
         {/* <!-- ######-----TOP HEADER-----####### --> */}
         <div class="topHeader">
           <h4>
-            Home ❯ Basic Setup ❯ User Entry
+            <a href="#">Home</a> ❯ Basic Setup ❯ Office
           </h4>
         </div>
 
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
         <div class="searchAdd">
-          {/* <input type="text" placeholder="Search Product Group"/> */}
-          {/* <label></label> */}
-          {/* <button
-            onClick={() => {
-              addData();
-            }}
-            className="btnAdd"
-          >
-            ADD
-          </button> */}
-
+        
           <Button label={"Export"} class={"btnPrint"} onClick={PrintPDFExcelExportFunction} />
-          <Button label={"ADD"} class={"btnAdd"} onClick={addData} />
-
-
-
+          <Button disabled={permissionType} label={"ADD"} class={"btnAdd"} onClick={addData} />
+   
         </div>
 
         {/* <!-- ####---THIS CLASS IS USE FOR TABLE GRID PRODUCT INFORMATION---####s --> */}
-        {/* <div class="subContainer tableHeight">
-          <div className="App"> */}
+        {/* <div class="subContainer">
+          <div className="App tableHeight"> */}
             <CustomTable
               columns={columnList}
-              rows={dataList?dataList:{}}
+              rows={dataList ? dataList : {}}
               actioncontrol={actioncontrol}
             />
           {/* </div>
@@ -361,11 +229,11 @@ const UserEntry = (props) => {
       {/* <!-- BODY CONTAINER END --> */}
 
 
-      {showModal && (<UserEntryAddEditModal masterProps={props} currentRow={currentRow} modalCallback={modalCallback}/>)}
+      {showModal && (<OfficesAddEditModal masterProps={props} currentRow={currentRow} modalCallback={modalCallback} />)}
 
 
     </>
   );
 };
 
-export default UserEntry;
+export default Offices;

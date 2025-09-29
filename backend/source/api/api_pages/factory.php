@@ -77,11 +77,13 @@ function dataAddEdit($data) {
 		$FactoryGroupId = $data->rowData->FactoryGroupId;
 		$FactoryName = $data->rowData->FactoryName;
 		$FactoryCode = $data->rowData->FactoryCode;
+		$Locations = $data->rowData->Locations?$data->rowData->Locations:[];
+		$ContactInfo = $data->rowData->ContactInfo?$data->rowData->ContactInfo:[];
 		// $Email = $data->rowData->Email;
 		// $Address = $data->rowData->Address;
 
-		$Locations = json_encode($data->rowData->Locations);
-		$ContactInfo = json_encode($data->rowData->ContactInfo);
+		$Locations = json_encode($Locations);
+		$ContactInfo = json_encode($ContactInfo);
 
 		// echo "<pre>";
 		// echo json_encode($Locations);

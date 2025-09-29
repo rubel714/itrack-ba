@@ -44,6 +44,12 @@ switch ($task) {
 	case "DesignationExport":
 		DesignationExport();
 		break;
+	case "OfficeExport":
+		OfficeExport();
+		break;
+	case "ZoneExport":
+		ZoneExport();
+		break;
 	case "MemberExport":
 		MemberExport();
 		break;
@@ -340,6 +346,65 @@ function DesignationExport()
 
 	//Report save name. Not allow any type of special character
 	$tableProperties["report_save_name"] = 'Designation';
+}
+
+
+function OfficeExport()
+{
+
+	global $sql, $tableProperties, $TEXT, $siteTitle;
+
+	$sql = "SELECT `OfficeName`
+	FROM t_office 
+	ORDER BY `OfficeName`;";
+
+	$tableProperties["query_field"] = array("OfficeName");
+	$tableProperties["table_header"] = array('Office Name');
+	$tableProperties["align"] = array("left");
+	$tableProperties["width_print_pdf"] = array("100%"); //when exist serial then here total 95% and 5% use for serial
+	$tableProperties["width_excel"] = array("80");
+	$tableProperties["precision"] = array("string"); //string,date,datetime,0,1,2,3,4
+	$tableProperties["total"] = array(0); //not total=0, total=1
+	$tableProperties["color_code"] = array(0); //colorcode field = 1 not color code field = 0
+	$tableProperties["header_logo"] = 0; //include header left and right logo. 0 or 1
+	$tableProperties["footer_signatory"] = 0; //include footer signatory. 0 or 1
+
+	//Report header list
+	$tableProperties["header_list"][0] = $siteTitle;
+	$tableProperties["header_list"][1] = 'Office List';
+	// $tableProperties["header_list"][1] = 'Heading 2';
+
+	//Report save name. Not allow any type of special character
+	$tableProperties["report_save_name"] = 'Office_List';
+}
+
+function ZoneExport()
+{
+
+	global $sql, $tableProperties, $TEXT, $siteTitle;
+
+	$sql = "SELECT `UserZoneName`
+	FROM t_user_zone 
+	ORDER BY `UserZoneName`;";
+
+	$tableProperties["query_field"] = array("UserZoneName");
+	$tableProperties["table_header"] = array('User Zone Name');
+	$tableProperties["align"] = array("left");
+	$tableProperties["width_print_pdf"] = array("100%"); //when exist serial then here total 95% and 5% use for serial
+	$tableProperties["width_excel"] = array("80");
+	$tableProperties["precision"] = array("string"); //string,date,datetime,0,1,2,3,4
+	$tableProperties["total"] = array(0); //not total=0, total=1
+	$tableProperties["color_code"] = array(0); //colorcode field = 1 not color code field = 0
+	$tableProperties["header_logo"] = 0; //include header left and right logo. 0 or 1
+	$tableProperties["footer_signatory"] = 0; //include footer signatory. 0 or 1
+
+	//Report header list
+	$tableProperties["header_list"][0] = $siteTitle;
+	$tableProperties["header_list"][1] = 'User Zone List';
+	// $tableProperties["header_list"][1] = 'Heading 2';
+
+	//Report save name. Not allow any type of special character
+	$tableProperties["report_save_name"] = 'UserZone_List';
 }
 
 

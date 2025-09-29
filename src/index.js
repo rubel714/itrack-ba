@@ -35,6 +35,8 @@ import Department from "views/screens/department/index.js";
 import Holiday from "views/screens/holiday/index.js";
 import Members from "views/screens/members/index.js";
 import Auditors from "views/screens/auditors/index.js";
+import Offices from "views/screens/offices/index.js";
+import Zone from "views/screens/zone/index.js";
 import UserRole from "views/screens/userrole/index.js";
 import RoleToMenuPermission from "views/screens/roletomenupermission/index.js";
 import AuditLog from "views/screens/auditlog/index.js";
@@ -97,6 +99,8 @@ ReactDOM.render(
             <Route path="/holiday" render={(props) => <Holiday {...props} />} />
             <Route path="/members" render={(props) => <Members {...props} />} />
             <Route path="/auditors" render={(props) => <Auditors {...props} />} />
+            <Route path="/offices" render={(props) => <Offices {...props} />} />
+            <Route path="/zone" render={(props) => <Zone {...props} />} />
             <Route path="/userrole" render={(props) => <UserRole {...props} />} />
             <Route path="/roletomenupermission" render={(props) => <RoleToMenuPermission {...props} />} />
             <Route path="/auditlog" render={(props) => <AuditLog {...props} />} />

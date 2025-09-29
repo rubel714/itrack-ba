@@ -122,7 +122,7 @@ function AfterLoginNavbar(props) {
                           href="javascript:void(0)"
                           onClick={() => props.history.push("members")}
                         >
-                          Members
+                          Employee
                         </a>
                       </li>
                     )}
@@ -242,6 +242,28 @@ function AfterLoginNavbar(props) {
                         </a>
                       </li>
                     )} */}
+
+                    {menuShowPermision("offices") === 1 && (
+                      <li>
+                        <a
+                          href="javascript:void(0)"
+                          onClick={() => props.history.push("offices")}
+                        >
+                          Office List
+                        </a>
+                      </li>
+                    )}
+
+                    {menuShowPermision("zone") === 1 && (
+                      <li>
+                        <a
+                          href="javascript:void(0)"
+                          onClick={() => props.history.push("zone")}
+                        >
+                          Zone List
+                        </a>
+                      </li>
+                    )}
 
                     {menuShowPermision("userrole") === 1 && (
                       <li>

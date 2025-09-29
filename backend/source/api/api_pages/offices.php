@@ -30,9 +30,9 @@ function getDataList($data){
 
 	try{
 		$dbh = new Db();
-		$query = "SELECT DesignationId AS id, DesignationName
-		FROM t_designation 
-		ORDER BY `DesignationName` ASC;";		
+		$query = "SELECT OfficeId AS id, OfficeName
+		FROM t_office 
+		ORDER BY `OfficeName` ASC;";		
 		
 		$resultdata = $dbh->query($query);
 		
@@ -62,47 +62,33 @@ function dataAddEdit($data) {
 		$lan = trim($data->lan); 
 		$UserId = trim($data->UserId); 
  
-		$DesignationId = $data->rowData->id;
-		$DesignationName = $data->rowData->DesignationName;
+		$OfficeId = $data->rowData->id;
+		$OfficeName = $data->rowData->OfficeName;
 
 		try{
 
 			$dbh = new Db();
 			$aQuerys = array();
 
-
-			// $query = "SELECT UserId,LoginName FROM `t_users` where UserId>8;";
  
-			// $resultdata = $dbh->query($query);
-			// foreach($resultdata as $row){
-			// 	$UserId = $row["UserId"];
-			// 	$LoginName = $row["LoginName"];
-			// 	$Password = password_hash($LoginName, PASSWORD_DEFAULT);
-		
-			// 	$query1 = "update `t_users` set Password='$Password' where UserId=$UserId;";
-			// 	$dbh->query($query1);
-			 
-		
-			// }
 
 
-
-			if($DesignationId == ""){
+			if($OfficeId == ""){
 				$q = new insertq();
-				$q->table = 't_designation';
-				$q->columns = ['DesignationName'];
-				$q->values = [$DesignationName];
-				$q->pks = ['DesignationId'];
+				$q->table = 't_office';
+				$q->columns = ['OfficeName'];
+				$q->values = [$OfficeName];
+				$q->pks = ['OfficeId'];
 				$q->bUseInsetId = false;
 				$q->build_query();
 				$aQuerys = array($q); 
 			}else{
 				$u = new updateq();
-				$u->table = 't_designation';
-				$u->columns = ['DesignationName'];
-				$u->values = [$DesignationName];
-				$u->pks = ['DesignationId'];
-				$u->pk_values = [$DesignationId];
+				$u->table = 't_office';
+				$u->columns = ['OfficeName'];
+				$u->values = [$OfficeName];
+				$u->pks = ['OfficeId'];
+				$u->pk_values = [$OfficeId];
 				$u->build_query();
 				$aQuerys = array($u);
 			}
@@ -138,7 +124,7 @@ function deleteData($data) {
 		return $returnData = msg(0,422,'Please Fill in all Required Fields!',$fields);
 	}else{
 		
-		$DesignationId = $data->rowData->id;
+		$OfficeId = $data->rowData->id;
 		$lan = trim($data->lan); 
 		$UserId = trim($data->UserId); 
 
@@ -147,9 +133,9 @@ function deleteData($data) {
 			$dbh = new Db();
 			
             $d = new deleteq();
-            $d->table = 't_designation';
-            $d->pks = ['DesignationId'];
-            $d->pk_values = [$DesignationId];
+            $d->table = 't_office';
+            $d->pks = ['OfficeId'];
+            $d->pk_values = [$OfficeId];
             $d->build_query();
             $aQuerys = array($d);
 

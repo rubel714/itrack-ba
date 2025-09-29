@@ -30,9 +30,9 @@ function getDataList($data){
 
 	try{
 		$dbh = new Db();
-		$query = "SELECT DesignationId AS id, DesignationName
-		FROM t_designation 
-		ORDER BY `DesignationName` ASC;";		
+		$query = "SELECT UserZoneId AS id, UserZoneName
+		FROM t_user_zone 
+		ORDER BY `UserZoneName` ASC;";		
 		
 		$resultdata = $dbh->query($query);
 		
@@ -62,47 +62,31 @@ function dataAddEdit($data) {
 		$lan = trim($data->lan); 
 		$UserId = trim($data->UserId); 
  
-		$DesignationId = $data->rowData->id;
-		$DesignationName = $data->rowData->DesignationName;
+		$UserZoneId = $data->rowData->id;
+		$UserZoneName = $data->rowData->UserZoneName;
 
 		try{
 
 			$dbh = new Db();
 			$aQuerys = array();
-
-
-			// $query = "SELECT UserId,LoginName FROM `t_users` where UserId>8;";
  
-			// $resultdata = $dbh->query($query);
-			// foreach($resultdata as $row){
-			// 	$UserId = $row["UserId"];
-			// 	$LoginName = $row["LoginName"];
-			// 	$Password = password_hash($LoginName, PASSWORD_DEFAULT);
-		
-			// 	$query1 = "update `t_users` set Password='$Password' where UserId=$UserId;";
-			// 	$dbh->query($query1);
-			 
-		
-			// }
 
-
-
-			if($DesignationId == ""){
+			if($UserZoneId == ""){
 				$q = new insertq();
-				$q->table = 't_designation';
-				$q->columns = ['DesignationName'];
-				$q->values = [$DesignationName];
-				$q->pks = ['DesignationId'];
+				$q->table = 't_user_zone';
+				$q->columns = ['UserZoneName'];
+				$q->values = [$UserZoneName];
+				$q->pks = ['UserZoneId'];
 				$q->bUseInsetId = false;
 				$q->build_query();
 				$aQuerys = array($q); 
 			}else{
 				$u = new updateq();
-				$u->table = 't_designation';
-				$u->columns = ['DesignationName'];
-				$u->values = [$DesignationName];
-				$u->pks = ['DesignationId'];
-				$u->pk_values = [$DesignationId];
+				$u->table = 't_user_zone';
+				$u->columns = ['UserZoneName'];
+				$u->values = [$UserZoneName];
+				$u->pks = ['UserZoneId'];
+				$u->pk_values = [$UserZoneId];
 				$u->build_query();
 				$aQuerys = array($u);
 			}
@@ -138,7 +122,7 @@ function deleteData($data) {
 		return $returnData = msg(0,422,'Please Fill in all Required Fields!',$fields);
 	}else{
 		
-		$DesignationId = $data->rowData->id;
+		$UserZoneId = $data->rowData->id;
 		$lan = trim($data->lan); 
 		$UserId = trim($data->UserId); 
 
@@ -147,9 +131,9 @@ function deleteData($data) {
 			$dbh = new Db();
 			
             $d = new deleteq();
-            $d->table = 't_designation';
-            $d->pks = ['DesignationId'];
-            $d->pk_values = [$DesignationId];
+            $d->table = 't_user_zone';
+            $d->pks = ['UserZoneId'];
+            $d->pk_values = [$UserZoneId];
             $d->build_query();
             $aQuerys = array($d);
 
