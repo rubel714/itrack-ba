@@ -21,8 +21,8 @@ import ExecuteQueryHook from "../../../components/hooks/ExecuteQueryHook";
 import moment from "moment";
 import "../../../assets/css/audit.css";
 
-const CoordinatorInput = (props) => {
-  const serverpage = "coordinatorinput"; // this is .php server page
+const Invoice = (props) => {
+  const serverpage = "invoice"; // this is .php server page
 
   const { useState } = React;
   const [bFirst, setBFirst] = useState(true);
@@ -73,11 +73,8 @@ const CoordinatorInput = (props) => {
 
   const [currReportWriterId, setCurrReportWriterId] = useState(null);
 
-  // handleChangeWidthHeight
   const { isLoading, data: dataList, error, ExecuteQuery } = ExecuteQueryHook(); //Fetch data
-  // const UserInfo = LoginUserInfo();
   const [selectedDate, setSelectedDate] = useState(
-    //new Date()
     moment().format("YYYY-MM-DD")
   );
 
@@ -89,7 +86,7 @@ const CoordinatorInput = (props) => {
 
     window.open(
       finalUrl +
-        "?action=CoordinatorInputExport" +
+        "?action=InvoiceExport" +
         "&reportType=excel" +
         "&TimeStamp=" +
         Date.now()
@@ -344,14 +341,9 @@ const CoordinatorInput = (props) => {
   }
 
   function handleChangeRadio(e) {
-    // console.log('e.target.checked: ', e.target.id);
-    // console.log('e.target.checked: ', e.target.value);
-    // const { name, value } = e.target;
-
     let data = { ...currentRow };
     data[e.target.id] = e.target.value;
     setCurrentRow(data);
-    //  console.log('aaa data: ', data);
   }
 
   const handleChangeDropDown = (name, value) => {
@@ -391,11 +383,6 @@ const CoordinatorInput = (props) => {
       data["BuyerId"] = value;
       setCurrBuyerId(value);
     }
-    // if (name === "TeamId") {
-    //   data["TeamId"] = value;
-    //   setCurrTeamId(value);
-    //   getMemberList(value, "");
-    // }
     if (name === "DepartmentId") {
       data["DepartmentId"] = value;
       setCurrDepartmentId(value);
@@ -509,25 +496,25 @@ const CoordinatorInput = (props) => {
       width: "7%",
     },
 
-    {
-      field: "ExpireDate",
-      label: "Expire Date",
-      align: "left",
-      visible: true,
-      sort: true,
-      filter: true,
-      width: "7%",
-    },
+    // {
+    //   field: "ExpireDate",
+    //   label: "Expire Date",
+    //   align: "left",
+    //   visible: true,
+    //   sort: true,
+    //   filter: true,
+    //   width: "7%",
+    // },
 
-    {
-      field: "OpportunityDate",
-      label: "Opportunity Date",
-      align: "left",
-      visible: true,
-      sort: true,
-      filter: true,
-      width: "6%",
-    },
+    // {
+    //   field: "OpportunityDate",
+    //   label: "Opportunity Date",
+    //   align: "left",
+    //   visible: true,
+    //   sort: true,
+    //   filter: true,
+    //   width: "6%",
+    // },
 
     {
       field: "AuditStageName",
@@ -538,15 +525,15 @@ const CoordinatorInput = (props) => {
       filter: true,
       width: "6%",
     },
-    {
-      field: "LeadStatusName",
-      label: "Lead Status",
-      align: "left",
-      visible: true,
-      sort: true,
-      filter: true,
-      width: "7%",
-    },
+    // {
+    //   field: "LeadStatusName",
+    //   label: "Lead Status",
+    //   align: "left",
+    //   visible: true,
+    //   sort: true,
+    //   filter: true,
+    //   width: "7%",
+    // },
     {
       field: "BuyerName",
       label: "Buyer",
@@ -596,6 +583,42 @@ const CoordinatorInput = (props) => {
       field: "RevenueBDT",
       label: "Revenue (BDT)",
       align: "right",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "5%",
+    },
+    {
+      field: "InvoiceTo",
+      label: "Invoice To",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "5%",
+    },
+    {
+      field: "NameofApplicant",
+      label: "Name of Applicant",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "5%",
+    },
+    {
+      field: "InvoiceEmail",
+      label: "Email",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "5%",
+    },
+    {
+      field: "InvoiceMobile",
+      label: "Mobile",
+      align: "left",
       visible: true,
       sort: true,
       filter: true,
@@ -779,7 +802,6 @@ const CoordinatorInput = (props) => {
       rowData: rowData,
     };
 
-    // apiCall.post("productgroup", { params }, apiOption()).then((res) => {
     apiCall.post(serverpage, { params }, apiOption()).then((res) => {
       // console.log("res: ", res);
       props.openNoticeModal({
@@ -796,7 +818,7 @@ const CoordinatorInput = (props) => {
       <div class="bodyContainer">
         {/* <!-- ######-----TOP HEADER-----####### --> */}
         <div class="topHeader">
-          <h4>Home ❯ Audit ❯ Coordinator Input</h4>
+          <h4>Home ❯ Audit ❯ Invoice</h4>
         </div>
 
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
@@ -919,6 +941,7 @@ const CoordinatorInput = (props) => {
                 type="text"
                 id="AssessmentNo"
                 name="AssessmentNo"
+                disabled={true}
                 // class={errorObject.AssessmentNo}
                 placeholder="Enter Assessment No"
                 value={currentRow.AssessmentNo}
@@ -930,6 +953,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="AuditStartDate"
                 name="AuditStartDate"
+                disabled={true}
                 // class={errorObject.AuditStartDate}
                 placeholder="Enter Audit Start Date"
                 value={currentRow.AuditStartDate}
@@ -985,6 +1009,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="AuditEndDate"
                 name="AuditEndDate"
+                disabled={true}
                 // class={errorObject.AuditEndDate}
                 placeholder="Enter Audit End Date"
                 value={currentRow.AuditEndDate}
@@ -995,6 +1020,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={true}
                 className="chosen_dropdown"
                 id="CountryId"
                 name="CountryId"
@@ -1080,6 +1106,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={true}
                 className="chosen_dropdown"
                 id="LeadAuditorId"
                 name="LeadAuditorId"
@@ -1117,6 +1144,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={true}
                 className="chosen_dropdown"
                 id="TeamAuditorId"
                 name="TeamAuditorId"
@@ -1179,6 +1207,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={true}
                 className="chosen_dropdown"
                 id="AuditTypeId"
                 name="AuditTypeId"
@@ -1217,6 +1246,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="Window"
                 name="Window"
+                disabled={true}
                 // class={errorObject.Window}
                 placeholder="Enter Window"
                 value={currentRow.Window}
@@ -1279,6 +1309,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={true}
                 className="chosen_dropdown"
                 id="ReportWriterId"
                 name="ReportWriterId"
@@ -1324,6 +1355,7 @@ const CoordinatorInput = (props) => {
                   type="radio"
                   id="PaymentStatus"
                   name="PaymentStatus"
+                  disabled={true}
                   value="Yes"
                   checked={currentRow.PaymentStatus == "Yes"}
                   onChange={handleChangeRadio}
@@ -1334,6 +1366,7 @@ const CoordinatorInput = (props) => {
                   type="radio"
                   id="PaymentStatus"
                   name="PaymentStatus"
+                  disabled={true}
                   value="No"
                   checked={currentRow.PaymentStatus == "No"}
                   onChange={handleChangeRadio}
@@ -1423,6 +1456,7 @@ const CoordinatorInput = (props) => {
                 type="text"
                 id="NoOfEmployee"
                 name="NoOfEmployee"
+                disabled={true}
                 // class={errorObject.NoOfEmployee}
                 placeholder="Enter No Of Employee"
                 value={currentRow.NoOfEmployee}
@@ -1434,6 +1468,7 @@ const CoordinatorInput = (props) => {
                 type="number"
                 id="AuditFee"
                 name="AuditFee"
+                disabled={true}
                 // class={errorObject.AuditFee}
                 placeholder="Enter Audit Fee"
                 value={currentRow.AuditFee}
@@ -1491,6 +1526,7 @@ const CoordinatorInput = (props) => {
                 type="text"
                 id="OPE"
                 name="OPE"
+                disabled={true}
                 // class={errorObject.OPE}
                 placeholder="Enter OPE"
                 value={currentRow.OPE}
@@ -1502,6 +1538,7 @@ const CoordinatorInput = (props) => {
                 type="text"
                 id="PINo"
                 name="PINo"
+                disabled={true}
                 // class={errorObject.PINo}
                 placeholder="Enter PI No"
                 value={currentRow.PINo}
@@ -1586,6 +1623,7 @@ const CoordinatorInput = (props) => {
                 type="number"
                 id="RevenueBDT"
                 name="RevenueBDT"
+                disabled={true}
                 // class={errorObject.RevenueBDT}
                 placeholder="Enter Revenue BDT"
                 value={currentRow.RevenueBDT}
@@ -1634,6 +1672,7 @@ const CoordinatorInput = (props) => {
                 id="IsSendMail"
                 name="IsSendMail"
                 type="checkbox"
+                disabled={true}
                 checked={currentRow.IsSendMail}
                 onChange={handleChangeCheck}
               />
@@ -1650,6 +1689,7 @@ const CoordinatorInput = (props) => {
                   type="radio"
                   id="ReportReleaseStatus"
                   name="ReportReleaseStatus"
+                  disabled={true}
                   value="Yes"
                   checked={currentRow.ReportReleaseStatus == "Yes"}
                   onChange={handleChangeRadio}
@@ -1660,11 +1700,91 @@ const CoordinatorInput = (props) => {
                   type="radio"
                   id="ReportReleaseStatus"
                   name="ReportReleaseStatus"
+                  disabled={true}
                   value="No"
                   checked={currentRow.ReportReleaseStatus == "No"}
                   onChange={handleChangeRadio}
                 ></input>
               </div>
+            </div>
+
+            <br></br>
+            <br></br>
+
+            <div class="control-row pt-10">
+              <label>Invoice To</label>
+              <input
+                type="text"
+                id="InvoiceTo"
+                name="InvoiceTo"
+                // disabled={true}
+                // class={errorObject.InvoiceTo}
+                placeholder="Enter Invoice To"
+                value={currentRow.InvoiceTo}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Name of Applicant</label>
+              <input
+                type="text"
+                id="NameofApplicant"
+                name="NameofApplicant"
+                // disabled={true}
+                // class={errorObject.NameofApplicant}
+                placeholder="Enter Name of Applicant"
+                value={currentRow.NameofApplicant}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Address</label>
+              <input
+                type="text"
+                id="InvoiceAddress"
+                name="InvoiceAddress"
+                // disabled={true}
+                // class={errorObject.InvoiceAddress}
+                placeholder="Enter Address"
+                value={currentRow.InvoiceAddress}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Email</label>
+              <input
+                type="text"
+                id="InvoiceEmail"
+                name="InvoiceEmail"
+                // disabled={true}
+                // class={errorObject.InvoiceEmail}
+                placeholder="Enter Email"
+                value={currentRow.InvoiceEmail}
+                onChange={(e) => handleChange(e)}
+              />
+            </div>
+
+            <div class="control-row pt-10">
+              <label>Mobile</label>
+              <input
+                type="text"
+                id="InvoiceMobile"
+                name="InvoiceMobile"
+                // disabled={true}
+                // class={errorObject.InvoiceMobile}
+                placeholder="Enter Mobile"
+                value={currentRow.InvoiceMobile}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Discount (%)</label>
+              <input
+                type="number"
+                id="Discount"
+                name="Discount"
+                // disabled={true}
+                // class={errorObject.Discount}
+                placeholder="Enter Discount"
+                value={currentRow.Discount}
+                onChange={(e) => handleChange(e)}
+              />
             </div>
 
             <div class="pt-10 saveCancelRow ">
@@ -1697,16 +1817,8 @@ const CoordinatorInput = (props) => {
           </div> */}
       </div>
       {/* <!-- BODY CONTAINER END --> */}
-
-      {/* {showModal && (
-        <SalesPersonInputAddEditModal
-          masterProps={props}
-          currentRow={currentRow}
-          modalCallback={modalCallback}
-        />
-      )} */}
     </>
   );
 };
 
-export default CoordinatorInput;
+export default Invoice;

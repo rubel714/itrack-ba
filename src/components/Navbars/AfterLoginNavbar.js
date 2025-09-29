@@ -373,6 +373,17 @@ function AfterLoginNavbar(props) {
                       </li>
                     )}
 
+                     {menuShowPermision("invoice") === 1 && (
+                      <li>
+                        <a
+                          href="javascript:void(0)"
+                          onClick={() => props.history.push("invoice")}
+                        >
+                          Invoice
+                        </a>
+                      </li>
+                    )}
+
                     {/* {menuShowPermision("inspectionreportentry") === 1 && (
                       <li>
                         <a

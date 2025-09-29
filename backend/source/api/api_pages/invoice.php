@@ -34,7 +34,9 @@ function getDataList($data)
 		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks
 		, a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, a.CountryId, a.LeadAuditorId, a.TeamAuditorId, a.AuditTypeId, 
 		a.Window, a.PaymentStatus, a.ReportWriterId, a.NoOfEmployee, a.AuditFee, a.OPE, a.PINo, a.RevenueBDT, 
-		a.AttachedDocuments, a.IsSendMail, a.ReportReleaseStatus
+		a.AttachedDocuments, a.IsSendMail, a.ReportReleaseStatus,
+
+		a.InvoiceTo, a.NameofApplicant, a.InvoiceAddress, a.InvoiceEmail, a.InvoiceMobile, a.Discount
 	   FROM `t_transaction` a
 	   INNER JOIN `t_activity` b ON a.`ActivityId` = b.`ActivityId`
 	   LEFT JOIN `t_factory` c ON a.`FactoryId` = c.`FactoryId`
@@ -76,32 +78,22 @@ function dataAddEdit($data)
 
 		$id = $data->rowData->id;
 
-		$AssessmentNo = $data->rowData->AssessmentNo ? $data->rowData->AssessmentNo : null;
-		$AuditStartDate = $data->rowData->AuditStartDate ? $data->rowData->AuditStartDate : null;
-		$AuditEndDate = $data->rowData->AuditEndDate ? $data->rowData->AuditEndDate : null;
-		$CountryId = $data->rowData->CountryId ? $data->rowData->CountryId : null;
-		$LeadAuditorId = $data->rowData->LeadAuditorId ? $data->rowData->LeadAuditorId : null;
-		$TeamAuditorId = $data->rowData->TeamAuditorId ? $data->rowData->TeamAuditorId : null;
-		$AuditTypeId = $data->rowData->AuditTypeId ? $data->rowData->AuditTypeId : null;
-		$Window = $data->rowData->Window ? $data->rowData->Window : null;
-		$PaymentStatus = $data->rowData->PaymentStatus ? $data->rowData->PaymentStatus : "No";
-		$ReportWriterId = $data->rowData->ReportWriterId ? $data->rowData->ReportWriterId : null;
-		$NoOfEmployee = $data->rowData->NoOfEmployee ? $data->rowData->NoOfEmployee : null;
-		$AuditFee = $data->rowData->AuditFee ? $data->rowData->AuditFee : null;
-		$OPE = $data->rowData->OPE ? $data->rowData->OPE : null;
-		$PINo = $data->rowData->PINo ? $data->rowData->PINo : null;
-		$RevenueBDT = $data->rowData->RevenueBDT ? $data->rowData->RevenueBDT : null;
-		$AttachedDocuments = $data->rowData->AttachedDocuments ? $data->rowData->AttachedDocuments : null;
-		$IsSendMail = $data->rowData->IsSendMail ? $data->rowData->IsSendMail : 0;
-		$ReportReleaseStatus = $data->rowData->ReportReleaseStatus ? $data->rowData->ReportReleaseStatus : "No";
+
+		$InvoiceTo = $data->rowData->InvoiceTo ? $data->rowData->InvoiceTo : null;
+		$NameofApplicant = $data->rowData->NameofApplicant ? $data->rowData->NameofApplicant : null;
+		$InvoiceAddress = $data->rowData->InvoiceAddress ? $data->rowData->InvoiceAddress : null;
+		$InvoiceEmail = $data->rowData->InvoiceEmail ? $data->rowData->InvoiceEmail : null;
+		$InvoiceMobile = $data->rowData->InvoiceMobile ? $data->rowData->InvoiceMobile : null;
+		$Discount = $data->rowData->Discount ? $data->rowData->Discount : null;
+		
 
 		try {
 			$aQuerys = array();
 
 			$u = new updateq();
 			$u->table = 't_transaction';
-			$u->columns = ["AssessmentNo", "AuditStartDate", "AuditEndDate", "CountryId", "LeadAuditorId", "TeamAuditorId", "AuditTypeId", "Window", "PaymentStatus", "ReportWriterId", "NoOfEmployee", "AuditFee", "OPE", "PINo", "RevenueBDT", "AttachedDocuments", "IsSendMail", "ReportReleaseStatus","LastUpdateUserId"];
-			$u->values = [$AssessmentNo,$AuditStartDate,$AuditEndDate,$CountryId,$LeadAuditorId,$TeamAuditorId,$AuditTypeId,$Window,$PaymentStatus,$ReportWriterId,$NoOfEmployee,$AuditFee,$OPE,$PINo,$RevenueBDT,$AttachedDocuments,$IsSendMail,$ReportReleaseStatus,$UserId];
+			$u->columns = ['InvoiceTo','NameofApplicant','InvoiceAddress','InvoiceEmail','InvoiceMobile','Discount'];
+			$u->values = [$InvoiceTo,$NameofApplicant,$InvoiceAddress,$InvoiceEmail,$InvoiceMobile,$Discount];
 			$u->pks = ['TransactionId'];
 			$u->pk_values = [$id];
 			$u->build_query();
@@ -147,13 +139,6 @@ function deleteData($data)
 		try {
 
 			$dbh = new Db();
-
-			// $d = new deleteq();
-			// $d->table = 't_transaction_items';
-			// $d->pks = ['TransactionId'];
-			// $d->pk_values = [$id];
-			// $d->build_query();
-			// $aQuerys[] = $d;
 
 			$d = new deleteq();
 			$d->table = 't_transaction';
