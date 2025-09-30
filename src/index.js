@@ -43,6 +43,7 @@ import AuditLog from "views/screens/auditlog/index.js";
 import ErrorLog from "views/screens/errorlog/index.js";
 import SalesPersonInput from "views/screens/salespersoninput/index.js";
 import CoordinatorInput from "views/screens/coordinatorinput/index.js";
+import ReportReviewer from "views/screens/reportreviewer/index.js";
 import Invoice from "views/screens/invoice/index.js";
 import UserContextProvider from './context/user-info-context';
 
@@ -109,6 +110,7 @@ ReactDOM.render(
 
             <Route path="/salespersoninput" render={(props) => <SalesPersonInput {...props} />} />
             <Route path="/coordinatorinput" render={(props) => <CoordinatorInput {...props} />} />
+            <Route path="/reportreviewer" render={(props) => <ReportReviewer {...props} />} />
             <Route path="/invoice" render={(props) => <Invoice {...props} />} />
 
             <Route path="/" render={(props) => <Index {...props} />} />
