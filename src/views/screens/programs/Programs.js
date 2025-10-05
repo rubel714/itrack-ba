@@ -205,6 +205,7 @@ const Programs = (props) => {
     });
   };
 
+  
   function deleteApi(rowData) {
 
 
@@ -229,13 +230,17 @@ const Programs = (props) => {
   }
 
 
+  
+
+
+
   return (
     <>
       <div class="bodyContainer">
         {/* <!-- ######-----TOP HEADER-----####### --> */}
         <div class="topHeader">
           <h4>
-            <a href="#">Home</a> ❯ Basic Setup ❯ Programs
+            <a href="javascript:void(0)" onClick={() => props.history.push("/home")}>Home</a> ❯ Basic Setup ❯ Programs
           </h4>
         </div>
 

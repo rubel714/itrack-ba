@@ -14,6 +14,7 @@ var productModal = document.getElementById("productModal");
 function openModal(modal) {
     modal.style.display = "block";
     document.querySelector(".btnUpdate").style.display = "none";
+
 }
 
 // Declare Modal close Function

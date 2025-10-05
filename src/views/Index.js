@@ -24,20 +24,25 @@ function Index(props) {
   });
 
   return (
-    <>
-      {Service.default.authToken() != null ? (
-        <AfterLoginNavbar {...props} />
-      ) : (
-        <BeforeLoginNavbar {...props} />
-      )}
-      <div className="wrapper">
-        <IndexHeader {...props} />
-        <div className="main">
-          <HomePage {...props}  />
+    <div>
+      <div class="mainContainer ">
+        <div class="sideBar">
+          {Service.default.authToken() != null ? (
+            <AfterLoginNavbar {...props} />
+          ) : (
+            <BeforeLoginNavbar {...props} />
+          )}
         </div>
-        <DarkFooter  {...props}  />
+
+        {/* <div className="wrapper"> */}
+          {/* <IndexHeader {...props} /> */}
+          <div className="bodyContainer">
+            <HomePage {...props} />
+          </div>
+          {/* <DarkFooter {...props} /> */}
+        {/* </div> */}
       </div>
-    </>
+    </div>
   );
 }
 

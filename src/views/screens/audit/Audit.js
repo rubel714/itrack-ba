@@ -1320,7 +1320,7 @@ const Audit = (props) => {
       <div class="bodyContainer non-printable">
         <div class="topHeader">
           <h4>
-            <a href="#">Home</a> ❯ Product ❯ Audit
+            <a href="javascript:void(0)" onClick={() => props.history.push("/home")}>Home</a> ❯ Product ❯ Audit
           </h4>
         </div>
 

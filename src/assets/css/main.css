@@ -43,6 +43,7 @@ html {
 
 body {
   background-color: var(--bg-color);
+
   ::-webkit-scrollbar {
     width: 4px;
     height: 4px;
@@ -52,13 +53,14 @@ body {
     background: transparent;
     /* margin-right: -20px; */
   }
+
   ::-webkit-scrollbar-thumb {
     background-color: var(--primary-color);
 
 
 
   }
- 
+
 }
 
 label {
@@ -96,40 +98,41 @@ input[type="number"] {
 
 /* #############---GLOBAL CLASS---############### */
 
+.mainContainer {
+  width: 100%;
+  /* height: calc(100vh - 80px); */
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+
+
+
+}
+
+.sideBar {
+  width: 250px;
+  height: 100%;
+  background-color: var(--secondary-color);
+  padding: 2px;
+  display: flex;
+  flex-direction: column;
+
+}
+
 /* Body Container */
 .bodyContainer {
   /* padding: 4px 4px; */
-  border-radius: 8px;
-}
+  /* border-radius: 8px; */
+  /* width: calc(100%-250px); */
+  width: 100%;
+  border: 4px solid white;
 
-/* Container Header, its not NAVBAR */
-/* .topHeader {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    height: 50px;
-    background-color: var(--secondary-color);
-    border: var(--header-border);
-    color: var(--headerFont-color);
-    border-radius: 8px;
-    padding: 8px;
 }
-
-.topHeader h4 {
-    font-size: 1rem;
-}
-
-.topHeader h4 a {
-    text-decoration: none;
-    color: var(--headerFont-color);
-    font-size: 1.5rem;
-} */
 
 .topHeader {
   display: flex;
   flex-direction: row;
   align-items: center;
-  /* Flex */
   height: 40px;
   background-color: var(--primary-color);
   border: var(--box-border);
@@ -151,7 +154,7 @@ input[type="number"] {
 
 /* THIS CLASS USE FOR CREATE CONTENT WITHIN BODY */
 .subContainer {
-  background-color:var(--secondary-color);
+  background-color: var(--secondary-color);
   border-radius: 8px;
   padding: 2px;
   width: 100%;
@@ -197,7 +200,8 @@ input[type="number"] {
 
 
 
-.MuiAutocomplete-hasPopupIcon .MuiAutocomplete-inputRoot, .MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot {
+.MuiAutocomplete-hasPopupIcon .MuiAutocomplete-inputRoot,
+.MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot {
   padding-right: 0px !important;
   /* width: 230px !important; */
 }
@@ -317,19 +321,20 @@ button:hover {
   /* margin-bottom: 10px; */
 }
 
-.tableGlobal thead{
+.tableGlobal thead {
   position: sticky;
   top: -2px;
 }
+
 .tableGlobal tr {
   height: 20px;
 }
 
 .tableGlobal thead tr {
-  background-color:var(--secondary-color);
+  background-color: var(--secondary-color);
   color: rgb(0, 0, 0);
   height: 30px;
-  
+
   /* font-size: .8rem; */
 }
 
@@ -426,7 +431,7 @@ tr:nth-child(odd) {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 100px;
+  /* padding-top: 100px; */
   /* background-color: var(--secondary-color); */
 }
 
@@ -491,7 +496,8 @@ tr:nth-child(odd) {
   align-self: flex-end;
   margin-right: 20px;
 }
-.btnLogin p{
+
+.btnLogin p {
   color: inherit;
 }
 
@@ -546,10 +552,12 @@ input {
   color: red;
   height: 16px !important;
 }
+
 .table-addimg-icon {
   color: green;
   height: 16px !important;
 }
+
 .table-generate-icon {
   color: brown;
   height: 16px !important;
@@ -585,9 +593,11 @@ input {
 .pt-10 {
   padding-top: 10px;
 }
+
 .pt-5 {
   padding-top: 5px;
 }
+
 .chosen_dropdown_font {
   font-size: 12px !important;
 }
@@ -646,12 +656,11 @@ input {
   display: none !important;
 }
 
-.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon
-  .MuiAutocomplete-inputRoot {
+.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot {
   padding-right: 0px !important;
 }
 
-#visitList{
+#visitList {
   min-width: 300px;
 }
 
@@ -670,9 +679,11 @@ input {
 .pb-30 {
   padding-bottom: 30px !important;
 }
+
 .pb-10 {
   padding-bottom: 10px !important;
 }
+
 .font-bold {
   font-weight: bold;
 }
@@ -766,6 +777,7 @@ input {
   .tableHeight {
     height: auto;
   }
+
   th,
   td {
     text-wrap: nowrap;
@@ -779,20 +791,22 @@ input {
     overflow-x: scroll;
     overflow-x: scroll;
   }
+
   th,
   td {
     text-wrap: nowrap;
   }
 }
-.homecontent p{
-text-align: left !important;
+
+.homecontent p {
+  text-align: left !important;
 }
+
 /* Media Query for Large Device Mobile Tablet/Computer */
-@media only screen and (min-width: 993px) and (max-width: 1199px) {
-}
+@media only screen and (min-width: 993px) and (max-width: 1199px) {}
+
 /* Media Query for Large Device Mobile Tablet/Computer */
-@media only screen and (min-width: 1200px) and (max-width: 4000px) {
-}
+@media only screen and (min-width: 1200px) and (max-width: 4000px) {}
 
 
 /* input[type="file"]::-webkit-file-upload-text {

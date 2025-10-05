@@ -238,7 +238,7 @@ const Dashboard = (props) => {
         {/* <!-- ######-----TOP HEADER-----####### --> */}
         <div class="topHeader">
           <h4>
-            <a href="#">Home</a> ❯ Dashboard
+            <a href="javascript:void(0)" onClick={() => props.history.push("/home")}>Home</a> ❯ Dashboard
           </h4>
         </div>
 

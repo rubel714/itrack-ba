@@ -46,9 +46,10 @@ const Index = (props) => {
   return (
     hasUserPermission && (
     <div>
-      <AfterLoginNavbar {...props} />
-
-      <div class="pb-30">
+       <div class="mainContainer ">
+          <div class="sideBar">
+            <AfterLoginNavbar {...props} />
+          </div>
 
         <Switch>
           <Route
@@ -66,7 +67,7 @@ const Index = (props) => {
         ></Notification>
 
       </div>
-      <DarkFooter  {...props}  />
+      {/* <DarkFooter  {...props}  /> */}
 
     </div>)
   );

@@ -225,7 +225,7 @@ const Branch = (props) => {
         {/* <!-- ######-----TOP HEADER-----####### --> */}
         <div class="topHeader">
           <h4>
-            <a href="#">Home</a> ❯ Basic Setup > Branch
+            <a href="javascript:void(0)" onClick={() => props.history.push("/home")}>Home</a> ❯ Basic Setup ❯ Branch
           </h4>
         </div>
 

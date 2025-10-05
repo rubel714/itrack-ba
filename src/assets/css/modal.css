@@ -348,6 +348,7 @@
     /* word-wrap: break-word; */
     margin-bottom: 35px;
 }
+
 .reportcheckblock {
     display: inline-table;
     border: 2px solid gray;
@@ -365,9 +366,11 @@
     box-sizing: border-box;
     /* Include the border in the box model */
 }
+
 .reportcheckblock-width-half {
     width: 286px;
 }
+
 .reportcheckblock-width-full {
     width: 583px;
 }
@@ -375,9 +378,11 @@
 .reportcheckblock-height-onethird {
     height: 290px;
 }
+
 .reportcheckblock-height-half {
     height: 330px;
 }
+
 .reportcheckblock-height-full {
     height: 360px;
 }
@@ -386,7 +391,7 @@
 .btnreportcheckblockwidth {
     min-width: 30px;
     font-size: 10px;
-    color:darkblue;
+    color: darkblue;
     border: 1px solid black !important;
 
 }
@@ -394,18 +399,18 @@
 .btnreportcheckblockheight {
     min-width: 30px;
     font-size: 10px;
-    color:darkblue;
+    color: darkblue;
     border: 1px solid black !important;
 }
 
 .btnChkList {
     min-width: 30px;
     font-size: 10px;
-    color:darkblue;
+    color: darkblue;
     width: 30px;
     height: 30px;
-  border: 1px solid black;
-  border-radius: 2px;
+    border: 1px solid black;
+    border-radius: 2px;
 }
 
 
@@ -413,24 +418,26 @@
     background-color: var(--gray-color);
 } */
 
-.bgselect{
+.bgselect {
     background-color: var(--secondary-color);
 }
-.checkblockselector{
-    padding:4px;
+
+.checkblockselector {
+    padding: 4px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     column-gap: 10px;
 }
-.checkblocksize{
-    
+
+.checkblocksize {
+
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-column-gap: 2px;
+    column-gap: 2px;
 }
 
 .btnreportcheckblockdelete {
@@ -438,6 +445,7 @@ column-gap: 2px;
     font-size: 10px;
     /* margin-left: 36px; */
     background-color: var(--red-color);
-    color:darkblue;
+    color: darkblue;
 }
-  /* background-color: var(--primary-color); */
+
+/* background-color: var(--primary-color); */

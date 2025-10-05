@@ -44,17 +44,16 @@ const Index = (props) => {
   return (
     hasUserPermission && (
       <div>
-        <AfterLoginNavbar {...props} />
+        <div class="mainContainer ">
+          <div class="sideBar">
+            <AfterLoginNavbar {...props} />
+          </div>
 
-        <div>
           <Switch>
             <Route
               path={`${path}/`}
               render={(props) => (
-                <ReportReviewer
-                  {...props}
-                  openNoticeModal={openNoticeModal}
-                />
+                <ReportReviewer {...props} openNoticeModal={openNoticeModal} />
               )}
             ></Route>
           </Switch>
@@ -64,7 +63,7 @@ const Index = (props) => {
             {...props}
           ></Notification>
         </div>
-        <DarkFooter {...props} />
+        {/* <DarkFooter {...props} /> */}
       </div>
     )
   );

@@ -203,7 +203,7 @@ const FactoryGroups = (props) => {
         {/* <!-- ######-----TOP HEADER-----####### --> */}
         <div class="topHeader">
           <h4>
-            <a href="#">Home</a> ❯ Basic Setup ❯ Factory Groups
+            <a href="javascript:void(0)" onClick={() => props.history.push("/home")}>Home</a> ❯ Basic Setup ❯ Factory Groups
           </h4>
         </div>
 
