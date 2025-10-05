@@ -6,8 +6,8 @@ import * as Service from "../services/Service.js";
 // core components
 import BeforeLoginNavbar from "components/Navbars/BeforeLoginNavbar.js";
 import AfterLoginNavbar from "components/Navbars/AfterLoginNavbar.js";
-import IndexHeader from "components/Headers/IndexHeader.js";
-import DarkFooter from "components/Footers/DarkFooter.js";
+// import IndexHeader from "components/Headers/IndexHeader.js";
+// import DarkFooter from "components/Footers/DarkFooter.js";
 import HomePage from "./screens/HomePage";
 
 function Index(props) {

@@ -105,8 +105,6 @@ input[type="number"] {
   display: flex;
   flex-direction: row;
 
-
-
 }
 
 .sideBar {
@@ -116,14 +114,13 @@ input[type="number"] {
   padding: 2px;
   display: flex;
   flex-direction: column;
+  /* opacity: 0.3; */
 
 }
 
 /* Body Container */
 .bodyContainer {
-  /* padding: 4px 4px; */
-  /* border-radius: 8px; */
-  /* width: calc(100%-250px); */
+  /* opacity: 0.3; */
   width: 100%;
   border: 4px solid white;
 
@@ -765,7 +762,8 @@ input {
 /* TABLE height control */
 /* User INFORMATION */
 .tableHeight {
-  max-height: calc(100vh - 220px);
+  /* max-height: calc(100vh - 220px); */
+  max-height: calc(100vh - 130px);
   /* min-height: calc(100vh - 216px); */
   overflow-y: auto;
   overflow-x: auto;

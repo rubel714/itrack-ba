@@ -62,7 +62,7 @@ const ProgramsAddEditModal = (props) => {
   };
 
   const validateForm = () => {
-    let validateFields = ["ProgramName","TATDayTypeId"];
+    let validateFields = ["ProgramName", "TATDayTypeId"];
     let errorData = {};
     let isValid = true;
     validateFields.map((field) => {
@@ -127,7 +127,7 @@ const ProgramsAddEditModal = (props) => {
               value={currentRow.ProgramName}
               onChange={(e) => handleChange(e)}
             />
-   </div>
+          </div>
           <div class="modalItem">
             <label>TAT Day Type *</label>
             <Autocomplete
@@ -177,7 +177,7 @@ const ProgramsAddEditModal = (props) => {
               value={currentRow.StandardTATDay}
               onChange={(e) => handleChange(e)}
             />
-   </div>
+          </div>
           <div class="modalItem">
             <label>Strategice TAT Day</label>
             <input

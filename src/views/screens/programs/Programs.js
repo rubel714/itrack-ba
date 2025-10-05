@@ -4,7 +4,12 @@ import { DeleteOutline, Edit } from "@material-ui/icons";
 import { Button } from "../../../components/CustomControl/Button";
 
 import CustomTable from "components/CustomTable/CustomTable";
-import { apiCall, apiOption, LoginUserInfo, language } from "../../../actions/api";
+import {
+  apiCall,
+  apiOption,
+  LoginUserInfo,
+  language,
+} from "../../../actions/api";
 import ExecuteQueryHook from "../../../components/hooks/ExecuteQueryHook";
 
 import ProgramsAddEditModal from "./ProgramsAddEditModal";
@@ -29,14 +34,13 @@ const Programs = (props) => {
 
     window.open(
       finalUrl +
-      "?action=ProgramExport" +
-      "&reportType=excel" +
-      "&TimeStamp=" +
-      Date.now()
+        "?action=ProgramExport" +
+        "&reportType=excel" +
+        "&TimeStamp=" +
+        Date.now()
     );
   };
   /* =====End of Excel Export Code==== */
-
 
   const columnList = [
     { field: "rownumber", label: "SL", align: "center", width: "5%" },
@@ -48,41 +52,41 @@ const Programs = (props) => {
       sort: true,
       filter: true,
     },
-        {
+    {
       field: "TATDayType",
       label: "TAT Day Type",
       align: "left",
       visible: true,
       sort: true,
       filter: true,
-       width: "20%",
+      width: "20%",
     },
-        {
+    {
       field: "StandardTATDay",
       label: "Standard TAT Day",
       align: "right",
       visible: true,
       sort: true,
       filter: true,
-       width: "20%",
+      width: "20%",
     },
-        {
+    {
       field: "StrategiceTATDay",
       label: "Strategice TAT Day",
       align: "right",
       visible: true,
       sort: true,
       filter: true,
-       width: "20%",
+      width: "20%",
     },
-        {
+    {
       field: "IsitMultiple",
       label: "Is it Multiple",
       align: "left",
       visible: true,
       sort: true,
       filter: true,
-       width: "10%",
+      width: "10%",
     },
     // {
     //   field: "IsActiveName",
@@ -104,7 +108,6 @@ const Programs = (props) => {
     },
   ];
 
-
   if (bFirst) {
     /**First time call for datalist */
     getDataList();
@@ -113,12 +116,10 @@ const Programs = (props) => {
 
   /**Get data for table list */
   function getDataList() {
-
-
     let params = {
       action: "getDataList",
       lan: language(),
-      UserId: UserInfo.UserId, 
+      UserId: UserInfo.UserId,
     };
     // console.log('LoginUserInfo params: ', params);
 
@@ -129,19 +130,23 @@ const Programs = (props) => {
   function actioncontrol(rowData) {
     return (
       <>
-        {permissionType === 0 && (<Edit
-          className={"table-edit-icon"}
-          onClick={() => {
-            editData(rowData);
-          }}
-        />)}
+        {permissionType === 0 && (
+          <Edit
+            className={"table-edit-icon"}
+            onClick={() => {
+              editData(rowData);
+            }}
+          />
+        )}
 
-        {permissionType === 0 && (<DeleteOutline
-          className={"table-delete-icon"}
-          onClick={() => {
-            deleteData(rowData);
-          }}
-        />)}
+        {permissionType === 0 && (
+          <DeleteOutline
+            className={"table-delete-icon"}
+            onClick={() => {
+              deleteData(rowData);
+            }}
+          />
+        )}
       </>
     );
   }
@@ -165,7 +170,6 @@ const Programs = (props) => {
     setCurrentRow(rowData);
     openModal();
   };
-
 
   function openModal() {
     setShowModal(true); //true=modal show, false=modal hide
@@ -205,11 +209,7 @@ const Programs = (props) => {
     });
   };
 
-  
   function deleteApi(rowData) {
-
-
-
     let params = {
       action: "deleteData",
       lan: language(),
@@ -218,7 +218,7 @@ const Programs = (props) => {
     };
 
     apiCall.post(serverpage, { params }, apiOption()).then((res) => {
-      console.log('res: ', res);
+      console.log("res: ", res);
       props.openNoticeModal({
         isOpen: true,
         msg: res.data.message,
@@ -226,13 +226,7 @@ const Programs = (props) => {
       });
       getDataList();
     });
-
   }
-
-
-  
-
-
 
   return (
     <>
@@ -240,35 +234,51 @@ const Programs = (props) => {
         {/* <!-- ######-----TOP HEADER-----####### --> */}
         <div class="topHeader">
           <h4>
-            <a href="javascript:void(0)" onClick={() => props.history.push("/home")}>Home</a> ❯ Basic Setup ❯ Programs
+            <a
+              href="javascript:void(0)"
+              onClick={() => props.history.push("/home")}
+            >
+              Home
+            </a>{" "}
+            ❯ Basic Setup ❯ Programs
           </h4>
         </div>
 
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
         <div class="searchAdd">
-        
-          <Button label={"Export"} class={"btnPrint"} onClick={PrintPDFExcelExportFunction} />
-          <Button disabled={permissionType} label={"ADD"} class={"btnAdd"} onClick={addData} />
-   
+          <Button
+            label={"Export"}
+            class={"btnPrint"}
+            onClick={PrintPDFExcelExportFunction}
+          />
+          <Button
+            disabled={permissionType}
+            label={"ADD"}
+            class={"btnAdd"}
+            onClick={addData}
+          />
         </div>
 
         {/* <!-- ####---THIS CLASS IS USE FOR TABLE GRID PRODUCT INFORMATION---####s --> */}
         {/* <div class="subContainer">
           <div className="App tableHeight"> */}
-            <CustomTable
-              columns={columnList}
-              rows={dataList ? dataList : {}}
-              actioncontrol={actioncontrol}
-            />
-          {/* </div>
+        <CustomTable
+          columns={columnList}
+          rows={dataList ? dataList : {}}
+          actioncontrol={actioncontrol}
+        />
+        {/* </div>
         </div> */}
       </div>
       {/* <!-- BODY CONTAINER END --> */}
 
-
-      {showModal && (<ProgramsAddEditModal masterProps={props} currentRow={currentRow} modalCallback={modalCallback} />)}
-
-
+      {showModal && (
+        <ProgramsAddEditModal
+          masterProps={props}
+          currentRow={currentRow}
+          modalCallback={modalCallback}
+        />
+      )}
     </>
   );
 };
