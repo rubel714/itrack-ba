@@ -1,6 +1,38 @@
+.formEntryColumnThree {
+    display: grid;
+    grid-template-columns: 13% 20% 13% 20% 13% 20%;
+    row-gap: 8px;
+    padding: 16px;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.formEntryColumnFour {
+    display: grid;
+    grid-template-columns: 10% 15% 10% 15% 10% 15% 10% 15%;
+    row-gap: 8px;
+    padding: 16px;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+}
+
+.formCheckBox{
+   width: 20px;
+   height: 20PX;
+
+}
+
+/* 
+
+
 .control-row {
   display: flex;
-  gap: 16px; /* space between controls */
+  gap: 16px; 
   flex-wrap: wrap;
 }
 
@@ -19,9 +51,4 @@
     display: flex; 
     padding: 16px;
     justify-content: center !important;
-    /* border: var(--box-border); */
-}
-
-/* .control-row input {
-   width: 12%;
 } */
