@@ -346,7 +346,7 @@ const RoleToMenuPermission = (props) => {
       <div class="bodyContainer">
         <div class="topHeader">
           <h4>
-            Home ❯ Basic Setup ❯ Role to Menu Permission
+            Home ❯ Security ❯ Role to Menu Permission
           </h4>
         </div>
 

@@ -70,7 +70,7 @@ const Factory = (props) => {
     {
       field: "custom",
       label: "Action",
-      width: "4%",
+      width: "7%",
       align: "center",
       visible: true,
       sort: false,
@@ -213,7 +213,7 @@ const Factory = (props) => {
         {/* <!-- ######-----TOP HEADER-----####### --> */}
         <div class="topHeader">
           <h4>
-            Home ❯ Basic Setup ❯ Factory
+            Home ❯ Settings ❯ Factory
           </h4>
         </div>
 

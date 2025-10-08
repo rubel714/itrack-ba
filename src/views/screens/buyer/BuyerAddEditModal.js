@@ -73,12 +73,12 @@ const BuyerAddEditModal = (props) => {
       {/* <!-- GROUP MODAL START --> */}
       <div id="groupModal" class="modal">
         {/* <!-- Modal content --> */}
-        <div class="modal-content">
+        <div class="modal-content-small">
           <div class="modalHeader">
             <h4>Add/Edit Buyer</h4>
           </div>
 
-          <div class="modalItem">
+          <div class="modalItemColumnOne">
             <label>Buyer Name *</label>
             <input
               type="text"
@@ -89,9 +89,7 @@ const BuyerAddEditModal = (props) => {
               value={currentRow.BuyerName}
               onChange={(e) => handleChange(e)}
             />
-          </div>
-
-          <div class="modalItem">
+   
             <label>Client Type</label>
             <input
               type="text"
@@ -102,8 +100,7 @@ const BuyerAddEditModal = (props) => {
               value={currentRow.ClientType}
               onChange={(e) => handleChange(e)}
             />
-          </div>
-          <div class="modalItem">
+ 
             <label>Country</label>
             <input
               type="text"
@@ -114,9 +111,7 @@ const BuyerAddEditModal = (props) => {
               value={currentRow.Country}
               onChange={(e) => handleChange(e)}
             />
-          </div>
-
-          <div class="modalItem">
+   
             <label>Sun Code</label>
             <input
               type="text"
@@ -127,8 +122,7 @@ const BuyerAddEditModal = (props) => {
               value={currentRow.SunCode}
               onChange={(e) => handleChange(e)}
             />
-          </div>
-          <div class="modalItem">
+   
             <label>Ebitz Code</label>
             <input
               type="text"
@@ -139,9 +133,7 @@ const BuyerAddEditModal = (props) => {
               value={currentRow.EbitzCode}
               onChange={(e) => handleChange(e)}
             />
-          </div>
-
-          <div class="modalItem">
+ 
             <label>ITS Code</label>
             <input
               type="text"
@@ -152,8 +144,7 @@ const BuyerAddEditModal = (props) => {
               value={currentRow.ItsCode}
               onChange={(e) => handleChange(e)}
             />
-          </div>
-          <div class="modalItem">
+ 
             <label>Register No</label>
             <input
               type="text"
@@ -164,9 +155,7 @@ const BuyerAddEditModal = (props) => {
               value={currentRow.RegisterNo}
               onChange={(e) => handleChange(e)}
             />
-          </div>
-
-          <div class="modalItem">
+ 
             <label>Customer Code</label>
             <input
               type="text"
@@ -179,7 +168,7 @@ const BuyerAddEditModal = (props) => {
             />
           </div>
 
-          <div class="modalItem">
+          <div class="modalItemButton">
             <Button label={"Close"} class={"btnClose"} onClick={modalClose} />
             {props.currentRow.id && (
               <Button

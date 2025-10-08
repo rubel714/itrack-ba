@@ -267,7 +267,7 @@ const TeamMemberAssign = (props) => {
       <div class="bodyContainer">
         <div class="topHeader">
           <h4>
-            Home ❯ Basic Setup ❯ Team Member Assign
+            Home ❯ Settings ❯ Team Member Assign
           </h4>
         </div>
 

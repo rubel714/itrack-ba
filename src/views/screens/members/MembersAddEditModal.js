@@ -19,29 +19,25 @@ const MembersAddEditModal = (props) => {
   const [DepartmentList, setDepartmentList] = useState(null);
   const [currDepartmentId, setCurrDepartmentId] = useState(null);
 
+  React.useEffect(() => {
+    getDepartmentList(props.currentRow.DepartmentId);
+  }, []);
 
-  
-    React.useEffect(() => {
-      getDepartmentList(props.currentRow.DepartmentId);
-    }, []);
-  
-    function getDepartmentList(selectDepartmentId) {
-      let params = {
-        action: "DepartmentList",
-        lan: language(),
-        UserId: UserInfo.UserId,
-      };
-  
-      apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
-        setDepartmentList(
-          [{ id: "", name: "Select Department" }].concat(res.data.datalist)
-        );
-  
-        setCurrDepartmentId(selectDepartmentId);
-      });
-    }
-  
+  function getDepartmentList(selectDepartmentId) {
+    let params = {
+      action: "DepartmentList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+    };
 
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      setDepartmentList(
+        [{ id: "", name: "Select Department" }].concat(res.data.datalist)
+      );
+
+      setCurrDepartmentId(selectDepartmentId);
+    });
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,7 +49,7 @@ const MembersAddEditModal = (props) => {
   };
 
   const validateForm = () => {
-    let validateFields = ["MemberName","PhoneNo","DepartmentId"];
+    let validateFields = ["MemberName", "PhoneNo", "DepartmentId"];
     let errorData = {};
     let isValid = true;
     validateFields.map((field) => {
@@ -97,7 +93,6 @@ const MembersAddEditModal = (props) => {
     props.modalCallback("close");
   }
 
-  
   const handleChangeFilterDropDown = (name, value) => {
     let data = { ...currentRow };
 
@@ -115,12 +110,12 @@ const MembersAddEditModal = (props) => {
       {/* <!-- GROUP MODAL START --> */}
       <div id="groupModal" class="modal">
         {/* <!-- Modal content --> */}
-        <div class="modal-content">
+        <div class="modal-content-small">
           <div class="modalHeader">
             <h4>Add/Edit Employee</h4>
           </div>
 
-          <div class="modalItem">
+          <div class="modalItemColumnOne">
             <label>Code</label>
             <input
               type="text"
@@ -131,9 +126,7 @@ const MembersAddEditModal = (props) => {
               value={currentRow.MemberCode}
               onChange={(e) => handleChange(e)}
             />
-          </div>
 
-          <div class="modalItem">
             <label>Name *</label>
             <input
               type="text"
@@ -144,47 +137,44 @@ const MembersAddEditModal = (props) => {
               value={currentRow.MemberName}
               onChange={(e) => handleChange(e)}
             />
-          </div>
-          <div class="modalItem">
-            <label>Department *</label>
-                       <Autocomplete
-                         autoHighlight
-                         disableClearable
-                         className="chosen_dropdown"
-                         id="DepartmentId"
-                         name="DepartmentId"
-                         autoComplete
-                         class={errorObject.DepartmentId}
-                         options={DepartmentList ? DepartmentList : []}
-                         getOptionLabel={(option) => option.name}
-                         defaultValue={{ id: 0, name: "Select Department" }}
-                         value={
-                           DepartmentList
-                             ? DepartmentList[
-                                 DepartmentList.findIndex(
-                                   (list) => list.id === currDepartmentId
-                                 )
-                               ]
-                             : null
-                         }
-                         onChange={(event, valueobj) =>
-                           handleChangeFilterDropDown(
-                             "DepartmentId",
-                             valueobj ? valueobj.id : ""
-                           )
-                         }
-                         renderOption={(option) => (
-                           <Typography className="chosen_dropdown_font">
-                             {option.name}
-                           </Typography>
-                         )}
-                         renderInput={(params) => (
-                           <TextField {...params} variant="standard" fullWidth />
-                         )}
-                       />
-          </div>
 
-         <div class="modalItem">
+            <label>Department *</label>
+            <Autocomplete
+              autoHighlight
+              disableClearable
+              className="chosen_dropdown"
+              id="DepartmentId"
+              name="DepartmentId"
+              autoComplete
+              class={errorObject.DepartmentId}
+              options={DepartmentList ? DepartmentList : []}
+              getOptionLabel={(option) => option.name}
+              defaultValue={{ id: 0, name: "Select Department" }}
+              value={
+                DepartmentList
+                  ? DepartmentList[
+                      DepartmentList.findIndex(
+                        (list) => list.id === currDepartmentId
+                      )
+                    ]
+                  : null
+              }
+              onChange={(event, valueobj) =>
+                handleChangeFilterDropDown(
+                  "DepartmentId",
+                  valueobj ? valueobj.id : ""
+                )
+              }
+              renderOption={(option) => (
+                <Typography className="chosen_dropdown_font">
+                  {option.name}
+                </Typography>
+              )}
+              renderInput={(params) => (
+                <TextField {...params} variant="standard" fullWidth />
+              )}
+            />
+
             <label>PhoneNo *</label>
             <input
               type="text"
@@ -195,9 +185,7 @@ const MembersAddEditModal = (props) => {
               value={currentRow.PhoneNo}
               onChange={(e) => handleChange(e)}
             />
-          </div>
 
-          <div class="modalItem">
             <label>Email</label>
             <input
               type="text"
@@ -208,9 +196,7 @@ const MembersAddEditModal = (props) => {
               value={currentRow.Email}
               onChange={(e) => handleChange(e)}
             />
-          </div>
 
-          <div class="modalItem">
             <label>Address</label>
             <input
               type="text"
@@ -223,8 +209,7 @@ const MembersAddEditModal = (props) => {
             />
           </div>
 
-         
-          <div class="modalItem">
+          <div class="modalItemButton">
             <Button label={"Close"} class={"btnClose"} onClick={modalClose} />
             {props.currentRow.id && (
               <Button

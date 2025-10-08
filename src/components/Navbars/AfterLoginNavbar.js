@@ -395,7 +395,7 @@ function AfterLoginNavbar(props) {
               {menuShowPermision("basicsetup") === 1 && (
                 <li class="dropdownMenu">
                   {" "}
-                  Basic Setup
+                  Settings
                   <ul class="dropdownList">
                     {menuShowPermision("programs") === 1 && (
                       <li>

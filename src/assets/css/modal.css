@@ -4,7 +4,7 @@
     position: fixed;
     z-index: 99;
     /* Sit on top */
-    padding-top: 124px;
+    /* padding-top: 124px; */
     /* Location of the box */
     left: 0;
     top: 0;
@@ -12,6 +12,9 @@
     height: 100%;
     /* Full height */
     overflow: auto;
+    align-items: center;
+    justify-content: center;
+    display: flex;
 }
 
 .modal .btnPlus {
@@ -23,7 +26,7 @@
 .modal input[type=text],
 .modal input[type=number],
 .modal select {
-    height: 25px;
+    height: 30px;
     width: 100%;
     font-size: .9rem;
 }
@@ -45,34 +48,7 @@
 }
 
 
-/* Modal Content */
-.modal-content {
-    background-color: var(--bg-color);
-    margin: auto;
-    /* padding: 4px; */
-    border: 1px solid black;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
-    border-radius: 8px;
-    width: 60%;
-    word-wrap: break-word;
-}
 
-.modal-content span {
-    padding-left: 16px;
-}
-
-/* Modal Content Small */
-.modal-content-small {
-    background-color: var(--secondary-color);
-    margin: auto;
-    padding: 4px;
-    border: 1px solid black;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
-    border-radius: 8px;
-    width: 40%;
-    word-wrap: break-word;
-
-}
 
 /* STYLE FOR MODAL HEADER */
 .modalHeader {
@@ -87,50 +63,152 @@
     color: var(--headerFont-color);
 }
 
-/* STYLE FOR EACH MODAL DIV */
-.modalItem {
-    display: flex;
-    align-items: center;
-    padding: 16px;
-    justify-content: end !important;
+ /* Modal Content Small */
+.modal-content-small {
+    background-color: var(--bg-color);
+    margin: auto;
+    /* padding: 4px; */
+    border: 1px solid black;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    width: 40%;
+    word-wrap: break-word;
+
+}
+.modalItemColumnOne {
+    display: grid;
+    grid-template-columns: 30% 70%;
+    row-gap: 8px;
+    padding:16px;
 }
 
-
-/* STYLE FOR CUSTOM BUTTON ALIGNMENT */
-
-.modalItem label {
+.modal .modalItemColumnOne label {
     font-size: .8rem;
     font-weight: bold;
+    padding-top: 6px;
     text-align: end;
     padding-right: 8px;
 }
 
-.modalItem .btnClose {
-    margin-right: 8px;
+
+
+
+
+
+/* Modal Content Two Column */
+.modal-content {
+    background-color: var(--bg-color);
+    margin: auto;
+    /* padding: 4px; */
+    border: 1px solid black;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    width: 60%;
+    word-wrap: break-word;
 }
 
-.modalItem .btnUpdate {
-    margin-right: 8px;
+
+.modalItemColumnTwo {
+    display: grid;
+    grid-template-columns: 20% 30% 20% 30%;;
+    row-gap: 8px;
+    padding:16px;
 }
 
-.modal .modalItem input[type=text] {
+.modal .modalItemColumnTwo label {
+    font-size: .8rem;
+    font-weight: bold;
+    padding-top: 6px;
+    text-align: end;
+    padding-right: 8px;
+}
+
+.modal-content span {
+    padding-left: 16px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* STYLE FOR EACH MODAL DIV */
+.modalItemButton {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px 8px 16px;
+    justify-content: end !important;
+}
+ .btnClose {
+    margin: 2px 8px 2px 8px;
+}
+
+.btnUpdate {
+    margin: 2px 8px 2px 8px;
+}
+
+
+
+
+
+
+
+
+/* STYLE FOR CUSTOM BUTTON ALIGNMENT */
+
+/* .modalItem label {
+    font-size: .8rem;
+    font-weight: bold;
+    text-align: end;
+    padding-right: 8px;
+} */
+
+
+
+/* .modal .modalItem input[type=text] {
     width: 50%;
 }
 
 .modal .modalItem input[type=number] {
     width: 50%;
 }
+.modal .modalItem .MuiAutocomplete-root {
+    width: 50%;
+} */
 
 .modal .modalItem input[type=file] {
     width: 100px;
     height: 40px;
 }
-
+/* 
 .modal .modalItem select {
-
     width: 50%;
-
-}
+} */
 
 .inspectionChecklistBody {
     display: grid;

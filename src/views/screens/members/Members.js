@@ -242,7 +242,7 @@ const Members = (props) => {
         {/* <!-- ######-----TOP HEADER-----####### --> */}
         <div class="topHeader">
           <h4>
-            <a href="javascript:void(0)" onClick={() => props.history.push("/home")}>Home</a> ❯ Basic Setup ❯ Employee
+            <a href="javascript:void(0)" onClick={() => props.history.push("/home")}>Home</a> ❯ Settings ❯ Employee
           </h4>
         </div>
 

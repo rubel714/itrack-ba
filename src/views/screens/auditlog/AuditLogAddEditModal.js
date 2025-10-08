@@ -75,7 +75,7 @@ const AuditLogAddEditModal = (props) => {
               <span class="font-bold">Params: </span>{currentRow.SqlParams}
             </div>
   
-          <div class="modalItem">
+          <div class="modalItemButton">
             <Button label={"Close"} class={"btnClose"} onClick={modalClose} />
             {/* {props.currentRow.id && (
               <Button

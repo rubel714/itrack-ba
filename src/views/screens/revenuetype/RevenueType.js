@@ -210,7 +210,7 @@ const RevenueType = (props) => {
         {/* <!-- ######-----TOP HEADER-----####### --> */}
         <div class="topHeader">
           <h4>
-            <a href="javascript:void(0)" onClick={() => props.history.push("/home")}>Home</a> ❯ Basic Setup ❯ Revenue Type
+            <a href="javascript:void(0)" onClick={() => props.history.push("/home")}>Home</a> ❯ Settings ❯ Revenue Type
           </h4>
         </div>
 

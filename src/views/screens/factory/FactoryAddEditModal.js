@@ -512,7 +512,7 @@ const FactoryAddEditModal = (props) => {
             <h4>Add/Edit Factory</h4>
           </div>
 
-          <div class="contactmodalBody pt-10">
+          <div class="modalItemColumnTwo">
             <label>Factory Name *</label>
             <input
               type="text"
@@ -603,7 +603,7 @@ const FactoryAddEditModal = (props) => {
             )}
 
             {!isLocationList && (
-              <div class="contactmodalBody pt-10">
+              <div class="modalItemColumnTwo">
                 <label>Location *</label>
                 <input
                   type="text"
@@ -615,7 +615,7 @@ const FactoryAddEditModal = (props) => {
                   onChange={(e) => handleChangeLocation(e)}
                 />
 
-                <div class="modalItem" style={{ "padding-top": "40px" }}>
+                <div class="modalItemButton" style={{ "padding-top": "40px" }}>
                   <Button
                     label={"Cancel"}
                     class={"btnClose"}
@@ -661,7 +661,8 @@ const FactoryAddEditModal = (props) => {
             )}
 
             {!isContactInfoList && (
-              <div class="contactmodalBody pt-10">
+              <>
+              <div class="modalItemColumnTwo">
                 <label>Contact Person</label>
                 <input
                   type="text"
@@ -705,7 +706,8 @@ const FactoryAddEditModal = (props) => {
                   onChange={(e) => handleChangeContactInfo(e)}
                 />
 
-                <div class="modalItem">
+                </div>
+                <div class="modalItemButton">
                   <Button
                     label={"Cancel"}
                     class={"btnClose"}
@@ -726,12 +728,12 @@ const FactoryAddEditModal = (props) => {
                     />
                   )}
                 </div>
-              </div>
+              </>
             )}
           </div></>)}
 
           {isLocationList && isContactInfoList && (
-            <div class="modalItem">
+            <div class="modalItemButton">
               <Button label={"Close"} class={"btnClose"} onClick={modalClose} />
               {props.currentRow.id && (
                 <Button

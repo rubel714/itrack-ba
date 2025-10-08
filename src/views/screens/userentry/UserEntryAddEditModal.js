@@ -479,7 +479,8 @@ const UserEntryAddEditModal = (props) => {
             <h4>Add/Edit User</h4>
           </div>
 
-          <div class="contactmodalBody pt-10">
+          <div class="modalItemColumnTwo">
+          {/* <div class="modalItemColumnTwo"> */}
             <label>Full Name *</label>
             <input
               type="text"
@@ -501,9 +502,9 @@ const UserEntryAddEditModal = (props) => {
               value={currentRow.Address}
               onChange={(e) => handleChange(e)}
             />
-          </div>
+          {/* </div>
 
-          <div class="contactmodalBody pt-10">
+          <div class="modalItemColumnTwo"> */}
             <label>Office *</label>
             <Autocomplete
               autoHighlight
@@ -575,9 +576,9 @@ const UserEntryAddEditModal = (props) => {
                 <TextField {...params} variant="standard" fullWidth />
               )}
             />
-          </div>
+          {/* </div>
 
-          <div class="contactmodalBody pt-10">
+          <div class="modalItemColumnTwo"> */}
             <label>Designation *</label>
             <Autocomplete
               autoHighlight
@@ -651,9 +652,9 @@ const UserEntryAddEditModal = (props) => {
                 <TextField {...params} variant="standard" fullWidth />
               )}
             />
-          </div>
+          {/* </div>
 
-          <div class="contactmodalBody pt-10">
+          <div class="modalItemColumnTwo"> */}
             <label>Gender *</label>
             <Autocomplete
               autoHighlight
@@ -698,9 +699,9 @@ const UserEntryAddEditModal = (props) => {
               value={currentRow.PhoneNo}
               onChange={(e) => handleChange(e)}
             ></input>
-          </div>
+          {/* </div>
 
-          <div class="contactmodalBody pt-10">
+          <div class="modalItemColumnTwo"> */}
             <label>Role Name *</label>
             <Autocomplete
               autoHighlight
@@ -746,9 +747,9 @@ const UserEntryAddEditModal = (props) => {
               value={currentRow.NID}
               onChange={(e) => handleChange(e)}
             ></input>
-          </div>
+          {/* </div>
 
-          <div class="contactmodalBody pt-10">
+          <div class="modalItemColumnTwo"> */}
             <label>Login Name *</label>
             <input
               type="text"
@@ -792,48 +793,9 @@ const UserEntryAddEditModal = (props) => {
               value={currentRow.Email}
               onChange={(e) => handleChange(e)}
             ></input>
-          </div>
-
-          {/* 
-          <div class="contactmodalBody pt-10">
-            <label>Lineman (N+1)</label>
-            <Autocomplete
-              autoHighlight
-              disableClearable
-              className="chosen_dropdown"
-              id="LinemanUserId"
-              name="LinemanUserId"
-              autoComplete
-              options={UserList ? UserList : []}
-              getOptionLabel={(option) => option.name}
-              defaultValue={{ id: 0, name: "Select User" }}
-              value={
-                UserList
-                  ? UserList[
-                      UserList.findIndex(
-                        (list) => list.id === currLinemanUserId
-                      )
-                    ]
-                  : null
-              }
-              onChange={(event, valueobj) =>
-                handleChangeFilterDropDown(
-                  "LinemanUserId",
-                  valueobj ? valueobj.id : ""
-                )
-              }
-              renderOption={(option) => (
-                <Typography className="chosen_dropdown_font">
-                  {option.name}
-                </Typography>
-              )}
-              renderInput={(params) => (
-                <TextField {...params} variant="standard" fullWidth />
-              )}
-            />
-          </div> */}
-
-          <div class="contactmodalBody pt-10">
+          {/* </div>
+ 
+          <div class="modalItemColumnTwo"> */}
             <label>Employee Id *</label>
             <input
               type="text"
@@ -853,9 +815,9 @@ const UserEntryAddEditModal = (props) => {
               checked={currentRow.IsActive}
               onChange={handleChangeCheck}
             />
-          </div>
+          {/* </div>
 
-          <div className="contactmodalBody pt-10">
+          <div className="modalItemColumnTwo"> */}
             <label>Photo</label>
             <input
               type="file"
@@ -881,12 +843,7 @@ const UserEntryAddEditModal = (props) => {
             )}
           </div>
 
-          {/* 
-          <div>
-      <input type="file" accept="image/*" onChange={handleImageUpload} />
-    </div> */}
-
-          <div class="modalItem">
+          <div class="modalItemButton"> 
             <Button label={"Close"} class={"btnClose"} onClick={modalClose} />
             {props.currentRow.id && (
               <Button

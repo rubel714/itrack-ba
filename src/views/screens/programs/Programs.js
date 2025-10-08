@@ -240,7 +240,7 @@ const Programs = (props) => {
             >
               Home
             </a>{" "}
-            ❯ Basic Setup ❯ Programs
+            ❯ Settings ❯ Programs
           </h4>
         </div>
 

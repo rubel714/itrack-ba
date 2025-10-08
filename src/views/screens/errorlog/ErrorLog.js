@@ -275,7 +275,7 @@ const ErrorLog = (props) => {
         {/* <!-- ######-----TOP HEADER-----####### --> */}
         <div class="topHeader">
           <h4>
-            <a href="javascript:void(0)" onClick={() => props.history.push("/home")}>Home</a> ❯ Basic Setup ❯ Error Log
+            <a href="javascript:void(0)" onClick={() => props.history.push("/home")}>Home</a> ❯ Security ❯ Error Log
           </h4>
         </div>
 

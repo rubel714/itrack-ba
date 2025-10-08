@@ -800,26 +800,24 @@ const CoordinatorInput = (props) => {
         </div>
 
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
-        <div class="searchAdd">
-          {toggle && (
-            <>
+        {toggle && ( <div class="searchAdd">
+         
               <Button
                 label={"Export"}
                 class={"btnPrint"}
                 onClick={PrintPDFExcelExportFunction}
               />
               {/* <Button label={"ADD"} class={"btnAdd"} onClick={addData} /> */}
-            </>
-          )}
+          
 
-          {!toggle && (
+          {/* {!toggle && (
             <Button
               label={"Back to List"}
               class={"btnClose"}
               onClick={showListView}
             />
-          )}
-        </div>
+          )} */}
+        </div>)}
 
         {/* <!-- ####---THIS CLASS IS USE FOR TABLE GRID---####s --> */}
 
@@ -833,9 +831,7 @@ const CoordinatorInput = (props) => {
 
         {!toggle && (
           <>
-            {/* <!-- GROUP MODAL START --> */}
-
-            <div class="pt-10 control-row">
+            <div class="formEntryColumnThree">
               <label>Activity *</label>
               <Autocomplete
                 autoHighlight
@@ -914,30 +910,6 @@ const CoordinatorInput = (props) => {
                 )}
               />
 
-              <label>Assessment No.</label>
-              <input
-                type="text"
-                id="AssessmentNo"
-                name="AssessmentNo"
-                // class={errorObject.AssessmentNo}
-                placeholder="Enter Assessment No"
-                value={currentRow.AssessmentNo}
-                onChange={(e) => handleChange(e)}
-              />
-
-              <label>Audit Start Date</label>
-              <input
-                type="date"
-                id="AuditStartDate"
-                name="AuditStartDate"
-                // class={errorObject.AuditStartDate}
-                placeholder="Enter Audit Start Date"
-                value={currentRow.AuditStartDate}
-                onChange={(e) => handleChange(e)}
-              />
-            </div>
-
-            <div class="control-row pt-10">
               <label>Group Name</label>
               <input
                 type="text"
@@ -980,53 +952,6 @@ const CoordinatorInput = (props) => {
                 // onChange={(e) => handleChange(e)}
               />
 
-              <label>Audit End Date</label>
-              <input
-                type="date"
-                id="AuditEndDate"
-                name="AuditEndDate"
-                // class={errorObject.AuditEndDate}
-                placeholder="Enter Audit End Date"
-                value={currentRow.AuditEndDate}
-                onChange={(e) => handleChange(e)}
-              />
-
-              <label>Country</label>
-              <Autocomplete
-                autoHighlight
-                disableClearable
-                className="chosen_dropdown"
-                id="CountryId"
-                name="CountryId"
-                autoComplete
-                // class={errorObject.CountryId}
-                options={CountryList ? CountryList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Country" }}
-                value={
-                  CountryList
-                    ? CountryList[
-                        CountryList.findIndex(
-                          (list) => list.id === currCountryId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeDropDown("CountryId", valueobj ? valueobj.id : "")
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
-            </div>
-
-            <div class="control-row pt-10">
               <label>Program *</label>
               <Autocomplete
                 autoHighlight
@@ -1076,82 +1001,6 @@ const CoordinatorInput = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Lead Auditor</label>
-              <Autocomplete
-                autoHighlight
-                disableClearable
-                className="chosen_dropdown"
-                id="LeadAuditorId"
-                name="LeadAuditorId"
-                autoComplete
-                // class={errorObject.LeadAuditorId}
-                options={LeadAuditorList ? LeadAuditorList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Lead Auditor" }}
-                value={
-                  LeadAuditorList
-                    ? LeadAuditorList[
-                        LeadAuditorList.findIndex(
-                          (list) => list.id === currLeadAuditorId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeDropDown(
-                    "LeadAuditorId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
-
-              <label>Team Auditor</label>
-              <Autocomplete
-                autoHighlight
-                disableClearable
-                className="chosen_dropdown"
-                id="TeamAuditorId"
-                name="TeamAuditorId"
-                autoComplete
-                // class={errorObject.TeamAuditorId}
-                options={TeamAuditorList ? TeamAuditorList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Team Auditor" }}
-                value={
-                  TeamAuditorList
-                    ? TeamAuditorList[
-                        TeamAuditorList.findIndex(
-                          (list) => list.id === currTeamAuditorId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeDropDown(
-                    "TeamAuditorId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
-            </div>
-
-            <div class="control-row pt-10">
               <label>Opportunity Date</label>
               <input
                 type="date"
@@ -1175,56 +1024,6 @@ const CoordinatorInput = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Audit Type</label>
-              <Autocomplete
-                autoHighlight
-                disableClearable
-                className="chosen_dropdown"
-                id="AuditTypeId"
-                name="AuditTypeId"
-                autoComplete
-                // class={errorObject.AuditTypeId}
-                options={AuditTypeList ? AuditTypeList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Audit Type" }}
-                value={
-                  AuditTypeList
-                    ? AuditTypeList[
-                        AuditTypeList.findIndex(
-                          (list) => list.id === currAuditTypeId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeDropDown(
-                    "AuditTypeId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
-
-              <label>Window</label>
-              <input
-                type="date"
-                id="Window"
-                name="Window"
-                // class={errorObject.Window}
-                placeholder="Enter Window"
-                value={currentRow.Window}
-                onChange={(e) => handleChange(e)}
-              />
-            </div>
-
-            <div class="control-row pt-10">
               <label>CB (Certificate Body)</label>
               <input
                 type="text"
@@ -1275,73 +1074,6 @@ const CoordinatorInput = (props) => {
                 )}
               />
 
-              <label>Report Writer</label>
-              <Autocomplete
-                autoHighlight
-                disableClearable
-                className="chosen_dropdown"
-                id="ReportWriterId"
-                name="ReportWriterId"
-                autoComplete
-                // class={errorObject.ReportWriterId}
-                options={CoordinatorList ? CoordinatorList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select" }}
-                value={
-                  CoordinatorList
-                    ? CoordinatorList[
-                        CoordinatorList.findIndex(
-                          (list) => list.id === currReportWriterId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeDropDown(
-                    "ReportWriterId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
-
-              <label>Payment Status</label>
-              <div>
-                <label>Yes</label>
-                <input
-                  style={{
-                    width: "15px",
-                    height: "15px",
-                    "margin-right": "15px",
-                  }}
-                  type="radio"
-                  id="PaymentStatus"
-                  name="PaymentStatus"
-                  value="Yes"
-                  checked={currentRow.PaymentStatus == "Yes"}
-                  onChange={handleChangeRadio}
-                ></input>
-                <label>No</label>
-                <input
-                  style={{ width: "15px", height: "15px" }}
-                  type="radio"
-                  id="PaymentStatus"
-                  name="PaymentStatus"
-                  value="No"
-                  checked={currentRow.PaymentStatus == "No"}
-                  onChange={handleChangeRadio}
-                ></input>
-              </div>
-            </div>
-
-            <div class="control-row pt-10">
               <label>Audit Stage</label>
               <Autocomplete
                 autoHighlight
@@ -1418,30 +1150,6 @@ const CoordinatorInput = (props) => {
                 )}
               />
 
-              <label>No Of Employee</label>
-              <input
-                type="text"
-                id="NoOfEmployee"
-                name="NoOfEmployee"
-                // class={errorObject.NoOfEmployee}
-                placeholder="Enter No Of Employee"
-                value={currentRow.NoOfEmployee}
-                onChange={(e) => handleChange(e)}
-              />
-
-              <label>Audit Fee</label>
-              <input
-                type="number"
-                id="AuditFee"
-                name="AuditFee"
-                // class={errorObject.AuditFee}
-                placeholder="Enter Audit Fee"
-                value={currentRow.AuditFee}
-                onChange={(e) => handleChange(e)}
-              />
-            </div>
-
-            <div class="control-row pt-10">
               <label>Man Day</label>
               <input
                 type="number"
@@ -1486,30 +1194,6 @@ const CoordinatorInput = (props) => {
                 )}
               />
 
-              <label>OPE</label>
-              <input
-                type="text"
-                id="OPE"
-                name="OPE"
-                // class={errorObject.OPE}
-                placeholder="Enter OPE"
-                value={currentRow.OPE}
-                onChange={(e) => handleChange(e)}
-              />
-
-              <label>PI No</label>
-              <input
-                type="text"
-                id="PINo"
-                name="PINo"
-                // class={errorObject.PINo}
-                placeholder="Enter PI No"
-                value={currentRow.PINo}
-                onChange={(e) => handleChange(e)}
-              />
-            </div>
-
-            <div class="control-row pt-10">
               <label>Lead Generated by (Department)</label>
               <Autocomplete
                 autoHighlight
@@ -1581,30 +1265,6 @@ const CoordinatorInput = (props) => {
                 )}
               />
 
-              <label>Revenue (BDT)</label>
-              <input
-                type="number"
-                id="RevenueBDT"
-                name="RevenueBDT"
-                // class={errorObject.RevenueBDT}
-                placeholder="Enter Revenue BDT"
-                value={currentRow.RevenueBDT}
-                onChange={(e) => handleChange(e)}
-              />
-
-              {/* <label>Attached Documents</label>
-              <input
-                type="text"
-                id="AttachedDocuments"
-                name="AttachedDocuments"
-                // class={errorObject.AttachedDocuments}
-                placeholder="Enter Attached Documents"
-                value={currentRow.AttachedDocuments}
-                onChange={(e) => handleChange(e)}
-              /> */}
-            </div>
-
-            <div class="control-row pt-10">
               <label>Next Followup Date</label>
               <input
                 type="date"
@@ -1628,12 +1288,335 @@ const CoordinatorInput = (props) => {
                 value={currentRow.Remarks}
                 onChange={(e) => handleChange(e)}
               />
+            </div>
+
+            <div class="formEntryColumnThree">
+              <label>Assessment No.</label>
+              <input
+                type="text"
+                id="AssessmentNo"
+                name="AssessmentNo"
+                // class={errorObject.AssessmentNo}
+                placeholder="Enter Assessment No"
+                value={currentRow.AssessmentNo}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Audit Start Date</label>
+              <input
+                type="date"
+                id="AuditStartDate"
+                name="AuditStartDate"
+                // class={errorObject.AuditStartDate}
+                placeholder="Enter Audit Start Date"
+                value={currentRow.AuditStartDate}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Audit End Date</label>
+              <input
+                type="date"
+                id="AuditEndDate"
+                name="AuditEndDate"
+                // class={errorObject.AuditEndDate}
+                placeholder="Enter Audit End Date"
+                value={currentRow.AuditEndDate}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Country</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                className="chosen_dropdown"
+                id="CountryId"
+                name="CountryId"
+                autoComplete
+                // class={errorObject.CountryId}
+                options={CountryList ? CountryList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Country" }}
+                value={
+                  CountryList
+                    ? CountryList[
+                        CountryList.findIndex(
+                          (list) => list.id === currCountryId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown("CountryId", valueobj ? valueobj.id : "")
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+              <label>Lead Auditor</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                className="chosen_dropdown"
+                id="LeadAuditorId"
+                name="LeadAuditorId"
+                autoComplete
+                // class={errorObject.LeadAuditorId}
+                options={LeadAuditorList ? LeadAuditorList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Lead Auditor" }}
+                value={
+                  LeadAuditorList
+                    ? LeadAuditorList[
+                        LeadAuditorList.findIndex(
+                          (list) => list.id === currLeadAuditorId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown(
+                    "LeadAuditorId",
+                    valueobj ? valueobj.id : ""
+                  )
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+              <label>Team Auditor</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                className="chosen_dropdown"
+                id="TeamAuditorId"
+                name="TeamAuditorId"
+                autoComplete
+                // class={errorObject.TeamAuditorId}
+                options={TeamAuditorList ? TeamAuditorList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Team Auditor" }}
+                value={
+                  TeamAuditorList
+                    ? TeamAuditorList[
+                        TeamAuditorList.findIndex(
+                          (list) => list.id === currTeamAuditorId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown(
+                    "TeamAuditorId",
+                    valueobj ? valueobj.id : ""
+                  )
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+              <label>Audit Type</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                className="chosen_dropdown"
+                id="AuditTypeId"
+                name="AuditTypeId"
+                autoComplete
+                // class={errorObject.AuditTypeId}
+                options={AuditTypeList ? AuditTypeList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Audit Type" }}
+                value={
+                  AuditTypeList
+                    ? AuditTypeList[
+                        AuditTypeList.findIndex(
+                          (list) => list.id === currAuditTypeId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown(
+                    "AuditTypeId",
+                    valueobj ? valueobj.id : ""
+                  )
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+              <label>Window</label>
+              <input
+                type="date"
+                id="Window"
+                name="Window"
+                // class={errorObject.Window}
+                placeholder="Enter Window"
+                value={currentRow.Window}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Report Writer</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                className="chosen_dropdown"
+                id="ReportWriterId"
+                name="ReportWriterId"
+                autoComplete
+                // class={errorObject.ReportWriterId}
+                options={CoordinatorList ? CoordinatorList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select" }}
+                value={
+                  CoordinatorList
+                    ? CoordinatorList[
+                        CoordinatorList.findIndex(
+                          (list) => list.id === currReportWriterId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown(
+                    "ReportWriterId",
+                    valueobj ? valueobj.id : ""
+                  )
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+              <label>Payment Status</label>
+              <div>
+                <label>Yes</label>
+                <input
+                  style={{
+                    width: "15px",
+                    height: "15px",
+                    "margin-right": "15px",
+                  }}
+                  type="radio"
+                  id="PaymentStatus"
+                  name="PaymentStatus"
+                  value="Yes"
+                  checked={currentRow.PaymentStatus == "Yes"}
+                  onChange={handleChangeRadio}
+                ></input>
+                <label>No</label>
+                <input
+                  style={{ width: "15px", height: "15px" }}
+                  type="radio"
+                  id="PaymentStatus"
+                  name="PaymentStatus"
+                  value="No"
+                  checked={currentRow.PaymentStatus == "No"}
+                  onChange={handleChangeRadio}
+                ></input>
+              </div>
+
+              <label>No Of Employee</label>
+              <input
+                type="text"
+                id="NoOfEmployee"
+                name="NoOfEmployee"
+                // class={errorObject.NoOfEmployee}
+                placeholder="Enter No Of Employee"
+                value={currentRow.NoOfEmployee}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Audit Fee</label>
+              <input
+                type="number"
+                id="AuditFee"
+                name="AuditFee"
+                // class={errorObject.AuditFee}
+                placeholder="Enter Audit Fee"
+                value={currentRow.AuditFee}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>OPE</label>
+              <input
+                type="text"
+                id="OPE"
+                name="OPE"
+                // class={errorObject.OPE}
+                placeholder="Enter OPE"
+                value={currentRow.OPE}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>PI No</label>
+              <input
+                type="text"
+                id="PINo"
+                name="PINo"
+                // class={errorObject.PINo}
+                placeholder="Enter PI No"
+                value={currentRow.PINo}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Revenue (BDT)</label>
+              <input
+                type="number"
+                id="RevenueBDT"
+                name="RevenueBDT"
+                // class={errorObject.RevenueBDT}
+                placeholder="Enter Revenue BDT"
+                value={currentRow.RevenueBDT}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Attached Documents</label>
+              <input
+                type="text"
+                id="AttachedDocuments"
+                name="AttachedDocuments"
+                // class={errorObject.AttachedDocuments}
+                placeholder="Enter Attached Documents"
+                value={currentRow.AttachedDocuments}
+                onChange={(e) => handleChange(e)}
+              />
 
               <label>Send Mail</label>
               <input
                 id="IsSendMail"
                 name="IsSendMail"
                 type="checkbox"
+                CLASS={"formCheckBox"}
                 checked={currentRow.IsSendMail}
                 onChange={handleChangeCheck}
               />
@@ -1667,7 +1650,7 @@ const CoordinatorInput = (props) => {
               </div>
             </div>
 
-            <div class="pt-10 saveCancelRow ">
+            <div class="modalItemButton">
               <Button
                 label={"Cancel"}
                 class={"btnClose"}
@@ -1688,8 +1671,6 @@ const CoordinatorInput = (props) => {
                 />
               )}
             </div>
-
-            {/* <!-- GROUP MODAL END --> */}
           </>
         )}
 

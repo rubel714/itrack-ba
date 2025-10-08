@@ -83,12 +83,12 @@ const DepartmentAddEditModal = (props) => {
       {/* <!-- GROUP MODAL START --> */}
       <div id="groupModal" class="modal">
         {/* <!-- Modal content --> */}
-        <div class="modal-content" style={{"width":"30%"}}>
+        <div class="modal-content-small" >
           <div class="modalHeader">
             <h4>Add/Edit Holiday</h4>
           </div>
 
-          <div class="modalItem">
+          <div class="modalItemColumnOne">
             <label>Holidate*</label>
             <input
               type="date"
@@ -106,7 +106,7 @@ const DepartmentAddEditModal = (props) => {
           </div>
   
 
-          <div class="modalItem">
+          <div class="modalItemButton">
 
             <Button label={"Close"} class={"btnClose"} onClick={modalClose} />
             {props.currentRow.id && (<Button label={"Update"} class={"btnUpdate"} onClick={addEditAPICall} />)}

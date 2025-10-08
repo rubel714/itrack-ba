@@ -82,7 +82,6 @@ const SalesPersonInput = (props) => {
       finalUrl +
         "?action=SalesPersonInputExport" +
         "&reportType=excel" +
-
         "&TimeStamp=" +
         Date.now()
     );
@@ -223,14 +222,15 @@ const SalesPersonInput = (props) => {
     };
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
-      setDepartmentList([{ id: "", name: "Select Department" }].concat(res.data.datalist));
+      setDepartmentList(
+        [{ id: "", name: "Select Department" }].concat(res.data.datalist)
+      );
 
       setCurrDepartmentId(selectDepartmentId);
     });
   }
 
   function getMemberList(pDepartmentId, selectMemberId) {
-
     let params = {
       action: "getMemberList",
       lan: language(),
@@ -637,18 +637,8 @@ const SalesPersonInput = (props) => {
         </div>
 
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
-        <div class="searchAdd">
-          {/* <input type="text" placeholder="Search Product Group"/> */}
-          {/* <button
-            onClick={() => {
-              addData();
-            }}
-            className="btnAdd"
-          >
-            ADD
-          </button> */}
-
-          {toggle && (
+       {toggle && ( <div class="searchAdd">
+          
             <>
               <Button
                 label={"Export"}
@@ -657,16 +647,16 @@ const SalesPersonInput = (props) => {
               />
               <Button label={"ADD"} class={"btnAdd"} onClick={addData} />
             </>
-          )}
+         
 
-          {!toggle && (
+          {/* {!toggle && (
             <Button
               label={"Back to List"}
               class={"btnClose"}
               onClick={showListView}
             />
-          )}
-        </div>
+          )} */}
+        </div> )}
 
         {/* <!-- ####---THIS CLASS IS USE FOR TABLE GRID---####s --> */}
 
@@ -678,11 +668,9 @@ const SalesPersonInput = (props) => {
           />
         )}
 
-        {!toggle && (
-          <div>
-            {/* <!-- GROUP MODAL START --> */}
-
-            <div class="pt-10 control-row">
+        {!toggle && (<>
+          <div class="formEntryColumnThree">
+            {/* <div class="pt-10 control-row"> */}
               <label>Activity *</label>
               <Autocomplete
                 autoHighlight
@@ -721,9 +709,9 @@ const SalesPersonInput = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
-            </div>
+            {/* </div> */}
 
-            <div class="control-row pt-10">
+            {/* <div class="control-row pt-10"> */}
               <label>Factory *</label>
               <Autocomplete
                 autoHighlight
@@ -802,9 +790,9 @@ const SalesPersonInput = (props) => {
                 }
                 // onChange={(e) => handleChange(e)}
               />
-            </div>
+            {/* </div> */}
 
-            <div class="control-row pt-10">
+            {/* <div class="control-row pt-10"> */}
               <label>Program *</label>
               <Autocomplete
                 autoHighlight
@@ -863,9 +851,9 @@ const SalesPersonInput = (props) => {
                 value={currentRow.OpportunityDate}
                 onChange={(e) => handleChange(e)}
               />
-            </div>
+            {/* </div>
 
-            <div class="control-row pt-10">
+            <div class="control-row pt-10"> */}
               <label>Tentative Offer Price</label>
               <input
                 type="number"
@@ -924,9 +912,9 @@ const SalesPersonInput = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
-            </div>
+            {/* </div> */}
 
-            <div class="control-row pt-10">
+            {/* <div class="control-row pt-10"> */}
               <label>Audit Stage</label>
               <Autocomplete
                 autoHighlight
@@ -1011,9 +999,9 @@ const SalesPersonInput = (props) => {
                 value={currentRow.ManDay}
                 onChange={(e) => handleChange(e)}
               />
-            </div>
+            {/* </div> */}
 
-            <div class="control-row pt-10">
+            {/* <div class="control-row pt-10"> */}
               <label>Buyer</label>
               <Autocomplete
                 autoHighlight
@@ -1061,12 +1049,17 @@ const SalesPersonInput = (props) => {
                 value={
                   DepartmentList
                     ? DepartmentList[
-                        DepartmentList.findIndex((list) => list.id === currDepartmentId)
+                        DepartmentList.findIndex(
+                          (list) => list.id === currDepartmentId
+                        )
                       ]
                     : null
                 }
                 onChange={(event, valueobj) =>
-                  handleChangeDropDown("DepartmentId", valueobj ? valueobj.id : "")
+                  handleChangeDropDown(
+                    "DepartmentId",
+                    valueobj ? valueobj.id : ""
+                  )
                 }
                 renderOption={(option) => (
                   <Typography className="chosen_dropdown_font">
@@ -1109,9 +1102,9 @@ const SalesPersonInput = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
-            </div>
+            {/* </div> */}
 
-            <div class="control-row pt-10">
+            {/* <div class="control-row pt-10"> */}
               <label>Next Followup Date</label>
               <input
                 type="date"
@@ -1133,9 +1126,10 @@ const SalesPersonInput = (props) => {
                 value={currentRow.Remarks}
                 onChange={(e) => handleChange(e)}
               />
-            </div>
+            {/* </div> */}
+          </div>
 
-            <div class="pt-10 saveCancelRow ">
+            <div class="modalItemButton">
               <Button
                 label={"Cancel"}
                 class={"btnClose"}
@@ -1156,9 +1150,7 @@ const SalesPersonInput = (props) => {
                 />
               )}
             </div>
-
-            {/* <!-- GROUP MODAL END --> */}
-          </div>
+          </>
         )}
 
         {/* </div>

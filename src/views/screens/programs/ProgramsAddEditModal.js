@@ -111,12 +111,13 @@ const ProgramsAddEditModal = (props) => {
       {/* <!-- GROUP MODAL START --> */}
       <div id="groupModal" class="modal">
         {/* <!-- Modal content --> */}
-        <div class="modal-content">
+        <div class="modal-content-small">
           <div class="modalHeader">
             <h4>Add/Edit Program</h4>
           </div>
 
-          <div class="modalItem">
+          <div class="modalItemColumnOne">
+            {/* <div class="modalItemColumnOne"> */}
             <label>Program Name *</label>
             <input
               type="text"
@@ -127,8 +128,8 @@ const ProgramsAddEditModal = (props) => {
               value={currentRow.ProgramName}
               onChange={(e) => handleChange(e)}
             />
-          </div>
-          <div class="modalItem">
+            {/* </div>
+          <div class="modalItemColumnOne"> */}
             <label>TAT Day Type *</label>
             <Autocomplete
               autoHighlight
@@ -165,8 +166,8 @@ const ProgramsAddEditModal = (props) => {
                 <TextField {...params} variant="standard" fullWidth />
               )}
             />
-          </div>
-          <div class="modalItem">
+            {/* </div>
+          <div class="modalItem"> */}
             <label>Standard TAT Day</label>
             <input
               type="number"
@@ -177,8 +178,8 @@ const ProgramsAddEditModal = (props) => {
               value={currentRow.StandardTATDay}
               onChange={(e) => handleChange(e)}
             />
-          </div>
-          <div class="modalItem">
+            {/* </div>
+          <div class="modalItem"> */}
             <label>Strategice TAT Day</label>
             <input
               type="number"
@@ -189,8 +190,8 @@ const ProgramsAddEditModal = (props) => {
               value={currentRow.StrategiceTATDay}
               onChange={(e) => handleChange(e)}
             />
-          </div>
-          <div class="modalItem">
+            {/* </div>
+          <div class="modalItem"> */}
             <label>Is it Multiple</label>
             <input
               type="text"
@@ -201,9 +202,10 @@ const ProgramsAddEditModal = (props) => {
               value={currentRow.IsitMultiple}
               onChange={(e) => handleChange(e)}
             />
+            {/* </div> */}
           </div>
 
-          <div class="modalItem">
+          <div class="modalItemButton">
             <Button label={"Close"} class={"btnClose"} onClick={modalClose} />
             {props.currentRow.id && (
               <Button

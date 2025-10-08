@@ -19,7 +19,6 @@ const AuditorsAddEditModal = (props) => {
   const [ProgramList, setProgramList] = useState(null);
   const [currProgramId, setCurrProgramId] = useState(null);
 
-  
   const handleChange = (e) => {
     const { name, value } = e.target;
     let data = { ...currentRow };
@@ -30,7 +29,7 @@ const AuditorsAddEditModal = (props) => {
   };
 
   const validateForm = () => {
-    let validateFields = ["AuditorName","PhoneNo"];
+    let validateFields = ["AuditorName", "PhoneNo"];
     let errorData = {};
     let isValid = true;
     validateFields.map((field) => {
@@ -74,33 +73,28 @@ const AuditorsAddEditModal = (props) => {
     props.modalCallback("close");
   }
 
-
-
   React.useEffect(() => {
     getProgram("");
     // getProgram(props.currentRow.DesignationId);
-
   }, []);
 
-  
-    function getProgram(selectProgramId) {
-      let params = {
-        action: "ProgramList",
-        lan: language(),
-        UserId: UserInfo.UserId,
-      };
-  
-      apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
-        setProgramList(res.data.datalist
-        );
-        //         setProgramList(
-        //   [{ id: "", name: "Select Program" }].concat(res.data.datalist)
-        // );
-  
-        setCurrProgramId(selectProgramId);
-      });
-    }
-  
+  function getProgram(selectProgramId) {
+    let params = {
+      action: "ProgramList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+    };
+
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      setProgramList(res.data.datalist);
+      //         setProgramList(
+      //   [{ id: "", name: "Select Program" }].concat(res.data.datalist)
+      // );
+
+      setCurrProgramId(selectProgramId);
+    });
+  }
+
   return (
     <>
       {/* <!-- GROUP MODAL START --> */}
@@ -111,7 +105,7 @@ const AuditorsAddEditModal = (props) => {
             <h4>Add/Edit Auditor</h4>
           </div>
 
-          <div class="modalItem">
+          <div class="modalItemColumnTwo">
             <label>Emp Id</label>
             <input
               type="text"
@@ -119,12 +113,10 @@ const AuditorsAddEditModal = (props) => {
               name="AuditorCode"
               // class={errorObject.AuditorCode}
               placeholder="Enter Emp Id"
-              value={currentRow.AuditorCode }
+              value={currentRow.AuditorCode}
               onChange={(e) => handleChange(e)}
             />
-          </div>
 
-          <div class="modalItem">
             <label>Name *</label>
             <input
               type="text"
@@ -135,9 +127,7 @@ const AuditorsAddEditModal = (props) => {
               value={currentRow.AuditorName}
               onChange={(e) => handleChange(e)}
             />
-          </div>
 
-          <div class="modalItem">
             <label>Email</label>
             <input
               type="text"
@@ -148,9 +138,7 @@ const AuditorsAddEditModal = (props) => {
               value={currentRow.Email}
               onChange={(e) => handleChange(e)}
             />
-          </div>
 
-         <div class="modalItem">
             <label>Phone Number *</label>
             <input
               type="text"
@@ -161,9 +149,7 @@ const AuditorsAddEditModal = (props) => {
               value={currentRow.PhoneNo}
               onChange={(e) => handleChange(e)}
             />
-          </div>
 
-          <div class="modalItem">
             <label>Address</label>
             <input
               type="text"
@@ -175,84 +161,101 @@ const AuditorsAddEditModal = (props) => {
               onChange={(e) => handleChange(e)}
             />
           </div>
+          <div class="modalItemColumnOne">
+            {props.currentRow.id && (
+              <div
+                class=""
+                style={{
+                  display: "inline-block",
+                  alignItems: "left",
+                  marginBottom: 4,
+                }}
+              >
+                <label>Capability of Lead Auditor Program</label>
+                {ProgramList &&
+                  ProgramList.map((program) => (
+                    <div key={program.id}>
+                      <input
+                        type="checkbox"
+                        id={`program_${program.id}`}
+                        checked={(currentRow.LeadAuditorProgram || []).includes(
+                          program.id
+                        )}
+                        onChange={(e) => {
+                          const selected = currentRow.LeadAuditorProgram || [];
+                          let newSelected;
+                          if (e.target.checked) {
+                            newSelected = [...selected, program.id];
+                          } else {
+                            newSelected = selected.filter(
+                              (id) => id !== program.id
+                            );
+                          }
+                          handleChange({
+                            target: {
+                              name: "LeadAuditorProgram",
+                              value: newSelected,
+                            },
+                          });
+                        }}
+                      />
+                      <span htmlFor={`program_${program.id}`}>
+                        {program.name}
+                      </span>
+                    </div>
+                  ))}
+              </div>
+            )}
 
-          {props.currentRow.id && (
-          <div class="modalItem" style={{ display: "inline-block", alignItems: "left", marginBottom: 4 }}>
+            {props.currentRow.id && (
+              <div
+                class=""
+                style={{
+                  display: "inline-block",
+                  alignItems: "left",
+                  marginBottom: 4,
+                }}
+              >
+                <label>Capability of Team Auditor Program</label>
+                {ProgramList &&
+                  ProgramList.map((program) => (
+                    // <div style={{ display: "grid", flexDirection: "row", gap: "4px", marginBottom: "8px" }}>
 
-            <label>Capability of Lead Auditor Program Name</label>
-            {ProgramList &&
-              ProgramList.map((program) => (
-                // <div style={{ display: "grid", flexDirection: "row", gap: "4px", marginBottom: "8px" }}>
-                
-                 <div key={program.id} >
-                  <input
-                    type="checkbox"
-                    id={`program_${program.id}`}
-                    checked={(currentRow.LeadAuditorProgram || []).includes(program.id)}
-                    onChange={(e) => {
-                      const selected = currentRow.LeadAuditorProgram || [];
-                      let newSelected;
-                      if (e.target.checked) {
-                        newSelected = [...selected, program.id];
-                      } else {
-                        newSelected = selected.filter((id) => id !== program.id);
-                      }
-                      handleChange({
-                        target: {
-                          name: "LeadAuditorProgram",
-                          value: newSelected,
-                        },
-                      });
-                    }}
-                  />
-                  <span htmlFor={`program_${program.id}`}>
-                    {program.name}
-                  </span>
-                </div>
-              ))
-            }
-          </div>)}
+                    <div key={program.id}>
+                      <input
+                        type="checkbox"
+                        id={`program_${program.id}`}
+                        checked={(currentRow.TeamAuditorProgram || []).includes(
+                          program.id
+                        )}
+                        onChange={(e) => {
+                          const selected = currentRow.TeamAuditorProgram || [];
+                          let newSelected;
+                          if (e.target.checked) {
+                            newSelected = [...selected, program.id];
+                          } else {
+                            newSelected = selected.filter(
+                              (id) => id !== program.id
+                            );
+                          }
+                          handleChange({
+                            target: {
+                              name: "TeamAuditorProgram",
+                              value: newSelected,
+                            },
+                          });
+                        }}
+                      />
+                      <span htmlFor={`program_${program.id}`}>
+                        {program.name}
+                      </span>
+                    </div>
+                  ))}
+              </div>
+            )}
+          </div>
 
- {props.currentRow.id && (
-          <div class="modalItem" style={{ display: "inline-block", alignItems: "left", marginBottom: 4 }}>
-            
-            <label>Capability of Team Auditor Program Name</label>
-            {ProgramList &&
-              ProgramList.map((program) => (
-                // <div style={{ display: "grid", flexDirection: "row", gap: "4px", marginBottom: "8px" }}>
-                
-                 <div key={program.id} >
-                  <input
-                    type="checkbox"
-                    id={`program_${program.id}`}
-                    checked={(currentRow.TeamAuditorProgram || []).includes(program.id)}
-                    onChange={(e) => {
-                      const selected = currentRow.TeamAuditorProgram || [];
-                      let newSelected;
-                      if (e.target.checked) {
-                        newSelected = [...selected, program.id];
-                      } else {
-                        newSelected = selected.filter((id) => id !== program.id);
-                      }
-                      handleChange({
-                        target: {
-                          name: "TeamAuditorProgram",
-                          value: newSelected,
-                        },
-                      });
-                    }}
-                  />
-                  <span htmlFor={`program_${program.id}`}>
-                    {program.name}
-                  </span>
-                </div>
-              ))
-            }
-
-          </div>)}
-
-         
-          <div class="modalItem">
+          <div class="modalItemButton">
             <Button label={"Close"} class={"btnClose"} onClick={modalClose} />
             {props.currentRow.id && (
               <Button

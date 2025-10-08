@@ -119,7 +119,7 @@ function CustomTable({
       {/* <div className="bodyContainer"> */}
       {/* <div className="topHeader">
         <h4>
-          <a href="javascript:void(0)" onClick={() => props.history.push("/home")}>Home</a> ❯ Basic Setup ❯ Product Cetegory
+          <a href="javascript:void(0)" onClick={() => props.history.push("/home")}>Home</a> ❯ Settings ❯ Product Cetegory
         </h4>
       </div> */}
 

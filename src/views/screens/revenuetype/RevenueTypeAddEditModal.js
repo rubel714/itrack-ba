@@ -76,12 +76,12 @@ const RevenueTypeAddEditModal = (props) => {
       {/* <!-- GROUP MODAL START --> */}
       <div id="groupModal" class="modal">
         {/* <!-- Modal content --> */}
-        <div class="modal-content">
+        <div class="modal-content-small">
           <div class="modalHeader">
             <h4>Add/Edit Revenue Type</h4>
           </div>
 
-          <div class="modalItem">
+          <div class="modalItemColumnOne">
             <label>Revenue Type *</label>
             <input
               type="text"
@@ -106,7 +106,7 @@ const RevenueTypeAddEditModal = (props) => {
           </div>
   
 
-          <div class="modalItem">
+          <div class="modalItemButton">
 
             <Button label={"Close"} class={"btnClose"} onClick={modalClose} />
             {props.currentRow.id && (<Button label={"Update"} class={"btnUpdate"} onClick={addEditAPICall} />)}

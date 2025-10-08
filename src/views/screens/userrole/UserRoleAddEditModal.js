@@ -96,12 +96,12 @@ const UserRoleAddEditModal = (props) => {
       {/* <!-- GROUP MODAL START --> */}
       <div id="groupModal" class="modal">
         {/* <!-- Modal content --> */}
-        <div class="modal-content">
+        <div class="modal-content-small">
           <div class="modalHeader">
             <h4>Add/Edit User Role</h4>
           </div>
 
-          <div class="modalItem">
+          <div class="modalItemColumnOne">
             <label>User Role *</label>
             <input
               type="text"
@@ -113,43 +113,8 @@ const UserRoleAddEditModal = (props) => {
               onChange={(e) => handleChange(e)}
             />
           </div>
-{/* 
-          <div class="modalItem">
-            <label for="">Discount (Amount)</label>
-            <input
-              type="number"
-              id="DiscountAmount"
-              name="DiscountAmount"
-              class={errorObject.DiscountAmount}
-              value={currentRow.DiscountAmount}
-              onChange={(e) => handleChange(e)}
-            />
-          </div> */}
-
-          {/* <div class="modalItem">
-            <label for="">Discount (%)</label>
-            <input
-              type="number"
-              id="DiscountPercentage"
-              name="DiscountPercentage"
-              class={errorObject.DiscountPercentage}
-              value={currentRow.DiscountPercentage}
-              onChange={(e) => handleChange(e)}
-            />
-          </div>
-
-          <div class="modalItem">
-            <label> Is Active?</label>
-            <input 
-              id="IsActive" 
-              name="IsActive" 
-              type = "checkbox" 
-              checked={currentRow.IsActive} 
-              onChange = {handleChangeCheck} 
-            />
-        
-          </div> */}
-          <div class="modalItem">
+          
+          <div class="modalItemButton">
 
             <Button label={"Close"} class={"btnClose"} onClick={modalClose} />
             {props.currentRow.id && (<Button label={"Update"} class={"btnUpdate"} onClick={addEditAPICall} />)}
