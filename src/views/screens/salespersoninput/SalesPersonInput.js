@@ -749,7 +749,7 @@ const SalesPersonInput = (props) => {
                 )}
               />
 
-              <label>Group Name {currentRow.id}</label>
+              <label>Group Name</label>
               <input
                 type="text"
                 id="FactoryGroupName"

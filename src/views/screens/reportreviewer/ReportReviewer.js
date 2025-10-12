@@ -978,32 +978,7 @@ const ReportReviewer = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
-
-              <label>Assessment No.</label>
-              <input
-                type="text"
-                id="AssessmentNo"
-                name="AssessmentNo"
-                disabled={true}
-                // class={errorObject.AssessmentNo}
-                placeholder="Enter Assessment No"
-                value={currentRow.AssessmentNo}
-                onChange={(e) => handleChange(e)}
-              />
-
-              <label>Audit Start Date</label>
-              <input
-                type="date"
-                id="AuditStartDate"
-                name="AuditStartDate"
-                disabled={true}
-                // class={errorObject.AuditStartDate}
-                placeholder="Enter Audit Start Date"
-                value={currentRow.AuditStartDate}
-                onChange={(e) => handleChange(e)}
-              />
- 
-              <label>Group Name</label>
+ <label>Group Name</label>
               <input
                 type="text"
                 id="FactoryGroupName"
@@ -1023,8 +998,7 @@ const ReportReviewer = (props) => {
                 }
                 // onChange={(e) => handleChange(e)}
               />
-
-              <label>Factory Location</label>
+<label>Factory Location</label>
               <input
                 type="text"
                 id="FactoryAddress"
@@ -1045,53 +1019,6 @@ const ReportReviewer = (props) => {
                 // onChange={(e) => handleChange(e)}
               />
 
-              <label>Audit End Date</label>
-              <input
-                type="date"
-                id="AuditEndDate"
-                name="AuditEndDate"
-                disabled={true}
-                // class={errorObject.AuditEndDate}
-                placeholder="Enter Audit End Date"
-                value={currentRow.AuditEndDate}
-                onChange={(e) => handleChange(e)}
-              />
-
-              <label>Country</label>
-              <Autocomplete
-                autoHighlight
-                disableClearable
-                disabled={true}
-                className="chosen_dropdown"
-                id="CountryId"
-                name="CountryId"
-                autoComplete
-                // class={errorObject.CountryId}
-                options={CountryList ? CountryList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Country" }}
-                value={
-                  CountryList
-                    ? CountryList[
-                        CountryList.findIndex(
-                          (list) => list.id === currCountryId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeDropDown("CountryId", valueobj ? valueobj.id : "")
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
- 
               <label>Program *</label>
               <Autocomplete
                 autoHighlight
@@ -1129,6 +1056,7 @@ const ReportReviewer = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
+
               <label>Expire Date</label>
               <input
                 type="date"
@@ -1141,82 +1069,7 @@ const ReportReviewer = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Lead Auditor</label>
-              <Autocomplete
-                autoHighlight
-                disableClearable
-                disabled={true}
-                className="chosen_dropdown"
-                id="LeadAuditorId"
-                name="LeadAuditorId"
-                autoComplete
-                // class={errorObject.LeadAuditorId}
-                options={LeadAuditorList ? LeadAuditorList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Lead Auditor" }}
-                value={
-                  LeadAuditorList
-                    ? LeadAuditorList[
-                        LeadAuditorList.findIndex(
-                          (list) => list.id === currLeadAuditorId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeDropDown(
-                    "LeadAuditorId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
 
-              <label>Team Auditor</label>
-              <Autocomplete
-                autoHighlight
-                disableClearable
-                disabled={true}
-                className="chosen_dropdown"
-                id="TeamAuditorId"
-                name="TeamAuditorId"
-                autoComplete
-                // class={errorObject.TeamAuditorId}
-                options={TeamAuditorList ? TeamAuditorList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Team Auditor" }}
-                value={
-                  TeamAuditorList
-                    ? TeamAuditorList[
-                        TeamAuditorList.findIndex(
-                          (list) => list.id === currTeamAuditorId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeDropDown(
-                    "TeamAuditorId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
- 
               <label>Opportunity Date</label>
               <input
                 type="date"
@@ -1228,6 +1081,7 @@ const ReportReviewer = (props) => {
                 value={currentRow.OpportunityDate}
                 onChange={(e) => handleChange(e)}
               />
+
               <label>Tentative Offer Price</label>
               <input
                 type="number"
@@ -1240,56 +1094,7 @@ const ReportReviewer = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Audit Type</label>
-              <Autocomplete
-                autoHighlight
-                disableClearable
-                disabled={true}
-                className="chosen_dropdown"
-                id="AuditTypeId"
-                name="AuditTypeId"
-                autoComplete
-                // class={errorObject.AuditTypeId}
-                options={AuditTypeList ? AuditTypeList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Audit Type" }}
-                value={
-                  AuditTypeList
-                    ? AuditTypeList[
-                        AuditTypeList.findIndex(
-                          (list) => list.id === currAuditTypeId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeDropDown(
-                    "AuditTypeId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
 
-              <label>Window</label>
-              <input
-                type="date"
-                id="Window"
-                name="Window"
-                disabled={true}
-                // class={errorObject.Window}
-                placeholder="Enter Window"
-                value={currentRow.Window}
-                onChange={(e) => handleChange(e)}
-              />
- 
               <label>CB (Certificate Body)</label>
               <input
                 type="text"
@@ -1301,6 +1106,7 @@ const ReportReviewer = (props) => {
                 value={currentRow.CertificateBody}
                 onChange={(e) => handleChange(e)}
               />
+
 
               <label>Coordinator</label>
               <Autocomplete
@@ -1340,74 +1146,6 @@ const ReportReviewer = (props) => {
                 )}
               />
 
-              <label>Report Writer</label>
-              <Autocomplete
-                autoHighlight
-                disableClearable
-                disabled={true}
-                className="chosen_dropdown"
-                id="ReportWriterId"
-                name="ReportWriterId"
-                autoComplete
-                // class={errorObject.ReportWriterId}
-                options={CoordinatorList ? CoordinatorList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select" }}
-                value={
-                  CoordinatorList
-                    ? CoordinatorList[
-                        CoordinatorList.findIndex(
-                          (list) => list.id === currReportWriterId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeDropDown(
-                    "ReportWriterId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
-
-              <label>Payment Status</label>
-              <div>
-                <label>Yes</label>
-                <input
-                  style={{
-                    width: "15px",
-                    height: "15px",
-                    "margin-right": "15px",
-                  }}
-                  type="radio"
-                  id="PaymentStatus"
-                  name="PaymentStatus"
-                  disabled={true}
-                  value="Yes"
-                  checked={currentRow.PaymentStatus == "Yes"}
-                  onChange={handleChangeRadio}
-                ></input>
-                <label>No</label>
-                <input
-                  style={{ width: "15px", height: "15px" }}
-                  type="radio"
-                  id="PaymentStatus"
-                  name="PaymentStatus"
-                  disabled={true}
-                  value="No"
-                  checked={currentRow.PaymentStatus == "No"}
-                  onChange={handleChangeRadio}
-                ></input>
-              </div>
- 
               <label>Audit Stage</label>
               <Autocomplete
                 autoHighlight
@@ -1484,30 +1222,6 @@ const ReportReviewer = (props) => {
                 )}
               />
 
-              <label>No Of Employee</label>
-              <input
-                type="text"
-                id="NoOfEmployee"
-                name="NoOfEmployee"
-                disabled={true}
-                // class={errorObject.NoOfEmployee}
-                placeholder="Enter No Of Employee"
-                value={currentRow.NoOfEmployee}
-                onChange={(e) => handleChange(e)}
-              />
-
-              <label>Audit Fee</label>
-              <input
-                type="number"
-                id="AuditFee"
-                name="AuditFee"
-                disabled={true}
-                // class={errorObject.AuditFee}
-                placeholder="Enter Audit Fee"
-                value={currentRow.AuditFee}
-                onChange={(e) => handleChange(e)}
-              />
- 
               <label>Man Day</label>
               <input
                 type="number"
@@ -1519,6 +1233,7 @@ const ReportReviewer = (props) => {
                 value={currentRow.ManDay}
                 onChange={(e) => handleChange(e)}
               />
+
               <label>Buyer</label>
               <Autocomplete
                 autoHighlight
@@ -1552,30 +1267,6 @@ const ReportReviewer = (props) => {
                 )}
               />
 
-              <label>OPE</label>
-              <input
-                type="text"
-                id="OPE"
-                name="OPE"
-                disabled={true}
-                // class={errorObject.OPE}
-                placeholder="Enter OPE"
-                value={currentRow.OPE}
-                onChange={(e) => handleChange(e)}
-              />
-
-              <label>PI No</label>
-              <input
-                type="text"
-                id="PINo"
-                name="PINo"
-                disabled={true}
-                // class={errorObject.PINo}
-                placeholder="Enter PI No"
-                value={currentRow.PINo}
-                onChange={(e) => handleChange(e)}
-              />
- 
               <label>Lead Generated by (Department)</label>
               <Autocomplete
                 autoHighlight
@@ -1647,30 +1338,7 @@ const ReportReviewer = (props) => {
                 )}
               />
 
-              <label>Revenue (BDT)</label>
-              <input
-                type="number"
-                id="RevenueBDT"
-                name="RevenueBDT"
-                disabled={true}
-                // class={errorObject.RevenueBDT}
-                placeholder="Enter Revenue BDT"
-                value={currentRow.RevenueBDT}
-                onChange={(e) => handleChange(e)}
-              />
 
-              <label>Attached Documents</label>
-              <input
-                type="text"
-                id="AttachedDocuments"
-                name="AttachedDocuments"
-                disabled={true}
-                // class={errorObject.AttachedDocuments}
-                placeholder="Enter Attached Documents"
-                value={currentRow.AttachedDocuments}
-                onChange={(e) => handleChange(e)}
-              />
- 
               <label>Next Followup Date</label>
               <input
                 type="date"
@@ -1695,17 +1363,385 @@ const ReportReviewer = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
+              <label>Assessment No.</label>
+              <input
+                type="text"
+                id="AssessmentNo"
+                name="AssessmentNo"
+                disabled={true}
+                // class={errorObject.AssessmentNo}
+                placeholder="Enter Assessment No"
+                value={currentRow.AssessmentNo}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Audit Start Date</label>
+              <input
+                type="date"
+                id="AuditStartDate"
+                name="AuditStartDate"
+                disabled={true}
+                // class={errorObject.AuditStartDate}
+                placeholder="Enter Audit Start Date"
+                value={currentRow.AuditStartDate}
+                onChange={(e) => handleChange(e)}
+              />
+ 
+             
+
+              
+
+              <label>Audit End Date</label>
+              <input
+                type="date"
+                id="AuditEndDate"
+                name="AuditEndDate"
+                disabled={true}
+                // class={errorObject.AuditEndDate}
+                placeholder="Enter Audit End Date"
+                value={currentRow.AuditEndDate}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Country</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                disabled={true}
+                className="chosen_dropdown"
+                id="CountryId"
+                name="CountryId"
+                autoComplete
+                // class={errorObject.CountryId}
+                options={CountryList ? CountryList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Country" }}
+                value={
+                  CountryList
+                    ? CountryList[
+                        CountryList.findIndex(
+                          (list) => list.id === currCountryId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown("CountryId", valueobj ? valueobj.id : "")
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+ 
+              <label>Lead Auditor</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                disabled={true}
+                className="chosen_dropdown"
+                id="LeadAuditorId"
+                name="LeadAuditorId"
+                autoComplete
+                // class={errorObject.LeadAuditorId}
+                options={LeadAuditorList ? LeadAuditorList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Lead Auditor" }}
+                value={
+                  LeadAuditorList
+                    ? LeadAuditorList[
+                        LeadAuditorList.findIndex(
+                          (list) => list.id === currLeadAuditorId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown(
+                    "LeadAuditorId",
+                    valueobj ? valueobj.id : ""
+                  )
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+              <label>Team Auditor</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                disabled={true}
+                className="chosen_dropdown"
+                id="TeamAuditorId"
+                name="TeamAuditorId"
+                autoComplete
+                // class={errorObject.TeamAuditorId}
+                options={TeamAuditorList ? TeamAuditorList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Team Auditor" }}
+                value={
+                  TeamAuditorList
+                    ? TeamAuditorList[
+                        TeamAuditorList.findIndex(
+                          (list) => list.id === currTeamAuditorId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown(
+                    "TeamAuditorId",
+                    valueobj ? valueobj.id : ""
+                  )
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+ 
+
+              <label>Audit Type</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                disabled={true}
+                className="chosen_dropdown"
+                id="AuditTypeId"
+                name="AuditTypeId"
+                autoComplete
+                // class={errorObject.AuditTypeId}
+                options={AuditTypeList ? AuditTypeList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Audit Type" }}
+                value={
+                  AuditTypeList
+                    ? AuditTypeList[
+                        AuditTypeList.findIndex(
+                          (list) => list.id === currAuditTypeId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown(
+                    "AuditTypeId",
+                    valueobj ? valueobj.id : ""
+                  )
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+              <label>Window Start</label>
+              <input
+                type="date"
+                id="Window"
+                name="Window"
+                disabled={true}
+                // class={errorObject.Window}
+                placeholder="Enter Window Start"
+                value={currentRow.Window}
+                onChange={(e) => handleChange(e)}
+              />
+ 
+              <label>Window End</label>
+              <input
+                type="date"
+                id="WindowEnd"
+                name="WindowEnd"
+                disabled={true}
+                // class={errorObject.WindowEnd}
+                placeholder="Enter Window End"
+                value={currentRow.WindowEnd}
+                onChange={(e) => handleChange(e)}
+              />
+              <label>Report Writer</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                disabled={true}
+                className="chosen_dropdown"
+                id="ReportWriterId"
+                name="ReportWriterId"
+                autoComplete
+                // class={errorObject.ReportWriterId}
+                options={CoordinatorList ? CoordinatorList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select" }}
+                value={
+                  CoordinatorList
+                    ? CoordinatorList[
+                        CoordinatorList.findIndex(
+                          (list) => list.id === currReportWriterId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown(
+                    "ReportWriterId",
+                    valueobj ? valueobj.id : ""
+                  )
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+              <label>Payment Status</label>
+              <div>
+                <label>Yes</label>
+                <input
+                  style={{
+                    width: "15px",
+                    height: "15px",
+                    "margin-right": "15px",
+                  }}
+                  type="radio"
+                  id="PaymentStatus"
+                  name="PaymentStatus"
+                  disabled={true}
+                  value="Yes"
+                  checked={currentRow.PaymentStatus == "Yes"}
+                  onChange={handleChangeRadio}
+                ></input>
+                <label>No</label>
+                <input
+                  style={{ width: "15px", height: "15px" }}
+                  type="radio"
+                  id="PaymentStatus"
+                  name="PaymentStatus"
+                  disabled={true}
+                  value="No"
+                  checked={currentRow.PaymentStatus == "No"}
+                  onChange={handleChangeRadio}
+                ></input>
+              </div>
+ 
+              <label>No Of Employee</label>
+              <input
+                type="text"
+                id="NoOfEmployee"
+                name="NoOfEmployee"
+                disabled={true}
+                // class={errorObject.NoOfEmployee}
+                placeholder="Enter No Of Employee"
+                value={currentRow.NoOfEmployee}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Audit Fee</label>
+              <input
+                type="number"
+                id="AuditFee"
+                name="AuditFee"
+                disabled={true}
+                // class={errorObject.AuditFee}
+                placeholder="Enter Audit Fee"
+                value={currentRow.AuditFee}
+                onChange={(e) => handleChange(e)}
+              />
+ 
+              <label>OPE</label>
+              <input
+                type="number"
+                id="OPE"
+                name="OPE"
+                disabled={true}
+                // class={errorObject.OPE}
+                placeholder="Enter OPE"
+                value={currentRow.OPE}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Others Amount</label>
+              <input
+                type="number"
+                id="OthersAmount"
+                name="OthersAmount"
+                disabled={true}
+                // class={errorObject.OthersAmount}
+                placeholder="Enter Others Amount"
+                value={currentRow.OthersAmount}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Revenue (BDT)</label>
+              <input
+                type="number"
+                id="RevenueBDT"
+                name="RevenueBDT"
+                disabled={true}
+                // class={errorObject.RevenueBDT}
+                placeholder="Enter Revenue BDT"
+                value={currentRow.RevenueBDT}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Attached Documents</label>
+              <input
+                type="text"
+                id="AttachedDocuments"
+                name="AttachedDocuments"
+                disabled={true}
+                // class={errorObject.AttachedDocuments}
+                placeholder="Enter Attached Documents"
+                value={currentRow.AttachedDocuments}
+                onChange={(e) => handleChange(e)}
+              />
+ 
+              <label>PI No</label>
+              <input
+                type="text"
+                id="PINo"
+                name="PINo"
+                disabled={true}
+                // class={errorObject.PINo}
+                placeholder="Enter PI No"
+                value={currentRow.PINo}
+                onChange={(e) => handleChange(e)}
+              />
+ 
+
+
               <label>Send Mail</label>
               <input
                 id="IsSendMail"
                 name="IsSendMail"
                 type="checkbox"
+                class={"formCheckBox"}
                 disabled={true}
                 checked={currentRow.IsSendMail}
                 onChange={handleChangeCheck}
               />
 
-              <label>Report Release</label>
+              {/* <label>Report Release</label>
               <div>
                 <label>Yes</label>
                 <input
@@ -1733,7 +1769,7 @@ const ReportReviewer = (props) => {
                   checked={currentRow.ReportReleaseStatus == "No"}
                   onChange={handleChangeRadio}
                 ></input>
-              </div>
+              </div> */}
  
               <label>Invoice To</label>
               <input
@@ -1915,6 +1951,36 @@ const ReportReviewer = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
+
+              <label>Report Release</label>
+              <div>
+                <label>Yes</label>
+                <input
+                  style={{
+                    width: "15px",
+                    height: "15px",
+                    "margin-right": "15px",
+                  }}
+                  type="radio"
+                  id="ReportReleaseStatus"
+                  name="ReportReleaseStatus"
+                  value="Yes"
+                  checked={currentRow.ReportReleaseStatus == "Yes"}
+                  onChange={handleChangeRadio}
+                ></input>
+                <label>No</label>
+                <input
+                  style={{ width: "15px", height: "15px" }}
+                  type="radio"
+                  id="ReportReleaseStatus"
+                  name="ReportReleaseStatus"
+                  value="No"
+                  checked={currentRow.ReportReleaseStatus == "No"}
+                  onChange={handleChangeRadio}
+                ></input>
+              </div>
+
+              
               <label>Report Released Status</label>
               <Autocomplete
                 autoHighlight
@@ -1985,6 +2051,18 @@ const ReportReviewer = (props) => {
                 // class={errorObject.AduditorLogOutTime}
                 placeholder="Enter Aduditor Log Out Time"
                 value={currentRow.AduditorLogOutTime}
+                onChange={(e) => handleChange(e)}
+              />
+
+                <label>Report Result</label>
+              <input
+                type="text"
+                id="ReportResult"
+                name="ReportResult"
+                // disabled={true}
+                // class={errorObject.ReportResult}
+                placeholder="Enter Report Result"
+                value={currentRow.ReportResult}
                 onChange={(e) => handleChange(e)}
               />
             </div>

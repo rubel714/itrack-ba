@@ -33,8 +33,8 @@ function getDataList($data)
 		a.LeadStatusId, h.LeadStatusName,a.ManDay,a.BuyerId,i.BuyerName,a.NextFollowupDate,
 		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks
 		, a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, a.CountryId, a.LeadAuditorId, a.TeamAuditorId, a.AuditTypeId, 
-		a.Window, a.PaymentStatus, a.ReportWriterId, a.NoOfEmployee, a.AuditFee, a.OPE, a.PINo, a.RevenueBDT, 
-		a.AttachedDocuments, a.IsSendMail, a.ReportReleaseStatus
+		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT, 
+		a.AttachedDocuments, a.IsSendMail
 	   FROM `t_transaction` a
 	   INNER JOIN `t_activity` b ON a.`ActivityId` = b.`ActivityId`
 	   LEFT JOIN `t_factory` c ON a.`FactoryId` = c.`FactoryId`
@@ -76,6 +76,27 @@ function dataAddEdit($data)
 
 		$id = $data->rowData->id;
 
+
+		//////////////////////////////////Sales input//////////////////////////////////////////////
+		$ActivityId = $data->rowData->ActivityId;
+		$FactoryId = $data->rowData->FactoryId;
+		$ProgramId = $data->rowData->ProgramId;
+		$ExpireDate = $data->rowData->ExpireDate ? $data->rowData->ExpireDate : null;
+		$OpportunityDate = $data->rowData->OpportunityDate ? $data->rowData->OpportunityDate : null;
+		$TentativeOfferPrice = $data->rowData->TentativeOfferPrice ? $data->rowData->TentativeOfferPrice : null;
+		$CertificateBody = $data->rowData->CertificateBody ? $data->rowData->CertificateBody : null;
+		$CoordinatorId = $data->rowData->CoordinatorId ? $data->rowData->CoordinatorId : null;
+		$AuditStageId = $data->rowData->AuditStageId ? $data->rowData->AuditStageId : null;
+		$LeadStatusId = $data->rowData->LeadStatusId ? $data->rowData->LeadStatusId : null;
+		$ManDay = $data->rowData->ManDay ? $data->rowData->ManDay : null;
+		$BuyerId = $data->rowData->BuyerId ? $data->rowData->BuyerId : null;
+		$NextFollowupDate = $data->rowData->NextFollowupDate ? $data->rowData->NextFollowupDate : null;
+		$DepartmentId = $data->rowData->DepartmentId ? $data->rowData->DepartmentId : null;
+		$MemberId = $data->rowData->MemberId ? $data->rowData->MemberId : null;
+		$Remarks = $data->rowData->Remarks ? $data->rowData->Remarks : null;
+
+		////////////////////////////////////Co ordinator////////////////////////////////////////////////////
+
 		$AssessmentNo = $data->rowData->AssessmentNo ? $data->rowData->AssessmentNo : null;
 		$AuditStartDate = $data->rowData->AuditStartDate ? $data->rowData->AuditStartDate : null;
 		$AuditEndDate = $data->rowData->AuditEndDate ? $data->rowData->AuditEndDate : null;
@@ -84,24 +105,28 @@ function dataAddEdit($data)
 		$TeamAuditorId = $data->rowData->TeamAuditorId ? $data->rowData->TeamAuditorId : null;
 		$AuditTypeId = $data->rowData->AuditTypeId ? $data->rowData->AuditTypeId : null;
 		$Window = $data->rowData->Window ? $data->rowData->Window : null;
+		$WindowEnd = $data->rowData->WindowEnd ? $data->rowData->WindowEnd : null;
 		$PaymentStatus = $data->rowData->PaymentStatus ? $data->rowData->PaymentStatus : "No";
 		$ReportWriterId = $data->rowData->ReportWriterId ? $data->rowData->ReportWriterId : null;
 		$NoOfEmployee = $data->rowData->NoOfEmployee ? $data->rowData->NoOfEmployee : null;
 		$AuditFee = $data->rowData->AuditFee ? $data->rowData->AuditFee : null;
 		$OPE = $data->rowData->OPE ? $data->rowData->OPE : null;
+		$OthersAmount = $data->rowData->OthersAmount ? $data->rowData->OthersAmount : null;
 		$PINo = $data->rowData->PINo ? $data->rowData->PINo : null;
 		$RevenueBDT = $data->rowData->RevenueBDT ? $data->rowData->RevenueBDT : null;
 		$AttachedDocuments = $data->rowData->AttachedDocuments ? $data->rowData->AttachedDocuments : null;
 		$IsSendMail = $data->rowData->IsSendMail ? $data->rowData->IsSendMail : 0;
-		$ReportReleaseStatus = $data->rowData->ReportReleaseStatus ? $data->rowData->ReportReleaseStatus : "No";
+		// $ReportReleaseStatus = $data->rowData->ReportReleaseStatus ? $data->rowData->ReportReleaseStatus : "No";
 
 		try {
 			$aQuerys = array();
 
 			$u = new updateq();
 			$u->table = 't_transaction';
-			$u->columns = ["AssessmentNo", "AuditStartDate", "AuditEndDate", "CountryId", "LeadAuditorId", "TeamAuditorId", "AuditTypeId", "Window", "PaymentStatus", "ReportWriterId", "NoOfEmployee", "AuditFee", "OPE", "PINo", "RevenueBDT", "AttachedDocuments", "IsSendMail", "ReportReleaseStatus","LastUpdateUserId"];
-			$u->values = [$AssessmentNo,$AuditStartDate,$AuditEndDate,$CountryId,$LeadAuditorId,$TeamAuditorId,$AuditTypeId,$Window,$PaymentStatus,$ReportWriterId,$NoOfEmployee,$AuditFee,$OPE,$PINo,$RevenueBDT,$AttachedDocuments,$IsSendMail,$ReportReleaseStatus,$UserId];
+			$u->columns = ['ActivityId', 'FactoryId', 'ProgramId', 'ExpireDate', 'OpportunityDate', 'TentativeOfferPrice', 'CertificateBody', 'CoordinatorId', 'AuditStageId', 'LeadStatusId', 'ManDay', 'BuyerId', 'NextFollowupDate', 'DepartmentId', 'MemberId', 'Remarks', 
+				"AssessmentNo", "AuditStartDate", "AuditEndDate", "CountryId", "LeadAuditorId", "TeamAuditorId", "AuditTypeId", "Window","WindowEnd", "PaymentStatus", "ReportWriterId", "NoOfEmployee", "AuditFee", "OPE","OthersAmount", "PINo", "RevenueBDT", "AttachedDocuments", "IsSendMail","LastCoordinatorInputUpdateUserId","LastUpdateUserId"];
+			$u->values = [$ActivityId, $FactoryId, $ProgramId, $ExpireDate, $OpportunityDate, $TentativeOfferPrice, $CertificateBody, $CoordinatorId, $AuditStageId, $LeadStatusId, $ManDay, $BuyerId, $NextFollowupDate, $DepartmentId, $MemberId, $Remarks,
+				$AssessmentNo,$AuditStartDate,$AuditEndDate,$CountryId,$LeadAuditorId,$TeamAuditorId,$AuditTypeId,$Window,$WindowEnd,$PaymentStatus,$ReportWriterId,$NoOfEmployee,$AuditFee,$OPE,$OthersAmount,$PINo,$RevenueBDT,$AttachedDocuments,$IsSendMail,$UserId,$UserId];
 			$u->pks = ['TransactionId'];
 			$u->pk_values = [$id];
 			$u->build_query();

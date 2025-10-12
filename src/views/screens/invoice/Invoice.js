@@ -734,7 +734,6 @@ const Invoice = (props) => {
       AttachedDocuments: "",
       AuditTypeId: "",
       IsSendMail: 0,
-      ReportReleaseStatus: "No",
 
       FormData: null,
     });
@@ -931,6 +930,399 @@ const Invoice = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
+ <label>Group Name</label>
+              <input
+                type="text"
+                id="FactoryGroupName"
+                name="FactoryGroupName"
+                // class={errorObject.FactoryGroupName}
+                placeholder="Enter Factory Group"
+                disabled={true}
+                // value={currentRow.FactoryGroupName}
+                value={
+                  currFactoryId
+                    ? FactoryList[
+                        FactoryList.findIndex(
+                          (list) => list.id === currFactoryId
+                        )
+                      ].FactoryGroupName
+                    : ""
+                }
+                // onChange={(e) => handleChange(e)}
+              />
+
+
+              <label>Factory Location</label>
+              <input
+                type="text"
+                id="FactoryAddress"
+                name="FactoryAddress"
+                // class={errorObject.FactoryAddress}
+                placeholder="Enter Factory Location"
+                disabled={true}
+                // value={currentRow.FactoryAddress}
+                value={
+                  currFactoryId
+                    ? FactoryList[
+                        FactoryList.findIndex(
+                          (list) => list.id === currFactoryId
+                        )
+                      ].Address
+                    : ""
+                }
+                // onChange={(e) => handleChange(e)}
+              />
+
+
+              <label>Program *</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                disabled={true}
+                // className="chosen_dropdown"
+                className={`chosen_dropdown ${
+                  errorObject.ProgramId ? errorObject.ProgramId : ""
+                }`}
+                id="ProgramId"
+                name="ProgramId"
+                autoComplete
+                // class={errorObject.ProgramId}
+                options={ProgramList ? ProgramList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Program" }}
+                value={
+                  ProgramList
+                    ? ProgramList[
+                        ProgramList.findIndex(
+                          (list) => list.id === currProgramId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown("ProgramId", valueobj ? valueobj.id : "")
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+              <label>Expire Date</label>
+              <input
+                type="date"
+                id="ExpireDate"
+                name="ExpireDate"
+                disabled={true}
+                // class={errorObject.ExpireDate}
+                placeholder="Enter Expire Date"
+                value={currentRow.ExpireDate}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Opportunity Date</label>
+              <input
+                type="date"
+                id="OpportunityDate"
+                name="OpportunityDate"
+                disabled={true}
+                // class={errorObject.OpportunityDate}
+                placeholder="Enter Opportunity Date"
+                value={currentRow.OpportunityDate}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Tentative Offer Price</label>
+              <input
+                type="number"
+                id="TentativeOfferPrice"
+                name="TentativeOfferPrice"
+                disabled={true}
+                // class={errorObject.TentativeOfferPrice}
+                placeholder="Enter Tentative Offer Price"
+                value={currentRow.TentativeOfferPrice}
+                onChange={(e) => handleChange(e)}
+              />
+              <label>CB (Certificate Body)</label>
+              <input
+                type="text"
+                id="CertificateBody"
+                name="CertificateBody"
+                disabled={true}
+                // class={errorObject.CertificateBody}
+                placeholder="Enter Certificate Body"
+                value={currentRow.CertificateBody}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Coordinator</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                disabled={true}
+                className="chosen_dropdown"
+                id="CoordinatorId"
+                name="CoordinatorId"
+                autoComplete
+                //  class={errorObject.CoordinatorId}
+                options={CoordinatorList ? CoordinatorList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Coordinator" }}
+                value={
+                  CoordinatorList
+                    ? CoordinatorList[
+                        CoordinatorList.findIndex(
+                          (list) => list.id === currCoordinatorId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown(
+                    "CoordinatorId",
+                    valueobj ? valueobj.id : ""
+                  )
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+              <label>Audit Stage</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                disabled={true}
+                className="chosen_dropdown"
+                id="AuditStageId"
+                name="AuditStageId"
+                autoComplete
+                //  class={errorObject.AuditStageId}
+                options={AuditStageList ? AuditStageList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Audit Stage" }}
+                value={
+                  AuditStageList
+                    ? AuditStageList[
+                        AuditStageList.findIndex(
+                          (list) => list.id === currAuditStageId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown(
+                    "AuditStageId",
+                    valueobj ? valueobj.id : ""
+                  )
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+
+              <label>Lead Status</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                disabled={true}
+                className="chosen_dropdown"
+                id="LeadStatusId"
+                name="LeadStatusId"
+                autoComplete
+                //  class={errorObject.LeadStatusId}
+                options={LeadStatusList ? LeadStatusList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Lead Status" }}
+                value={
+                  LeadStatusList
+                    ? LeadStatusList[
+                        LeadStatusList.findIndex(
+                          (list) => list.id === currLeadStatusId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown(
+                    "LeadStatusId",
+                    valueobj ? valueobj.id : ""
+                  )
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+  <label>Man Day</label>
+              <input
+                type="number"
+                id="ManDay"
+                name="ManDay"
+                disabled={true}
+                // class={errorObject.ManDay}
+                placeholder="Enter Man Day"
+                value={currentRow.ManDay}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Buyer</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                disabled={true}
+                className="chosen_dropdown"
+                id="BuyerId"
+                name="BuyerId"
+                autoComplete
+                //  class={errorObject.BuyerId}
+                options={BuyerList ? BuyerList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Buyer" }}
+                value={
+                  BuyerList
+                    ? BuyerList[
+                        BuyerList.findIndex((list) => list.id === currBuyerId)
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown("BuyerId", valueobj ? valueobj.id : "")
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+  <label>Lead Generated by (Department)</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                disabled={true}
+                className="chosen_dropdown"
+                id="DepartmentId"
+                name="DepartmentId"
+                autoComplete
+                //  class={errorObject.DepartmentId}
+                options={DepartmentList ? DepartmentList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Department" }}
+                value={
+                  DepartmentList
+                    ? DepartmentList[
+                        DepartmentList.findIndex(
+                          (list) => list.id === currDepartmentId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown(
+                    "DepartmentId",
+                    valueobj ? valueobj.id : ""
+                  )
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+              <label>Lead Generated by (Person)</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                disabled={true}
+                className="chosen_dropdown"
+                id="MemberId"
+                name="MemberId"
+                autoComplete
+                //  class={errorObject.MemberId}
+                options={MemberList ? MemberList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: "", name: "Select Member" }}
+                value={
+                  MemberList
+                    ? MemberList[
+                        MemberList.findIndex((list) => list.id === currMemberId)
+                      ]
+                    : ""
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown("MemberId", valueobj ? valueobj.id : "")
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+              <label>Next Followup Date</label>
+              <input
+                type="date"
+                id="NextFollowupDate"
+                name="NextFollowupDate"
+                disabled={true}
+                // class={errorObject.NextFollowupDate}
+                placeholder="Enter Next Followup Date"
+                value={currentRow.NextFollowupDate}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Remarks/Note</label>
+              <input
+                type="text"
+                id="Remarks"
+                name="Remarks"
+                disabled={true}
+                // class={errorObject.Remarks}
+                placeholder="Enter Remarks/Note"
+                value={currentRow.Remarks}
+                onChange={(e) => handleChange(e)}
+              />
+
+
+
+
+
+
+
+
+
+
+
+
 
               <label>Assessment No.</label>
               <input
@@ -956,48 +1348,7 @@ const Invoice = (props) => {
                 onChange={(e) => handleChange(e)}
               />
  
-              <label>Group Name</label>
-              <input
-                type="text"
-                id="FactoryGroupName"
-                name="FactoryGroupName"
-                // class={errorObject.FactoryGroupName}
-                placeholder="Enter Factory Group"
-                disabled={true}
-                // value={currentRow.FactoryGroupName}
-                value={
-                  currFactoryId
-                    ? FactoryList[
-                        FactoryList.findIndex(
-                          (list) => list.id === currFactoryId
-                        )
-                      ].FactoryGroupName
-                    : ""
-                }
-                // onChange={(e) => handleChange(e)}
-              />
-
-              <label>Factory Location</label>
-              <input
-                type="text"
-                id="FactoryAddress"
-                name="FactoryAddress"
-                // class={errorObject.FactoryAddress}
-                placeholder="Enter Factory Location"
-                disabled={true}
-                // value={currentRow.FactoryAddress}
-                value={
-                  currFactoryId
-                    ? FactoryList[
-                        FactoryList.findIndex(
-                          (list) => list.id === currFactoryId
-                        )
-                      ].Address
-                    : ""
-                }
-                // onChange={(e) => handleChange(e)}
-              />
-
+             
               <label>Audit End Date</label>
               <input
                 type="date"
@@ -1045,55 +1396,6 @@ const Invoice = (props) => {
                 )}
               />
  
-              <label>Program *</label>
-              <Autocomplete
-                autoHighlight
-                disableClearable
-                disabled={true}
-                // className="chosen_dropdown"
-                className={`chosen_dropdown ${
-                  errorObject.ProgramId ? errorObject.ProgramId : ""
-                }`}
-                id="ProgramId"
-                name="ProgramId"
-                autoComplete
-                // class={errorObject.ProgramId}
-                options={ProgramList ? ProgramList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Program" }}
-                value={
-                  ProgramList
-                    ? ProgramList[
-                        ProgramList.findIndex(
-                          (list) => list.id === currProgramId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeDropDown("ProgramId", valueobj ? valueobj.id : "")
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
-              <label>Expire Date</label>
-              <input
-                type="date"
-                id="ExpireDate"
-                name="ExpireDate"
-                disabled={true}
-                // class={errorObject.ExpireDate}
-                placeholder="Enter Expire Date"
-                value={currentRow.ExpireDate}
-                onChange={(e) => handleChange(e)}
-              />
-
               <label>Lead Auditor</label>
               <Autocomplete
                 autoHighlight
@@ -1170,28 +1472,6 @@ const Invoice = (props) => {
                 )}
               />
  
-              <label>Opportunity Date</label>
-              <input
-                type="date"
-                id="OpportunityDate"
-                name="OpportunityDate"
-                disabled={true}
-                // class={errorObject.OpportunityDate}
-                placeholder="Enter Opportunity Date"
-                value={currentRow.OpportunityDate}
-                onChange={(e) => handleChange(e)}
-              />
-              <label>Tentative Offer Price</label>
-              <input
-                type="number"
-                id="TentativeOfferPrice"
-                name="TentativeOfferPrice"
-                disabled={true}
-                // class={errorObject.TentativeOfferPrice}
-                placeholder="Enter Tentative Offer Price"
-                value={currentRow.TentativeOfferPrice}
-                onChange={(e) => handleChange(e)}
-              />
 
               <label>Audit Type</label>
               <Autocomplete
@@ -1231,67 +1511,30 @@ const Invoice = (props) => {
                 )}
               />
 
-              <label>Window</label>
+              <label>Window Start</label>
               <input
                 type="date"
                 id="Window"
                 name="Window"
                 disabled={true}
                 // class={errorObject.Window}
-                placeholder="Enter Window"
+                placeholder="Enter Window Start"
                 value={currentRow.Window}
                 onChange={(e) => handleChange(e)}
               />
- 
-              <label>CB (Certificate Body)</label>
+              <label>Window End</label>
               <input
-                type="text"
-                id="CertificateBody"
-                name="CertificateBody"
+                type="date"
+                id="WindowEnd"
+                name="WindowEnd"
                 disabled={true}
-                // class={errorObject.CertificateBody}
-                placeholder="Enter Certificate Body"
-                value={currentRow.CertificateBody}
+                // class={errorObject.WindowEnd}
+                placeholder="Enter Window End"
+                value={currentRow.WindowEnd}
                 onChange={(e) => handleChange(e)}
               />
+ 
 
-              <label>Coordinator</label>
-              <Autocomplete
-                autoHighlight
-                disableClearable
-                disabled={true}
-                className="chosen_dropdown"
-                id="CoordinatorId"
-                name="CoordinatorId"
-                autoComplete
-                //  class={errorObject.CoordinatorId}
-                options={CoordinatorList ? CoordinatorList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Coordinator" }}
-                value={
-                  CoordinatorList
-                    ? CoordinatorList[
-                        CoordinatorList.findIndex(
-                          (list) => list.id === currCoordinatorId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeDropDown(
-                    "CoordinatorId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
 
               <label>Report Writer</label>
               <Autocomplete
@@ -1361,82 +1604,6 @@ const Invoice = (props) => {
                 ></input>
               </div>
      
-              <label>Audit Stage</label>
-              <Autocomplete
-                autoHighlight
-                disableClearable
-                disabled={true}
-                className="chosen_dropdown"
-                id="AuditStageId"
-                name="AuditStageId"
-                autoComplete
-                //  class={errorObject.AuditStageId}
-                options={AuditStageList ? AuditStageList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Audit Stage" }}
-                value={
-                  AuditStageList
-                    ? AuditStageList[
-                        AuditStageList.findIndex(
-                          (list) => list.id === currAuditStageId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeDropDown(
-                    "AuditStageId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
-
-              <label>Lead Status</label>
-              <Autocomplete
-                autoHighlight
-                disableClearable
-                disabled={true}
-                className="chosen_dropdown"
-                id="LeadStatusId"
-                name="LeadStatusId"
-                autoComplete
-                //  class={errorObject.LeadStatusId}
-                options={LeadStatusList ? LeadStatusList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Lead Status" }}
-                value={
-                  LeadStatusList
-                    ? LeadStatusList[
-                        LeadStatusList.findIndex(
-                          (list) => list.id === currLeadStatusId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeDropDown(
-                    "LeadStatusId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
-
               <label>No Of Employee</label>
               <input
                 type="text"
@@ -1461,53 +1628,10 @@ const Invoice = (props) => {
                 onChange={(e) => handleChange(e)}
               />
   
-              <label>Man Day</label>
-              <input
-                type="number"
-                id="ManDay"
-                name="ManDay"
-                disabled={true}
-                // class={errorObject.ManDay}
-                placeholder="Enter Man Day"
-                value={currentRow.ManDay}
-                onChange={(e) => handleChange(e)}
-              />
-              <label>Buyer</label>
-              <Autocomplete
-                autoHighlight
-                disableClearable
-                disabled={true}
-                className="chosen_dropdown"
-                id="BuyerId"
-                name="BuyerId"
-                autoComplete
-                //  class={errorObject.BuyerId}
-                options={BuyerList ? BuyerList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Buyer" }}
-                value={
-                  BuyerList
-                    ? BuyerList[
-                        BuyerList.findIndex((list) => list.id === currBuyerId)
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeDropDown("BuyerId", valueobj ? valueobj.id : "")
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
-
+            
               <label>OPE</label>
               <input
-                type="text"
+                type="number"
                 id="OPE"
                 name="OPE"
                 disabled={true}
@@ -1517,88 +1641,21 @@ const Invoice = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>PI No</label>
+              <label>Others Amount</label>
               <input
-                type="text"
-                id="PINo"
-                name="PINo"
+                type="number"
+                id="OthersAmount"
+                name="OthersAmount"
                 disabled={true}
-                // class={errorObject.PINo}
-                placeholder="Enter PI No"
-                value={currentRow.PINo}
+                // class={errorObject.OthersAmount}
+                placeholder="Enter Others Amount"
+                value={currentRow.OthersAmount}
                 onChange={(e) => handleChange(e)}
               />
-  
-              <label>Lead Generated by (Department)</label>
-              <Autocomplete
-                autoHighlight
-                disableClearable
-                disabled={true}
-                className="chosen_dropdown"
-                id="DepartmentId"
-                name="DepartmentId"
-                autoComplete
-                //  class={errorObject.DepartmentId}
-                options={DepartmentList ? DepartmentList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Department" }}
-                value={
-                  DepartmentList
-                    ? DepartmentList[
-                        DepartmentList.findIndex(
-                          (list) => list.id === currDepartmentId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeDropDown(
-                    "DepartmentId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
 
-              <label>Lead Generated by (Person)</label>
-              <Autocomplete
-                autoHighlight
-                disableClearable
-                disabled={true}
-                className="chosen_dropdown"
-                id="MemberId"
-                name="MemberId"
-                autoComplete
-                //  class={errorObject.MemberId}
-                options={MemberList ? MemberList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: "", name: "Select Member" }}
-                value={
-                  MemberList
-                    ? MemberList[
-                        MemberList.findIndex((list) => list.id === currMemberId)
-                      ]
-                    : ""
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeDropDown("MemberId", valueobj ? valueobj.id : "")
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
+
+            
+
 
               <label>Revenue (BDT)</label>
               <input
@@ -1611,8 +1668,19 @@ const Invoice = (props) => {
                 value={currentRow.RevenueBDT}
                 onChange={(e) => handleChange(e)}
               />
-
-              <label>Attached Documents</label>
+              <label>PI No</label>
+              <input
+                type="text"
+                id="PINo"
+                name="PINo"
+                disabled={true}
+                // class={errorObject.PINo}
+                placeholder="Enter PI No"
+                value={currentRow.PINo}
+                onChange={(e) => handleChange(e)}
+              />
+  
+              {/* <label>Attached Documents</label>
               <input
                 type="text"
                 id="AttachedDocuments"
@@ -1622,79 +1690,22 @@ const Invoice = (props) => {
                 placeholder="Enter Attached Documents"
                 value={currentRow.AttachedDocuments}
                 onChange={(e) => handleChange(e)}
-              /> 
+              />  */}
  
-              <label>Next Followup Date</label>
-              <input
-                type="date"
-                id="NextFollowupDate"
-                name="NextFollowupDate"
-                disabled={true}
-                // class={errorObject.NextFollowupDate}
-                placeholder="Enter Next Followup Date"
-                value={currentRow.NextFollowupDate}
-                onChange={(e) => handleChange(e)}
-              />
-
-              <label>Remarks/Note</label>
-              <input
-                type="text"
-                id="Remarks"
-                name="Remarks"
-                disabled={true}
-                // class={errorObject.Remarks}
-                placeholder="Enter Remarks/Note"
-                value={currentRow.Remarks}
-                onChange={(e) => handleChange(e)}
-              />
 
               <label>Send Mail</label>
               <input
                 id="IsSendMail"
                 name="IsSendMail"
                 type="checkbox"
+                class={"formCheckBox"}
                 disabled={true}
                 checked={currentRow.IsSendMail}
                 onChange={handleChangeCheck}
               />
-
-              <label>Report Release</label>
-              <div>
-                <label>Yes</label>
-                <input
-                  style={{
-                    width: "15px",
-                    height: "15px",
-                    "margin-right": "15px",
-                  }}
-                  type="radio"
-                  id="ReportReleaseStatus"
-                  name="ReportReleaseStatus"
-                  disabled={true}
-                  value="Yes"
-                  checked={currentRow.ReportReleaseStatus == "Yes"}
-                  onChange={handleChangeRadio}
-                ></input>
-                <label>No</label>
-                <input
-                  style={{ width: "15px", height: "15px" }}
-                  type="radio"
-                  id="ReportReleaseStatus"
-                  name="ReportReleaseStatus"
-                  disabled={true}
-                  value="No"
-                  checked={currentRow.ReportReleaseStatus == "No"}
-                  onChange={handleChangeRadio}
-                ></input>
-              </div>
- 
-
-
          </div>
 
             <div class="formEntryColumnThree">
-
-
               <label>Invoice To</label>
               <input
                 type="text"

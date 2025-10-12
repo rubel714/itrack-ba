@@ -33,13 +33,13 @@ function getDataList($data)
 		a.LeadStatusId, h.LeadStatusName,a.ManDay,a.BuyerId,i.BuyerName,a.NextFollowupDate,
 		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks
 		, a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, a.CountryId, a.LeadAuditorId, a.TeamAuditorId, a.AuditTypeId, 
-		a.Window, a.PaymentStatus, a.ReportWriterId, a.NoOfEmployee, a.AuditFee, a.OPE, a.PINo, a.RevenueBDT, 
+		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT, 
 		a.AttachedDocuments, a.IsSendMail, a.ReportReleaseStatus,
 
 		a.InvoiceTo, a.NameofApplicant, a.InvoiceAddress, a.InvoiceEmail, a.InvoiceMobile, a.Discount
 		 ,a.IsReportReceivedFromWriter,a.ReportReceivedDate,a.`LocalReviewerId`,q.UserName as LocalReviewer,
 		 a.StandardTAT,a.StrategicTAT, a.`ReportReleasedStatusId`,r.ReportReleasedStatus,
-		 a.OverseasSendingDate,a.AuditorLogInTime,a.AduditorLogOutTime
+		 a.OverseasSendingDate,a.AuditorLogInTime,a.AduditorLogOutTime,a.ReportResult
 	   FROM `t_transaction` a
 	   INNER JOIN `t_activity` b ON a.`ActivityId` = b.`ActivityId`
 	   LEFT JOIN `t_factory` c ON a.`FactoryId` = c.`FactoryId`
@@ -89,20 +89,20 @@ function dataAddEdit($data)
 		$LocalReviewerId = $data->rowData->LocalReviewerId ? $data->rowData->LocalReviewerId : null;
 		$StandardTAT = $data->rowData->StandardTAT ? $data->rowData->StandardTAT : null;
 		$StrategicTAT = $data->rowData->StrategicTAT ? $data->rowData->StrategicTAT : null;
+		$ReportReleaseStatus = $data->rowData->ReportReleaseStatus ? $data->rowData->ReportReleaseStatus : null;
 		$ReportReleasedStatusId = $data->rowData->ReportReleasedStatusId ? $data->rowData->ReportReleasedStatusId : null;
 		$OverseasSendingDate = $data->rowData->OverseasSendingDate ? $data->rowData->OverseasSendingDate : null;
 		$AuditorLogInTime = $data->rowData->AuditorLogInTime ? $data->rowData->AuditorLogInTime : null;
 		$AduditorLogOutTime = $data->rowData->AduditorLogOutTime ? $data->rowData->AduditorLogOutTime : null;
+		$ReportResult = $data->rowData->ReportResult ? $data->rowData->ReportResult : null;
 		
-
-
 		try {
 			$aQuerys = array();
 
 			$u = new updateq();
 			$u->table = 't_transaction';
-			$u->columns = ['IsReportReceivedFromWriter','ReportReceivedDate','LocalReviewerId','StandardTAT','StrategicTAT','ReportReleasedStatusId','OverseasSendingDate','AuditorLogInTime','AduditorLogOutTime'];
-			$u->values = [$IsReportReceivedFromWriter,$ReportReceivedDate,$LocalReviewerId,$StandardTAT,$StrategicTAT,$ReportReleasedStatusId,$OverseasSendingDate,$AuditorLogInTime,$AduditorLogOutTime];
+			$u->columns = ['IsReportReceivedFromWriter','ReportReceivedDate','LocalReviewerId','StandardTAT','StrategicTAT','ReportReleaseStatus','ReportReleasedStatusId','OverseasSendingDate','AuditorLogInTime','AduditorLogOutTime','ReportResult'];
+			$u->values = [$IsReportReceivedFromWriter,$ReportReceivedDate,$LocalReviewerId,$StandardTAT,$StrategicTAT,$ReportReleaseStatus,$ReportReleasedStatusId,$OverseasSendingDate,$AuditorLogInTime,$AduditorLogOutTime,$ReportResult];
 			$u->pks = ['TransactionId'];
 			$u->pk_values = [$id];
 			$u->build_query();
