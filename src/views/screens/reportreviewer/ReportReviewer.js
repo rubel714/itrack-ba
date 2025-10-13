@@ -346,6 +346,8 @@ const ReportReviewer = (props) => {
   }
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log('name: ', name);
+    console.log('value: ', value);
     let data = { ...currentRow };
     data[name] = value;
     setCurrentRow(data);
@@ -2032,7 +2034,7 @@ const ReportReviewer = (props) => {
               />
               <label>Auditor Log In Time</label>
               <input
-                type="text"
+                type="datetime-local"
                 id="AuditorLogInTime"
                 name="AuditorLogInTime"
                 // disabled={true}
@@ -2044,7 +2046,7 @@ const ReportReviewer = (props) => {
           
               <label>Aduditor Log Out Time</label>
               <input
-                type="text"
+                type="datetime-local"
                 id="AduditorLogOutTime"
                 name="AduditorLogOutTime"
                 // disabled={true}
