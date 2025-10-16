@@ -26,6 +26,9 @@ function getDataList($data)
 	try {
 		$dbh = new Db();
 
+		$StartDate = trim($data->StartDate);
+		$EndDate = trim($data->EndDate) . " 23-59-59";
+		
 		$query = "SELECT a.TransactionId AS id,a.TransactionTypeId,DATE(a.`TransactionDate`) TransactionDate,
 		a.InvoiceNo,a.ActivityId,b.ActivityName,a.FactoryId,c.FactoryName,c.Address as FactoryAddress,d.FactoryGroupName,
 		a.ProgramId,e.ProgramName,a.ExpireDate,a.OpportunityDate,a.TentativeOfferPrice,
@@ -46,6 +49,7 @@ function getDataList($data)
 	   LEFT JOIN `t_buyer` i ON a.`BuyerId` = i.`BuyerId`
 	   LEFT JOIN `t_department` j ON a.`DepartmentId` = j.`DepartmentId`
 	   LEFT JOIN `t_member` k ON a.`MemberId` = k.`MemberId`
+	   where ((a.AuditStartDate between '$StartDate' and '$EndDate') OR (a.AuditStartDate is null))
 	   ORDER BY a.`TransactionDate` DESC, a.InvoiceNo ASC;";
 
 		$resultdata = $dbh->query($query);
@@ -70,6 +74,7 @@ function dataAddEdit($data)
 	if ($_SERVER["REQUEST_METHOD"] != "POST") {
 		return $returnData = msg(0, 404, 'Page Not Found!');
 	} else {
+		$dbh = new Db();
 
 		$lan = trim($data->lan);
 		$UserId = trim($data->UserId);
@@ -118,15 +123,120 @@ function dataAddEdit($data)
 		$IsSendMail = $data->rowData->IsSendMail ? $data->rowData->IsSendMail : 0;
 		// $ReportReleaseStatus = $data->rowData->ReportReleaseStatus ? $data->rowData->ReportReleaseStatus : "No";
 
+
+		$StandardTAT = date("Y-m-d");
+		$StrategicTAT = date("Y-m-d");
+
+		if($AuditEndDate){
+			$sql = "select TATDayTypeId, ifnull(StandardTATDay,1) StandardTATDay, ifnull(StrategiceTATDay,1) StrategiceTATDay 
+			from t_program where ProgramId=$ProgramId";
+			$resultdata = $dbh->query($sql);
+			$TATDayTypeId = $resultdata[0]['TATDayTypeId'];	//1=Calendar, 2=Working
+			$StandardTATDay = $resultdata[0]['StandardTATDay'];	
+			$StrategiceTATDay = $resultdata[0]['StrategiceTATDay'];	
+
+			if($TATDayTypeId == 1){
+				//Calendar day
+				$StandardTATDate=date_create($AuditEndDate);
+				date_add($StandardTATDate,date_interval_create_from_date_string("$StandardTATDay days"));
+				$StandardTAT = date_format($StandardTATDate,"Y-m-d");
+
+				$StrategicTATDate=date_create($AuditEndDate);
+				date_add($StrategicTATDate,date_interval_create_from_date_string("$StrategiceTATDay days"));
+				$StrategicTAT = date_format($StrategicTATDate,"Y-m-d");
+
+			}else if($TATDayTypeId == 2){
+				//working day
+
+				//================== Start for StandardTATDay==========================
+				$date = $AuditEndDate;// date('Y-m-d');
+				$workingDays = 1;
+				$dayCount = 0;
+				while ($workingDays <= $StandardTATDay) {
+					$dayCount++;
+
+					// Move to next day
+					$date = date('Y-m-d', strtotime($date . ' +1 day'));
+
+					// Check if weekend
+					// $dayOfWeek = date('N', strtotime($date)); // 6 = Saturday, 7 = Sunday
+					// if ($dayOfWeek == 6 || $dayOfWeek == 7) {
+					// 	continue;
+					// }
+
+					// Check if holiday
+					// $sql = "SELECT COUNT(*) as cnt FROM holidays WHERE HoliDate = '$date'";
+					// $result = $conn->query($sql);
+					// $row = $result->fetch_assoc();
+
+					$sql = "select COUNT(*) as cnt	from t_holiday where HoliDate = '$date';";
+					$resultdata1 = $dbh->query($sql);
+					if ($resultdata1[0]['cnt'] > 0) {
+						continue; // skip holiday
+					}
+
+					// Count valid working day
+					$workingDays++;
+				}
+
+				$StandardTATDate=date_create($AuditEndDate);
+				date_add($StandardTATDate,date_interval_create_from_date_string("$dayCount days"));
+				$StandardTAT = date_format($StandardTATDate,"Y-m-d");
+				//================== End for StandardTATDay==========================
+
+
+
+
+				//================== Start for StandardTATDay==========================
+				$date = $AuditEndDate;// date('Y-m-d');
+				$workingDays = 1;
+				$dayCount = 0;
+				while ($workingDays <= $StrategiceTATDay) {
+					$dayCount++;
+
+					// Move to next day
+					$date = date('Y-m-d', strtotime($date . ' +1 day'));
+
+					// Check if weekend
+					// $dayOfWeek = date('N', strtotime($date)); // 6 = Saturday, 7 = Sunday
+					// if ($dayOfWeek == 6 || $dayOfWeek == 7) {
+					// 	continue;
+					// }
+
+					// Check if holiday
+					// $sql = "SELECT COUNT(*) as cnt FROM holidays WHERE HoliDate = '$date'";
+					// $result = $conn->query($sql);
+					// $row = $result->fetch_assoc();
+
+					$sql = "select COUNT(*) as cnt	from t_holiday where HoliDate = '$date';";
+					$resultdata1 = $dbh->query($sql);
+					if ($resultdata1[0]['cnt'] > 0) {
+						continue; // skip holiday
+					}
+
+					// Count valid working day
+					$workingDays++;
+				}
+
+				$StrategicTATDate=date_create($AuditEndDate);
+				date_add($StrategicTATDate,date_interval_create_from_date_string("$dayCount days"));
+				$StrategicTAT = date_format($StrategicTATDate,"Y-m-d");
+				//================== End for StandardTATDay==========================
+
+
+			// echo "StandardTAT: $StandardTAT, StrategicTAT: $StrategicTAT";
+			}
+		} 
+
 		try {
 			$aQuerys = array();
 
 			$u = new updateq();
 			$u->table = 't_transaction';
 			$u->columns = ['ActivityId', 'FactoryId', 'ProgramId', 'ExpireDate', 'OpportunityDate', 'TentativeOfferPrice', 'CertificateBody', 'CoordinatorId', 'AuditStageId', 'LeadStatusId', 'ManDay', 'BuyerId', 'NextFollowupDate', 'DepartmentId', 'MemberId', 'Remarks', 
-				"AssessmentNo", "AuditStartDate", "AuditEndDate", "CountryId", "LeadAuditorId", "TeamAuditorId", "AuditTypeId", "Window","WindowEnd", "PaymentStatus", "ReportWriterId", "NoOfEmployee", "AuditFee", "OPE","OthersAmount", "PINo", "RevenueBDT", "AttachedDocuments", "IsSendMail","LastCoordinatorInputUpdateUserId","LastUpdateUserId"];
+				"AssessmentNo", "AuditStartDate", "AuditEndDate", "CountryId", "LeadAuditorId", "TeamAuditorId", "AuditTypeId", "Window","WindowEnd", "PaymentStatus", "ReportWriterId", "NoOfEmployee", "AuditFee", "OPE","OthersAmount", "PINo", "RevenueBDT", "AttachedDocuments", "IsSendMail","StandardTAT","StrategicTAT","LastCoordinatorInputUpdateUserId","LastUpdateUserId"];
 			$u->values = [$ActivityId, $FactoryId, $ProgramId, $ExpireDate, $OpportunityDate, $TentativeOfferPrice, $CertificateBody, $CoordinatorId, $AuditStageId, $LeadStatusId, $ManDay, $BuyerId, $NextFollowupDate, $DepartmentId, $MemberId, $Remarks,
-				$AssessmentNo,$AuditStartDate,$AuditEndDate,$CountryId,$LeadAuditorId,$TeamAuditorId,$AuditTypeId,$Window,$WindowEnd,$PaymentStatus,$ReportWriterId,$NoOfEmployee,$AuditFee,$OPE,$OthersAmount,$PINo,$RevenueBDT,$AttachedDocuments,$IsSendMail,$UserId,$UserId];
+				$AssessmentNo,$AuditStartDate,$AuditEndDate,$CountryId,$LeadAuditorId,$TeamAuditorId,$AuditTypeId,$Window,$WindowEnd,$PaymentStatus,$ReportWriterId,$NoOfEmployee,$AuditFee,$OPE,$OthersAmount,$PINo,$RevenueBDT,$AttachedDocuments,$IsSendMail,$StandardTAT,$StrategicTAT,$UserId,$UserId];
 			$u->pks = ['TransactionId'];
 			$u->pk_values = [$id];
 			$u->build_query();

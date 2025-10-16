@@ -346,8 +346,8 @@ const ReportReviewer = (props) => {
   }
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log('name: ', name);
-    console.log('value: ', value);
+    // console.log('name: ', name);
+    // console.log('value: ', value);
     let data = { ...currentRow };
     data[name] = value;
     setCurrentRow(data);
@@ -1931,7 +1931,7 @@ const ReportReviewer = (props) => {
 
               <label>Standard TAT</label>
               <input
-                type="number"
+                type="date"
                 id="StandardTAT"
                 name="StandardTAT"
                 // disabled={true}
@@ -1943,7 +1943,7 @@ const ReportReviewer = (props) => {
      
               <label>Strategic TAT</label>
               <input
-                type="number"
+                type="date"
                 id="StrategicTAT"
                 name="StrategicTAT"
                 // disabled={true}

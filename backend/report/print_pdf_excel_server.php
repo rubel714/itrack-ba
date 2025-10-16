@@ -680,8 +680,8 @@ function SalesPersonInputExport()
 function CoordinatorInputExport()
 {
 	global $sql, $tableProperties, $TEXT, $siteTitle;
-	// $UserId = $_REQUEST['UserId'];
-	// $Search = $_REQUEST['Search'];
+	$StartDate = $_REQUEST['StartDate'];
+	$EndDate = $_REQUEST['EndDate'];
 
 	$sql = "SELECT b.ActivityName,c.FactoryName,d.FactoryGroupName,c.Address as FactoryAddress,
 		e.ProgramName,a.ExpireDate,a.OpportunityDate,a.TentativeOfferPrice,
@@ -709,6 +709,7 @@ function CoordinatorInputExport()
 	   LEFT JOIN `t_auditor` n ON a.`TeamAuditorId` = n.`AuditorId`
 	   LEFT JOIN `t_audittype` o ON a.`AuditTypeId` = o.`AuditTypeId`
 	   LEFT JOIN `t_users` p ON a.`ReportWriterId` = p.`UserId`
+	   where ((a.AuditStartDate between '$StartDate' and '$EndDate') OR (a.AuditStartDate is null))
 	   ORDER BY a.`TransactionDate` DESC, a.InvoiceNo ASC;";
 
 	$tableProperties["query_field"] = array("ActivityName", "FactoryName", "FactoryGroupName", "FactoryAddress", "ProgramName", "ExpireDate", "OpportunityDate", "TentativeOfferPrice", "CertificateBody", "CoordinatorName", "AuditStageName", "LeadStatusName", "ManDay", "BuyerName", "NextFollowupDate", "DepartmentName", "MemberName", "Remarks","AssessmentNo","AuditStartDate","AuditEndDate","CountryName","LeadAuditor","TeamAuditor","AuditTypeName","Window","WindowEnd","PaymentStatus","ReportWriter","NoOfEmployee","AuditFee","OPE","OthersAmount","RevenueBDT","PINo","IsSendMail");

@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef } from "react";
+import React, { forwardRef, useRef,useEffect } from "react";
 import swal from "sweetalert";
 import {
   DeleteOutline,
@@ -73,6 +73,10 @@ const CoordinatorInput = (props) => {
 
   const [currReportWriterId, setCurrReportWriterId] = useState(null);
 
+  const [StartDate, setStartDate] = useState(moment().format("YYYY-MM-DD"));
+  const [EndDate, setEndDate] = useState(moment().add(30, "days").format("YYYY-MM-DD"));
+
+
   // handleChangeWidthHeight
   const { isLoading, data: dataList, error, ExecuteQuery } = ExecuteQueryHook(); //Fetch data
   // const UserInfo = LoginUserInfo();
@@ -91,11 +95,28 @@ const CoordinatorInput = (props) => {
       finalUrl +
         "?action=CoordinatorInputExport" +
         "&reportType=excel" +
+        "&StartDate=" +
+        StartDate +
+        "&EndDate=" +
+        EndDate +
         "&TimeStamp=" +
         Date.now()
     );
   };
   /* =====End of Excel Export Code==== */
+
+  const handleChangeFilterDate = (e) => {
+    const { name, value } = e.target;
+    if (name === "StartDate") {
+      setStartDate(value);
+      //getTransactionList(currDepartmentId, currUserId, value, EndDate);
+    }
+
+    if (name === "EndDate") {
+      setEndDate(value);
+      // getTransactionList(currDepartmentId, currUserId, StartDate, value);
+    }
+  };
 
   React.useEffect(() => {
     getActivityList("");
@@ -632,12 +653,22 @@ const CoordinatorInput = (props) => {
     setBFirst(false);
   }
 
+    useEffect(() => {
+    getDataList();
+  }, [
+    StartDate,
+    EndDate,
+  ]);
+
+
   /**Get data for table list */
   function getDataList() {
     let params = {
       action: "getDataList",
       lan: language(),
       UserId: UserInfo.UserId,
+      StartDate: StartDate,
+      EndDate: EndDate,
     };
     // console.log('LoginUserInfo params: ', params);
 
@@ -817,6 +848,36 @@ const CoordinatorInput = (props) => {
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
         {toggle && ( <div class="searchAdd">
          
+
+         
+          <div>
+            <label>Start Date</label>
+            <div class="">
+              <input
+                type="date"
+                id="StartDate"
+                name="StartDate"
+                value={StartDate}
+                onChange={(e) => handleChangeFilterDate(e)}
+              />
+            </div>
+          </div>
+
+
+          <div>
+            <label>End Date</label>
+            <div class="">
+            <input
+              type="date"
+              id="EndDate"
+              name="EndDate"
+              value={EndDate}
+              onChange={(e) => handleChangeFilterDate(e)}
+            />
+          </div>
+          </div>
+
+
               <Button
                 label={"Export"}
                 class={"btnPrint"}
