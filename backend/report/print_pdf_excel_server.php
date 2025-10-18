@@ -690,8 +690,7 @@ function CoordinatorInputExport()
 		j.DepartmentName,k.MemberName,a.Remarks
 		
 		,a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, l.CountryName, m.AuditorName as LeadAuditor, 
-		n.AuditorName as TeamAuditor, o.AuditTypeName, 
-		a.Window,a.WindowEnd, a.PaymentStatus, p.UserName as ReportWriter, a.NoOfEmployee, a.AuditFee, 
+		 o.AuditTypeName, a.Window,a.WindowEnd, a.PaymentStatus, p.AuditorName as ReportWriter, a.NoOfEmployee, a.AuditFee, 
 		a.OPE,a.OthersAmount,  a.RevenueBDT,a.PINo, a.IsSendMail
 	   FROM `t_transaction` a
 	   INNER JOIN `t_activity` b ON a.`ActivityId` = b.`ActivityId`
@@ -706,20 +705,19 @@ function CoordinatorInputExport()
 	   LEFT JOIN `t_member` k ON a.`MemberId` = k.`MemberId`
 	   LEFT JOIN `t_country` l ON a.`CountryId` = l.`CountryId`
 	   LEFT JOIN `t_auditor` m ON a.`LeadAuditorId` = m.`AuditorId`
-	   LEFT JOIN `t_auditor` n ON a.`TeamAuditorId` = n.`AuditorId`
 	   LEFT JOIN `t_audittype` o ON a.`AuditTypeId` = o.`AuditTypeId`
-	   LEFT JOIN `t_users` p ON a.`ReportWriterId` = p.`UserId`
+	   LEFT JOIN `t_auditor` p ON a.`ReportWriterId` = p.`AuditorId`
 	   where ((a.AuditStartDate between '$StartDate' and '$EndDate') OR (a.AuditStartDate is null))
 	   ORDER BY a.`TransactionDate` DESC, a.InvoiceNo ASC;";
 
-	$tableProperties["query_field"] = array("ActivityName", "FactoryName", "FactoryGroupName", "FactoryAddress", "ProgramName", "ExpireDate", "OpportunityDate", "TentativeOfferPrice", "CertificateBody", "CoordinatorName", "AuditStageName", "LeadStatusName", "ManDay", "BuyerName", "NextFollowupDate", "DepartmentName", "MemberName", "Remarks","AssessmentNo","AuditStartDate","AuditEndDate","CountryName","LeadAuditor","TeamAuditor","AuditTypeName","Window","WindowEnd","PaymentStatus","ReportWriter","NoOfEmployee","AuditFee","OPE","OthersAmount","RevenueBDT","PINo","IsSendMail");
-	$tableProperties["table_header"] = array("Activity", "Factory", "Factory Group", "Factory Location", "Program", "Expire Date", "Opportunity Date", "Tentative Offer Price", "Certificate Body", "Coordinator", "Audit Stage", "Lead Status", "Man Day", "Buyer", "Next Followup Date", "Department", "Member", "Remarks/Note","Assessment No","Audit Start Date","Audit End Date","Country","Lead Auditor","Team Auditor","Audit Type","Window Start","Window End","Payment Status","Report Writer","No Of Employee","Audit Fee","OPE","Others Amount","Revenue BDT","PI No","Is Send Mail");
-	$tableProperties["align"] = array("left", "left", "left", "left", "left", "left", "left", "right", "left", "left", "left", "left", "right", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left","left", "right", "right", "right", "right","left",  "left");
-	$tableProperties["width_print_pdf"] = array("10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%"); //when exist serial then here total 95% and 5% use for serial
-	$tableProperties["width_excel"] = array("25", "22", "20", "20", "15", "15", "15", "15", "15", "16", "20", "20", "12", "20", "20", "20", "20", "25","15","15","15","15","15","15","15","15","15","15","15","15","15","15","15","15","15","15");
-	$tableProperties["precision"] = array("string", "string", "string", "string", "string", "string", "string", 0, "string", "string", "string", "string", 0, "string", "string", "string", "string", "string", "string", "string", "string", "string","string", "string", "string", "string", "string", "string", "string","string", 1, 1,1, 1, "string","string"); //string,date,datetime,0,1,2,3,4
-	$tableProperties["total"] = array(0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); //not total=0, total=1
-	$tableProperties["color_code"] = array(0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); //colorcode field = 1 not color code field = 0
+	$tableProperties["query_field"] = array("ActivityName", "FactoryName", "FactoryGroupName", "FactoryAddress", "ProgramName", "ExpireDate", "OpportunityDate", "TentativeOfferPrice", "CertificateBody", "CoordinatorName", "AuditStageName", "LeadStatusName", "ManDay", "BuyerName", "NextFollowupDate", "DepartmentName", "MemberName", "Remarks","AssessmentNo","AuditStartDate","AuditEndDate","CountryName","LeadAuditor","AuditTypeName","Window","WindowEnd","PaymentStatus","ReportWriter","NoOfEmployee","AuditFee","OPE","OthersAmount","RevenueBDT","PINo","IsSendMail");
+	$tableProperties["table_header"] = array("Activity", "Factory", "Factory Group", "Factory Location", "Program", "Expire Date", "Opportunity Date", "Tentative Offer Price", "Certificate Body", "Coordinator", "Audit Stage", "Lead Status", "Man Day", "Buyer", "Next Followup Date", "Department", "Member", "Remarks/Note","Assessment No","Audit Start Date","Audit End Date","Country","Lead Auditor","Audit Type","Window Start","Window End","Payment Status","Report Writer","No Of Employee","Audit Fee","OPE","Others Amount","Revenue BDT","PI No","Is Send Mail");
+	$tableProperties["align"] = array("left", "left", "left", "left", "left", "left", "left", "right", "left", "left", "left", "left", "right", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left","left", "right", "right", "right", "right","left",  "left");
+	$tableProperties["width_print_pdf"] = array("10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%", "5%",  "5%", "5%", "5%"); //when exist serial then here total 95% and 5% use for serial
+	$tableProperties["width_excel"] = array("25", "22", "20", "20", "15", "15", "15", "15", "15", "16", "20", "20", "12", "20", "20", "20", "20", "25","15","15","15","15","15","15","15","15","15","15","15","15","15","15","15","15","15");
+	$tableProperties["precision"] = array("string", "string", "string", "string", "string", "string", "string", 0, "string", "string", "string", "string", 0, "string", "string", "string", "string", "string", "string", "string", "string","string", "string", "string", "string", "string", "string", "string","string", 1, 1,1, 1, "string","string"); //string,date,datetime,0,1,2,3,4
+	$tableProperties["total"] = array(0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); //not total=0, total=1
+	$tableProperties["color_code"] = array(0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); //colorcode field = 1 not color code field = 0
 	$tableProperties["header_logo"] = 0; //include header left and right logo. 0 or 1
 	$tableProperties["footer_signatory"] = 0; //include footer signatory. 0 or 1
 

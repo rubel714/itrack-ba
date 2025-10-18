@@ -73,6 +73,9 @@ switch ($task) {
 	case "getCountryList":
 		$returnData = getCountryList($data);
 		break;
+	case "getAuditorList":
+		$returnData = getAuditorList($data);
+		break;
 	case "getLeadAuditorList":
 		$returnData = getLeadAuditorList($data);
 		break;
@@ -655,14 +658,40 @@ function getCountryList($data)
 }
 
 
-function getLeadAuditorList($data)
+
+function getAuditorList($data)
 {
 	
 	try {
 		$dbh = new Db();
-		$query = "SELECT distinct a.`AuditorId` id, b.AuditorName `name`
+		$query = "SELECT a.`AuditorId` id, a.AuditorName `name`
+	 			 	FROM t_auditor a
+					ORDER BY a.AuditorName;";
+
+		$resultdata = $dbh->query($query);
+
+		$returnData = [
+			"success" => 1,
+			"status" => 200,
+			"message" => "",
+			"datalist" => $resultdata
+		];
+	} catch (PDOException $e) {
+		$returnData = msg(0, 500, $e->getMessage());
+	}
+
+	return $returnData;
+}
+
+function getLeadAuditorList($data)
+{
+	
+    $ProgramId = trim($data->ProgramId);
+	try {
+		$dbh = new Db();
+		$query = "SELECT a.`AuditorId` id, b.AuditorName `name`
 	 			 	FROM t_auditor_lead_program a
-					INNER JOIN t_auditor b on a.AuditorId=b.AuditorId
+					INNER JOIN t_auditor b on a.AuditorId=b.AuditorId and a.ProgramId=$ProgramId
 					ORDER BY b.AuditorName;";
 
 		$resultdata = $dbh->query($query);
@@ -684,11 +713,12 @@ function getLeadAuditorList($data)
 function getTeamAuditorList($data)
 {
 	
+    $ProgramId = trim($data->ProgramId);
 	try {
 		$dbh = new Db();
 		$query = "SELECT distinct a.`AuditorId` id, b.AuditorName `name`
 	 			 	FROM t_auditor_member_program a
-					INNER JOIN t_auditor b on a.AuditorId=b.AuditorId
+					INNER JOIN t_auditor b on a.AuditorId=b.AuditorId and a.ProgramId=$ProgramId
 					ORDER BY b.AuditorName;";
 
 		$resultdata = $dbh->query($query);

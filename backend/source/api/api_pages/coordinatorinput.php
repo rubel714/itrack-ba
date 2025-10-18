@@ -35,7 +35,7 @@ function getDataList($data)
 		a.CertificateBody,a.CoordinatorId,f.UserName as CoordinatorName, a.AuditStageId, g.AuditStageName,
 		a.LeadStatusId, h.LeadStatusName,a.ManDay,a.BuyerId,i.BuyerName,a.NextFollowupDate,
 		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks
-		, a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, a.CountryId, a.LeadAuditorId, a.TeamAuditorId, a.AuditTypeId, 
+		, a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, a.CountryId, a.LeadAuditorId, a.TeamAuditorIds as TeamAuditorId, a.AuditTypeId, 
 		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT, 
 		a.AttachedDocuments, a.IsSendMail
 	   FROM `t_transaction` a
@@ -73,7 +73,8 @@ function dataAddEdit($data)
 
 	if ($_SERVER["REQUEST_METHOD"] != "POST") {
 		return $returnData = msg(0, 404, 'Page Not Found!');
-	} else {
+	}
+	else {
 		$dbh = new Db();
 
 		$lan = trim($data->lan);
@@ -107,7 +108,8 @@ function dataAddEdit($data)
 		$AuditEndDate = $data->rowData->AuditEndDate ? $data->rowData->AuditEndDate : null;
 		$CountryId = $data->rowData->CountryId ? $data->rowData->CountryId : null;
 		$LeadAuditorId = $data->rowData->LeadAuditorId ? $data->rowData->LeadAuditorId : null;
-		$TeamAuditorId = $data->rowData->TeamAuditorId ? $data->rowData->TeamAuditorId : null;
+		// $TeamAuditorId = $data->rowData->TeamAuditorId ? $data->rowData->TeamAuditorId : null;
+		$TeamAuditorId = $data->rowData->TeamAuditorId ? $data->rowData->TeamAuditorId : [];
 		$AuditTypeId = $data->rowData->AuditTypeId ? $data->rowData->AuditTypeId : null;
 		$Window = $data->rowData->Window ? $data->rowData->Window : null;
 		$WindowEnd = $data->rowData->WindowEnd ? $data->rowData->WindowEnd : null;
@@ -234,9 +236,9 @@ function dataAddEdit($data)
 			$u = new updateq();
 			$u->table = 't_transaction';
 			$u->columns = ['ActivityId', 'FactoryId', 'ProgramId', 'ExpireDate', 'OpportunityDate', 'TentativeOfferPrice', 'CertificateBody', 'CoordinatorId', 'AuditStageId', 'LeadStatusId', 'ManDay', 'BuyerId', 'NextFollowupDate', 'DepartmentId', 'MemberId', 'Remarks', 
-				"AssessmentNo", "AuditStartDate", "AuditEndDate", "CountryId", "LeadAuditorId", "TeamAuditorId", "AuditTypeId", "Window","WindowEnd", "PaymentStatus", "ReportWriterId", "NoOfEmployee", "AuditFee", "OPE","OthersAmount", "PINo", "RevenueBDT", "AttachedDocuments", "IsSendMail","StandardTAT","StrategicTAT","LastCoordinatorInputUpdateUserId","LastUpdateUserId"];
+				"AssessmentNo", "AuditStartDate", "AuditEndDate", "CountryId", "LeadAuditorId", "TeamAuditorIds", "AuditTypeId", "Window","WindowEnd", "PaymentStatus", "ReportWriterId", "NoOfEmployee", "AuditFee", "OPE","OthersAmount", "PINo", "RevenueBDT", "AttachedDocuments", "IsSendMail","StandardTAT","StrategicTAT","LastCoordinatorInputUpdateUserId","LastUpdateUserId"];
 			$u->values = [$ActivityId, $FactoryId, $ProgramId, $ExpireDate, $OpportunityDate, $TentativeOfferPrice, $CertificateBody, $CoordinatorId, $AuditStageId, $LeadStatusId, $ManDay, $BuyerId, $NextFollowupDate, $DepartmentId, $MemberId, $Remarks,
-				$AssessmentNo,$AuditStartDate,$AuditEndDate,$CountryId,$LeadAuditorId,$TeamAuditorId,$AuditTypeId,$Window,$WindowEnd,$PaymentStatus,$ReportWriterId,$NoOfEmployee,$AuditFee,$OPE,$OthersAmount,$PINo,$RevenueBDT,$AttachedDocuments,$IsSendMail,$StandardTAT,$StrategicTAT,$UserId,$UserId];
+				$AssessmentNo,$AuditStartDate,$AuditEndDate,$CountryId,$LeadAuditorId, ($TeamAuditorId),$AuditTypeId,$Window,$WindowEnd,$PaymentStatus,$ReportWriterId,$NoOfEmployee,$AuditFee,$OPE,$OthersAmount,$PINo,$RevenueBDT,$AttachedDocuments,$IsSendMail,$StandardTAT,$StrategicTAT,$UserId,$UserId];
 			$u->pks = ['TransactionId'];
 			$u->pk_values = [$id];
 			$u->build_query();

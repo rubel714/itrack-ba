@@ -292,7 +292,7 @@ const Invoice = (props) => {
 
   function getTeamAuditorList(selectTeamAuditorId) {
     let params = {
-      action: "getTeamAuditorList",
+      action: "getAuditorList",
       lan: language(),
       UserId: UserInfo.UserId,
     };
