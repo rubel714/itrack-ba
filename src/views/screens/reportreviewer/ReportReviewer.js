@@ -20,6 +20,7 @@ import {
 import ExecuteQueryHook from "../../../components/hooks/ExecuteQueryHook";
 import moment from "moment";
 import "../../../assets/css/audit.css";
+import { MenuItem, FormControl, InputLabel, Select, Checkbox, ListItemText } from "@material-ui/core";
 
 const ReportReviewer = (props) => {
   const serverpage = "reportreviewer"; // this is .php server page
@@ -66,11 +67,12 @@ const ReportReviewer = (props) => {
   const [currLeadAuditorId, setCurrLeadAuditorId] = useState(null);
 
   const [TeamAuditorList, setTeamAuditorList] = useState(null);
-  const [currTeamAuditorId, setCurrTeamAuditorId] = useState(null);
+  const [currTeamAuditorId, setCurrTeamAuditorId] = useState([]);
 
   const [AuditTypeList, setAuditTypeList] = useState(null);
   const [currAuditTypeId, setCurrAuditTypeId] = useState(null);
 
+  const [AuditorList, setAuditorList] = useState(null);
   const [currReportWriterId, setCurrReportWriterId] = useState(null);
 
   const [currLocalReviewerId, setCurrLocalReviewerId] = useState(null);
@@ -111,8 +113,8 @@ const ReportReviewer = (props) => {
     getDepartmentList("");
     getMemberList("", "");
     getCountryList("");
-    getLeadAuditorList("");
-    getTeamAuditorList("");
+    // getLeadAuditorList("");
+    // getTeamAuditorList("");
     getAuditTypeList("");
     getReleasedStatusList("");
 
@@ -183,6 +185,22 @@ const ReportReviewer = (props) => {
     });
   }
 
+  function getAuditorList(selectReportWriterId) {
+    // console.log('selectReportWriterId: ', selectReportWriterId);
+    let params = {
+      action: "getAuditorList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+    };
+
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      setAuditorList(
+        [{ id: "", name: "Select" }].concat(res.data.datalist)
+      );
+
+      setCurrReportWriterId(selectReportWriterId);
+    });
+  }
   function getAuditStageList(selectAuditStageId) {
     let params = {
       action: "AuditStageList",
@@ -283,7 +301,7 @@ const ReportReviewer = (props) => {
 
   function getLeadAuditorList(selectLeadAuditorId) {
     let params = {
-      action: "getLeadAuditorList",
+      action: "getAuditorList",
       lan: language(),
       UserId: UserInfo.UserId,
     };
@@ -309,7 +327,7 @@ const ReportReviewer = (props) => {
         [{ id: "", name: "Select Team Auditor" }].concat(res.data.datalist)
       );
 
-      setCurrTeamAuditorId(selectTeamAuditorId);
+       setCurrTeamAuditorId(selectTeamAuditorId?selectTeamAuditorId:[]);
     });
   }
 
@@ -427,10 +445,10 @@ const ReportReviewer = (props) => {
       setCurrLeadAuditorId(value);
     }
 
-    if (name === "TeamAuditorId") {
-      data["TeamAuditorId"] = value;
-      setCurrTeamAuditorId(value);
-    }
+    // if (name === "TeamAuditorId") {
+    //   data["TeamAuditorId"] = value;
+    //   setCurrTeamAuditorId(value);
+    // }
 
     if (name === "AuditTypeId") {
       data["AuditTypeId"] = value;
@@ -453,7 +471,22 @@ const ReportReviewer = (props) => {
     setErrorObject({ ...errorObject, [name]: null });
     setCurrentRow(data);
   };
+    const handleChangeMulpleCbo = (event) => {
+    let data = { ...currentRow };
 
+  // console.log('selected: ', selected);
+
+    // console.log('eventeventeventevent: ', event);
+    // console.log('eventeventeventevent TeamAuditorList: ', TeamAuditorList);
+    const value = event.target.value;
+    // console.log('value: ', value);
+    setCurrTeamAuditorId(typeof value === "string" ? value.split(",") : value);
+
+    data["TeamAuditorId"] = typeof value === "string" ? value.split(",") : value;
+    // setErrorObject({ ...errorObject, [name]: null });
+    setCurrentRow(data);
+
+  };
   const validateForm = () => {
     let validateFields = [];
     validateFields = ["ActivityId", "FactoryId", "ProgramId"];
@@ -720,7 +753,7 @@ const ReportReviewer = (props) => {
 
     setCurrCountryId("");
     setCurrLeadAuditorId("");
-    setCurrTeamAuditorId("");
+    setCurrTeamAuditorId([]);
     setCurrAuditTypeId("");
     setCurrReportWriterId("");
     setCurrLocalReviewerId("");
@@ -799,11 +832,15 @@ const ReportReviewer = (props) => {
 
     getMemberList(rowData.DepartmentId, rowData.MemberId);
     setCurrCountryId(rowData.CountryId);
+getLeadAuditorList(rowData.LeadAuditorId);
+    // setCurrLeadAuditorId(rowData.LeadAuditorId);
+    // setCurrTeamAuditorId(rowData.TeamAuditorId);
+    
+    getTeamAuditorList(JSON.parse(rowData.TeamAuditorId || "[]"));
 
-    setCurrLeadAuditorId(rowData.LeadAuditorId);
-    setCurrTeamAuditorId(rowData.TeamAuditorId);
     setCurrAuditTypeId(rowData.AuditTypeId);
-    setCurrReportWriterId(rowData.ReportWriterId);
+    getAuditorList(rowData.ReportWriterId);
+    // setCurrReportWriterId(rowData.ReportWriterId);
 
     setCurrLocalReviewerId(rowData.LocalReviewerId);
     setCurrReportReleasedStatusId(rowData.ReportReleasedStatusId);
@@ -1479,7 +1516,29 @@ const ReportReviewer = (props) => {
               />
 
               <label>Team Auditor</label>
-              <Autocomplete
+              <FormControl sx={{ width: 300 }}>
+                <Select
+                  multiple
+                  disabled={true}
+                  value={currTeamAuditorId}
+                  onChange={handleChangeMulpleCbo}
+                  renderValue={(selected) =>
+                    (TeamAuditorList || [])
+                      .filter((a) => currTeamAuditorId.includes(a.id))
+                      .map((a) => a.name)
+                      .join(", ")
+                  }
+                >
+                  {(TeamAuditorList || []).map((auditor) => (
+                    <MenuItem key={auditor.id} value={auditor.id}>
+                      <Checkbox checked={currTeamAuditorId.includes(auditor.id)} />
+                      <ListItemText primary={auditor.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              {/* <Autocomplete
                 autoHighlight
                 disableClearable
                 disabled={true}
@@ -1487,7 +1546,6 @@ const ReportReviewer = (props) => {
                 id="TeamAuditorId"
                 name="TeamAuditorId"
                 autoComplete
-                // class={errorObject.TeamAuditorId}
                 options={TeamAuditorList ? TeamAuditorList : []}
                 getOptionLabel={(option) => option.name}
                 defaultValue={{ id: 0, name: "Select Team Auditor" }}
@@ -1514,7 +1572,7 @@ const ReportReviewer = (props) => {
                 renderInput={(params) => (
                   <TextField {...params} variant="standard" fullWidth />
                 )}
-              />
+              /> */}
  
 
               <label>Audit Type</label>
@@ -1578,8 +1636,9 @@ const ReportReviewer = (props) => {
                 value={currentRow.WindowEnd}
                 onChange={(e) => handleChange(e)}
               />
+
               <label>Report Writer</label>
-              <Autocomplete
+               <Autocomplete
                 autoHighlight
                 disableClearable
                 disabled={true}
@@ -1587,14 +1646,13 @@ const ReportReviewer = (props) => {
                 id="ReportWriterId"
                 name="ReportWriterId"
                 autoComplete
-                // class={errorObject.ReportWriterId}
-                options={CoordinatorList ? CoordinatorList : []}
+                options={AuditorList ? AuditorList : []}
                 getOptionLabel={(option) => option.name}
                 defaultValue={{ id: 0, name: "Select" }}
                 value={
-                  CoordinatorList
-                    ? CoordinatorList[
-                        CoordinatorList.findIndex(
+                  AuditorList
+                    ? AuditorList[
+                        AuditorList.findIndex(
                           (list) => list.id === currReportWriterId
                         )
                       ]

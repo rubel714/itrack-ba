@@ -32,7 +32,7 @@ function getDataList($data)
 		a.CertificateBody,a.CoordinatorId,f.UserName as CoordinatorName, a.AuditStageId, g.AuditStageName,
 		a.LeadStatusId, h.LeadStatusName,a.ManDay,a.BuyerId,i.BuyerName,a.NextFollowupDate,
 		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks
-		, a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, a.CountryId, a.LeadAuditorId, a.TeamAuditorId, a.AuditTypeId, 
+		, a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, a.CountryId, a.LeadAuditorId, REPLACE(a.TeamAuditorIds, '".'"'."', '') as TeamAuditorId, a.AuditTypeId, 
 		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT, 
 		a.AttachedDocuments, a.IsSendMail,
 
@@ -92,8 +92,8 @@ function dataAddEdit($data)
 
 			$u = new updateq();
 			$u->table = 't_transaction';
-			$u->columns = ['InvoiceTo','NameofApplicant','InvoiceAddress','InvoiceEmail','InvoiceMobile','Discount'];
-			$u->values = [$InvoiceTo,$NameofApplicant,$InvoiceAddress,$InvoiceEmail,$InvoiceMobile,$Discount];
+			$u->columns = ['InvoiceTo','NameofApplicant','InvoiceAddress','InvoiceEmail','InvoiceMobile','Discount',"LastInvoiceUpdateUserId","LastUpdateUserId"];
+			$u->values = [$InvoiceTo,$NameofApplicant,$InvoiceAddress,$InvoiceEmail,$InvoiceMobile,$Discount,$UserId,$UserId];
 			$u->pks = ['TransactionId'];
 			$u->pk_values = [$id];
 			$u->build_query();

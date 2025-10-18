@@ -70,7 +70,6 @@ const CoordinatorInput = (props) => {
   const [currLeadAuditorId, setCurrLeadAuditorId] = useState(null);
 
   const [TeamAuditorList, setTeamAuditorList] = useState(null);
-  // const [currTeamAuditorId, setCurrTeamAuditorId] = useState(null);
   const [currTeamAuditorId, setCurrTeamAuditorId] = useState([]);
 
   const [AuditTypeList, setAuditTypeList] = useState(null);
