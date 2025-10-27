@@ -31,9 +31,13 @@ function getDataList($data){
 	
 	try{
 		$dbh = new Db();
-		$query = "SELECT HolyDayId AS id, HoliDate, Year(HoliDate) YearName, DATE_FORMAT(HoliDate, '%M') MonthName, DATE_FORMAT(HoliDate, '%W') DayName
-		FROM t_holiday where DayType='holiday'
-		ORDER BY `HoliDate` DESC;";		
+		$query = "SELECT a.HolyDayId AS id, a.HoliDate, Year(a.HoliDate) YearName,
+		 DATE_FORMAT(a.HoliDate, '%M') MonthName, DATE_FORMAT(a.HoliDate, '%W') DayName
+		 ,b.AuditorName,b.PhoneNo,a.Comments,a.AuditorId
+		FROM t_holiday a
+		inner join t_auditor b on a.AuditorId=b.AuditorId
+		where a.DayType='leave'
+		ORDER BY a.HoliDate DESC;";		
 		
 		$resultdata = $dbh->query($query);
 		
@@ -64,7 +68,10 @@ function dataAddEdit($data) {
 		$UserId = trim($data->UserId);  
 		$HolyDayId = $data->rowData->id;
 		$HoliDate = $data->rowData->HoliDate;
-		$DayType = "holiday";
+		$AuditorId = $data->rowData->AuditorId;
+		$Comments = $data->rowData->Comments?$data->rowData->Comments:null;
+
+		$DayType = "leave";
 
 		try{
 
@@ -74,8 +81,8 @@ function dataAddEdit($data) {
 			if($HolyDayId == ""){
 				$q = new insertq();
 				$q->table = 't_holiday';
-				$q->columns = ['HoliDate','DayType'];
-				$q->values = [$HoliDate,$DayType];
+				$q->columns = ['HoliDate','DayType','AuditorId','Comments'];
+				$q->values = [$HoliDate,$DayType,$AuditorId,$Comments];
 				$q->pks = ['HolyDayId'];
 				$q->bUseInsetId = false;
 				$q->build_query();
@@ -83,8 +90,8 @@ function dataAddEdit($data) {
 			}else{
 				$u = new updateq();
 				$u->table = 't_holiday';
-				$u->columns = ['HoliDate'];
-				$u->values = [$HoliDate];
+				$u->columns = ['HoliDate','AuditorId','Comments'];
+				$u->values = [$HoliDate,$AuditorId,$Comments];
 				$u->pks = ['HolyDayId'];
 				$u->pk_values = [$HolyDayId];
 				$u->build_query();

@@ -33,6 +33,7 @@ import Designation from "views/screens/designation/index.js";
 
 import Department from "views/screens/department/index.js";
 import Holiday from "views/screens/holiday/index.js";
+import Leave from "views/screens/leave/index.js";
 import Members from "views/screens/members/index.js";
 import Auditors from "views/screens/auditors/index.js";
 import Offices from "views/screens/offices/index.js";
@@ -45,6 +46,7 @@ import SalesPersonInput from "views/screens/salespersoninput/index.js";
 import CoordinatorInput from "views/screens/coordinatorinput/index.js";
 import ReportReviewer from "views/screens/reportreviewer/index.js";
 import Invoice from "views/screens/invoice/index.js";
+import AuditCalendar from "views/screens/auditcalendar/index.js";
 import UserContextProvider from './context/user-info-context';
 
 // import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
@@ -99,6 +101,7 @@ ReactDOM.render(
             <Route path="/designation" render={(props) => <Designation {...props} />} />
             <Route path="/department" render={(props) => <Department {...props} />} />
             <Route path="/holiday" render={(props) => <Holiday {...props} />} />
+            <Route path="/leave" render={(props) => <Leave {...props} />} />
             <Route path="/members" render={(props) => <Members {...props} />} />
             <Route path="/auditors" render={(props) => <Auditors {...props} />} />
             <Route path="/offices" render={(props) => <Offices {...props} />} />
@@ -112,6 +115,8 @@ ReactDOM.render(
             <Route path="/coordinatorinput" render={(props) => <CoordinatorInput {...props} />} />
             <Route path="/reportreviewer" render={(props) => <ReportReviewer {...props} />} />
             <Route path="/invoice" render={(props) => <Invoice {...props} />} />
+
+            <Route path="/auditcalendar" render={(props) => <AuditCalendar {...props} />} />
 
             <Route path="/" render={(props) => <Index {...props} />} />
 

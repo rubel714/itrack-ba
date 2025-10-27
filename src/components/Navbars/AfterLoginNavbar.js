@@ -178,7 +178,16 @@ function AfterLoginNavbar(props) {
                       </a>
                     </li>
                   )}
-
+                  {menuShowPermision("leave") === 1 && (
+                    <li>
+                      <a
+                        href="javascript:void(0)"
+                        onClick={() => props.history.push("leave")}
+                      >
+                        Leave
+                      </a>
+                    </li>
+                  )}
                   {menuShowPermision("offices") === 1 && (
                     <li>
                       <a
@@ -324,7 +333,18 @@ function AfterLoginNavbar(props) {
               <li class="dropdownMenu">
                 {" "}
                 Reports
-                <ul class="dropdownList"></ul>
+                <ul class="dropdownList">
+                  {menuShowPermision("auditcalendar") === 1 && (
+                    <li>
+                      <a
+                        href="javascript:void(0)"
+                        onClick={() => props.history.push("auditcalendar")}
+                      >
+                        Audit Calendar
+                      </a>
+                    </li>
+                  )}
+                </ul>
               </li>
             )}
           </ul>

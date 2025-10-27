@@ -94,7 +94,7 @@ const DepartmentAddEditModal = (props) => {
               type="date"
               id="HoliDate"
               name="HoliDate"
-              style={{"width":"30%"}}
+              style={{"width":"50%"}}
               class={errorObject.HoliDate}
               placeholder="Enter Holidate"
               value={currentRow.HoliDate}
