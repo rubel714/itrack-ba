@@ -184,7 +184,7 @@ function AfterLoginNavbar(props) {
                         href="javascript:void(0)"
                         onClick={() => props.history.push("leave")}
                       >
-                        Leave
+                       Leave/Office Work
                       </a>
                     </li>
                   )}

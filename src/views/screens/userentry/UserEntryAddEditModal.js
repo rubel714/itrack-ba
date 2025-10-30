@@ -815,6 +815,24 @@ const UserEntryAddEditModal = (props) => {
               checked={currentRow.IsActive}
               onChange={handleChangeCheck}
             />
+
+            <label> Is Coordinator?</label>
+            <input
+              id="IsCoordinator"
+              name="IsCoordinator"
+              type="checkbox"
+              checked={currentRow.IsCoordinator}
+              onChange={handleChangeCheck}
+            />
+
+            <label> Is Report Reviewer?</label>
+            <input
+              id="IsReportReviewer"
+              name="IsReportReviewer"
+              type="checkbox"
+              checked={currentRow.IsReportReviewer}
+              onChange={handleChangeCheck}
+            />
           {/* </div>
 
           <div className="modalItemColumnTwo"> */}

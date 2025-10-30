@@ -45,6 +45,7 @@ const ReportReviewer = (props) => {
   const [CoordinatorList, setCoordinatorList] = useState(null);
   const [currCoordinatorId, setCurrCoordinatorId] = useState(null);
 
+
   const [AuditStageList, setAuditStageList] = useState(null);
   const [currAuditStageId, setCurrAuditStageId] = useState(null);
 
@@ -75,6 +76,7 @@ const ReportReviewer = (props) => {
   const [AuditorList, setAuditorList] = useState(null);
   const [currReportWriterId, setCurrReportWriterId] = useState(null);
 
+  const [LocalReviewerList, setLocalReviewerList] = useState(null);
   const [currLocalReviewerId, setCurrLocalReviewerId] = useState(null);
 
   const [ReleasedStatusList, setReleasedStatusList] = useState(null);
@@ -107,6 +109,7 @@ const ReportReviewer = (props) => {
     getFactoryList("");
     getProgramList("");
     getCoordinatorList("");
+    getReportReviewerList("");
     getAuditStageList("");
     getLeadStatusList("");
     getBuyerList("");
@@ -171,7 +174,7 @@ const ReportReviewer = (props) => {
 
   function getCoordinatorList(selectCoordinatorId) {
     let params = {
-      action: "UserList",
+      action: "getCoordinatorList",
       lan: language(),
       UserId: UserInfo.UserId,
     };
@@ -182,6 +185,22 @@ const ReportReviewer = (props) => {
       );
 
       setCurrCoordinatorId(selectCoordinatorId);
+    });
+  }
+
+  function getReportReviewerList(selectLocalReviewerId) {
+    let params = {
+      action: "getReportReviewerList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+    };
+
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      setLocalReviewerList(
+        [{ id: "", name: "Select" }].concat(res.data.datalist)
+      );
+
+      setCurrLocalReviewerId(selectLocalReviewerId);
     });
   }
 
@@ -1959,13 +1978,13 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 name="LocalReviewerId"
                 autoComplete
                 // class={errorObject.LocalReviewerId}
-                options={CoordinatorList ? CoordinatorList : []}
+                options={LocalReviewerList ? LocalReviewerList : []}
                 getOptionLabel={(option) => option.name}
                 defaultValue={{ id: 0, name: "Select" }}
                 value={
-                  CoordinatorList
-                    ? CoordinatorList[
-                        CoordinatorList.findIndex(
+                  LocalReviewerList
+                    ? LocalReviewerList[
+                        LocalReviewerList.findIndex(
                           (list) => list.id === currLocalReviewerId
                         )
                       ]

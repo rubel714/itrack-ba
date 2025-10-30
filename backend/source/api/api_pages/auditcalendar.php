@@ -60,8 +60,8 @@ function getDataList($data)
 		FROM `t_transaction` a
 		INNER JOIN `t_program` b ON a.ProgramId=b.ProgramId
 		INNER JOIN `t_factory` c ON a.FactoryId=c.FactoryId
-		WHERE a.`AuditStartDate`>='$StartDate'
-		AND `AuditEndDate`<='$EndDate'
+		WHERE a.AuditStartDate <= '$EndDate'
+  		AND a.AuditEndDate >='$StartDate'
 		AND (a.`LeadAuditorId` IS NOT NULL OR a.`TeamAuditorIds` <> '[]');";
 		$resultdata = $dbh->query($query);
 		$AuditList = array();
@@ -123,15 +123,24 @@ function getDataList($data)
 		LEFT JOIN `t_leavestatus` b ON a.LeaveStatusId=b.LeaveStatusId
 		WHERE (a.HoliDate >= '$StartDate' AND a.HoliDate <= '$EndDate');";
 		$resultdata = $dbh->query($query);
-		$HoliLeaveDayList = array();
+		$HoliDayList = array();
+		$LeaveDayList = array();
+		// $HoliLeaveDayList = array();
 		foreach ($resultdata as $row) {
-			if (array_key_exists($row['HoliDate'], $HoliLeaveDayList)) {
-				if ($HoliLeaveDayList[$row['HoliDate']]['DayType'] !== 'holiday') {
-					$HoliLeaveDayList[$row['HoliDate']] = $row; // overwrite only if not holiday. because holiday has higher priority
-				}
-			} else {
-				$HoliLeaveDayList[$row['HoliDate']] = $row;
+
+			if($row['DayType'] == "holiday"){
+				$HoliDayList[$row['HoliDate']] = $row;
+			}else{
+				$LeaveDayList[$row['HoliDate']."_".$row['AuditorId']] = $row;
 			}
+
+			// if (array_key_exists($row['HoliDate'], $HoliLeaveDayList)) {
+			// 	if ($HoliLeaveDayList[$row['HoliDate']]['DayType'] !== 'holiday') {
+			// 		$HoliLeaveDayList[$row['HoliDate']] = $row; // overwrite only if not holiday. because holiday has higher priority
+			// 	}
+			// } else {
+			// 	$HoliLeaveDayList[$row['HoliDate']] = $row;
+			// }
 		}
 
 
@@ -159,18 +168,27 @@ function getDataList($data)
 
 				$Msg = $obj['Msg'];
 
-				if (array_key_exists($date, $HoliLeaveDayList)) {
-					if ($HoliLeaveDayList[$date]['DayType'] == "holiday") {
-						$Msg = "Offday";
-					} else if ($HoliLeaveDayList[$date]['AuditorId'] == $obj['AuditorId']) {
-						$Msg = "Leave";
-					}
-					// else if($HoliLeaveDayList[$date]['Comments']){
-					// 	$Msg = $HoliLeaveDayList[$date]['Comments'];
-					// }
 
+			// if($row['DayType'] == "holiday"){
+			// 	$HoliDayList[$row['HoliDate']] = $row;
+			// }else{
+			// 	$LeaveDayList[$row['HoliDate']."_".$row['AuditorId']] = $row;
+			// }
+
+				if($Msg == ""){
+					if (array_key_exists($date, $HoliDayList)) {
+						$Msg = "Offday";
+						// if ($HoliLeaveDayList[$date]['DayType'] == "holiday") {
+						// 	$Msg = "Offday";
+						// } else if ($HoliLeaveDayList[$date]['AuditorId'] == $obj['AuditorId']) {
+						// 	$Msg = $HoliLeaveDayList[$date]['LeaveStatusName'];
+						// }
+
+					}else if (array_key_exists($date."_".$obj['AuditorId'], $LeaveDayList)) {
+						$Msg = $LeaveDayList[$date."_".$obj['AuditorId']]['LeaveStatusName'];
+					}
 				}
-				// $Msg = $obj['Msg'];
+
 				$row["A_" . $obj['AuditorId']] = $Msg;
 			}
 

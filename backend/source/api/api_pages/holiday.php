@@ -72,6 +72,16 @@ function dataAddEdit($data) {
 			$aQuerys = array();
 
 			if($HolyDayId == ""){
+
+				$query = "SELECT count(HolyDayId) DuplicateDate
+				FROM t_holiday where DayType='holiday' and HoliDate='$HoliDate';";		
+				$resultdata = $dbh->query($query);
+				$DuplicateDate = $resultdata[0]["DuplicateDate"];
+				if($DuplicateDate>0){
+					return $returnData = msg(0,404,'Date is already exist');
+				}
+
+
 				$q = new insertq();
 				$q->table = 't_holiday';
 				$q->columns = ['HoliDate','DayType'];
@@ -81,6 +91,15 @@ function dataAddEdit($data) {
 				$q->build_query();
 				$aQuerys = array($q); 
 			}else{
+
+				$query = "SELECT count(HolyDayId) DuplicateDate
+				FROM t_holiday where HolyDayId !=$HolyDayId AND DayType='holiday' and HoliDate='$HoliDate';";		
+				$resultdata = $dbh->query($query);
+				$DuplicateDate = $resultdata[0]["DuplicateDate"];
+				if($DuplicateDate>0){
+					return $returnData = msg(0,404,'Date is already exist');
+				}
+
 				$u = new updateq();
 				$u->table = 't_holiday';
 				$u->columns = ['HoliDate'];

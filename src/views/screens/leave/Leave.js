@@ -94,7 +94,17 @@ const Leave = (props) => {
       filter: true,
       width: "10%"
     },
-            {
+    {
+      field: "LeaveStatusName",
+      label: "Status",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "10%"
+
+    },
+     {
       field: "Comments",
       label: "Comments",
       align: "left",
@@ -162,6 +172,7 @@ const Leave = (props) => {
       id: "",
       HoliDate: "",
       AuditorId: "",
+      LeaveStatusId: "",
       Comments: "",
     });
     openModal();
@@ -241,7 +252,7 @@ const Leave = (props) => {
         {/* <!-- ######-----TOP HEADER-----####### --> */}
         <div class="topHeader">
           <h4>
-            <a href="javascript:void(0)" onClick={() => props.history.push("/home")}>Home</a> ❯ Settings ❯ Leave
+            <a href="javascript:void(0)" onClick={() => props.history.push("/home")}>Home</a> ❯ Settings ❯ Leave/Office Work
           </h4>
         </div>
 

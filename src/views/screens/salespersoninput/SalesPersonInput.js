@@ -152,7 +152,7 @@ const SalesPersonInput = (props) => {
 
   function getCoordinatorList(selectCoordinatorId) {
     let params = {
-      action: "UserList",
+      action: "getCoordinatorList",
       lan: language(),
       UserId: UserInfo.UserId,
     };

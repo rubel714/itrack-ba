@@ -34,7 +34,7 @@ function getDataList($data){
 		 a.`Email`,a.PhoneNo,a.`IsActive`, CASE WHEN a.IsActive=1 THEN 'Yes' ELSE 'No' END IsActiveName, 
 		a.DesignationId, b.DesignationName, c.RoleId, d.RoleName,a.PhotoUrl,a.DepartmentId,e.DepartmentName,
 		a.Address,a.BusinessLineId,a.UserCode
-		,a.OfficeId, h.OfficeName,a.UserZoneId, i.UserZoneName, a.`GenderId`, f.GenderName,a.NID
+		,a.OfficeId, h.OfficeName,a.UserZoneId, i.UserZoneName, a.`GenderId`, f.GenderName,a.NID,a.IsCoordinator,a.IsReportReviewer
 	   FROM `t_users` a
 	   INNER JOIN `t_designation` b ON a.`DesignationId` = b.`DesignationId`
 	   INNER JOIN `t_user_role_map` c ON a.`UserId` = c.`UserId`
@@ -93,6 +93,10 @@ function dataAddEdit($data) {
 		$GenderId = $data->rowData->GenderId;
 		// $BusinessLineId = $data->rowData->BusinessLineId;
 		$IsActive = $data->rowData->IsActive ? $data->rowData->IsActive : 0;
+		$IsCoordinator = $data->rowData->IsCoordinator ? $data->rowData->IsCoordinator : 0;
+		$IsReportReviewer = $data->rowData->IsReportReviewer ? $data->rowData->IsReportReviewer : 0;
+
+
 		// $TeamId = $data->rowData->TeamId? $data->rowData->TeamId : null;
 		// $LinemanUserId = $data->rowData->LinemanUserId? $data->rowData->LinemanUserId : null;
 		$Address = $data->rowData->Address? $data->rowData->Address : null;
@@ -109,8 +113,8 @@ function dataAddEdit($data) {
 			if($id == ""){
 				$q = new insertq();
 				$q->table = 't_users';
-				$q->columns = ['UserCode','UserName','LoginName','Password','Email','PhoneNo','IsActive','DesignationId','PhotoUrl','DepartmentId','OfficeId','UserZoneId','NID','GenderId','Address'];
-				$q->values = [$UserCode,$UserName,$LoginName,$Password,$Email,$PhoneNo,$IsActive,$DesignationId,$PhotoUrl,$DepartmentId,$OfficeId,$UserZoneId,$NID,$GenderId,$Address];
+				$q->columns = ['UserCode','UserName','LoginName','Password','Email','PhoneNo','IsActive','DesignationId','PhotoUrl','DepartmentId','OfficeId','UserZoneId','NID','GenderId','Address','IsCoordinator','IsReportReviewer'];
+				$q->values = [$UserCode,$UserName,$LoginName,$Password,$Email,$PhoneNo,$IsActive,$DesignationId,$PhotoUrl,$DepartmentId,$OfficeId,$UserZoneId,$NID,$GenderId,$Address,$IsCoordinator,$IsReportReviewer];
 				$q->pks = ['UserId'];
 				$q->bUseInsetId = true;
 				$q->build_query();
@@ -130,12 +134,12 @@ function dataAddEdit($data) {
 				$u->table = 't_users';
 
 					if($Cpassword != ''){
-						$u->columns = ['UserCode','UserName','LoginName','Password','Email','PhoneNo','IsActive','DesignationId','PhotoUrl','DepartmentId','OfficeId','UserZoneId','NID','GenderId','Address'];
-						$u->values = [$UserCode,$UserName,$LoginName,$Password,$Email,$PhoneNo,$IsActive,$DesignationId,$PhotoUrl,$DepartmentId,$OfficeId,$UserZoneId,$NID,$GenderId,$Address];
+						$u->columns = ['UserCode','UserName','LoginName','Password','Email','PhoneNo','IsActive','DesignationId','PhotoUrl','DepartmentId','OfficeId','UserZoneId','NID','GenderId','Address','IsCoordinator','IsReportReviewer'];
+						$u->values = [$UserCode,$UserName,$LoginName,$Password,$Email,$PhoneNo,$IsActive,$DesignationId,$PhotoUrl,$DepartmentId,$OfficeId,$UserZoneId,$NID,$GenderId,$Address,$IsCoordinator,$IsReportReviewer];
 						
 					}else{
-						$u->columns = ['UserCode','UserName','LoginName','Email','PhoneNo','IsActive','DesignationId','PhotoUrl','DepartmentId','OfficeId','UserZoneId','NID','GenderId','Address'];
-						$u->values = [$UserCode, $UserName,$LoginName,$Email,$PhoneNo,$IsActive,$DesignationId,$PhotoUrl,$DepartmentId,$OfficeId,$UserZoneId,$NID,$GenderId,$Address];
+						$u->columns = ['UserCode','UserName','LoginName','Email','PhoneNo','IsActive','DesignationId','PhotoUrl','DepartmentId','OfficeId','UserZoneId','NID','GenderId','Address','IsCoordinator','IsReportReviewer'];
+						$u->values = [$UserCode, $UserName,$LoginName,$Email,$PhoneNo,$IsActive,$DesignationId,$PhotoUrl,$DepartmentId,$OfficeId,$UserZoneId,$NID,$GenderId,$Address,$IsCoordinator,$IsReportReviewer];
 				
 					}
 

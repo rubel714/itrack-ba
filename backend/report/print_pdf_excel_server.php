@@ -573,32 +573,33 @@ function LeaveExport()
 	global $sql, $tableProperties, $TEXT, $siteTitle;
 
 	$sql = "SELECT a.`HoliDate`, Year(a.HoliDate) YearName, DATE_FORMAT(a.HoliDate, '%M') MonthName, 
-	DATE_FORMAT(a.HoliDate, '%W') DayName,b.AuditorName,b.PhoneNo,a.Comments
+	DATE_FORMAT(a.HoliDate, '%W') DayName,b.AuditorName,b.PhoneNo,c.LeaveStatusName,a.Comments
 	FROM t_holiday a 
 	inner join t_auditor b on a.AuditorId=b.AuditorId
+	inner join t_leavestatus c on a.LeaveStatusId=c.LeaveStatusId
 	where DayType='leave'
 	ORDER BY a.`HoliDate` DESC;";
 
 
 
-	$tableProperties["query_field"] = array("HoliDate","YearName","MonthName","DayName","AuditorName","PhoneNo","Comments");
-	$tableProperties["table_header"] = array('Holidate', 'Year', 'Month', 'Day','Auditor','Phone','Comments');
-	$tableProperties["align"] = array("left", "left", "left", "left", "left", "left", "left");
-	$tableProperties["width_print_pdf"] = array("15%","10%","10%","10%","20%","10%","25%"); //when exist serial then here total 95% and 5% use for serial
-	$tableProperties["width_excel"] = array("20", "15", "20", "20", "20", "20", "20");
-	$tableProperties["precision"] = array("string","string","string","string","string","string","string"); //string,date,datetime,0,1,2,3,4
-	$tableProperties["total"] = array(0,0,0,0,0,0,0); //not total=0, total=1
-	$tableProperties["color_code"] = array(0,0,0,0,0,0,0); //colorcode field = 1 not color code field = 0
+	$tableProperties["query_field"] = array("HoliDate","YearName","MonthName","DayName","AuditorName","PhoneNo","LeaveStatusName","Comments");
+	$tableProperties["table_header"] = array('Holidate', 'Year', 'Month', 'Day','Auditor','Phone','Status','Comments');
+	$tableProperties["align"] = array("left", "left", "left", "left", "left", "left", "left", "left");
+	$tableProperties["width_print_pdf"] = array("15%","10%","10%","10%","20%","10%","10%","25%"); //when exist serial then here total 95% and 5% use for serial
+	$tableProperties["width_excel"] = array("20", "15", "20", "20", "20", "20", "20", "20");
+	$tableProperties["precision"] = array("string","string","string","string","string","string","string","string"); //string,date,datetime,0,1,2,3,4
+	$tableProperties["total"] = array(0,0,0,0,0,0,0,0); //not total=0, total=1
+	$tableProperties["color_code"] = array(0,0,0,0,0,0,0,0); //colorcode field = 1 not color code field = 0
 	$tableProperties["header_logo"] = 0; //include header left and right logo. 0 or 1
 	$tableProperties["footer_signatory"] = 0; //include footer signatory. 0 or 1
 
 	//Report header list
 	$tableProperties["header_list"][0] = $siteTitle;
-	$tableProperties["header_list"][1] = 'Leave';
+	$tableProperties["header_list"][1] = 'Leave/Office Work';
 	// $tableProperties["header_list"][1] = 'Heading 2';
 
 	//Report save name. Not allow any type of special character
-	$tableProperties["report_save_name"] = 'Leave';
+	$tableProperties["report_save_name"] = 'Leave_Office_Work';
 }
 
 function RevenueTypeExport()

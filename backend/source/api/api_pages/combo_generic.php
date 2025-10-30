@@ -13,6 +13,12 @@ switch ($task) {
 	case "UserList":
 		$returnData = UserList($data);
 		break;
+	case "getCoordinatorList":
+		$returnData = getCoordinatorList($data);
+		break;
+	case "getReportReviewerList":
+		$returnData = getReportReviewerList($data);
+		break;
 	case "CheckList":
 		$returnData = CheckList($data);
 		break;
@@ -72,6 +78,9 @@ switch ($task) {
 		break;
 	case "getCountryList":
 		$returnData = getCountryList($data);
+		break;
+	case "getLeaveStatusList":
+		$returnData = getLeaveStatusList($data);
 		break;
 	case "getAuditorList":
 		$returnData = getAuditorList($data);
@@ -164,6 +173,56 @@ function UserList($data)
 
 	return $returnData;
 }
+
+function getCoordinatorList($data)
+{
+	try {
+		$dbh = new Db();
+		$query = "SELECT `UserId` id,`UserName` `name`
+	 			 	FROM `t_users` 
+					where IsCoordinator=1
+					ORDER BY UserName;";
+
+		$resultdata = $dbh->query($query);
+
+		$returnData = [
+			"success" => 1,
+			"status" => 200,
+			"message" => "",
+			"datalist" => $resultdata
+		];
+	} catch (PDOException $e) {
+		$returnData = msg(0, 500, $e->getMessage());
+	}
+
+	return $returnData;
+}
+
+
+function getReportReviewerList($data)
+{
+	try {
+		$dbh = new Db();
+		$query = "SELECT `UserId` id,`UserName` `name`
+	 			 	FROM `t_users` 
+					where IsReportReviewer=1
+					ORDER BY UserName;";
+
+		$resultdata = $dbh->query($query);
+
+		$returnData = [
+			"success" => 1,
+			"status" => 200,
+			"message" => "",
+			"datalist" => $resultdata
+		];
+	} catch (PDOException $e) {
+		$returnData = msg(0, 500, $e->getMessage());
+	}
+
+	return $returnData;
+}
+
 
 function CheckList($data)
 {
@@ -641,6 +700,30 @@ function getCountryList($data)
 		$query = "SELECT a.`CountryId` id, a.CountryName `name`
 	 			 	FROM t_country a
 					ORDER BY a.CountryName;";
+
+		$resultdata = $dbh->query($query);
+
+		$returnData = [
+			"success" => 1,
+			"status" => 200,
+			"message" => "",
+			"datalist" => $resultdata
+		];
+	} catch (PDOException $e) {
+		$returnData = msg(0, 500, $e->getMessage());
+	}
+
+	return $returnData;
+}
+
+function getLeaveStatusList($data)
+{
+	
+	try {
+		$dbh = new Db();
+		$query = "SELECT a.`LeaveStatusId` id, a.LeaveStatusName `name`
+	 			 	FROM t_leavestatus a
+					ORDER BY a.LeaveStatusName;";
 
 		$resultdata = $dbh->query($query);
 

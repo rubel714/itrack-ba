@@ -14,9 +14,13 @@ const DepartmentAddEditModal = (props) => {
   const [AuditorList, setAuditorList] = useState(null);
   const [currAuditorId, setCurrAuditorId] = useState(null);
 
+  const [LeaveStatusList, setLeaveStatusList] = useState(null);
+  const [currLeaveStatusId, setCurrLeaveStatusId] = useState(null);
+
   
   React.useEffect(() => {
     getAuditorList(props.currentRow.AuditorId);
+    getLeaveStatusList(props.currentRow.LeaveStatusId);
   }, []);
   
     function getAuditorList(selectAuditorId) {
@@ -32,6 +36,22 @@ const DepartmentAddEditModal = (props) => {
         );
   
         setCurrAuditorId(selectAuditorId);
+      });
+    }
+  
+    function getLeaveStatusList(selectLeaveStatusId) {
+      let params = {
+        action: "getLeaveStatusList",
+        lan: language(),
+        UserId: UserInfo.UserId,
+      };
+  
+      apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+        setLeaveStatusList(
+          [{ id: "", name: "Select Status" }].concat(res.data.datalist)
+        );
+  
+        setCurrLeaveStatusId(selectLeaveStatusId);
       });
     }
 
@@ -50,7 +70,7 @@ const DepartmentAddEditModal = (props) => {
   
   const validateForm = () => {
 
-    let validateFields = ["HoliDate","AuditorId"]
+    let validateFields = ["HoliDate","AuditorId","LeaveStatusId"]
     let errorData = {}
     let isValid = true
     validateFields.map((field) => {
@@ -111,6 +131,11 @@ const DepartmentAddEditModal = (props) => {
       setCurrAuditorId(value);
     }
 
+    if (name === "LeaveStatusId") {
+      data["LeaveStatusId"] = value;
+      setCurrLeaveStatusId(value);
+    }
+
     setErrorObject({ ...errorObject, [name]: null });
     setCurrentRow(data);
   };
@@ -124,18 +149,18 @@ const DepartmentAddEditModal = (props) => {
         {/* <!-- Modal content --> */}
         <div class="modal-content-small" >
           <div class="modalHeader">
-            <h4>Add/Edit Leave</h4>
+            <h4>Add/Edit Leave/Office Work</h4>
           </div>
 
           <div class="modalItemColumnTwo">
-            <label>Leave Date*</label>
+            <label>Date*</label>
             <input
               type="date"
               id="HoliDate"
               name="HoliDate"
               // style={{"width":"30%"}}
               class={errorObject.HoliDate}
-              placeholder="Enter Leave Date"
+              placeholder="Enter Date"
               value={currentRow.HoliDate}
               onChange={(e) => handleChange(e)}
             />
@@ -164,6 +189,43 @@ const DepartmentAddEditModal = (props) => {
               onChange={(event, valueobj) =>
                 handleChangeDropDown(
                   "AuditorId",
+                  valueobj ? valueobj.id : ""
+                )
+              }
+              renderOption={(option) => (
+                <Typography className="chosen_dropdown_font">
+                  {option.name}
+                </Typography>
+              )}
+              renderInput={(params) => (
+                <TextField {...params} variant="standard" fullWidth />
+              )}
+            />
+           
+             <label>Status *</label>
+            <Autocomplete
+              autoHighlight
+              disableClearable
+              className="chosen_dropdown"
+              id="LeaveStatusId"
+              name="LeaveStatusId"
+              autoComplete
+              class={errorObject.LeaveStatusId }
+              options={LeaveStatusList ? LeaveStatusList : []}
+              getOptionLabel={(option) => option.name}
+              defaultValue={{ id: 0, name: "Select Status" }}
+              value={
+                LeaveStatusList
+                  ? LeaveStatusList[
+                      LeaveStatusList.findIndex(
+                        (list) => list.id === currLeaveStatusId
+                      )
+                    ]
+                  : null
+              }
+              onChange={(event, valueobj) =>
+                handleChangeDropDown(
+                  "LeaveStatusId",
                   valueobj ? valueobj.id : ""
                 )
               }

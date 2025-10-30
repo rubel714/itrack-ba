@@ -94,7 +94,8 @@ const UserRole = (props) => {
   /** Action from table row buttons*/
   function actioncontrol(rowData) {
     return (
-      <>
+      
+      <>{rowData.id != 1 && (<>
         {permissionType === 0 && (<Edit
           className={"table-edit-icon"}
           onClick={() => {
@@ -108,7 +109,9 @@ const UserRole = (props) => {
             deleteData(rowData);
           }}
         />)}
+        </>)}
       </>
+
     );
   }
 
