@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef,useEffect } from "react";
+import React, { forwardRef, useRef, useEffect } from "react";
 import swal from "sweetalert";
 import {
   DeleteOutline,
@@ -21,9 +21,15 @@ import ExecuteQueryHook from "../../../components/hooks/ExecuteQueryHook";
 import moment from "moment";
 import "../../../assets/css/audit.css";
 
-import { MenuItem, FormControl, InputLabel, Select, Checkbox, ListItemText } from "@material-ui/core";
-
-
+import {
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
+  Checkbox,
+  ListItemText,
+} from "@material-ui/core";
+import FilesUploadModal from "./FilesUploadModal";
 
 const CoordinatorInput = (props) => {
   const serverpage = "coordinatorinput"; // this is .php server page
@@ -79,26 +85,27 @@ const CoordinatorInput = (props) => {
   const [currReportWriterId, setCurrReportWriterId] = useState(null);
 
   const [StartDate, setStartDate] = useState(moment().format("YYYY-MM-DD"));
-  const [EndDate, setEndDate] = useState(moment().add(30, "days").format("YYYY-MM-DD"));
+  const [EndDate, setEndDate] = useState(
+    moment().add(30, "days").format("YYYY-MM-DD")
+  );
 
+  const [showFileUploadModal, setShowFileUploadModal] = useState(false);
 
-// const fruits = {
-//   1: "Apple",
-//   2: "Banana",
-//   3: "Mango",
-//   4: "Orange"
-// };
+  // const fruits = {
+  //   1: "Apple",
+  //   2: "Banana",
+  //   3: "Mango",
+  //   4: "Orange"
+  // };
 
-// const auditors = [
-//   { id: "", name: "Select Team Auditor" },
-//   { id: 2, name: "Aman ullah" },
-//   { id: 1, name: "Rakibul Islam" },
-//   { id: 6, name: "Rubel" }
-// ];
+  // const auditors = [
+  //   { id: "", name: "Select Team Auditor" },
+  //   { id: 2, name: "Aman ullah" },
+  //   { id: 1, name: "Rakibul Islam" },
+  //   { id: 6, name: "Rubel" }
+  // ];
 
   // const [selected, setSelected] = useState([]);
-
-
 
   // handleChangeWidthHeight
   const { isLoading, data: dataList, error, ExecuteQuery } = ExecuteQueryHook(); //Fetch data
@@ -234,9 +241,7 @@ const CoordinatorInput = (props) => {
     };
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
-      setAuditorList(
-        [{ id: "", name: "Select" }].concat(res.data.datalist)
-      );
+      setAuditorList([{ id: "", name: "Select" }].concat(res.data.datalist));
 
       setCurrReportWriterId(selectReportWriterId);
     });
@@ -340,12 +345,12 @@ const CoordinatorInput = (props) => {
     });
   }
 
-  function getLeadAuditorList(pProgramId,selectLeadAuditorId) {
+  function getLeadAuditorList(pProgramId, selectLeadAuditorId) {
     let params = {
       action: "getLeadAuditorList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ProgramId: pProgramId
+      ProgramId: pProgramId,
     };
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
@@ -353,7 +358,7 @@ const CoordinatorInput = (props) => {
         [{ id: "", name: "Select Lead Auditor" }].concat(res.data.datalist)
       );
 
-      setCurrLeadAuditorId(selectLeadAuditorId?selectLeadAuditorId:"");
+      setCurrLeadAuditorId(selectLeadAuditorId ? selectLeadAuditorId : "");
     });
   }
 
@@ -362,15 +367,13 @@ const CoordinatorInput = (props) => {
       action: "getTeamAuditorList",
       lan: language(),
       UserId: UserInfo.UserId,
-      ProgramId: pProgramId
+      ProgramId: pProgramId,
     };
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
-      setTeamAuditorList(
-       res.data.datalist
-      );
-  
-      setCurrTeamAuditorId(selectTeamAuditorId?selectTeamAuditorId:[]);
+      setTeamAuditorList(res.data.datalist);
+
+      setCurrTeamAuditorId(selectTeamAuditorId ? selectTeamAuditorId : []);
     });
   }
 
@@ -395,16 +398,25 @@ const CoordinatorInput = (props) => {
     let data = { ...currentRow };
     data[name] = value;
 
-    if(name == "AuditFee"){
-      let RevenueBDT = parseFloat(value || 0) + parseFloat(currentRow.OPE || 0) + parseFloat(currentRow.OthersAmount || 0);
-      data["RevenueBDT"] = RevenueBDT;
-    }    
-    if( name == "OPE"){
-      let RevenueBDT = parseFloat(currentRow.AuditFee || 0) + parseFloat(value || 0) + parseFloat(currentRow.OthersAmount || 0);
+    if (name == "AuditFee") {
+      let RevenueBDT =
+        parseFloat(value || 0) +
+        parseFloat(currentRow.OPE || 0) +
+        parseFloat(currentRow.OthersAmount || 0);
       data["RevenueBDT"] = RevenueBDT;
     }
-    if(name == "OthersAmount"){
-      let RevenueBDT = parseFloat(currentRow.AuditFee || 0) + parseFloat(currentRow.OPE || 0) + parseFloat(value || 0);
+    if (name == "OPE") {
+      let RevenueBDT =
+        parseFloat(currentRow.AuditFee || 0) +
+        parseFloat(value || 0) +
+        parseFloat(currentRow.OthersAmount || 0);
+      data["RevenueBDT"] = RevenueBDT;
+    }
+    if (name == "OthersAmount") {
+      let RevenueBDT =
+        parseFloat(currentRow.AuditFee || 0) +
+        parseFloat(currentRow.OPE || 0) +
+        parseFloat(value || 0);
       data["RevenueBDT"] = RevenueBDT;
     }
 
@@ -514,10 +526,10 @@ const CoordinatorInput = (props) => {
     setCurrentRow(data);
   };
 
-    const handleChangeMulpleCbo = (event) => {
+  const handleChangeMulpleCbo = (event) => {
     let data = { ...currentRow };
 
-  // console.log('selected: ', selected);
+    // console.log('selected: ', selected);
 
     // console.log('eventeventeventevent: ', event);
     // console.log('eventeventeventevent TeamAuditorList: ', TeamAuditorList);
@@ -525,10 +537,10 @@ const CoordinatorInput = (props) => {
     // console.log('value: ', value);
     setCurrTeamAuditorId(typeof value === "string" ? value.split(",") : value);
 
-    data["TeamAuditorId"] = typeof value === "string" ? value.split(",") : value;
+    data["TeamAuditorId"] =
+      typeof value === "string" ? value.split(",") : value;
     // setErrorObject({ ...errorObject, [name]: null });
     setCurrentRow(data);
-
   };
 
   const validateForm = () => {
@@ -714,13 +726,9 @@ const CoordinatorInput = (props) => {
     setBFirst(false);
   }
 
-    useEffect(() => {
+  useEffect(() => {
     getDataList();
-  }, [
-    StartDate,
-    EndDate,
-  ]);
-
+  }, [StartDate, EndDate]);
 
   /**Get data for table list */
   function getDataList() {
@@ -809,7 +817,7 @@ const CoordinatorInput = (props) => {
       TeamAuditorIds: "",
       AuditTypeId: "",
       Window: "",
-      WindowEnd:"",
+      WindowEnd: "",
       PaymentStatus: "No",
       ReportWriterId: "",
       NoOfEmployee: "",
@@ -841,9 +849,12 @@ const CoordinatorInput = (props) => {
     getMemberList(rowData.DepartmentId, rowData.MemberId);
     setCurrCountryId(rowData.CountryId);
 
-    getLeadAuditorList(rowData.ProgramId,rowData.LeadAuditorId);
+    getLeadAuditorList(rowData.ProgramId, rowData.LeadAuditorId);
     // getTeamAuditorList(rowData.ProgramId,rowData.TeamAuditorId);
-    getTeamAuditorList(rowData.ProgramId,JSON.parse(rowData.TeamAuditorId || "[]"));
+    getTeamAuditorList(
+      rowData.ProgramId,
+      JSON.parse(rowData.TeamAuditorId || "[]")
+    );
 
     // setCurrLeadAuditorId(rowData.LeadAuditorId);
     // setCurrTeamAuditorId(rowData.TeamAuditorId);
@@ -906,6 +917,22 @@ const CoordinatorInput = (props) => {
     });
   }
 
+  function FileUploadModalShow() {
+    setShowFileUploadModal(true);
+  }
+
+  function fileUploadModalCallback(type) {
+    console.log("type: ", type);
+
+    if (type != "Close") {
+      let data = { ...currentRow };
+      data["AttachedDocuments"] = type;
+      setCurrentRow(data);
+    }
+
+    setShowFileUploadModal(false);
+  }
+
   return (
     <>
       <div class="bodyContainer">
@@ -915,54 +942,50 @@ const CoordinatorInput = (props) => {
         </div>
 
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
-        {toggle && ( <div class="searchAdd">
-         
-
-         
-          <div>
-            <label>Start Date</label>
-            <div class="">
-              <input
-                type="date"
-                id="StartDate"
-                name="StartDate"
-                value={StartDate}
-                onChange={(e) => handleChangeFilterDate(e)}
-              />
+        {toggle && (
+          <div class="searchAdd">
+            <div>
+              <label>Start Date</label>
+              <div class="">
+                <input
+                  type="date"
+                  id="StartDate"
+                  name="StartDate"
+                  value={StartDate}
+                  onChange={(e) => handleChangeFilterDate(e)}
+                />
+              </div>
             </div>
-          </div>
 
+            <div>
+              <label>End Date</label>
+              <div class="">
+                <input
+                  type="date"
+                  id="EndDate"
+                  name="EndDate"
+                  value={EndDate}
+                  onChange={(e) => handleChangeFilterDate(e)}
+                />
+              </div>
+            </div>
 
-          <div>
-            <label>End Date</label>
-            <div class="">
-            <input
-              type="date"
-              id="EndDate"
-              name="EndDate"
-              value={EndDate}
-              onChange={(e) => handleChangeFilterDate(e)}
+            <Button
+              label={"Export"}
+              class={"btnPrint"}
+              onClick={PrintPDFExcelExportFunction}
             />
-          </div>
-          </div>
+            {/* <Button label={"ADD"} class={"btnAdd"} onClick={addData} /> */}
 
-
-              <Button
-                label={"Export"}
-                class={"btnPrint"}
-                onClick={PrintPDFExcelExportFunction}
-              />
-              {/* <Button label={"ADD"} class={"btnAdd"} onClick={addData} /> */}
-          
-
-          {/* {!toggle && (
+            {/* {!toggle && (
             <Button
               label={"Back to List"}
               class={"btnClose"}
               onClick={showListView}
             />
           )} */}
-        </div>)}
+          </div>
+        )}
 
         {/* <!-- ####---THIS CLASS IS USE FOR TABLE GRID---####s --> */}
 
@@ -1543,7 +1566,7 @@ const CoordinatorInput = (props) => {
               <label>Team Auditor</label>
 
               <FormControl sx={{ width: 300 }}>
-               <Select
+                <Select
                   multiple
                   value={currTeamAuditorId}
                   onChange={handleChangeMulpleCbo}
@@ -1556,13 +1579,14 @@ const CoordinatorInput = (props) => {
                 >
                   {(TeamAuditorList || []).map((auditor) => (
                     <MenuItem key={auditor.id} value={auditor.id}>
-                      <Checkbox checked={currTeamAuditorId.includes(auditor.id)} />
+                      <Checkbox
+                        checked={currTeamAuditorId.includes(auditor.id)}
+                      />
                       <ListItemText primary={auditor.name} />
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
-             
 
               {/* <Autocomplete
                 autoHighlight
@@ -1652,7 +1676,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="WindowEnd"
                 name="WindowEnd"
-                disabled={currAuditTypeId==1?true:false}
+                disabled={currAuditTypeId == 1 ? true : false}
                 // class={errorObject.WindowEnd}
                 placeholder="Enter Window End"
                 value={currentRow.WindowEnd}
@@ -1669,10 +1693,14 @@ const CoordinatorInput = (props) => {
                 autoComplete
                 // class={errorObject.ReportWriterId}
                 // options={AuditorList ? AuditorList : []}
-                options={(AuditorList || []).filter(a => {
+                options={(AuditorList || []).filter((a) => {
                   const id = String(a.id);
-                  const leadId = currLeadAuditorId ? String(currLeadAuditorId) : "";
-                  const teamIds = Array.isArray(currTeamAuditorId) ? currTeamAuditorId.map(String) : [];
+                  const leadId = currLeadAuditorId
+                    ? String(currLeadAuditorId)
+                    : "";
+                  const teamIds = Array.isArray(currTeamAuditorId)
+                    ? currTeamAuditorId.map(String)
+                    : [];
                   return leadId === id || teamIds.includes(id);
                 })}
                 //options={(AuditorList ? AuditorList : []).filter(a => [1,5].includes(a.id))}
@@ -1803,10 +1831,8 @@ const CoordinatorInput = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-             
-
               <label>Attached Documents</label>
-              <input
+              {/* <input
                 type="text"
                 id="AttachedDocuments"
                 name="AttachedDocuments"
@@ -1814,6 +1840,11 @@ const CoordinatorInput = (props) => {
                 placeholder="Enter Attached Documents"
                 value={currentRow.AttachedDocuments}
                 onChange={(e) => handleChange(e)}
+              /> */}
+              <Button
+                label={"File"}
+                class={"btnSave"}
+                onClick={FileUploadModalShow}
               />
 
               <label>Send Mail</label>
@@ -1825,7 +1856,6 @@ const CoordinatorInput = (props) => {
                 checked={currentRow.IsSendMail}
                 onChange={handleChangeCheck}
               />
-
             </div>
 
             <div class="modalItemButton">
@@ -1856,6 +1886,14 @@ const CoordinatorInput = (props) => {
           </div> */}
       </div>
       {/* <!-- BODY CONTAINER END --> */}
+
+      {showFileUploadModal && (
+        <FilesUploadModal
+          masterProps={props}
+          currentRow={currentRow}
+          fileUploadModalCallback={fileUploadModalCallback}
+        />
+      )}
 
       {/* {showModal && (
         <SalesPersonInputAddEditModal

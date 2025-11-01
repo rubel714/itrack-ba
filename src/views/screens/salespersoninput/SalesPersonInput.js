@@ -55,6 +55,9 @@ const SalesPersonInput = (props) => {
   const [BuyerList, setBuyerList] = useState(null);
   const [currBuyerId, setCurrBuyerId] = useState(null);
 
+  const [RemarksList, setRemarksList] = useState([{"id":"New","name":"New"},{"id":"Re-Certificate","name":"Re-Certificate"}]);
+  const [currRemarks, setCurrRemarks] = useState(null);
+
   // const [TeamList, setTeamList] = useState(null);
   // const [currTeamId, setCurrTeamId] = useState(null);
 
@@ -307,6 +310,10 @@ const SalesPersonInput = (props) => {
       data["MemberId"] = value;
       setCurrMemberId(value);
     }
+    if (name === "Remarks") {
+      data["Remarks"] = value;
+      setCurrRemarks(value);
+    }
 
     setErrorObject({ ...errorObject, [name]: null });
     setCurrentRow(data);
@@ -529,6 +536,7 @@ const SalesPersonInput = (props) => {
     setCurrLeadStatusId("");
     setCurrBuyerId("");
     setCurrDepartmentId("");
+    setCurrRemarks("");
     // setCurrMemberId(rowData.MemberId);
     getMemberList("", "");
 
@@ -571,6 +579,7 @@ const SalesPersonInput = (props) => {
     setCurrLeadStatusId(rowData.LeadStatusId);
     setCurrBuyerId(rowData.BuyerId);
     setCurrDepartmentId(rowData.DepartmentId);
+    setCurrRemarks(rowData.Remarks);
     // setCurrMemberId(rowData.MemberId);
 
     getMemberList(rowData.DepartmentId, rowData.MemberId);
@@ -1117,7 +1126,42 @@ const SalesPersonInput = (props) => {
               />
 
               <label>Remarks/Note</label>
-              <input
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                className="chosen_dropdown"
+                id="Remarks"
+                name="Remarks"
+                autoComplete
+                //  class={errorObject.Remarks}
+                options={RemarksList ? RemarksList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Remarks/Note" }}
+                value={
+                  RemarksList
+                    ? RemarksList[
+                        RemarksList.findIndex(
+                          (list) => list.id === currRemarks
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown(
+                    "Remarks",
+                    valueobj ? valueobj.id : ""
+                  )
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+              {/* <input
                 type="text"
                 id="Remarks"
                 name="Remarks"
@@ -1125,8 +1169,7 @@ const SalesPersonInput = (props) => {
                 placeholder="Enter Remarks/Note"
                 value={currentRow.Remarks}
                 onChange={(e) => handleChange(e)}
-              />
-            {/* </div> */}
+              /> */}
           </div>
 
             <div class="modalItemButton">

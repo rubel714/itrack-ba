@@ -16,6 +16,11 @@ switch ($task) {
 	case "deleteData":
 		$returnData = deleteData($data);
 		break;
+
+
+	case "FilesUpload":
+		$returnData = FilesUpload($data);
+		break;
 	default:
 		echo "{failure:true}";
 		break;
@@ -28,14 +33,14 @@ function getDataList($data)
 
 		$StartDate = trim($data->StartDate);
 		$EndDate = trim($data->EndDate) . " 23-59-59";
-		
+
 		$query = "SELECT a.TransactionId AS id,a.TransactionTypeId,DATE(a.`TransactionDate`) TransactionDate,
 		a.InvoiceNo,a.ActivityId,b.ActivityName,a.FactoryId,c.FactoryName,c.Address as FactoryAddress,d.FactoryGroupName,
 		a.ProgramId,e.ProgramName,a.ExpireDate,a.OpportunityDate,a.TentativeOfferPrice,
 		a.CertificateBody,a.CoordinatorId,f.UserName as CoordinatorName, a.AuditStageId, g.AuditStageName,
 		a.LeadStatusId, h.LeadStatusName,a.ManDay,a.BuyerId,i.BuyerName,a.NextFollowupDate,
 		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks
-		, a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, a.CountryId, a.LeadAuditorId, REPLACE(a.TeamAuditorIds, '".'"'."', '') as TeamAuditorId, a.AuditTypeId, 
+		, a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, a.CountryId, a.LeadAuditorId, REPLACE(a.TeamAuditorIds, '" . '"' . "', '') as TeamAuditorId, a.AuditTypeId, 
 		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT, 
 		a.AttachedDocuments, a.IsSendMail
 	   FROM `t_transaction` a
@@ -54,11 +59,17 @@ function getDataList($data)
 
 		$resultdata = $dbh->query($query);
 
+		$dList = array();
+		foreach($resultdata as $key=>$obj){
+			$obj['AttachedDocuments'] = json_decode($obj['AttachedDocuments']);
+			$dList[] = $obj;
+		}
+
 		$returnData = [
 			"success" => 1,
 			"status" => 200,
 			"message" => "",
-			"datalist" => $resultdata
+			"datalist" => $dList
 		];
 	} catch (PDOException $e) {
 		$returnData = msg(0, 500, $e->getMessage());
@@ -73,8 +84,7 @@ function dataAddEdit($data)
 
 	if ($_SERVER["REQUEST_METHOD"] != "POST") {
 		return $returnData = msg(0, 404, 'Page Not Found!');
-	}
-	else {
+	} else {
 		$dbh = new Db();
 
 		$lan = trim($data->lan);
@@ -121,7 +131,7 @@ function dataAddEdit($data)
 		$OthersAmount = $data->rowData->OthersAmount ? $data->rowData->OthersAmount : null;
 		$PINo = $data->rowData->PINo ? $data->rowData->PINo : null;
 		$RevenueBDT = $data->rowData->RevenueBDT ? $data->rowData->RevenueBDT : null;
-		$AttachedDocuments = $data->rowData->AttachedDocuments ? $data->rowData->AttachedDocuments : null;
+		$AttachedDocuments = $data->rowData->AttachedDocuments ? $data->rowData->AttachedDocuments : [];
 		$IsSendMail = $data->rowData->IsSendMail ? $data->rowData->IsSendMail : 0;
 		// $ReportReleaseStatus = $data->rowData->ReportReleaseStatus ? $data->rowData->ReportReleaseStatus : "No";
 
@@ -129,29 +139,28 @@ function dataAddEdit($data)
 		$StandardTAT = date("Y-m-d");
 		$StrategicTAT = date("Y-m-d");
 
-		if($AuditEndDate){
+		if ($AuditEndDate) {
 			$sql = "select TATDayTypeId, ifnull(StandardTATDay,1) StandardTATDay, ifnull(StrategiceTATDay,1) StrategiceTATDay 
 			from t_program where ProgramId=$ProgramId";
 			$resultdata = $dbh->query($sql);
 			$TATDayTypeId = $resultdata[0]['TATDayTypeId'];	//1=Calendar, 2=Working
-			$StandardTATDay = $resultdata[0]['StandardTATDay'];	
-			$StrategiceTATDay = $resultdata[0]['StrategiceTATDay'];	
+			$StandardTATDay = $resultdata[0]['StandardTATDay'];
+			$StrategiceTATDay = $resultdata[0]['StrategiceTATDay'];
 
-			if($TATDayTypeId == 1){
+			if ($TATDayTypeId == 1) {
 				//Calendar day
-				$StandardTATDate=date_create($AuditEndDate);
-				date_add($StandardTATDate,date_interval_create_from_date_string("$StandardTATDay days"));
-				$StandardTAT = date_format($StandardTATDate,"Y-m-d");
+				$StandardTATDate = date_create($AuditEndDate);
+				date_add($StandardTATDate, date_interval_create_from_date_string("$StandardTATDay days"));
+				$StandardTAT = date_format($StandardTATDate, "Y-m-d");
 
-				$StrategicTATDate=date_create($AuditEndDate);
-				date_add($StrategicTATDate,date_interval_create_from_date_string("$StrategiceTATDay days"));
-				$StrategicTAT = date_format($StrategicTATDate,"Y-m-d");
-
-			}else if($TATDayTypeId == 2){
+				$StrategicTATDate = date_create($AuditEndDate);
+				date_add($StrategicTATDate, date_interval_create_from_date_string("$StrategiceTATDay days"));
+				$StrategicTAT = date_format($StrategicTATDate, "Y-m-d");
+			} else if ($TATDayTypeId == 2) {
 				//working day
 
 				//================== Start for StandardTATDay==========================
-				$date = $AuditEndDate;// date('Y-m-d');
+				$date = $AuditEndDate; // date('Y-m-d');
 				$workingDays = 1;
 				$dayCount = 0;
 				while ($workingDays <= $StandardTATDay) {
@@ -181,16 +190,16 @@ function dataAddEdit($data)
 					$workingDays++;
 				}
 
-				$StandardTATDate=date_create($AuditEndDate);
-				date_add($StandardTATDate,date_interval_create_from_date_string("$dayCount days"));
-				$StandardTAT = date_format($StandardTATDate,"Y-m-d");
+				$StandardTATDate = date_create($AuditEndDate);
+				date_add($StandardTATDate, date_interval_create_from_date_string("$dayCount days"));
+				$StandardTAT = date_format($StandardTATDate, "Y-m-d");
 				//================== End for StandardTATDay==========================
 
 
 
 
 				//================== Start for StandardTATDay==========================
-				$date = $AuditEndDate;// date('Y-m-d');
+				$date = $AuditEndDate; // date('Y-m-d');
 				$workingDays = 1;
 				$dayCount = 0;
 				while ($workingDays <= $StrategiceTATDay) {
@@ -220,17 +229,17 @@ function dataAddEdit($data)
 					$workingDays++;
 				}
 
-				$StrategicTATDate=date_create($AuditEndDate);
-				date_add($StrategicTATDate,date_interval_create_from_date_string("$dayCount days"));
-				$StrategicTAT = date_format($StrategicTATDate,"Y-m-d");
+				$StrategicTATDate = date_create($AuditEndDate);
+				date_add($StrategicTATDate, date_interval_create_from_date_string("$dayCount days"));
+				$StrategicTAT = date_format($StrategicTATDate, "Y-m-d");
 				//================== End for StandardTATDay==========================
 
 
-			// echo "StandardTAT: $StandardTAT, StrategicTAT: $StrategicTAT";
+				// echo "StandardTAT: $StandardTAT, StrategicTAT: $StrategicTAT";
 			}
-		} 
+		}
 
-		if($AuditStartDate && $AuditEndDate){
+		if ($AuditStartDate && $AuditEndDate) {
 
 			// if($LeadAuditorId){
 			// 	$query = "SELECT b.ProgramName,c.FactoryName,a.AuditStartDate,a.AuditEndDate
@@ -241,7 +250,7 @@ function dataAddEdit($data)
 			// 		AND a.AuditStartDate <= '$AuditEndDate'
 			// 		AND a.AuditEndDate >='$AuditStartDate'
 			// 		AND a.LeadAuditorId = '$LeadAuditorId';";	
-					
+
 			// 		$resultdata = $dbh->query($query);
 			// 		if(count($resultdata)>0){
 			// 			$DuplicateProgramName = $resultdata[0]["ProgramName"];
@@ -254,13 +263,13 @@ function dataAddEdit($data)
 			// 	}
 
 
-				$ids = (array)$TeamAuditorId;
-				if($LeadAuditorId){
-					$ids[] = $LeadAuditorId;
-				}
-				foreach($ids as $TAuditorId){
-					// $TAuditorId = 2;
-					 $query = "
+			$ids = (array)$TeamAuditorId;
+			if ($LeadAuditorId) {
+				$ids[] = $LeadAuditorId;
+			}
+			foreach ($ids as $TAuditorId) {
+				// $TAuditorId = 2;
+				$query = "
 					 SELECT b.ProgramName,c.FactoryName,a.AuditStartDate,a.AuditEndDate
 					FROM t_transaction a
 					inner join t_program b on a.ProgramId = b.ProgramId
@@ -279,37 +288,115 @@ function dataAddEdit($data)
 					where a.TransactionId !=$id 
 					AND a.AuditStartDate <= '$AuditEndDate'
 					AND a.AuditEndDate >='$AuditStartDate'
-					AND JSON_CONTAINS(REPLACE(a.TeamAuditorIds, '".'"'."', ''), '$TAuditorId');";	
+					AND JSON_CONTAINS(REPLACE(a.TeamAuditorIds, '" . '"' . "', ''), '$TAuditorId');";
 
-					$resultdata = $dbh->query($query);
-					if(count($resultdata)>0){
-						$DuplicateProgramName = $resultdata[0]["ProgramName"];
-						$DuplicateFactoryName = $resultdata[0]["FactoryName"];
-						$DuplicateAuditStartDate = $resultdata[0]["AuditStartDate"];
-						$DuplicateAuditEndDate = $resultdata[0]["AuditEndDate"];
+				$resultdata = $dbh->query($query);
+				if (count($resultdata) > 0) {
+					$DuplicateProgramName = $resultdata[0]["ProgramName"];
+					$DuplicateFactoryName = $resultdata[0]["FactoryName"];
+					$DuplicateAuditStartDate = $resultdata[0]["AuditStartDate"];
+					$DuplicateAuditEndDate = $resultdata[0]["AuditEndDate"];
 
-						return $returnData = msg(0,404,'Auditor is already assigned '.$DuplicateProgramName.", ".$DuplicateFactoryName." ($DuplicateAuditStartDate, $DuplicateAuditEndDate)");
-					}
+					return $returnData = msg(0, 404, 'Auditor is already assigned ' . $DuplicateProgramName . ", " . $DuplicateFactoryName . " ($DuplicateAuditStartDate, $DuplicateAuditEndDate)");
 				}
-
-
-
-
-
-
-
+			}
 		}
-			
+
+
+		$AttachedDocumentsArr = array();
+		foreach ($AttachedDocuments as $key => $row) {
+			$row->file = "";//file string empty
+			$row->status = "";//status empty
+			$AttachedDocumentsArr[] = (array)$row;
+		}
 
 		try {
 			$aQuerys = array();
 
 			$u = new updateq();
 			$u->table = 't_transaction';
-			$u->columns = ['ActivityId', 'FactoryId', 'ProgramId', 'ExpireDate', 'OpportunityDate', 'TentativeOfferPrice', 'CertificateBody', 'CoordinatorId', 'AuditStageId', 'LeadStatusId', 'ManDay', 'BuyerId', 'NextFollowupDate', 'DepartmentId', 'MemberId', 'Remarks', 
-				"AssessmentNo", "AuditStartDate", "AuditEndDate", "CountryId", "LeadAuditorId", "TeamAuditorIds", "AuditTypeId", "Window","WindowEnd", "PaymentStatus", "ReportWriterId", "NoOfEmployee", "AuditFee", "OPE","OthersAmount", "PINo", "RevenueBDT", "AttachedDocuments", "IsSendMail","StandardTAT","StrategicTAT","LastCoordinatorInputUpdateUserId","LastUpdateUserId"];
-			$u->values = [$ActivityId, $FactoryId, $ProgramId, $ExpireDate, $OpportunityDate, $TentativeOfferPrice, $CertificateBody, $CoordinatorId, $AuditStageId, $LeadStatusId, $ManDay, $BuyerId, $NextFollowupDate, $DepartmentId, $MemberId, $Remarks,
-				$AssessmentNo,$AuditStartDate,$AuditEndDate,$CountryId,$LeadAuditorId, json_encode($TeamAuditorId),$AuditTypeId,$Window,$WindowEnd,$PaymentStatus,$ReportWriterId,$NoOfEmployee,$AuditFee,$OPE,$OthersAmount,$PINo,$RevenueBDT,$AttachedDocuments,$IsSendMail,$StandardTAT,$StrategicTAT,$UserId,$UserId];
+			$u->columns = [
+				'ActivityId',
+				'FactoryId',
+				'ProgramId',
+				'ExpireDate',
+				'OpportunityDate',
+				'TentativeOfferPrice',
+				'CertificateBody',
+				'CoordinatorId',
+				'AuditStageId',
+				'LeadStatusId',
+				'ManDay',
+				'BuyerId',
+				'NextFollowupDate',
+				'DepartmentId',
+				'MemberId',
+				'Remarks',
+				"AssessmentNo",
+				"AuditStartDate",
+				"AuditEndDate",
+				"CountryId",
+				"LeadAuditorId",
+				"TeamAuditorIds",
+				"AuditTypeId",
+				"Window",
+				"WindowEnd",
+				"PaymentStatus",
+				"ReportWriterId",
+				"NoOfEmployee",
+				"AuditFee",
+				"OPE",
+				"OthersAmount",
+				"PINo",
+				"RevenueBDT",
+				"AttachedDocuments",
+				"IsSendMail",
+				"StandardTAT",
+				"StrategicTAT",
+				"LastCoordinatorInputUpdateUserId",
+				"LastUpdateUserId"
+			];
+			$u->values = [
+				$ActivityId,
+				$FactoryId,
+				$ProgramId,
+				$ExpireDate,
+				$OpportunityDate,
+				$TentativeOfferPrice,
+				$CertificateBody,
+				$CoordinatorId,
+				$AuditStageId,
+				$LeadStatusId,
+				$ManDay,
+				$BuyerId,
+				$NextFollowupDate,
+				$DepartmentId,
+				$MemberId,
+				$Remarks,
+				$AssessmentNo,
+				$AuditStartDate,
+				$AuditEndDate,
+				$CountryId,
+				$LeadAuditorId,
+				json_encode($TeamAuditorId),
+				$AuditTypeId,
+				$Window,
+				$WindowEnd,
+				$PaymentStatus,
+				$ReportWriterId,
+				$NoOfEmployee,
+				$AuditFee,
+				$OPE,
+				$OthersAmount,
+				$PINo,
+				$RevenueBDT,
+				json_encode($AttachedDocumentsArr),
+				$IsSendMail,
+				$StandardTAT,
+				$StrategicTAT,
+				$UserId,
+				$UserId
+			];
 			$u->pks = ['TransactionId'];
 			$u->pk_values = [$id];
 			$u->build_query();
@@ -431,3 +518,70 @@ function deleteData($data)
 // 	file_put_contents($targetDir . "/" . $output_file, $decoded);
 // 	return $output_file;
 // }
+
+
+
+function FilesUpload($data)
+{
+
+	if ($_SERVER["REQUEST_METHOD"] != "POST") {
+		return $returnData = msg(0, 404, 'Page Not Found!');
+	} else {
+
+		$lan = trim($data->lan);
+		$UserId = trim($data->UserId);
+		$rowData = $data->rowData;
+
+		// echo "<pre>";
+		// print_r($FileNameString);
+		// exit;
+
+		$TransactionId = $data->TransactionId;
+
+		try {
+
+
+			foreach ($rowData as $fileobj) {
+				if($fileobj->status == "new"){
+					ConvertCSVFile($TransactionId, $fileobj->name, $fileobj->extention, $fileobj->file);
+				}
+			}
+
+			$success = 1;
+			$status = 200;
+			$message = "Uploaded successfully";
+
+			$returnData = [
+				"success" => $success,
+				"status" => $status,
+				"message" => $message
+			];
+		} catch (PDOException $e) {
+			$returnData = msg(0, 500, $e->getMessage());
+		}
+
+		return $returnData;
+	}
+}
+
+
+
+function ConvertCSVFile($TransactionId, $name, $extention, $filebase64_string)
+{
+	$targetDir = '../../../image/transaction/' . $TransactionId;
+
+	if (!file_exists($targetDir)) {
+		mkdir($targetDir, 0777, true);
+	}
+
+	$exploded = explode(',', $filebase64_string, 2);
+	// echo "<pre>";
+	// print_r($exploded);
+	// $extention = "csv"; // explode(';', explode('/', $exploded[0])[1])[0];
+	$decoded = base64_decode($exploded[1]);
+	// $output_file = $prefix . "_cover_" . date("Y_m_d_H_i_s") . "_" . rand(1, 9999) . "." . $extention;
+	// $output_file = date("Y_m_d_H_i_s") . "_" . rand(1, 9999) ."_".$name. "." . $extention;
+	$output_file = date("Y_m_d_H_i_s") . "_" . rand(1, 9999) . "_" . $name;
+	file_put_contents($targetDir . "/" . $output_file, $decoded);
+	return $output_file;
+}
