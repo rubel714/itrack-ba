@@ -6,6 +6,7 @@ import Notification from "../../../services/Notification";
 import {
   checkLogin,
   checkUserPermission,
+  getUserActionPermission,
 } from "../../../services/CheckUserAccess";
 import DarkFooter from "../../../components/Footers/DarkFooter.js";
 import CoordinatorInput from "./CoordinatorInput";
@@ -23,6 +24,12 @@ const Index = (props) => {
     setRedirectLogin(false);
   }
 
+  
+    //This is for user has VIEW/EDIT permission in this page start
+    const permissionType = getUserActionPermission(menukey);
+    console.log("propsprops permissionType index: ", permissionType);
+    //This is for user has VIEW/EDIT permission in this page end
+  
   // React.useEffect(() => {
   // }, []);
 
@@ -55,6 +62,7 @@ const Index = (props) => {
               render={(props) => (
                 <CoordinatorInput
                   {...props}
+                  permissionType={permissionType}
                   openNoticeModal={openNoticeModal}
                 />
               )}

@@ -2060,7 +2060,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
               </div>
 
               
-              <label>Report Released Status</label>
+              {/* <label>Report Released Status</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
@@ -2096,7 +2096,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 renderInput={(params) => (
                   <TextField {...params} variant="standard" fullWidth />
                 )}
-              />
+              /> */}
 
               <label>Overseas Sending Date</label>
               <input

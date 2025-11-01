@@ -32,6 +32,8 @@ import {
 import FilesUploadModal from "./FilesUploadModal";
 
 const CoordinatorInput = (props) => {
+  const permissionType = props.permissionType;
+
   const serverpage = "coordinatorinput"; // this is .php server page
 
   const { useState } = React;
@@ -84,6 +86,13 @@ const CoordinatorInput = (props) => {
   const [AuditorList, setAuditorList] = useState(null);
   const [currReportWriterId, setCurrReportWriterId] = useState(null);
 
+    const [RemarksList, setRemarksList] = useState([
+    { id: "New", name: "New" },
+    { id: "Re-Certificate", name: "Re-Certificate" },
+  ]);
+  const [currRemarks, setCurrRemarks] = useState(null);
+
+
   const [StartDate, setStartDate] = useState(moment().format("YYYY-MM-DD"));
   const [EndDate, setEndDate] = useState(
     moment().add(30, "days").format("YYYY-MM-DD")
@@ -129,6 +138,10 @@ const CoordinatorInput = (props) => {
         StartDate +
         "&EndDate=" +
         EndDate +
+        "&UserId=" +
+        UserInfo.UserId +
+        "&RoleId=" +
+        UserInfo.RoleId[0] +
         "&TimeStamp=" +
         Date.now()
     );
@@ -522,6 +535,11 @@ const CoordinatorInput = (props) => {
       setCurrReportWriterId(value);
     }
 
+    if (name === "Remarks") {
+      data["Remarks"] = value;
+      setCurrRemarks(value);
+    }
+
     setErrorObject({ ...errorObject, [name]: null });
     setCurrentRow(data);
   };
@@ -736,6 +754,7 @@ const CoordinatorInput = (props) => {
       action: "getDataList",
       lan: language(),
       UserId: UserInfo.UserId,
+      RoleId: UserInfo.RoleId[0],
       StartDate: StartDate,
       EndDate: EndDate,
     };
@@ -1004,6 +1023,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={ permissionType == 1}
                 // disabled={true}
                 className={`chosen_dropdown ${
                   errorObject.ActivityId ? errorObject.ActivityId : ""
@@ -1044,6 +1064,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // className="chosen_dropdown"
                 className={`chosen_dropdown ${
@@ -1162,6 +1183,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="ExpireDate"
                 name="ExpireDate"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.ExpireDate}
                 placeholder="Enter Expire Date"
@@ -1174,6 +1196,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="OpportunityDate"
                 name="OpportunityDate"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.OpportunityDate}
                 placeholder="Enter Opportunity Date"
@@ -1185,6 +1208,7 @@ const CoordinatorInput = (props) => {
                 type="number"
                 id="TentativeOfferPrice"
                 name="TentativeOfferPrice"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.TentativeOfferPrice}
                 placeholder="Enter Tentative Offer Price"
@@ -1197,6 +1221,7 @@ const CoordinatorInput = (props) => {
                 type="text"
                 id="CertificateBody"
                 name="CertificateBody"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.CertificateBody}
                 placeholder="Enter Certificate Body"
@@ -1208,6 +1233,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={ permissionType == 1}
                 // disabled={true}
                 className="chosen_dropdown"
                 id="CoordinatorId"
@@ -1247,6 +1273,7 @@ const CoordinatorInput = (props) => {
                 autoHighlight
                 disableClearable
                 // disabled={true}
+                disabled={ permissionType == 1}
                 className="chosen_dropdown"
                 id="AuditStageId"
                 name="AuditStageId"
@@ -1284,6 +1311,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={ permissionType == 1}
                 // disabled={true}
                 className="chosen_dropdown"
                 id="LeadStatusId"
@@ -1323,6 +1351,7 @@ const CoordinatorInput = (props) => {
                 type="number"
                 id="ManDay"
                 name="ManDay"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.ManDay}
                 placeholder="Enter Man Day"
@@ -1333,6 +1362,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={ permissionType == 1}
                 // disabled={true}
                 className="chosen_dropdown"
                 id="BuyerId"
@@ -1366,6 +1396,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={ permissionType == 1}
                 // disabled={true}
                 className="chosen_dropdown"
                 id="DepartmentId"
@@ -1404,6 +1435,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={ permissionType == 1}
                 // disabled={true}
                 className="chosen_dropdown"
                 id="MemberId"
@@ -1438,6 +1470,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="NextFollowupDate"
                 name="NextFollowupDate"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.NextFollowupDate}
                 placeholder="Enter Next Followup Date"
@@ -1446,16 +1479,48 @@ const CoordinatorInput = (props) => {
               />
 
               <label>Remarks/Note</label>
-              <input
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                disabled={permissionType == 1}
+                className="chosen_dropdown"
+                id="Remarks"
+                name="Remarks"
+                autoComplete
+                //  class={errorObject.Remarks}
+                options={RemarksList ? RemarksList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Remarks/Note" }}
+                value={
+                  RemarksList
+                    ? RemarksList[
+                        RemarksList.findIndex((list) => list.id === currRemarks)
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown("Remarks", valueobj ? valueobj.id : "")
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+              {/* <input
                 type="text"
                 id="Remarks"
                 name="Remarks"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.Remarks}
                 placeholder="Enter Remarks/Note"
                 value={currentRow.Remarks}
                 onChange={(e) => handleChange(e)}
-              />
+              /> */}
             </div>
 
             <div class="formEntryColumnThree">
@@ -1464,6 +1529,7 @@ const CoordinatorInput = (props) => {
                 type="text"
                 id="AssessmentNo"
                 name="AssessmentNo"
+                disabled={ permissionType == 1}
                 // class={errorObject.AssessmentNo}
                 placeholder="Enter Assessment No"
                 value={currentRow.AssessmentNo}
@@ -1475,6 +1541,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="AuditStartDate"
                 name="AuditStartDate"
+                disabled={ permissionType == 1}
                 // class={errorObject.AuditStartDate}
                 placeholder="Enter Audit Start Date"
                 value={currentRow.AuditStartDate}
@@ -1486,6 +1553,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="AuditEndDate"
                 name="AuditEndDate"
+                disabled={ permissionType == 1}
                 // class={errorObject.AuditEndDate}
                 placeholder="Enter Audit End Date"
                 value={currentRow.AuditEndDate}
@@ -1496,6 +1564,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={ permissionType == 1}
                 className="chosen_dropdown"
                 id="CountryId"
                 name="CountryId"
@@ -1530,6 +1599,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={ permissionType == 1}
                 className="chosen_dropdown"
                 id="LeadAuditorId"
                 name="LeadAuditorId"
@@ -1568,6 +1638,7 @@ const CoordinatorInput = (props) => {
               <FormControl sx={{ width: 300 }}>
                 <Select
                   multiple
+                disabled={ permissionType == 1}
                   value={currTeamAuditorId}
                   onChange={handleChangeMulpleCbo}
                   renderValue={(selected) =>
@@ -1627,6 +1698,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={ permissionType == 1}
                 className="chosen_dropdown"
                 id="AuditTypeId"
                 name="AuditTypeId"
@@ -1665,6 +1737,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="Window"
                 name="Window"
+                disabled={ permissionType == 1}
                 // class={errorObject.Window}
                 placeholder="Enter Window Start"
                 value={currentRow.Window}
@@ -1676,7 +1749,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="WindowEnd"
                 name="WindowEnd"
-                disabled={currAuditTypeId == 1 ? true : false}
+                disabled={(currAuditTypeId == 1 || permissionType == 1) ? true : false}
                 // class={errorObject.WindowEnd}
                 placeholder="Enter Window End"
                 value={currentRow.WindowEnd}
@@ -1687,6 +1760,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={ permissionType == 1}
                 className="chosen_dropdown"
                 id="ReportWriterId"
                 name="ReportWriterId"
@@ -1749,6 +1823,7 @@ const CoordinatorInput = (props) => {
                   type="radio"
                   id="PaymentStatus"
                   name="PaymentStatus"
+                  disabled={ permissionType == 1}
                   value="Yes"
                   checked={currentRow.PaymentStatus == "Yes"}
                   onChange={handleChangeRadio}
@@ -1759,6 +1834,7 @@ const CoordinatorInput = (props) => {
                   type="radio"
                   id="PaymentStatus"
                   name="PaymentStatus"
+                  disabled={ permissionType == 1}
                   value="No"
                   checked={currentRow.PaymentStatus == "No"}
                   onChange={handleChangeRadio}
@@ -1770,6 +1846,7 @@ const CoordinatorInput = (props) => {
                 type="text"
                 id="NoOfEmployee"
                 name="NoOfEmployee"
+                disabled={ permissionType == 1}
                 // class={errorObject.NoOfEmployee}
                 placeholder="Enter No Of Employee"
                 value={currentRow.NoOfEmployee}
@@ -1781,6 +1858,7 @@ const CoordinatorInput = (props) => {
                 type="number"
                 id="AuditFee"
                 name="AuditFee"
+                disabled={ permissionType == 1}
                 // class={errorObject.AuditFee}
                 placeholder="Enter Audit Fee"
                 value={currentRow.AuditFee}
@@ -1792,6 +1870,7 @@ const CoordinatorInput = (props) => {
                 type="number"
                 id="OPE"
                 name="OPE"
+                disabled={ permissionType == 1}
                 // class={errorObject.OPE}
                 placeholder="Enter OPE"
                 value={currentRow.OPE}
@@ -1803,6 +1882,7 @@ const CoordinatorInput = (props) => {
                 type="number"
                 id="OthersAmount"
                 name="OthersAmount"
+                disabled={ permissionType == 1}
                 // class={errorObject.OthersAmount}
                 placeholder="Enter Others Amount"
                 value={currentRow.OthersAmount}
@@ -1814,6 +1894,7 @@ const CoordinatorInput = (props) => {
                 type="number"
                 id="RevenueBDT"
                 name="RevenueBDT"
+                disabled={ permissionType == 1}
                 // class={errorObject.RevenueBDT}
                 placeholder="Enter Revenue BDT"
                 value={currentRow.RevenueBDT}
@@ -1825,6 +1906,7 @@ const CoordinatorInput = (props) => {
                 type="text"
                 id="PINo"
                 name="PINo"
+                disabled={ permissionType == 1}
                 // class={errorObject.PINo}
                 placeholder="Enter PI No"
                 value={currentRow.PINo}
@@ -1844,6 +1926,7 @@ const CoordinatorInput = (props) => {
               <Button
                 label={"File"}
                 class={"btnSave"}
+                disabled={ permissionType == 1}
                 onClick={FileUploadModalShow}
               />
 
@@ -1851,6 +1934,7 @@ const CoordinatorInput = (props) => {
               <input
                 id="IsSendMail"
                 name="IsSendMail"
+                disabled={ permissionType == 1}
                 type="checkbox"
                 class={"formCheckBox"}
                 checked={currentRow.IsSendMail}
@@ -1868,6 +1952,7 @@ const CoordinatorInput = (props) => {
                 <Button
                   label={"Update"}
                   class={"btnUpdate"}
+                  disabled={ permissionType == 1}
                   onClick={addEditAPICall}
                 />
               )}

@@ -25,13 +25,18 @@ function getDataList($data)
 {
 	try {
 		$dbh = new Db();
+		$UserId = trim($data->UserId);
+		$RoleId = trim($data->RoleId);
+		if($RoleId == 1){
+			$UserId = 0;
+		}
 
 		$query = "SELECT a.TransactionId AS id,a.TransactionTypeId,DATE(a.`TransactionDate`) TransactionDate,
 		a.InvoiceNo,a.ActivityId,b.ActivityName,a.FactoryId,c.FactoryName,c.Address as FactoryAddress,d.FactoryGroupName,
 		a.ProgramId,e.ProgramName,a.ExpireDate,a.OpportunityDate,a.TentativeOfferPrice,
 		a.CertificateBody,a.CoordinatorId,f.UserName as CoordinatorName, a.AuditStageId, g.AuditStageName,
 		a.LeadStatusId, h.LeadStatusName,a.ManDay,a.BuyerId,i.BuyerName,a.NextFollowupDate,
-		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks
+		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks,a.StatusId
 	   FROM `t_transaction` a
 	   INNER JOIN `t_activity` b ON a.`ActivityId` = b.`ActivityId`
 	   LEFT JOIN `t_factory` c ON a.`FactoryId` = c.`FactoryId`
@@ -43,6 +48,7 @@ function getDataList($data)
 	   LEFT JOIN `t_buyer` i ON a.`BuyerId` = i.`BuyerId`
 	   LEFT JOIN `t_department` j ON a.`DepartmentId` = j.`DepartmentId`
 	   LEFT JOIN `t_member` k ON a.`MemberId` = k.`MemberId`
+	   Where (a.UserId = $UserId OR $UserId=0)
 	   ORDER BY a.`TransactionDate` DESC, a.InvoiceNo ASC;";
 
 		$resultdata = $dbh->query($query);
@@ -91,7 +97,8 @@ function dataAddEdit($data)
 		$DepartmentId = $data->rowData->DepartmentId ? $data->rowData->DepartmentId : null;
 		$MemberId = $data->rowData->MemberId ? $data->rowData->MemberId : null;
 		$Remarks = $data->rowData->Remarks ? $data->rowData->Remarks : null;
-		$StatusId = 1;
+		$StatusId = $data->rowData->StatusId ? $data->rowData->StatusId : 1;
+		// $StatusId = 1;
 
 
 
@@ -109,8 +116,8 @@ function dataAddEdit($data)
 			} else {
 				$u = new updateq();
 				$u->table = 't_transaction';
-				$u->columns = ['ActivityId', 'FactoryId', 'ProgramId', 'ExpireDate', 'OpportunityDate', 'TentativeOfferPrice', 'CertificateBody', 'CoordinatorId', 'AuditStageId', 'LeadStatusId', 'ManDay', 'BuyerId', 'NextFollowupDate', 'DepartmentId', 'MemberId', 'Remarks', 'LastSalesInputUpdateUserId','LastUpdateUserId'];
-				$u->values = [$ActivityId, $FactoryId, $ProgramId, $ExpireDate, $OpportunityDate, $TentativeOfferPrice, $CertificateBody, $CoordinatorId, $AuditStageId, $LeadStatusId, $ManDay, $BuyerId, $NextFollowupDate, $DepartmentId, $MemberId, $Remarks, $UserId, $UserId];
+				$u->columns = ['ActivityId', 'FactoryId', 'ProgramId', 'ExpireDate', 'OpportunityDate', 'TentativeOfferPrice', 'CertificateBody', 'CoordinatorId', 'AuditStageId', 'LeadStatusId', 'ManDay', 'BuyerId', 'NextFollowupDate', 'DepartmentId', 'MemberId', 'Remarks', 'LastSalesInputUpdateUserId','LastUpdateUserId','StatusId'];
+				$u->values = [$ActivityId, $FactoryId, $ProgramId, $ExpireDate, $OpportunityDate, $TentativeOfferPrice, $CertificateBody, $CoordinatorId, $AuditStageId, $LeadStatusId, $ManDay, $BuyerId, $NextFollowupDate, $DepartmentId, $MemberId, $Remarks, $UserId, $UserId,$StatusId];
 				$u->pks = ['TransactionId'];
 				$u->pk_values = [$id];
 				$u->build_query();

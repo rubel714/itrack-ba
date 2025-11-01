@@ -22,6 +22,8 @@ import moment from "moment";
 // import SalesPersonInputAddEditModal from "./SalesPersonInputAddEditModal";
 import "../../../assets/css/audit.css";
 const SalesPersonInput = (props) => {
+  const permissionType = props.permissionType;
+
   const serverpage = "salespersoninput"; // this is .php server page
 
   const { useState } = React;
@@ -55,7 +57,10 @@ const SalesPersonInput = (props) => {
   const [BuyerList, setBuyerList] = useState(null);
   const [currBuyerId, setCurrBuyerId] = useState(null);
 
-  const [RemarksList, setRemarksList] = useState([{"id":"New","name":"New"},{"id":"Re-Certificate","name":"Re-Certificate"}]);
+  const [RemarksList, setRemarksList] = useState([
+    { id: "New", name: "New" },
+    { id: "Re-Certificate", name: "Re-Certificate" },
+  ]);
   const [currRemarks, setCurrRemarks] = useState(null);
 
   // const [TeamList, setTeamList] = useState(null);
@@ -85,6 +90,10 @@ const SalesPersonInput = (props) => {
       finalUrl +
         "?action=SalesPersonInputExport" +
         "&reportType=excel" +
+        "&UserId=" +
+        UserInfo.UserId +
+        "&RoleId=" +
+        UserInfo.RoleId[0] +
         "&TimeStamp=" +
         Date.now()
     );
@@ -319,6 +328,14 @@ const SalesPersonInput = (props) => {
     setCurrentRow(data);
   };
 
+  function handleChangeCheck(e) {
+    const { name, value } = e.target;
+
+    let data = { ...currentRow };
+    data[name] = e.target.checked ? 5 : 1;
+    setCurrentRow(data);
+  }
+
   const validateForm = () => {
     let validateFields = [];
     validateFields = ["ActivityId", "FactoryId", "ProgramId"];
@@ -334,10 +351,53 @@ const SalesPersonInput = (props) => {
     return isValid;
   };
 
+
+
+
   function addEditAPICall() {
     if (validateForm()) {
-      // console.log('currentRow: ', currentRow);
-      let params = {
+
+
+      if(currentRow.StatusId == 5){
+      swal({
+        title: "Are you sure?",
+        text: "You want to forward this report to audit team. This will be lock for you!",
+        icon: "warning",
+        buttons: {
+          confirm: {
+            text: "Yes",
+            value: true,
+            visible: true,
+            className: "",
+            closeModal: true,
+          },
+          cancel: {
+            text: "No",
+            value: null,
+            visible: true,
+            className: "",
+            closeModal: true,
+          },
+        },
+        dangerMode: true,
+      }).then((allowAction) => {
+
+        if (allowAction) {
+          addEditAPICallToServer();
+        }
+
+      });
+    }else{
+      addEditAPICallToServer();
+    }
+
+
+    }
+  }
+
+
+  function addEditAPICallToServer(){
+     let params = {
         action: "dataAddEdit",
         lan: language(),
         UserId: UserInfo.UserId,
@@ -356,8 +416,10 @@ const SalesPersonInput = (props) => {
           getDataList();
         }
       });
-    }
   }
+
+
+
 
   function showListView() {
     setToggle(true);
@@ -500,6 +562,7 @@ const SalesPersonInput = (props) => {
       action: "getDataList",
       lan: language(),
       UserId: UserInfo.UserId,
+      RoleId: UserInfo.RoleId[0],
     };
     // console.log('LoginUserInfo params: ', params);
 
@@ -517,12 +580,12 @@ const SalesPersonInput = (props) => {
           }}
         />
 
-        <DeleteOutline
+        {rowData.StatusId == 1 && permissionType == 0 && (<DeleteOutline
           className={"table-delete-icon"}
           onClick={() => {
             deleteData(rowData);
           }}
-        />
+        />)}
       </>
     );
   }
@@ -563,7 +626,7 @@ const SalesPersonInput = (props) => {
       DepartmentId: "",
       MemberId: "",
       Remarks: "",
-      StatusId: 5,
+      StatusId: 1,
       FormData: null,
     });
     // openModal();
@@ -646,8 +709,8 @@ const SalesPersonInput = (props) => {
         </div>
 
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
-       {toggle && ( <div class="searchAdd">
-          
+        {toggle && (
+          <div class="searchAdd">
             <>
               <Button
                 label={"Export"}
@@ -656,16 +719,16 @@ const SalesPersonInput = (props) => {
               />
               <Button label={"ADD"} class={"btnAdd"} onClick={addData} />
             </>
-         
 
-          {/* {!toggle && (
+            {/* {!toggle && (
             <Button
               label={"Back to List"}
               class={"btnClose"}
               onClick={showListView}
             />
           )} */}
-        </div> )}
+          </div>
+        )}
 
         {/* <!-- ####---THIS CLASS IS USE FOR TABLE GRID---####s --> */}
 
@@ -677,13 +740,15 @@ const SalesPersonInput = (props) => {
           />
         )}
 
-        {!toggle && (<>
-          <div class="formEntryColumnThree">
-            {/* <div class="pt-10 control-row"> */}
+        {!toggle && (
+          <>
+            <div class="formEntryColumnThree">
+              {/* <div class="pt-10 control-row"> */}
               <label>Activity *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
                 className={`chosen_dropdown ${
                   errorObject.ActivityId ? errorObject.ActivityId : ""
                 }`}
@@ -718,13 +783,14 @@ const SalesPersonInput = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
-            {/* </div> */}
+              {/* </div> */}
 
-            {/* <div class="control-row pt-10"> */}
+              {/* <div class="control-row pt-10"> */}
               <label>Factory *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
                 // className="chosen_dropdown"
                 className={`chosen_dropdown ${
                   errorObject.FactoryId ? errorObject.FactoryId : ""
@@ -799,13 +865,14 @@ const SalesPersonInput = (props) => {
                 }
                 // onChange={(e) => handleChange(e)}
               />
-            {/* </div> */}
+              {/* </div> */}
 
-            {/* <div class="control-row pt-10"> */}
+              {/* <div class="control-row pt-10"> */}
               <label>Program *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
                 // className="chosen_dropdown"
                 className={`chosen_dropdown ${
                   errorObject.ProgramId ? errorObject.ProgramId : ""
@@ -844,6 +911,7 @@ const SalesPersonInput = (props) => {
                 type="date"
                 id="ExpireDate"
                 name="ExpireDate"
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
                 // class={errorObject.ExpireDate}
                 placeholder="Enter Expire Date"
                 value={currentRow.ExpireDate}
@@ -855,12 +923,13 @@ const SalesPersonInput = (props) => {
                 type="date"
                 id="OpportunityDate"
                 name="OpportunityDate"
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
                 // class={errorObject.OpportunityDate}
                 placeholder="Enter Opportunity Date"
                 value={currentRow.OpportunityDate}
                 onChange={(e) => handleChange(e)}
               />
-            {/* </div>
+              {/* </div>
 
             <div class="control-row pt-10"> */}
               <label>Tentative Offer Price</label>
@@ -868,6 +937,7 @@ const SalesPersonInput = (props) => {
                 type="number"
                 id="TentativeOfferPrice"
                 name="TentativeOfferPrice"
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
                 // class={errorObject.TentativeOfferPrice}
                 placeholder="Enter Tentative Offer Price"
                 value={currentRow.TentativeOfferPrice}
@@ -879,6 +949,7 @@ const SalesPersonInput = (props) => {
                 type="text"
                 id="CertificateBody"
                 name="CertificateBody"
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
                 // class={errorObject.CertificateBody}
                 placeholder="Enter Certificate Body"
                 value={currentRow.CertificateBody}
@@ -889,6 +960,7 @@ const SalesPersonInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
                 className="chosen_dropdown"
                 id="CoordinatorId"
                 name="CoordinatorId"
@@ -921,13 +993,14 @@ const SalesPersonInput = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
-            {/* </div> */}
+              {/* </div> */}
 
-            {/* <div class="control-row pt-10"> */}
+              {/* <div class="control-row pt-10"> */}
               <label>Audit Stage</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
                 className="chosen_dropdown"
                 id="AuditStageId"
                 name="AuditStageId"
@@ -965,6 +1038,7 @@ const SalesPersonInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
                 className="chosen_dropdown"
                 id="LeadStatusId"
                 name="LeadStatusId"
@@ -1003,18 +1077,20 @@ const SalesPersonInput = (props) => {
                 type="number"
                 id="ManDay"
                 name="ManDay"
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
                 // class={errorObject.ManDay}
                 placeholder="Enter Man Day"
                 value={currentRow.ManDay}
                 onChange={(e) => handleChange(e)}
               />
-            {/* </div> */}
+              {/* </div> */}
 
-            {/* <div class="control-row pt-10"> */}
+              {/* <div class="control-row pt-10"> */}
               <label>Buyer</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
                 className="chosen_dropdown"
                 id="BuyerId"
                 name="BuyerId"
@@ -1047,6 +1123,7 @@ const SalesPersonInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
                 className="chosen_dropdown"
                 id="DepartmentId"
                 name="DepartmentId"
@@ -1084,6 +1161,7 @@ const SalesPersonInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
                 className="chosen_dropdown"
                 id="MemberId"
                 name="MemberId"
@@ -1111,14 +1189,15 @@ const SalesPersonInput = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
-            {/* </div> */}
+              {/* </div> */}
 
-            {/* <div class="control-row pt-10"> */}
+              {/* <div class="control-row pt-10"> */}
               <label>Next Followup Date</label>
               <input
                 type="date"
                 id="NextFollowupDate"
                 name="NextFollowupDate"
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
                 // class={errorObject.NextFollowupDate}
                 placeholder="Enter Next Followup Date"
                 value={currentRow.NextFollowupDate}
@@ -1129,6 +1208,7 @@ const SalesPersonInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
                 className="chosen_dropdown"
                 id="Remarks"
                 name="Remarks"
@@ -1140,17 +1220,12 @@ const SalesPersonInput = (props) => {
                 value={
                   RemarksList
                     ? RemarksList[
-                        RemarksList.findIndex(
-                          (list) => list.id === currRemarks
-                        )
+                        RemarksList.findIndex((list) => list.id === currRemarks)
                       ]
                     : null
                 }
                 onChange={(event, valueobj) =>
-                  handleChangeDropDown(
-                    "Remarks",
-                    valueobj ? valueobj.id : ""
-                  )
+                  handleChangeDropDown("Remarks", valueobj ? valueobj.id : "")
                 }
                 renderOption={(option) => (
                   <Typography className="chosen_dropdown_font">
@@ -1170,9 +1245,26 @@ const SalesPersonInput = (props) => {
                 value={currentRow.Remarks}
                 onChange={(e) => handleChange(e)}
               /> */}
-          </div>
+            </div>
 
             <div class="modalItemButton">
+              <label>Forward to Audit Team</label>
+              <input
+                id="StatusId"
+                name="StatusId"
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
+                type="checkbox"
+                class={"formCheckBox"}
+                checked={currentRow.StatusId == 5}
+                onChange={handleChangeCheck}
+              />
+              <label></label>
+              <label></label>
+              <label></label>
+              <label></label>
+              <label></label>
+              <label></label>
+
               <Button
                 label={"Cancel"}
                 class={"btnClose"}
@@ -1182,6 +1274,7 @@ const SalesPersonInput = (props) => {
                 <Button
                   label={"Update"}
                   class={"btnUpdate"}
+                  disabled={currentRow.StatusId == 5 || permissionType == 1}
                   onClick={addEditAPICall}
                 />
               )}

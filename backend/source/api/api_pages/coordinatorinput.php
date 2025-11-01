@@ -31,6 +31,12 @@ function getDataList($data)
 	try {
 		$dbh = new Db();
 
+		$UserId = trim($data->UserId);
+		$RoleId = trim($data->RoleId);
+		if($RoleId == 1){
+			$UserId = 0;
+		}
+
 		$StartDate = trim($data->StartDate);
 		$EndDate = trim($data->EndDate) . " 23-59-59";
 
@@ -55,6 +61,8 @@ function getDataList($data)
 	   LEFT JOIN `t_department` j ON a.`DepartmentId` = j.`DepartmentId`
 	   LEFT JOIN `t_member` k ON a.`MemberId` = k.`MemberId`
 	   where ((a.AuditStartDate between '$StartDate' and '$EndDate') OR (a.AuditStartDate is null))
+	   AND a.StatusId = 5
+	   AND (a.CoordinatorId = $UserId OR $UserId=0)
 	   ORDER BY a.`TransactionDate` DESC, a.InvoiceNo ASC;";
 
 		$resultdata = $dbh->query($query);

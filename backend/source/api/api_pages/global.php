@@ -1,20 +1,20 @@
 <?php
 
-function getProductSystemBarcode($ClientId) {
+// function checkIsAdmin($UserId) {
 
-	$dbh = new Db();
-	$query = "SELECT ClientCode FROM t_client where ClientId=$ClientId;"; 
-	$resultdata = $dbh->query($query);
-	$ClientCode = $resultdata[0]["ClientCode"];
+// 	$dbh = new Db();
+// 	$query = "SELECT ClientCode FROM t_client where ClientId=$ClientId;"; 
+// 	$resultdata = $dbh->query($query);
+// 	$ClientCode = $resultdata[0]["ClientCode"];
 
-	$query = "SELECT IFNULL(MAX(SUBSTRING(SystemBarcode, 5, 8)),0)+1 NextSystemBarcode FROM t_product WHERE ClientId = $ClientId;"; 
-	$resultdata = $dbh->query($query);
-	$NextSystemBarcode = $resultdata[0]["NextSystemBarcode"];
+// 	$query = "SELECT IFNULL(MAX(SUBSTRING(SystemBarcode, 5, 8)),0)+1 NextSystemBarcode FROM t_product WHERE ClientId = $ClientId;"; 
+// 	$resultdata = $dbh->query($query);
+// 	$NextSystemBarcode = $resultdata[0]["NextSystemBarcode"];
 
-	$returnData = $ClientCode. str_pad($NextSystemBarcode,8,0,STR_PAD_LEFT);
+// 	$returnData = $ClientCode. str_pad($NextSystemBarcode,8,0,STR_PAD_LEFT);
 	
-	return $returnData;
-}
+// 	return $returnData;
+// }
 
 function getNextInvoiceNumber($ClientId,$BranchId,$TransactionTypeId) {
 
