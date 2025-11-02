@@ -23,6 +23,7 @@ import "../../../assets/css/audit.css";
 import { MenuItem, FormControl, InputLabel, Select, Checkbox, ListItemText } from "@material-ui/core";
 
 const Invoice = (props) => {
+  const permissionType = props.permissionType;
   const serverpage = "invoice"; // this is .php server page
 
   const { useState } = React;
@@ -1771,6 +1772,7 @@ const Invoice = (props) => {
                 type="text"
                 id="InvoiceTo"
                 name="InvoiceTo"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.InvoiceTo}
                 placeholder="Enter Invoice To"
@@ -1783,6 +1785,7 @@ const Invoice = (props) => {
                 type="text"
                 id="NameofApplicant"
                 name="NameofApplicant"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.NameofApplicant}
                 placeholder="Enter Name of Applicant"
@@ -1795,6 +1798,7 @@ const Invoice = (props) => {
                 type="text"
                 id="InvoiceAddress"
                 name="InvoiceAddress"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.InvoiceAddress}
                 placeholder="Enter Address"
@@ -1807,6 +1811,7 @@ const Invoice = (props) => {
                 type="text"
                 id="InvoiceEmail"
                 name="InvoiceEmail"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.InvoiceEmail}
                 placeholder="Enter Email"
@@ -1819,6 +1824,7 @@ const Invoice = (props) => {
                 type="text"
                 id="InvoiceMobile"
                 name="InvoiceMobile"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.InvoiceMobile}
                 placeholder="Enter Mobile"
@@ -1831,6 +1837,7 @@ const Invoice = (props) => {
                 type="number"
                 id="Discount"
                 name="Discount"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.Discount}
                 placeholder="Enter Discount"
@@ -1850,6 +1857,7 @@ const Invoice = (props) => {
                 <Button
                   label={"Update"}
                   class={"btnUpdate"}
+                disabled={ permissionType == 1}
                   onClick={addEditAPICall}
                 />
               )}

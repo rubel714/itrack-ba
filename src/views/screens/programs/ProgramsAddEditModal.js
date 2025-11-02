@@ -20,8 +20,12 @@ const ProgramsAddEditModal = (props) => {
   const [TATDayTypeList, setTATDayTypeList] = useState(null);
   const [currTATDayTypeId, setCurrTATDayTypeId] = useState(null);
 
+  const [ProgramCategoryList, setProgramCategoryList] = useState(null);
+  const [currProgramCategoryId, setCurrProgramCategoryId] = useState(null);
+
   React.useEffect(() => {
     getTATDayTypeList(props.currentRow.TATDayTypeId);
+    getProgramCategoryList(props.currentRow.ProgramCategoryId);
   }, []);
 
   function getTATDayTypeList(selectTATDayTypeId) {
@@ -37,6 +41,22 @@ const ProgramsAddEditModal = (props) => {
       );
 
       setCurrTATDayTypeId(selectTATDayTypeId);
+    });
+  }
+
+  function getProgramCategoryList(selectProgramCategoryId) {
+    let params = {
+      action: "ProgramCategoryList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+    };
+
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      setProgramCategoryList(
+        [{ id: "", name: "Select Category" }].concat(res.data.datalist)
+      );
+
+      setCurrProgramCategoryId(selectProgramCategoryId);
     });
   }
 
@@ -57,12 +77,17 @@ const ProgramsAddEditModal = (props) => {
       setCurrTATDayTypeId(value);
     }
 
+    if (name === "ProgramCategoryId") {
+      data["ProgramCategoryId"] = value;
+      setCurrProgramCategoryId(value);
+    }
+
     setErrorObject({ ...errorObject, [name]: null });
     setCurrentRow(data);
   };
 
   const validateForm = () => {
-    let validateFields = ["ProgramName", "TATDayTypeId"];
+    let validateFields = ["ProgramName", "TATDayTypeId","ProgramCategoryId"];
     let errorData = {};
     let isValid = true;
     validateFields.map((field) => {
@@ -166,6 +191,7 @@ const ProgramsAddEditModal = (props) => {
                 <TextField {...params} variant="standard" fullWidth />
               )}
             />
+           
             {/* </div>
           <div class="modalItem"> */}
             <label>Standard TAT Day</label>
@@ -189,6 +215,43 @@ const ProgramsAddEditModal = (props) => {
               placeholder="Enter Strategice TAT Day"
               value={currentRow.StrategiceTATDay}
               onChange={(e) => handleChange(e)}
+            />
+
+             <label>Category *</label>
+            <Autocomplete
+              autoHighlight
+              disableClearable
+              className="chosen_dropdown"
+              id="ProgramCategoryId"
+              name="ProgramCategoryId"
+              autoComplete
+              class={errorObject.ProgramCategoryId}
+              options={ProgramCategoryList ? ProgramCategoryList : []}
+              getOptionLabel={(option) => option.name}
+              defaultValue={{ id: 0, name: "Select Category" }}
+              value={
+                ProgramCategoryList
+                  ? ProgramCategoryList[
+                      ProgramCategoryList.findIndex(
+                        (list) => list.id === currProgramCategoryId
+                      )
+                    ]
+                  : null
+              }
+              onChange={(event, valueobj) =>
+                handleChangeFilterDropDown(
+                  "ProgramCategoryId",
+                  valueobj ? valueobj.id : ""
+                )
+              }
+              renderOption={(option) => (
+                <Typography className="chosen_dropdown_font">
+                  {option.name}
+                </Typography>
+              )}
+              renderInput={(params) => (
+                <TextField {...params} variant="standard" fullWidth />
+              )}
             />
             {/* </div>
           <div class="modalItem"> */}

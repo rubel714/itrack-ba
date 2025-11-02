@@ -185,19 +185,20 @@ function ProgramExport()
 	global $sql, $tableProperties, $TEXT, $siteTitle;
 
 
-	$sql = "SELECT `ProgramName`,TATDayType,StandardTATDay,StrategiceTATDay
+	$sql = "SELECT `ProgramName`,TATDayType,StandardTATDay,StrategiceTATDay,ProgramCategoryName
 	FROM t_program 
 	inner join t_tat_day_type on t_program.TATDayTypeId=t_tat_day_type.TATDayTypeId
+	inner join t_programcategory on t_program.ProgramCategoryId=t_programcategory.ProgramCategoryId
 	ORDER BY `ProgramName`;";
 
-	$tableProperties["query_field"] = array("ProgramName", "TATDayType", "StandardTATDay", "StrategiceTATDay");
-	$tableProperties["table_header"] = array('Program Name', 'TAT Day Type', 'Standard TAT Day', 'Strategice TAT Day');
-	$tableProperties["align"] = array("left", "left", "right", "right");
-	$tableProperties["width_print_pdf"] = array("40%", "20%", "20%", "20%"); //when exist serial then here total 95% and 5% use for serial
-	$tableProperties["width_excel"] = array("30", "20", "20", "20");
-	$tableProperties["precision"] = array("string", "string", 0, 0); //string,date,datetime,0,1,2,3,4
-	$tableProperties["total"] = array(0, 0, 0, 0); //not total=0, total=1
-	$tableProperties["color_code"] = array(0, 0, 0, 0); //colorcode field = 1 not color code field = 0
+	$tableProperties["query_field"] = array("ProgramName", "TATDayType", "StandardTATDay", "StrategiceTATDay","ProgramCategoryName");
+	$tableProperties["table_header"] = array('Program Name', 'TAT Day Type', 'Standard TAT Day', 'Strategice TAT Day','Category');
+	$tableProperties["align"] = array("left", "left", "right", "right","left");
+	$tableProperties["width_print_pdf"] = array("20%", "20%", "20%", "20%", "20%"); //when exist serial then here total 95% and 5% use for serial
+	$tableProperties["width_excel"] = array("30", "20", "20", "20", "20");
+	$tableProperties["precision"] = array("string", "string", 0, 0,"string"); //string,date,datetime,0,1,2,3,4
+	$tableProperties["total"] = array(0, 0, 0, 0,0); //not total=0, total=1
+	$tableProperties["color_code"] = array(0, 0, 0, 0,0); //colorcode field = 1 not color code field = 0
 	$tableProperties["header_logo"] = 0; //include header left and right logo. 0 or 1
 	$tableProperties["footer_signatory"] = 0; //include footer signatory. 0 or 1
 
@@ -815,6 +816,7 @@ function InvoiceExport()
 	   LEFT JOIN `t_auditor` n ON a.`TeamAuditorId` = n.`AuditorId`
 	   LEFT JOIN `t_audittype` o ON a.`AuditTypeId` = o.`AuditTypeId`
 	   LEFT JOIN `t_users` p ON a.`ReportWriterId` = p.`UserId`
+	   WHERE a.StatusId = 5
 	   ORDER BY a.`TransactionDate` DESC, a.InvoiceNo ASC;";
 
 
@@ -843,6 +845,13 @@ function InvoiceExport()
 function ReportReviewerExport()
 {
 	global $sql, $tableProperties, $TEXT, $siteTitle;
+
+	$UserId = $_REQUEST['UserId'];
+	$RoleId = $_REQUEST['RoleId'];
+	if($RoleId == 1){
+		$UserId = 0;
+	}
+
 	// $UserId = $_REQUEST['UserId'];
 	// $Search = $_REQUEST['Search'];
 
@@ -876,6 +885,8 @@ function ReportReviewerExport()
 	   LEFT JOIN `t_users` p ON a.`ReportWriterId` = p.`UserId`
 	   LEFT JOIN `t_users` q ON a.`LocalReviewerId` = q.`UserId`
 	   LEFT JOIN `t_releasedstatus` r ON a.`ReportReleasedStatusId` = r.`ReportReleasedStatusId`
+	   where a.StatusId = 5
+	   AND (a.LocalReviewerId = $UserId OR $UserId=0)
 	   ORDER BY a.`TransactionDate` DESC, a.InvoiceNo ASC;";
  
 

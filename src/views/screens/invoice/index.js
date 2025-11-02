@@ -6,6 +6,7 @@ import Notification from "../../../services/Notification";
 import {
   checkLogin,
   checkUserPermission,
+  getUserActionPermission,
 } from "../../../services/CheckUserAccess";
 import DarkFooter from "../../../components/Footers/DarkFooter.js";
 import Invoice from "./Invoice";
@@ -23,6 +24,12 @@ const Index = (props) => {
     setRedirectLogin(false);
   }
 
+    //This is for user has VIEW/EDIT permission in this page start
+    const permissionType = getUserActionPermission(menukey);
+    console.log("propsprops permissionType index: ", permissionType);
+    //This is for user has VIEW/EDIT permission in this page end
+  
+    
   const [msgObj, setMsgObj] = React.useState({
     isOpen: false,
   });
@@ -52,6 +59,7 @@ const Index = (props) => {
               render={(props) => (
                 <Invoice
                   {...props}
+                  permissionType={permissionType}
                   openNoticeModal={openNoticeModal}
                 />
               )}

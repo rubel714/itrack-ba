@@ -68,12 +68,21 @@ const Programs = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "20%",
+      width: "12%",
     },
     {
       field: "StrategiceTATDay",
       label: "Strategice TAT Day",
       align: "right",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "12%",
+    },
+    {
+      field: "ProgramCategoryName",
+      label: "Category",
+      align: "left",
       visible: true,
       sort: true,
       filter: true,
@@ -161,6 +170,7 @@ const Programs = (props) => {
       TATDayTypeId: "",
       StandardTATDay: "",
       StrategiceTATDay: "",
+      ProgramCategoryId: "",
       IsitMultiple: "",
     });
     openModal();

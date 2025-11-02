@@ -48,6 +48,7 @@ function getDataList($data)
 	   LEFT JOIN `t_buyer` i ON a.`BuyerId` = i.`BuyerId`
 	   LEFT JOIN `t_department` j ON a.`DepartmentId` = j.`DepartmentId`
 	   LEFT JOIN `t_member` k ON a.`MemberId` = k.`MemberId`
+	   WHERE a.StatusId = 5
 	   ORDER BY a.`TransactionDate` DESC, a.InvoiceNo ASC;";
 
 		$resultdata = $dbh->query($query);

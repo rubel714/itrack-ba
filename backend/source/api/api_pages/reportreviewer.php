@@ -26,6 +26,12 @@ function getDataList($data)
 	try {
 		$dbh = new Db();
 
+		$UserId = trim($data->UserId);
+		$RoleId = trim($data->RoleId);
+		if($RoleId == 1){
+			$UserId = 0;
+		}
+
 		$query = "SELECT a.TransactionId AS id,a.TransactionTypeId,DATE(a.`TransactionDate`) TransactionDate,
 		a.InvoiceNo,a.ActivityId,b.ActivityName,a.FactoryId,c.FactoryName,c.Address as FactoryAddress,d.FactoryGroupName,
 		a.ProgramId,e.ProgramName,a.ExpireDate,a.OpportunityDate,a.TentativeOfferPrice,
@@ -53,6 +59,8 @@ function getDataList($data)
 	   LEFT JOIN `t_member` k ON a.`MemberId` = k.`MemberId`
 	   LEFT JOIN `t_users` q ON a.`LocalReviewerId` = q.`UserId`
 	   LEFT JOIN `t_releasedstatus` r ON a.`ReportReleasedStatusId` = r.`ReportReleasedStatusId`
+	   WHERE a.StatusId = 5
+	   AND (a.LocalReviewerId = $UserId OR $UserId=0)
 	   ORDER BY a.`TransactionDate` DESC, a.InvoiceNo ASC;";
 
 		$resultdata = $dbh->query($query);

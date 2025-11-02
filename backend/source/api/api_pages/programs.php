@@ -32,9 +32,11 @@ function getDataList($data){
 
 	try{
 		$dbh = new Db();
-		$query = "SELECT ProgramId AS id, ProgramName,TATDayType,StandardTATDay,StrategiceTATDay,t_program.TATDayTypeId,IsitMultiple
+		$query = "SELECT ProgramId AS id, ProgramName,TATDayType,StandardTATDay,StrategiceTATDay,
+		t_program.TATDayTypeId,IsitMultiple,t_program.ProgramCategoryId,ProgramCategoryName
 		FROM t_program 
 		inner join t_tat_day_type on t_program.TATDayTypeId=t_tat_day_type.TATDayTypeId
+		inner join t_programcategory on t_program.ProgramCategoryId=t_programcategory.ProgramCategoryId
 		ORDER BY `ProgramName` ASC;";		
 		
 		$resultdata = $dbh->query($query);
@@ -70,6 +72,7 @@ function dataAddEdit($data) {
 		$ProgramId = $data->rowData->id;
 		$ProgramName = $data->rowData->ProgramName;
 		$TATDayTypeId = $data->rowData->TATDayTypeId;
+		$ProgramCategoryId = $data->rowData->ProgramCategoryId;
 		$StandardTATDay = $data->rowData->StandardTATDay ? $data->rowData->StandardTATDay : null;
 		$StrategiceTATDay = $data->rowData->StrategiceTATDay ? $data->rowData->StrategiceTATDay : null;
 		$IsitMultiple = $data->rowData->IsitMultiple ? $data->rowData->IsitMultiple : null;
@@ -84,8 +87,8 @@ function dataAddEdit($data) {
 			if($ProgramId == ""){
 				$q = new insertq();
 				$q->table = 't_program';
-				$q->columns = ['ProgramName','TATDayTypeId','StandardTATDay','StrategiceTATDay','IsitMultiple'];
-				$q->values = [$ProgramName,$TATDayTypeId,$StandardTATDay,$StrategiceTATDay,$IsitMultiple];
+				$q->columns = ['ProgramName','TATDayTypeId','StandardTATDay','StrategiceTATDay','ProgramCategoryId','IsitMultiple'];
+				$q->values = [$ProgramName,$TATDayTypeId,$StandardTATDay,$StrategiceTATDay,$ProgramCategoryId,$IsitMultiple];
 				$q->pks = ['ProgramId'];
 				$q->bUseInsetId = false;
 				$q->build_query();
@@ -93,8 +96,8 @@ function dataAddEdit($data) {
 			}else{
 				$u = new updateq();
 				$u->table = 't_program';
-				$u->columns = ['ProgramName','TATDayTypeId','StandardTATDay','StrategiceTATDay','IsitMultiple'];
-				$u->values = [$ProgramName,$TATDayTypeId,$StandardTATDay,$StrategiceTATDay,$IsitMultiple];
+				$u->columns = ['ProgramName','TATDayTypeId','StandardTATDay','StrategiceTATDay','ProgramCategoryId','IsitMultiple'];
+				$u->values = [$ProgramName,$TATDayTypeId,$StandardTATDay,$StrategiceTATDay,$ProgramCategoryId,$IsitMultiple];
 				$u->pks = ['ProgramId'];
 				$u->pk_values = [$ProgramId];
 				$u->build_query();

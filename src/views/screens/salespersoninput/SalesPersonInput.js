@@ -358,7 +358,7 @@ const SalesPersonInput = (props) => {
     if (validateForm()) {
 
 
-      if(currentRow.StatusId == 5){
+      if(currentRow.CurrStatusId == 5){
       swal({
         title: "Are you sure?",
         text: "You want to forward this report to audit team. This will be lock for you!",
@@ -461,7 +461,7 @@ const SalesPersonInput = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "12%",
+      // width: "12%",
     },
     // {
     //   field: "FactoryGroupName",
@@ -542,8 +542,8 @@ const SalesPersonInput = (props) => {
     {
       field: "custom",
       label: "Action",
-      width: "8%",
-      align: "center",
+      width: "6%",
+      align: "left",
       visible: true,
       sort: false,
       filter: false,
@@ -627,6 +627,7 @@ const SalesPersonInput = (props) => {
       MemberId: "",
       Remarks: "",
       StatusId: 1,
+      CurrStatusId: 1,
       FormData: null,
     });
     // openModal();
@@ -1250,12 +1251,12 @@ const SalesPersonInput = (props) => {
             <div class="modalItemButton">
               <label>Forward to Audit Team</label>
               <input
-                id="StatusId"
-                name="StatusId"
+                id="CurrStatusId"
+                name="CurrStatusId"
                 disabled={currentRow.StatusId == 5 || permissionType == 1}
                 type="checkbox"
                 class={"formCheckBox"}
-                checked={currentRow.StatusId == 5}
+                checked={currentRow.CurrStatusId == 5}
                 onChange={handleChangeCheck}
               />
               <label></label>

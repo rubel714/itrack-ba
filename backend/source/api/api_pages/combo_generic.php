@@ -31,6 +31,9 @@ switch ($task) {
 	case "TATDayTypeList":
 		$returnData = TATDayTypeList($data);
 		break;
+	case "ProgramCategoryList":
+		$returnData = ProgramCategoryList($data);
+		break;
 	case "AuditStageList":
 		$returnData = AuditStageList($data);
 		break;
@@ -283,6 +286,28 @@ function TATDayTypeList($data)
 		$query = "SELECT `TATDayTypeId` id,TATDayType `name`
 	 			 	FROM `t_tat_day_type` 
 					ORDER BY TATDayType;";
+		$resultdata = $dbh->query($query);
+
+		$returnData = [
+			"success" => 1,
+			"status" => 200,
+			"message" => "",
+			"datalist" => $resultdata
+		];
+	} catch (PDOException $e) {
+		$returnData = msg(0, 500, $e->getMessage());
+	}
+
+	return $returnData;
+}
+
+function ProgramCategoryList($data)
+{
+	try {
+		$dbh = new Db();
+		$query = "SELECT `ProgramCategoryId` id, ProgramCategoryName `name`
+	 			 	FROM `t_programcategory` 
+					ORDER BY ProgramCategoryName;";
 		$resultdata = $dbh->query($query);
 
 		$returnData = [

@@ -23,6 +23,7 @@ import "../../../assets/css/audit.css";
 import { MenuItem, FormControl, InputLabel, Select, Checkbox, ListItemText } from "@material-ui/core";
 
 const ReportReviewer = (props) => {
+  const permissionType = props.permissionType;
   const serverpage = "reportreviewer"; // this is .php server page
 
   const { useState } = React;
@@ -98,6 +99,10 @@ const ReportReviewer = (props) => {
       finalUrl +
         "?action=ReportReviewerExport" +
         "&reportType=excel" +
+        "&UserId=" +
+        UserInfo.UserId +
+        "&RoleId=" +
+        UserInfo.RoleId[0] +
         "&TimeStamp=" +
         Date.now()
     );
@@ -731,6 +736,7 @@ const ReportReviewer = (props) => {
       action: "getDataList",
       lan: language(),
       UserId: UserInfo.UserId,
+      RoleId: UserInfo.RoleId[0],
     };
     // console.log('LoginUserInfo params: ', params);
 
@@ -1783,7 +1789,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Attached Documents</label>
+              {/* <label>Attached Documents</label>
               <input
                 type="text"
                 id="AttachedDocuments"
@@ -1793,7 +1799,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 placeholder="Enter Attached Documents"
                 value={currentRow.AttachedDocuments}
                 onChange={(e) => handleChange(e)}
-              />
+              /> */}
  
               <label>PI No</label>
               <input
@@ -1938,6 +1944,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                   type="radio"
                   id="IsReportReceivedFromWriter"
                   name="IsReportReceivedFromWriter"
+                  disabled={ permissionType == 1}
                   // disabled={true}
                   value="Yes"
                   checked={currentRow.IsReportReceivedFromWriter == "Yes"}
@@ -1949,6 +1956,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                   type="radio"
                   id="IsReportReceivedFromWriter"
                   name="IsReportReceivedFromWriter"
+                disabled={ permissionType == 1}
                   // disabled={true}
                   value="No"
                   checked={currentRow.IsReportReceivedFromWriter == "No"}
@@ -1961,6 +1969,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 type="date"
                 id="ReportReceivedDate"
                 name="ReportReceivedDate"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.ReportReceivedDate}
                 placeholder="Enter Report Received Date"
@@ -1972,6 +1981,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
               <Autocomplete
                 autoHighlight
                 disableClearable
+                disabled={ permissionType == 1}
                 // disabled={true}
                 className="chosen_dropdown"
                 id="LocalReviewerId"
@@ -2011,6 +2021,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 type="date"
                 id="StandardTAT"
                 name="StandardTAT"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.StandardTAT}
                 placeholder="Enter Standard TAT"
@@ -2023,6 +2034,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 type="date"
                 id="StrategicTAT"
                 name="StrategicTAT"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.StrategicTAT}
                 placeholder="Enter Strategic TAT"
@@ -2043,6 +2055,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                   type="radio"
                   id="ReportReleaseStatus"
                   name="ReportReleaseStatus"
+                disabled={ permissionType == 1}
                   value="Yes"
                   checked={currentRow.ReportReleaseStatus == "Yes"}
                   onChange={handleChangeRadio}
@@ -2053,6 +2066,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                   type="radio"
                   id="ReportReleaseStatus"
                   name="ReportReleaseStatus"
+                disabled={ permissionType == 1}
                   value="No"
                   checked={currentRow.ReportReleaseStatus == "No"}
                   onChange={handleChangeRadio}
@@ -2103,6 +2117,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 type="date"
                 id="OverseasSendingDate"
                 name="OverseasSendingDate"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.OverseasSendingDate}
                 placeholder="Enter Overseas Sending Date"
@@ -2114,6 +2129,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 type="datetime-local"
                 id="AuditorLogInTime"
                 name="AuditorLogInTime"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.AuditorLogInTime}
                 placeholder="Enter Auditor Log In Time"
@@ -2126,6 +2142,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 type="datetime-local"
                 id="AduditorLogOutTime"
                 name="AduditorLogOutTime"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.AduditorLogOutTime}
                 placeholder="Enter Aduditor Log Out Time"
@@ -2138,6 +2155,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 type="text"
                 id="ReportResult"
                 name="ReportResult"
+                disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.ReportResult}
                 placeholder="Enter Report Result"
@@ -2156,6 +2174,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 <Button
                   label={"Update"}
                   class={"btnUpdate"}
+                disabled={ permissionType == 1}
                   onClick={addEditAPICall}
                 />
               )}
