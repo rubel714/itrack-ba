@@ -684,7 +684,7 @@ const ReportReviewer = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "5%",
+      width: "7%",
     },
     {
       field: "StandardTAT",
@@ -704,15 +704,15 @@ const ReportReviewer = (props) => {
       filter: true,
       width: "5%",
     },
-    {
-      field: "ReportReleasedStatus",
-      label: "Released Status",
-      align: "left",
-      visible: true,
-      sort: true,
-      filter: true,
-      width: "5%",
-    },
+    // {
+    //   field: "ReportReleasedStatus",
+    //   label: "Released Status",
+    //   align: "left",
+    //   visible: true,
+    //   sort: true,
+    //   filter: true,
+    //   width: "5%",
+    // },
     {
       field: "custom",
       label: "Action",

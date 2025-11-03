@@ -471,10 +471,27 @@ const CoordinatorInput = (props) => {
       setCurrFactoryId(value);
     }
 
+
+
+
+
+
+
     if (name === "ProgramId") {
       data["ProgramId"] = value;
       setCurrProgramId(value);
+
+      getLeadAuditorList(value, "");
+      getTeamAuditorList(value, "");
     }
+
+
+
+
+
+
+
+
 
     if (name === "CoordinatorId") {
       data["CoordinatorId"] = value;
@@ -1145,7 +1162,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
-                disabled={true}
+                disabled={ permissionType == 1}
                 // className="chosen_dropdown"
                 className={`chosen_dropdown ${
                   errorObject.ProgramId ? errorObject.ProgramId : ""
@@ -1772,17 +1789,13 @@ const CoordinatorInput = (props) => {
                   const leadId = currLeadAuditorId
                     ? String(currLeadAuditorId)
                     : "";
+
                   const teamIds = Array.isArray(currTeamAuditorId)
                     ? currTeamAuditorId.map(String)
                     : [];
+
                   return leadId === id || teamIds.includes(id);
                 })}
-                //options={(AuditorList ? AuditorList : []).filter(a => [1,5].includes(a.id))}
-
-                // const filteredAuditors = (AuditorList || []).filter(a => [1, 6].includes(a.id));
-
-                //currTeamAuditorId
-                //currLeadAuditorId
 
                 getOptionLabel={(option) => option.name}
                 defaultValue={{ id: 0, name: "Select" }}
