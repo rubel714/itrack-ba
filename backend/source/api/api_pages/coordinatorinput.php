@@ -249,36 +249,13 @@ function dataAddEdit($data)
 
 		if ($AuditStartDate && $AuditEndDate) {
 
-			// if($LeadAuditorId){
-			// 	$query = "SELECT b.ProgramName,c.FactoryName,a.AuditStartDate,a.AuditEndDate
-			// 		FROM t_transaction a
-			// 		inner join t_program b on a.ProgramId = b.ProgramId
-			// 		inner join t_factory c on a.FactoryId = c.FactoryId
-			// 		where a.TransactionId !=$id 
-			// 		AND a.AuditStartDate <= '$AuditEndDate'
-			// 		AND a.AuditEndDate >='$AuditStartDate'
-			// 		AND a.LeadAuditorId = '$LeadAuditorId';";	
-
-			// 		$resultdata = $dbh->query($query);
-			// 		if(count($resultdata)>0){
-			// 			$DuplicateProgramName = $resultdata[0]["ProgramName"];
-			// 			$DuplicateFactoryName = $resultdata[0]["FactoryName"];
-			// 			$DuplicateAuditStartDate = $resultdata[0]["AuditStartDate"];
-			// 			$DuplicateAuditEndDate = $resultdata[0]["AuditEndDate"];
-
-			// 			return $returnData = msg(0,404,'Lead Auditor is already assigned '.$DuplicateProgramName.", ".$DuplicateFactoryName." ($DuplicateAuditStartDate, $DuplicateAuditEndDate)");
-			// 		}
-			// 	}
-
-
 			$ids = (array)$TeamAuditorId;
 			if ($LeadAuditorId) {
 				$ids[] = $LeadAuditorId;
 			}
 			foreach ($ids as $TAuditorId) {
-				// $TAuditorId = 2;
 				$query = "
-					 SELECT b.ProgramName,c.FactoryName,a.AuditStartDate,a.AuditEndDate
+					 SELECT a.TransactionId,b.ProgramName,c.FactoryName,a.AuditStartDate,a.AuditEndDate
 					FROM t_transaction a
 					inner join t_program b on a.ProgramId = b.ProgramId
 					inner join t_factory c on a.FactoryId = c.FactoryId
@@ -289,7 +266,7 @@ function dataAddEdit($data)
 
 					union all
 					 
-					 SELECT b.ProgramName,c.FactoryName,a.AuditStartDate,a.AuditEndDate
+					 SELECT a.TransactionId,b.ProgramName,c.FactoryName,a.AuditStartDate,a.AuditEndDate
 					FROM t_transaction a
 					inner join t_program b on a.ProgramId = b.ProgramId
 					inner join t_factory c on a.FactoryId = c.FactoryId
@@ -300,12 +277,17 @@ function dataAddEdit($data)
 
 				$resultdata = $dbh->query($query);
 				if (count($resultdata) > 0) {
+					$DuplicateTransactionId = $resultdata[0]["TransactionId"];
 					$DuplicateProgramName = $resultdata[0]["ProgramName"];
 					$DuplicateFactoryName = $resultdata[0]["FactoryName"];
 					$DuplicateAuditStartDate = $resultdata[0]["AuditStartDate"];
 					$DuplicateAuditEndDate = $resultdata[0]["AuditEndDate"];
 
-					return $returnData = msg(0, 404, 'Auditor is already assigned ' . $DuplicateProgramName . ", " . $DuplicateFactoryName . " ($DuplicateAuditStartDate, $DuplicateAuditEndDate)");
+					$sql1 = "select AuditorName from t_auditor where AuditorId=$TAuditorId";
+					$resultdata1 = $dbh->query($sql1);
+					$DuplicateAuditorName = $resultdata1[0]["AuditorName"];
+
+					return $returnData = msg(0, 404, $DuplicateAuditorName.' is already assigned ' . $DuplicateProgramName . ", " . $DuplicateFactoryName . " ($DuplicateAuditStartDate, $DuplicateAuditEndDate)");
 				}
 			}
 		}
