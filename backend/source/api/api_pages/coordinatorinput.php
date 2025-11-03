@@ -254,6 +254,9 @@ function dataAddEdit($data)
 				$ids[] = $LeadAuditorId;
 			}
 			foreach ($ids as $TAuditorId) {
+				if( $TAuditorId == "[]"){
+					continue;
+				}
 				$query = "
 					 SELECT a.TransactionId,b.ProgramName,c.FactoryName,a.AuditStartDate,a.AuditEndDate
 					FROM t_transaction a
@@ -283,7 +286,8 @@ function dataAddEdit($data)
 					$DuplicateAuditStartDate = $resultdata[0]["AuditStartDate"];
 					$DuplicateAuditEndDate = $resultdata[0]["AuditEndDate"];
 
-					$sql1 = "select AuditorName from t_auditor where AuditorId=$TAuditorId";
+					  $sql1 = "select AuditorName from t_auditor where AuditorId='$TAuditorId'";
+
 					$resultdata1 = $dbh->query($sql1);
 					$DuplicateAuditorName = $resultdata1[0]["AuditorName"];
 

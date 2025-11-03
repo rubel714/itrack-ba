@@ -60,7 +60,7 @@ function getDataList($data)
 	   LEFT JOIN `t_users` q ON a.`LocalReviewerId` = q.`UserId`
 	   LEFT JOIN `t_releasedstatus` r ON a.`ReportReleasedStatusId` = r.`ReportReleasedStatusId`
 	   WHERE a.StatusId = 5
-	   ORDER BY a.`TransactionDate` DESC, a.InvoiceNo ASC;";
+	   ORDER BY a.`ReportReleaseStatus` ASC, a.AuditEndDate DESC;";
 
 		$resultdata = $dbh->query($query);
 

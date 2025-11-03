@@ -669,8 +669,8 @@ const ReportReviewer = (props) => {
       width: "5%",
     },
     {
-      field: "IsReportReceivedFromWriter",
-      label: "Received From Writer",
+      field: "ReportReleaseStatus",
+      label: "Report Release Status",
       align: "left",
       visible: true,
       sort: true,
