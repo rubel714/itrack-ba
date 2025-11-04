@@ -899,7 +899,7 @@ const CoordinatorInput = (props) => {
 
     getAuditorList(rowData.ReportWriterId);
     // setCurrReportWriterId(rowData.ReportWriterId);
-
+    setCurrRemarks(rowData.Remarks);
     setCurrentRow(rowData);
     setToggle(false); // true=show tabel, false= show add/edit form
   };
