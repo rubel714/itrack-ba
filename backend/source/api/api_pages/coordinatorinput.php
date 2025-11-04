@@ -249,10 +249,21 @@ function dataAddEdit($data)
 
 		if ($AuditStartDate && $AuditEndDate) {
 
-			$ids = (array)$TeamAuditorId;
+			$$ids = [];
+			if(is_string($TeamAuditorId)){
+				$ids =json_decode($TeamAuditorId);
+			}else{
+				$ids = (array)$TeamAuditorId;
+			}
+
+
 			if ($LeadAuditorId) {
 				$ids[] = $LeadAuditorId;
 			}
+
+			$ids = array_unique($ids);
+
+			$DupMsg = "";
 			foreach ($ids as $TAuditorId) {
 				if( $TAuditorId == "[]"){
 					continue;
@@ -286,14 +297,24 @@ function dataAddEdit($data)
 					$DuplicateAuditStartDate = $resultdata[0]["AuditStartDate"];
 					$DuplicateAuditEndDate = $resultdata[0]["AuditEndDate"];
 
-					  $sql1 = "select AuditorName from t_auditor where AuditorId='$TAuditorId'";
+					$sql1 = "select AuditorName from t_auditor where AuditorId='$TAuditorId'";
 
 					$resultdata1 = $dbh->query($sql1);
 					$DuplicateAuditorName = $resultdata1[0]["AuditorName"];
 
-					return $returnData = msg(0, 404, $DuplicateAuditorName.' is already assigned ' . $DuplicateProgramName . ", " . $DuplicateFactoryName . " ($DuplicateAuditStartDate, $DuplicateAuditEndDate)");
+					if($DupMsg != ""){
+						$DupMsg .= "; ";
+					}
+					$DupMsg .= $DuplicateAuditorName.' is already assigned ' . $DuplicateProgramName . ", " . $DuplicateFactoryName . " ($DuplicateAuditStartDate, $DuplicateAuditEndDate)";
+					// return $returnData = msg(0, 404, $DuplicateAuditorName.' is already assigned ' . $DuplicateProgramName . ", " . $DuplicateFactoryName . " ($DuplicateAuditStartDate, $DuplicateAuditEndDate)");
 				}
 			}
+
+			if($DupMsg != ""){
+				return $returnData = msg(0, 404, $DupMsg);
+			}
+
+
 		}
 
 

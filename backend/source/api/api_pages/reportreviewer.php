@@ -32,6 +32,8 @@ function getDataList($data)
 			$UserId = 0;
 		}
 
+		$currDate = date('Y-m-d');
+
 		$query = "SELECT a.TransactionId AS id,a.TransactionTypeId,DATE(a.`TransactionDate`) TransactionDate,
 		a.InvoiceNo,a.ActivityId,b.ActivityName,a.FactoryId,c.FactoryName,c.Address as FactoryAddress,d.FactoryGroupName,
 		a.ProgramId,e.ProgramName,a.ExpireDate,a.OpportunityDate,a.TentativeOfferPrice,
@@ -60,6 +62,7 @@ function getDataList($data)
 	   LEFT JOIN `t_users` q ON a.`LocalReviewerId` = q.`UserId`
 	   LEFT JOIN `t_releasedstatus` r ON a.`ReportReleasedStatusId` = r.`ReportReleasedStatusId`
 	   WHERE a.StatusId = 5
+	   AND a.AuditEndDate<'$currDate'
 	   ORDER BY a.`ReportReleaseStatus` ASC, a.AuditEndDate DESC;";
 
 		$resultdata = $dbh->query($query);

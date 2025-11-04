@@ -4,7 +4,8 @@ URL: https://itrackba.ng-ssl.com
 User: admin
 Password: Net@pp096
 
-
+Mail: do_not_reply@ng-ssl.com
+Password: zz2X40U92sDsHqa9
 
 =================Local .env================================================
 

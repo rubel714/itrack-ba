@@ -854,6 +854,8 @@ function ReportReviewerExport()
 
 	// $UserId = $_REQUEST['UserId'];
 	// $Search = $_REQUEST['Search'];
+	$currDate = date('Y-m-d');
+
 
 	$sql = "SELECT b.ActivityName,c.FactoryName,d.FactoryGroupName,c.Address as FactoryAddress,
 		e.ProgramName,a.ExpireDate,a.OpportunityDate,a.TentativeOfferPrice,
@@ -886,6 +888,7 @@ function ReportReviewerExport()
 	   LEFT JOIN `t_users` q ON a.`LocalReviewerId` = q.`UserId`
 	   LEFT JOIN `t_releasedstatus` r ON a.`ReportReleasedStatusId` = r.`ReportReleasedStatusId`
 	   where a.StatusId = 5
+	   AND a.AuditEndDate<'$currDate'
 	   ORDER BY a.`ReportReleaseStatus` ASC, a.AuditEndDate DESC;";
  
 
