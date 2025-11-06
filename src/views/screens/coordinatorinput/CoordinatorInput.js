@@ -5,6 +5,7 @@ import {
   Edit,
   AddAPhoto,
   PictureAsPdf,
+  Email,
 } from "@material-ui/icons";
 import { Button } from "../../../components/CustomControl/Button";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -20,7 +21,7 @@ import {
 import ExecuteQueryHook from "../../../components/hooks/ExecuteQueryHook";
 import moment from "moment";
 import "../../../assets/css/audit.css";
-
+import FadeLoader from "react-spinners/FadeLoader";
 import {
   MenuItem,
   FormControl,
@@ -40,6 +41,7 @@ const CoordinatorInput = (props) => {
   const [bFirst, setBFirst] = useState(true);
   const [currentRow, setCurrentRow] = useState([]);
   const [toggle, setToggle] = useState(true); //true=show tabel, false= show add/edit form
+  const [mailsendloading, setMailsendloading] = useState(false); //true=show loader, false= hide loader
 
   const [errorObject, setErrorObject] = useState({});
   const UserInfo = LoginUserInfo();
@@ -86,12 +88,11 @@ const CoordinatorInput = (props) => {
   const [AuditorList, setAuditorList] = useState(null);
   const [currReportWriterId, setCurrReportWriterId] = useState(null);
 
-    const [RemarksList, setRemarksList] = useState([
+  const [RemarksList, setRemarksList] = useState([
     { id: "New", name: "New" },
     { id: "Re-Certificate", name: "Re-Certificate" },
   ]);
   const [currRemarks, setCurrRemarks] = useState(null);
-
 
   const [StartDate, setStartDate] = useState(moment().format("YYYY-MM-DD"));
   const [EndDate, setEndDate] = useState(
@@ -147,6 +148,24 @@ const CoordinatorInput = (props) => {
     );
   };
   /* =====End of Excel Export Code==== */
+
+  function LoaderModal({ loading }) {
+  if (!loading) return null;
+  return (
+    <div style={{
+      position: "fixed",
+      top: 0, left: 0, right: 0, bottom: 0,
+      background: "rgba(0,0,0,0.3)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 9999
+    }}>
+      <FadeLoader color="#da2525ff" />
+    </div>
+  );
+}
+
 
   const handleChangeFilterDate = (e) => {
     const { name, value } = e.target;
@@ -471,12 +490,6 @@ const CoordinatorInput = (props) => {
       setCurrFactoryId(value);
     }
 
-
-
-
-
-
-
     if (name === "ProgramId") {
       data["ProgramId"] = value;
       setCurrProgramId(value);
@@ -484,14 +497,6 @@ const CoordinatorInput = (props) => {
       getLeadAuditorList(value, "");
       getTeamAuditorList(value, "");
     }
-
-
-
-
-
-
-
-
 
     if (name === "CoordinatorId") {
       data["CoordinatorId"] = value;
@@ -609,9 +614,6 @@ const CoordinatorInput = (props) => {
           msg: res.data.message,
           msgtype: res.data.success,
         });
-
- 
-
 
         if (res.data.success === 1) {
           setToggle(true); // true=show tabel, false= show add/edit form
@@ -787,6 +789,15 @@ const CoordinatorInput = (props) => {
   function actioncontrol(rowData) {
     return (
       <>
+        <Email
+          className={
+            rowData.IsSendMail > 0 ? " table-view-icon" : " table-addimg-icon"
+          }
+          onClick={() => {
+            sendMail(rowData);
+          }}
+        />
+
         <Edit
           className={"table-edit-icon"}
           onClick={() => {
@@ -873,6 +884,61 @@ const CoordinatorInput = (props) => {
     // openModal();
     setToggle(false); // true=show tabel, false= show add/edit form
   };
+
+  const sendMail = (rowData) => {
+    let msgq = "You want to send email!";
+    if (rowData.IsSendMail > 0) {
+      msgq = "You want to send email again!";
+    }
+
+    swal({
+      title: "Are you sure?",
+      text: msgq,
+      icon: "warning",
+      buttons: {
+        confirm: {
+          text: "Yes",
+          value: true,
+          visible: true,
+          className: "",
+          closeModal: true,
+        },
+        cancel: {
+          text: "No",
+          value: null,
+          visible: true,
+          className: "",
+          closeModal: true,
+        },
+      },
+      dangerMode: true,
+    }).then((allowAction) => {
+      if (allowAction) {
+        setMailsendloading(true);
+        sendMailApi(rowData);
+      }
+    });
+  };
+
+  function sendMailApi(rowData) {
+    let params = {
+      action: "mailsend",
+      lan: language(),
+      UserId: UserInfo.UserId,
+      rowData: rowData,
+    };
+
+    apiCall.post("mailsend", { params }, apiOption()).then((res) => {
+      console.log("res: ", res);
+      props.openNoticeModal({
+        isOpen: true,
+        msg: res.data.message,
+        msgtype: res.data.success,
+      });
+      setMailsendloading(false);
+      getDataList();
+    });
+  }
 
   const editData = (rowData) => {
     setCurrActivityId(rowData.ActivityId);
@@ -1043,7 +1109,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 className={`chosen_dropdown ${
                   errorObject.ActivityId ? errorObject.ActivityId : ""
@@ -1084,7 +1150,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // className="chosen_dropdown"
                 className={`chosen_dropdown ${
@@ -1165,7 +1231,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // className="chosen_dropdown"
                 className={`chosen_dropdown ${
                   errorObject.ProgramId ? errorObject.ProgramId : ""
@@ -1203,7 +1269,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="ExpireDate"
                 name="ExpireDate"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.ExpireDate}
                 placeholder="Enter Expire Date"
@@ -1216,7 +1282,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="OpportunityDate"
                 name="OpportunityDate"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.OpportunityDate}
                 placeholder="Enter Opportunity Date"
@@ -1228,7 +1294,7 @@ const CoordinatorInput = (props) => {
                 type="number"
                 id="TentativeOfferPrice"
                 name="TentativeOfferPrice"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.TentativeOfferPrice}
                 placeholder="Enter Tentative Offer Price"
@@ -1241,7 +1307,7 @@ const CoordinatorInput = (props) => {
                 type="text"
                 id="CertificateBody"
                 name="CertificateBody"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.CertificateBody}
                 placeholder="Enter Certificate Body"
@@ -1253,7 +1319,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 className="chosen_dropdown"
                 id="CoordinatorId"
@@ -1293,7 +1359,7 @@ const CoordinatorInput = (props) => {
                 autoHighlight
                 disableClearable
                 // disabled={true}
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 className="chosen_dropdown"
                 id="AuditStageId"
                 name="AuditStageId"
@@ -1331,7 +1397,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 className="chosen_dropdown"
                 id="LeadStatusId"
@@ -1371,7 +1437,7 @@ const CoordinatorInput = (props) => {
                 type="number"
                 id="ManDay"
                 name="ManDay"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.ManDay}
                 placeholder="Enter Man Day"
@@ -1382,7 +1448,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 className="chosen_dropdown"
                 id="BuyerId"
@@ -1416,7 +1482,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 className="chosen_dropdown"
                 id="DepartmentId"
@@ -1455,7 +1521,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 className="chosen_dropdown"
                 id="MemberId"
@@ -1490,7 +1556,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="NextFollowupDate"
                 name="NextFollowupDate"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.NextFollowupDate}
                 placeholder="Enter Next Followup Date"
@@ -1549,7 +1615,7 @@ const CoordinatorInput = (props) => {
                 type="text"
                 id="AssessmentNo"
                 name="AssessmentNo"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // class={errorObject.AssessmentNo}
                 placeholder="Enter Assessment No"
                 value={currentRow.AssessmentNo}
@@ -1561,7 +1627,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="AuditStartDate"
                 name="AuditStartDate"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // class={errorObject.AuditStartDate}
                 placeholder="Enter Audit Start Date"
                 value={currentRow.AuditStartDate}
@@ -1573,7 +1639,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="AuditEndDate"
                 name="AuditEndDate"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // class={errorObject.AuditEndDate}
                 placeholder="Enter Audit End Date"
                 value={currentRow.AuditEndDate}
@@ -1584,7 +1650,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 className="chosen_dropdown"
                 id="CountryId"
                 name="CountryId"
@@ -1619,7 +1685,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 className="chosen_dropdown"
                 id="LeadAuditorId"
                 name="LeadAuditorId"
@@ -1658,7 +1724,7 @@ const CoordinatorInput = (props) => {
               <FormControl sx={{ width: 300 }}>
                 <Select
                   multiple
-                disabled={ permissionType == 1}
+                  disabled={permissionType == 1}
                   value={currTeamAuditorId}
                   onChange={handleChangeMulpleCbo}
                   renderValue={(selected) =>
@@ -1718,7 +1784,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 className="chosen_dropdown"
                 id="AuditTypeId"
                 name="AuditTypeId"
@@ -1757,7 +1823,7 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="Window"
                 name="Window"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // class={errorObject.Window}
                 placeholder="Enter Window Start"
                 value={currentRow.Window}
@@ -1769,7 +1835,9 @@ const CoordinatorInput = (props) => {
                 type="date"
                 id="WindowEnd"
                 name="WindowEnd"
-                disabled={(currAuditTypeId == 1 || permissionType == 1) ? true : false}
+                disabled={
+                  currAuditTypeId == 1 || permissionType == 1 ? true : false
+                }
                 // class={errorObject.WindowEnd}
                 placeholder="Enter Window End"
                 value={currentRow.WindowEnd}
@@ -1780,7 +1848,7 @@ const CoordinatorInput = (props) => {
               <Autocomplete
                 autoHighlight
                 disableClearable
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 className="chosen_dropdown"
                 id="ReportWriterId"
                 name="ReportWriterId"
@@ -1799,7 +1867,6 @@ const CoordinatorInput = (props) => {
 
                   return leadId === id || teamIds.includes(id);
                 })}
-
                 getOptionLabel={(option) => option.name}
                 defaultValue={{ id: 0, name: "Select" }}
                 value={
@@ -1839,7 +1906,7 @@ const CoordinatorInput = (props) => {
                   type="radio"
                   id="PaymentStatus"
                   name="PaymentStatus"
-                  disabled={ permissionType == 1}
+                  disabled={permissionType == 1}
                   value="Yes"
                   checked={currentRow.PaymentStatus == "Yes"}
                   onChange={handleChangeRadio}
@@ -1850,7 +1917,7 @@ const CoordinatorInput = (props) => {
                   type="radio"
                   id="PaymentStatus"
                   name="PaymentStatus"
-                  disabled={ permissionType == 1}
+                  disabled={permissionType == 1}
                   value="No"
                   checked={currentRow.PaymentStatus == "No"}
                   onChange={handleChangeRadio}
@@ -1862,7 +1929,7 @@ const CoordinatorInput = (props) => {
                 type="text"
                 id="NoOfEmployee"
                 name="NoOfEmployee"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // class={errorObject.NoOfEmployee}
                 placeholder="Enter No Of Employee"
                 value={currentRow.NoOfEmployee}
@@ -1874,7 +1941,7 @@ const CoordinatorInput = (props) => {
                 type="number"
                 id="AuditFee"
                 name="AuditFee"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // class={errorObject.AuditFee}
                 placeholder="Enter Audit Fee"
                 value={currentRow.AuditFee}
@@ -1886,7 +1953,7 @@ const CoordinatorInput = (props) => {
                 type="number"
                 id="OPE"
                 name="OPE"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // class={errorObject.OPE}
                 placeholder="Enter OPE"
                 value={currentRow.OPE}
@@ -1898,7 +1965,7 @@ const CoordinatorInput = (props) => {
                 type="number"
                 id="OthersAmount"
                 name="OthersAmount"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // class={errorObject.OthersAmount}
                 placeholder="Enter Others Amount"
                 value={currentRow.OthersAmount}
@@ -1910,7 +1977,7 @@ const CoordinatorInput = (props) => {
                 type="number"
                 id="RevenueBDT"
                 name="RevenueBDT"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // class={errorObject.RevenueBDT}
                 placeholder="Enter Revenue BDT"
                 value={currentRow.RevenueBDT}
@@ -1922,7 +1989,7 @@ const CoordinatorInput = (props) => {
                 type="text"
                 id="PINo"
                 name="PINo"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // class={errorObject.PINo}
                 placeholder="Enter PI No"
                 value={currentRow.PINo}
@@ -1942,20 +2009,21 @@ const CoordinatorInput = (props) => {
               <Button
                 label={"File"}
                 class={"btnSave"}
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 onClick={FileUploadModalShow}
               />
 
-              <label>Send Mail</label>
+              {/* <label>Send Mail</label>
               <input
                 id="IsSendMail"
                 name="IsSendMail"
-                disabled={ permissionType == 1}
+                disabled={ true }
+                // disabled={ permissionType == 1}
                 type="checkbox"
                 class={"formCheckBox"}
                 checked={currentRow.IsSendMail}
                 onChange={handleChangeCheck}
-              />
+              /> */}
             </div>
 
             <div class="modalItemButton">
@@ -1968,7 +2036,7 @@ const CoordinatorInput = (props) => {
                 <Button
                   label={"Update"}
                   class={"btnUpdate"}
-                  disabled={ permissionType == 1}
+                  disabled={permissionType == 1}
                   onClick={addEditAPICall}
                 />
               )}
@@ -1995,6 +2063,9 @@ const CoordinatorInput = (props) => {
           fileUploadModalCallback={fileUploadModalCallback}
         />
       )}
+
+        <LoaderModal loading={mailsendloading} />
+       
 
       {/* {showModal && (
         <SalesPersonInputAddEditModal

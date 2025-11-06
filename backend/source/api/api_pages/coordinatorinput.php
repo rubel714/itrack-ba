@@ -33,7 +33,7 @@ function getDataList($data)
 
 		$UserId = trim($data->UserId);
 		$RoleId = trim($data->RoleId);
-		if($RoleId == 1){
+		if ($RoleId == 1) {
 			$UserId = 0;
 		}
 
@@ -68,7 +68,7 @@ function getDataList($data)
 		$resultdata = $dbh->query($query);
 
 		$dList = array();
-		foreach($resultdata as $key=>$obj){
+		foreach ($resultdata as $key => $obj) {
 			$obj['AttachedDocuments'] = json_decode($obj['AttachedDocuments']);
 			$dList[] = $obj;
 		}
@@ -250,9 +250,9 @@ function dataAddEdit($data)
 		if ($AuditStartDate && $AuditEndDate) {
 
 			$$ids = [];
-			if(is_string($TeamAuditorId)){
-				$ids =json_decode($TeamAuditorId);
-			}else{
+			if (is_string($TeamAuditorId)) {
+				$ids = json_decode($TeamAuditorId);
+			} else {
 				$ids = (array)$TeamAuditorId;
 			}
 
@@ -265,7 +265,7 @@ function dataAddEdit($data)
 
 			$DupMsg = "";
 			foreach ($ids as $TAuditorId) {
-				if( $TAuditorId == "[]"){
+				if ($TAuditorId == "[]") {
 					continue;
 				}
 				$query = "
@@ -302,26 +302,24 @@ function dataAddEdit($data)
 					$resultdata1 = $dbh->query($sql1);
 					$DuplicateAuditorName = $resultdata1[0]["AuditorName"];
 
-					if($DupMsg != ""){
+					if ($DupMsg != "") {
 						$DupMsg .= "; ";
 					}
-					$DupMsg .= $DuplicateAuditorName.' is already assigned ' . $DuplicateProgramName . ", " . $DuplicateFactoryName . " ($DuplicateAuditStartDate, $DuplicateAuditEndDate)";
+					$DupMsg .= $DuplicateAuditorName . ' is already assigned ' . $DuplicateProgramName . ", " . $DuplicateFactoryName . " ($DuplicateAuditStartDate, $DuplicateAuditEndDate)";
 					// return $returnData = msg(0, 404, $DuplicateAuditorName.' is already assigned ' . $DuplicateProgramName . ", " . $DuplicateFactoryName . " ($DuplicateAuditStartDate, $DuplicateAuditEndDate)");
 				}
 			}
 
-			if($DupMsg != ""){
+			if ($DupMsg != "") {
 				return $returnData = msg(0, 404, $DupMsg);
 			}
-
-
 		}
 
 
 		$AttachedDocumentsArr = array();
 		foreach ($AttachedDocuments as $key => $row) {
-			$row->file = "";//file string empty
-			$row->status = "";//status empty
+			$row->file = ""; //file string empty
+			$row->status = ""; //status empty
 			$AttachedDocumentsArr[] = (array)$row;
 		}
 
@@ -557,7 +555,7 @@ function FilesUpload($data)
 
 
 			foreach ($rowData as $fileobj) {
-				if($fileobj->status == "new"){
+				if ($fileobj->status == "new") {
 					ConvertCSVFile($TransactionId, $fileobj->name, $fileobj->extention, $fileobj->file);
 				}
 			}
@@ -596,7 +594,8 @@ function ConvertCSVFile($TransactionId, $name, $extention, $filebase64_string)
 	$decoded = base64_decode($exploded[1]);
 	// $output_file = $prefix . "_cover_" . date("Y_m_d_H_i_s") . "_" . rand(1, 9999) . "." . $extention;
 	// $output_file = date("Y_m_d_H_i_s") . "_" . rand(1, 9999) ."_".$name. "." . $extention;
-	$output_file = date("Y_m_d_H_i_s") . "_" . rand(1, 9999) . "_" . $name;
+	// $output_file = date("Y_m_d_H_i_s") . "_" . rand(1, 9999) . "_" . $name;
+	$output_file = $name;
 	file_put_contents($targetDir . "/" . $output_file, $decoded);
 	return $output_file;
 }

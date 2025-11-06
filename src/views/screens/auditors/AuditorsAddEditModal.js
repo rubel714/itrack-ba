@@ -29,7 +29,7 @@ const AuditorsAddEditModal = (props) => {
   };
 
   const validateForm = () => {
-    let validateFields = ["AuditorName", "PhoneNo"];
+    let validateFields = ["AuditorName", "PhoneNo","Email"];
     let errorData = {};
     let isValid = true;
     validateFields.map((field) => {
@@ -128,12 +128,12 @@ const AuditorsAddEditModal = (props) => {
               onChange={(e) => handleChange(e)}
             />
 
-            <label>Email</label>
+            <label>Email *</label>
             <input
               type="text"
               id="Email"
               name="Email"
-              // class={errorObject.Email}
+              class={errorObject.Email}
               placeholder="Enter Email"
               value={currentRow.Email}
               onChange={(e) => handleChange(e)}
