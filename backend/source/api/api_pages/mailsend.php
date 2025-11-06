@@ -60,6 +60,7 @@ try {
     $FactoryName = $resultdata[0]['FactoryName'];
     $AuditStartDate = $resultdata[0]['AuditStartDate'];
     $AuditEndDate = $resultdata[0]['AuditEndDate'];
+    $AssessmentNo = $resultdata[0]['AssessmentNo'];
 
 
     $sql = "select AuditorName,Email from t_auditor where AuditorId=$LeadAuditorId";
