@@ -88,6 +88,9 @@ const CoordinatorInput = (props) => {
   const [AuditorList, setAuditorList] = useState(null);
   const [currReportWriterId, setCurrReportWriterId] = useState(null);
 
+  const [DaysList, setDaysList] = useState(null);
+  const [currDays, setCurrDays] = useState("");
+
   const [RemarksList, setRemarksList] = useState([
     { id: "New", name: "New" },
     { id: "Re-Certificate", name: "Re-Certificate" },
@@ -194,6 +197,7 @@ const CoordinatorInput = (props) => {
     // getLeadAuditorList(0,"");
     // getTeamAuditorList(0,"");
     getAuditTypeList("");
+    getDaysList("");
 
     // getAuditorList("");
 
@@ -425,6 +429,24 @@ const CoordinatorInput = (props) => {
     });
   }
 
+    function getDaysList(selectDays) {
+    let params = {
+      action: "getDaysList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+    };
+
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      // setDaysList(
+      //   [{ id: "", name: "Select Days" }].concat(res.data.datalist)
+      // );
+
+          setDaysList(res.data.datalist);
+
+      setCurrDays(selectDays);
+    });
+  }
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     let data = { ...currentRow };
@@ -532,6 +554,10 @@ const CoordinatorInput = (props) => {
       setCurrMemberId(value);
     }
 
+    if (name === "FactoryHoliday") {
+      data["FactoryHoliday"] = value;
+      setCurrDays(value);
+    }
     if (name === "CountryId") {
       data["CountryId"] = value;
       setCurrCountryId(value);
@@ -566,7 +592,7 @@ const CoordinatorInput = (props) => {
     setCurrentRow(data);
   };
 
-  const handleChangeMulpleCbo = (event) => {
+  const handleChangeMulpleCboTeamAuditor = (event) => {
     let data = { ...currentRow };
 
     // console.log('selected: ', selected);
@@ -580,6 +606,28 @@ const CoordinatorInput = (props) => {
     data["TeamAuditorId"] =
       typeof value === "string" ? value.split(",") : value;
     // setErrorObject({ ...errorObject, [name]: null });
+    setCurrentRow(data);
+  };
+
+  
+  const handleChangeMulpleCboDays = (event) => {
+    let data = { ...currentRow };
+
+    // console.log('selected: ', selected);
+
+    // console.log('eventeventeventevent: ', event);
+    // console.log('eventeventeventevent TeamAuditorList: ', TeamAuditorList);
+    const value = event.target.value;
+    // console.log('value: ', value);
+    // console.log('value==========: ', (typeof value === "string" ? value.split(",") : value));
+    let FactoryHoliday = value.join(",");
+    setCurrDays(FactoryHoliday);
+
+
+    // setCurrTeamAuditorId(typeof value === "string" ? value.split(",") : value);
+
+    data["FactoryHoliday"] = FactoryHoliday;
+    // // setErrorObject({ ...errorObject, [name]: null });
     setCurrentRow(data);
   };
 
@@ -953,6 +1001,7 @@ const CoordinatorInput = (props) => {
 
     getMemberList(rowData.DepartmentId, rowData.MemberId);
     setCurrCountryId(rowData.CountryId);
+    setCurrDays(rowData.FactoryHoliday);
 
     getLeadAuditorList(rowData.ProgramId, rowData.LeadAuditorId);
     // getTeamAuditorList(rowData.ProgramId,rowData.TeamAuditorId);
@@ -1206,26 +1255,89 @@ const CoordinatorInput = (props) => {
                 // onChange={(e) => handleChange(e)}
               />
 
-              <label>Factory Location</label>
+             <label>Factory Address</label>
               <input
                 type="text"
                 id="FactoryAddress"
                 name="FactoryAddress"
+                disabled={permissionType == 1}
                 // class={errorObject.FactoryAddress}
-                placeholder="Enter Factory Location"
-                disabled={true}
-                // value={currentRow.FactoryAddress}
-                value={
-                  currFactoryId
-                    ? FactoryList[
-                        FactoryList.findIndex(
-                          (list) => list.id === currFactoryId
-                        )
-                      ].Address
-                    : ""
-                }
-                // onChange={(e) => handleChange(e)}
+                placeholder="Enter Factory Address"
+                value={currentRow.FactoryAddress}
+                onChange={(e) => handleChange(e)}
               />
+
+               <label>Factory Contact Person</label>
+              <input
+                type="text"
+                id="FactoryContactPerson"
+                name="FactoryContactPerson"
+                disabled={permissionType == 1}
+                // class={errorObject.FactoryContactPerson}
+                placeholder="Enter Factory Contact Person"
+                value={currentRow.FactoryContactPerson}
+                onChange={(e) => handleChange(e)}
+              />
+
+               <label>Factory Contact Person Phone</label>
+              <input
+                type="text"
+                id="FactoryContactPersonPhone"
+                name="FactoryContactPersonPhone"
+                disabled={permissionType == 1}
+                // class={errorObject.FactoryContactPersonPhone}
+                placeholder="Enter Factory Contact Person Phone"
+                value={currentRow.FactoryContactPersonPhone}
+                onChange={(e) => handleChange(e)}
+              />
+      
+               <label>Factory Contact Person Email</label>
+              <input
+                type="text"
+                id="FactoryContactPersonEmail"
+                name="FactoryContactPersonEmail"
+                disabled={permissionType == 1}
+                // class={errorObject.FactoryContactPersonEmail}
+                placeholder="Enter Factory Contact Person Email"
+                value={currentRow.FactoryContactPersonEmail}
+                onChange={(e) => handleChange(e)}
+              />
+      
+              <label>Factory Holiday</label>
+             <FormControl sx={{ width: 300 }}>
+                <Select
+                  multiple
+                  disabled={permissionType == 1}
+                  value={currDays.length>0?currDays.split(","): []}
+                  onChange={handleChangeMulpleCboDays}
+                  renderValue={(selected) =>
+                    (DaysList || [])
+                      .filter((a) => (currDays.length>0?currDays.split(","):[]).includes(a.id))
+                      .map((a) => a.name)
+                      .join(", ")
+                  }
+                >
+                  {(DaysList || []).map((obj) => (
+                    <MenuItem key={obj.id} value={obj.id}>
+                      <Checkbox
+                        checked={(currDays.split(",")).includes(obj.id)}
+                      />
+                      <ListItemText primary={obj.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              {/* <input
+                type="text"
+                id="FactoryHoliday"
+                name="FactoryHoliday"
+                disabled={permissionType == 1}
+                // class={errorObject.FactoryHoliday}
+                placeholder="Enter Factory Holiday"
+                value={currentRow.FactoryHoliday}
+                onChange={(e) => handleChange(e)}
+              />
+       */}
 
               <label>Program *</label>
               <Autocomplete
@@ -1720,13 +1832,12 @@ const CoordinatorInput = (props) => {
               />
 
               <label>Team Auditor</label>
-
               <FormControl sx={{ width: 300 }}>
                 <Select
                   multiple
                   disabled={permissionType == 1}
                   value={currTeamAuditorId}
-                  onChange={handleChangeMulpleCbo}
+                  onChange={handleChangeMulpleCboTeamAuditor}
                   renderValue={(selected) =>
                     (TeamAuditorList || [])
                       .filter((a) => currTeamAuditorId.includes(a.id))

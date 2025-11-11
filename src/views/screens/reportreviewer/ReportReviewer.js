@@ -1062,26 +1062,70 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 }
                 // onChange={(e) => handleChange(e)}
               />
-<label>Factory Location</label>
+              
+              
+ 
+             <label>Factory Address</label>
               <input
                 type="text"
                 id="FactoryAddress"
                 name="FactoryAddress"
-                // class={errorObject.FactoryAddress}
-                placeholder="Enter Factory Location"
                 disabled={true}
-                // value={currentRow.FactoryAddress}
-                value={
-                  currFactoryId
-                    ? FactoryList[
-                        FactoryList.findIndex(
-                          (list) => list.id === currFactoryId
-                        )
-                      ].Address
-                    : ""
-                }
-                // onChange={(e) => handleChange(e)}
+                // class={errorObject.FactoryAddress}
+                placeholder="Enter Factory Address"
+                value={currentRow.FactoryAddress}
+                onChange={(e) => handleChange(e)}
               />
+
+               <label>Factory Contact Person</label>
+              <input
+                type="text"
+                id="FactoryContactPerson"
+                name="FactoryContactPerson"
+                disabled={true}
+                // class={errorObject.FactoryContactPerson}
+                placeholder="Enter Factory Contact Person"
+                value={currentRow.FactoryContactPerson}
+                onChange={(e) => handleChange(e)}
+              />
+
+               <label>Factory Contact Person Phone</label>
+              <input
+                type="text"
+                id="FactoryContactPersonPhone"
+                name="FactoryContactPersonPhone"
+                disabled={true}
+                // class={errorObject.FactoryContactPersonPhone}
+                placeholder="Enter Factory Contact Person Phone"
+                value={currentRow.FactoryContactPersonPhone}
+                onChange={(e) => handleChange(e)}
+              />
+      
+               <label>Factory Contact Person Email</label>
+              <input
+                type="text"
+                id="FactoryContactPersonEmail"
+                name="FactoryContactPersonEmail"
+                disabled={true}
+                // class={errorObject.FactoryContactPersonEmail}
+                placeholder="Enter Factory Contact Person Email"
+                value={currentRow.FactoryContactPersonEmail}
+                onChange={(e) => handleChange(e)}
+              />
+      
+
+               <label>Factory Holiday</label>
+              <input
+                type="text"
+                id="FactoryHoliday"
+                name="FactoryHoliday"
+                disabled={true}
+                // class={errorObject.FactoryHoliday}
+                placeholder="Enter Factory Holiday"
+                value={currentRow.FactoryHoliday}
+                onChange={(e) => handleChange(e)}
+              />
+      
 
               <label>Program *</label>
               <Autocomplete

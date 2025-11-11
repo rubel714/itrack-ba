@@ -41,8 +41,9 @@ function getDataList($data)
 		$EndDate = trim($data->EndDate) . " 23-59-59";
 
 		$query = "SELECT a.TransactionId AS id,a.TransactionTypeId,DATE(a.`TransactionDate`) TransactionDate,
-		a.InvoiceNo,a.ActivityId,b.ActivityName,a.FactoryId,c.FactoryName,c.Address as FactoryAddress,d.FactoryGroupName,
-		a.ProgramId,e.ProgramName,a.ExpireDate,a.OpportunityDate,a.TentativeOfferPrice,
+		a.InvoiceNo,a.ActivityId,b.ActivityName,a.FactoryId,c.FactoryName,
+		a.FactoryAddress,a.FactoryContactPerson,a.FactoryContactPersonPhone,a.FactoryContactPersonEmail,ifnull(a.FactoryHoliday,'') FactoryHoliday,		
+		d.FactoryGroupName,	a.ProgramId,e.ProgramName,a.ExpireDate,a.OpportunityDate,a.TentativeOfferPrice,
 		a.CertificateBody,a.CoordinatorId,f.UserName as CoordinatorName, a.AuditStageId, g.AuditStageName,
 		a.LeadStatusId, h.LeadStatusName,a.ManDay,a.BuyerId,i.BuyerName,a.NextFollowupDate,
 		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks
@@ -121,6 +122,12 @@ function dataAddEdit($data)
 
 		////////////////////////////////////Co ordinator////////////////////////////////////////////////////
 
+		$FactoryAddress = $data->rowData->FactoryAddress ? $data->rowData->FactoryAddress : null;
+		$FactoryContactPerson = $data->rowData->FactoryContactPerson ? $data->rowData->FactoryContactPerson : null;
+		$FactoryContactPersonPhone = $data->rowData->FactoryContactPersonPhone ? $data->rowData->FactoryContactPersonPhone : null;
+		$FactoryContactPersonEmail = $data->rowData->FactoryContactPersonEmail ? $data->rowData->FactoryContactPersonEmail : null;
+		$FactoryHoliday = $data->rowData->FactoryHoliday ? $data->rowData->FactoryHoliday : null;
+		
 		$AssessmentNo = $data->rowData->AssessmentNo ? $data->rowData->AssessmentNo : null;
 		$AuditStartDate = $data->rowData->AuditStartDate ? $data->rowData->AuditStartDate : null;
 		$AuditEndDate = $data->rowData->AuditEndDate ? $data->rowData->AuditEndDate : null;
@@ -331,6 +338,11 @@ function dataAddEdit($data)
 			$u->columns = [
 				'ActivityId',
 				'FactoryId',
+				'FactoryAddress',
+				'FactoryContactPerson',
+				'FactoryContactPersonPhone',
+				'FactoryContactPersonEmail',
+				'FactoryHoliday',
 				'ProgramId',
 				'ExpireDate',
 				'OpportunityDate',
@@ -372,6 +384,11 @@ function dataAddEdit($data)
 			$u->values = [
 				$ActivityId,
 				$FactoryId,
+				$FactoryAddress,
+				$FactoryContactPerson,
+				$FactoryContactPersonPhone,
+				$FactoryContactPersonEmail,
+				$FactoryHoliday,
 				$ProgramId,
 				$ExpireDate,
 				$OpportunityDate,

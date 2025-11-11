@@ -82,6 +82,9 @@ switch ($task) {
 	case "getCountryList":
 		$returnData = getCountryList($data);
 		break;
+	case "getDaysList":
+		$returnData = getDaysList($data);
+		break;
 	case "getLeaveStatusList":
 		$returnData = getLeaveStatusList($data);
 		break;
@@ -725,6 +728,29 @@ function getCountryList($data)
 		$query = "SELECT a.`CountryId` id, a.CountryName `name`
 	 			 	FROM t_country a
 					ORDER BY a.CountryName;";
+
+		$resultdata = $dbh->query($query);
+
+		$returnData = [
+			"success" => 1,
+			"status" => 200,
+			"message" => "",
+			"datalist" => $resultdata
+		];
+	} catch (PDOException $e) {
+		$returnData = msg(0, 500, $e->getMessage());
+	}
+
+	return $returnData;
+}
+
+function getDaysList($data)
+{
+	
+	try {
+		$dbh = new Db();
+		$query = "SELECT a.`DayName` id, a.DayName `name`
+	 			 	FROM t_sevendays a order by Serial ASC;";
 
 		$resultdata = $dbh->query($query);
 
