@@ -46,11 +46,24 @@ try {
 
 
     $sql = "select ifnull(a.CoordinatorId,0) CoordinatorId, ifnull(a.LeadAuditorId,0) LeadAuditorId, 
-        REPLACE(a.TeamAuditorIds, '" . '"' . "', '') as TeamAuditorIds, a.AttachedDocuments,
-        a.AssessmentNo,DATE_FORMAT(a.AuditStartDate, '%d-%b-%Y') AS AuditStartDate,
-        DATE_FORMAT(a.AuditEndDate, '%d-%b-%Y') AS AuditEndDate,b.FactoryName
+        REPLACE(a.TeamAuditorIds, '" . '"' . "', '') as TeamAuditorIds, a.AttachedDocuments, a.AssessmentNo,
+        case when a.AuditStartDate is not null then DATE_FORMAT(a.AuditStartDate, '%d-%b-%Y') else '' end AuditStartDate,
+        case when a.AuditEndDate is not null then DATE_FORMAT(a.AuditEndDate, '%d-%b-%Y') else '' end AuditEndDate,
+        b.FactoryName,c.BuyerName,d.ProgramName,e.AuditStageName,a.ManDay,a.Remarks,f.LeadStatusName,
+
+        case when a.Window is not null then DATE_FORMAT(a.Window, '%d-%b-%Y') else '' end Window
+        ,case when a.WindowEnd is not null then DATE_FORMAT(a.WindowEnd, '%d-%b-%Y') else '' end WindowEnd,
+        g.AuditorName as ReportWriterName,a.FactoryAddress,a.FactoryContactPersonPhone,a.FactoryContactPerson
+        ,a.FactoryContactPersonEmail,a.FactoryHoliday,h.CountryName
+
         from t_transaction a
         INNER JOIN t_factory b ON a.FactoryId=b.FactoryId
+        LEFT JOIN t_buyer c ON a.BuyerId=c.BuyerId
+        LEFT JOIN t_program d ON a.ProgramId=d.ProgramId
+        LEFT JOIN t_auditstage e ON a.AuditStageId=e.AuditStageId
+        LEFT JOIN t_leadstatus f ON a.LeadStatusId=f.LeadStatusId
+        LEFT JOIN t_auditor g ON a.ReportWriterId=g.AuditorId
+        LEFT JOIN t_country h ON a.CountryId=h.CountryId 
         where a.TransactionId=$TransactionId";
     $resultdata = $dbh->query($sql);
     $CoordinatorId = $resultdata[0]['CoordinatorId'];
@@ -58,9 +71,36 @@ try {
     $TeamAuditorIds = $resultdata[0]['TeamAuditorIds'];
     $AttachedDocuments = $resultdata[0]['AttachedDocuments'];
     $FactoryName = $resultdata[0]['FactoryName'];
+    $FactoryAddress = $resultdata[0]['FactoryAddress'];
+    $FactoryContactPersonPhone = $resultdata[0]['FactoryContactPersonPhone'];
+    $FactoryContactPerson = $resultdata[0]['FactoryContactPerson'];
+    $FactoryContactPersonEmail = $resultdata[0]['FactoryContactPersonEmail'];
+    $FactoryHoliday = $resultdata[0]['FactoryHoliday'];
+
     $AuditStartDate = $resultdata[0]['AuditStartDate'];
     $AuditEndDate = $resultdata[0]['AuditEndDate'];
     $AssessmentNo = $resultdata[0]['AssessmentNo'];
+    $BuyerName = $resultdata[0]['BuyerName'];
+    $ProgramName = $resultdata[0]['ProgramName'];
+    $AuditStageName = $resultdata[0]['AuditStageName'];
+    $State = "";
+    $ManDay = $resultdata[0]['ManDay'];
+    $Remarks = $resultdata[0]['Remarks'];
+    $LeadStatusName = $resultdata[0]['LeadStatusName'];
+    $Window = $resultdata[0]['Window'];
+    $WindowEnd = $resultdata[0]['WindowEnd'];
+    $ReportWriterName = $resultdata[0]['ReportWriterName'];
+    $CountryName = $resultdata[0]['CountryName'];
+
+     $WindowDates = "";
+    if($Window && $WindowEnd){
+        $WindowDates = "$Window - $WindowEnd";
+    }else if($Window){
+        $WindowDates = $Window;
+    }else if($WindowEnd){
+        $WindowDates = $WindowEnd;
+    }
+ 
 
 
     $sql = "select AuditorName,Email from t_auditor where AuditorId=$LeadAuditorId";
@@ -145,75 +185,72 @@ try {
                     <p>Please find below details of your audit assignment.</p>
                     <table border='1'>
                     <tr>
-                        <td>Job No.</td>
-                        <td>$AssessmentNo</td>
+                        <td>Coordinator</td>
+                        <td>$CoordinatorName</td>
                         <td>Client</td>
-                        <td>-</td>
+                        <td>$BuyerName</td>
                     </tr>
                     <tr>
-                        <td>Assessment Type</td>
-                        <td>-</td>
-                        <td>Assessment SubType</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td>Audit Type</td>
-                        <td>-</td>
-                        <td>Schedule Type</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td>Audit Start Date</td>
+                        <td>Audit Date</td>
                         <td>$AuditStartDate</td>
-                        <td>Audit End Date</td>
-                        <td>$AuditEndDate</td>
+                        <td>Program</td>
+                        <td>$ProgramName</td>
                     </tr>
                     <tr>
-                        <td>Report Office of the Lead Auditor</td>
-                        <td>-</td>
-                        <td>Lead Auditor</td>
-                        <td>$LeadAuditorName</td>
+                        <td>Assessment No.</td>
+                        <td>$AssessmentNo</td>
+                        <td>Audit Stage</td>
+                        <td>$AuditStageName</td>
                     </tr>
                     <tr>
-                        <td>Auditor</td>
-                        <td colspan='3'>$TeamAuditorNames</td>
+                        <td>State</td>
+                        <td>$State</td>
+                        <td>MD</td>
+                        <td>$ManDay</td>
                     </tr>
                     <tr>
-                        <td>Factory English Name</td>
+                        <td>Business Type</td>
+                        <td>$Remarks</td>
+                        <td>Status</td>
+                        <td>$LeadStatusName</td>
+                    </tr>
+                    <tr>
+                        <td>Auditor Name (Lead)</td>
+                        <td>$TeamAuditorName</td>
+                        <td>Window</td>
+                        <td>$WindowDates</td>
+                    </tr>
+                    <tr>
+                        <td>Auditor Name (Team)</td>
+                        <td>$TeamAuditorNames</td>
+                        <td>Factory Name</td>
                         <td>$FactoryName</td>
-                        <td>Factory Local Name</td>
-                        <td>-</td>
                     </tr>
                     <tr>
-                        <td>Factory English Address</td>
-                        <td>-</td>
-                        <td>Factory Local Address</td>
-                        <td>-</td>
+                        <td>Report Writer</td>
+                        <td>$ReportWriterName</td>
+                        <td>Factory Location/Address</td>
+                        <td>$FactoryAddress</td>
                     </tr>
                     <tr>
-                        <td>Contact Name</td>
-                        <td>-</td>
-                        <td>Contact Title</td>
-                        <td>-</td>
+                        <td>Contact Person Phone</td>
+                        <td>$FactoryContactPersonPhone</td>
+                        <td>Contact Person</td>
+                        <td>$FactoryContactPerson</td>
                     </tr>
                     <tr>
-                        <td>Contact Telephone</td>
-                        <td>-</td>
-                        <td>Contact Mobile</td>
-                        <td>-</td>
+                        <td>Contact Person Email</td>
+                        <td>$FactoryContactPersonEmail</td>
+                        <td>Country</td>
+                        <td>$CountryName</td>
                     </tr>
                     <tr>
-                        <td>AE Name</td>
-                        <td>-</td>
-                        <td>CS Name</td>
-                        <td>-</td>
+                        <td>Factory Holiday</td>
+                        <td>$FactoryHoliday</td>
+                        <td></td>
+                        <td></td>
                     </tr>
-                    <tr>
-                        <td>Registration No. for Intertek programs</td>
-                        <td >-</td>
-                        <td>Service Type</td>
-                        <td >-</td>
-                    </tr>
+                 
                     <tr>
                         <td><strong>Special Note (if client requirement applies):</strong></td>
                         <td colspan='3'>

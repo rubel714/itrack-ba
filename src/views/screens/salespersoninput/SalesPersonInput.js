@@ -845,7 +845,7 @@ const SalesPersonInput = (props) => {
                 }
                 // onChange={(e) => handleChange(e)}
               />
-
+{/* 
               <label>Factory Location</label>
               <input
                 type="text"
@@ -864,9 +864,7 @@ const SalesPersonInput = (props) => {
                       ].Address
                     : ""
                 }
-                // onChange={(e) => handleChange(e)}
-              />
-              {/* </div> */}
+              /> */}
 
               {/* <div class="control-row pt-10"> */}
               <label>Program *</label>
