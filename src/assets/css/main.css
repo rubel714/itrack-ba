@@ -121,7 +121,8 @@ input[type="number"] {
 /* Body Container */
 .bodyContainer {
   /* opacity: 0.3; */
-  width: 100%;
+  /* width: 100%; */
+  width: calc(100% - 250px);
   border: 4px solid white;
 
 }
@@ -808,3 +809,8 @@ input {
 /* input[type="file"]::-webkit-file-upload-text {
   display: none;
 } */
+
+
+.MuiListItem-root.Mui-selected, .MuiListItem-root.Mui-selected:hover {
+	background-color: var(--secondary-color) !important;
+}
