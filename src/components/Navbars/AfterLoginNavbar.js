@@ -6,6 +6,8 @@ function AfterLoginNavbar(props) {
 
   const [settingsToogle, setSettingsToogle] = React.useState(false);
   const [securityToogle, setSecurityToogle] = React.useState(false);
+  const [auditToogle, setAuditToogle] = React.useState(false);
+  const [reportsToogle, setReportsToogle] = React.useState(false);
 
   const baseUrl = process.env.REACT_APP_FRONT_URL;
   // const [previewImage, setPreviewImage] = useState(
@@ -27,34 +29,31 @@ function AfterLoginNavbar(props) {
     return isShow;
   }
 
-// function menuParentClickCloseAll(){
-//     if(settingsToogle == "block"){
-//       setSettingsToogle("hidden");
-//     }
-//     if(securityToogle == "block"){
-//       setSecurityToogle("hidden");
-//     }
+  // function menuParentClickCloseAll(){
+  //     if(settingsToogle == "block"){
+  //       setSettingsToogle("hidden");
+  //     }
+  //     if(securityToogle == "block"){
+  //       setSecurityToogle("hidden");
+  //     }
 
-//   }
-const menuParentClick = (menuParentName) => {
-    console.log('menuParentName: ', menuParentName);
-    console.log('settingsToogle: ', settingsToogle);
+  //   }
+  const menuParentClick = (menuParentName) => {
+    console.log("menuParentName: ", menuParentName);
+    console.log("settingsToogle: ", settingsToogle);
 
-
+    if (menuParentName == "Settings") {
       setSettingsToogle(!settingsToogle);
-   
-
-    // if(menuParentName == "Settings"){
-    //   if(settingsToogle){
-    //     menuParentClickCloseAll();
-    //   }else{
-        
-
-    //   }
+    } else if (menuParentName == "Security") {
+      setSecurityToogle(!securityToogle);
+    } else if (menuParentName == "Audit") {
+      setAuditToogle(!auditToogle);
+    } else if (menuParentName == "Reports") {
+      setReportsToogle(!reportsToogle);
+    }
 
     // }
-
-  }
+  };
 
   return (
     <>
@@ -63,11 +62,11 @@ const menuParentClick = (menuParentName) => {
         <img alt="..." src={require("assets/img/logo.png")}></img>
         <label>iTrack BA</label>
       </div>
-<hr></hr>
+      <hr></hr>
       {/* menuBar */}
       <div class="menuBar">
         <div class="menuListBar">
-          <ul style={{fontWeight:"bold"}}>
+          <ul style={{ fontWeight: "bold" }}>
             <li class="dropdownMenu">
               {" "}
               <a
@@ -80,12 +79,15 @@ const menuParentClick = (menuParentName) => {
             </li>
 
             {menuShowPermision("settings") === 1 && (
-              <li class="dropdownMenu" onClick={() => menuParentClick("Settings")} >
+              <li
+                class="dropdownMenu"
+                onClick={() => menuParentClick("Settings")}
+              >
                 {" "}
                 Settings
-                <ul className={`dropdownList ${settingsToogle ? "show" : "hide"}`}>
-
-
+                <ul
+                  className={`dropdownList ${settingsToogle ? "show" : "hide"}`}
+                >
                   {menuShowPermision("programs") === 1 && (
                     <li>
                       <a
@@ -218,7 +220,7 @@ const menuParentClick = (menuParentName) => {
                         href="javascript:void(0)"
                         onClick={() => props.history.push("leave")}
                       >
-                       Leave/Office Work
+                        Leave/Office Work
                       </a>
                     </li>
                   )}
@@ -248,10 +250,15 @@ const menuParentClick = (menuParentName) => {
             )}
 
             {menuShowPermision("security") === 1 && (
-              <li class="dropdownMenu">
+              <li
+                class="dropdownMenu"
+                onClick={() => menuParentClick("Security")}
+              >
                 {" "}
                 Security
-                <ul class="dropdownList">
+                <ul
+                  className={`dropdownList ${securityToogle ? "show" : "hide"}`}
+                >
                   {menuShowPermision("userrole") === 1 && (
                     <li>
                       <a
@@ -313,10 +320,10 @@ const menuParentClick = (menuParentName) => {
             )}
 
             {menuShowPermision("audit") === 1 && (
-              <li class="dropdownMenu">
+              <li class="dropdownMenu" onClick={() => menuParentClick("Audit")}>
                 {" "}
                 Audit
-                <ul class="dropdownList">
+                <ul className={`dropdownList ${auditToogle ? "show" : "hide"}`}>
                   {menuShowPermision("salespersoninput") === 1 && (
                     <li>
                       <a
@@ -364,10 +371,15 @@ const menuParentClick = (menuParentName) => {
             )}
 
             {menuShowPermision("reports") === 1 && (
-              <li class="dropdownMenu">
+              <li
+                class="dropdownMenu"
+                onClick={() => menuParentClick("Reports")}
+              >
                 {" "}
                 Reports
-                <ul class="dropdownList">
+                <ul
+                  className={`dropdownList ${reportsToogle ? "show" : "hide"}`}
+                >
                   {menuShowPermision("auditcalendar") === 1 && (
                     <li>
                       <a
