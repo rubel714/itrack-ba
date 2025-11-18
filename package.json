@@ -31,6 +31,7 @@
     "react-swipeable-views": "^0.14.0",
     "react-to-print": "^2.14.15",
     "react-window": "^1.8.9",
+    "react-tabulator": "^0.15.0",
     "reactstrap": "8.4.1",
     "sweetalert": "^2.1.2"
   },

@@ -64,7 +64,7 @@ function getDataList($data)
   		AND a.AuditEndDate >='$StartDate'
 		AND (a.`LeadAuditorId` IS NOT NULL OR a.`TeamAuditorIds` <> '[]');";
 		$resultdata = $dbh->query($query);
-		$AuditList = array();
+		// $AuditList = array();
 		foreach ($resultdata as $row) {
 
 
@@ -105,8 +105,8 @@ function getDataList($data)
 
 
 
-			$row['AuditorIds'] = $AuditorIds;
-			$AuditList[$row['TransactionId']] = $row;
+			// $row['AuditorIds'] = $AuditorIds;
+			// $AuditList[$row['TransactionId']] = $row;
 		}
 
 
@@ -146,18 +146,18 @@ function getDataList($data)
 
 
 		$columnlist = array();
-		$columnlist[] = ["field" => "rownumber", "label" => "SL", "align" => "center", "width" => "2%"];
-		$columnlist[] = ["field" => "Date", "label" => "Date", "align" => "left", "visible" => true, "sort" => true, "filter" => true, "width" => "7%"];
-		$columnlist[] = ["field" => "Day", "label" => "Day", "align" => "center", "visible" => true, "sort" => true, "filter" => true, "width" => "4%"];
-
-		$width = 87 / count($AuditorList) . '%';
+		$columnlist[] = ["field" => "Serial", "title" => "SL", "align" => "center", "width" => 20, "frozen"=>true];
+		$columnlist[] = ["field" => "Date", "title" => "Date", "filter" => true, "width" => 100, "frozen"=>true];
+		$columnlist[] = ["field" => "Day", "title" => "Day", "filter" => true, "width" => 70, "frozen"=>true];
+		//$width = 87 / count($AuditorList) . '%';
 		foreach ($AuditorList as $auditorId => $auditorInfo) {
-			$columnlist[] = ["field" => "A_" . $auditorId, "label" => $auditorInfo['AuditorName'], "align" => "left", "visible" => true, "sort" => true, "filter" => true, "width" => $width];
+			$columnlist[] = ["field" => "A_" . $auditorId, "title" => $auditorInfo['AuditorName'],  "width" => 120];
 		}
 
 
 		$dataList = array();
 		// $sl = 1;
+		$serial = 0;
 		foreach ($dataMatrix as $date => $rowobj) {
 
 			$row = [];
@@ -193,6 +193,7 @@ function getDataList($data)
 			}
 
 
+			$row["Serial"] = ++$serial;
 			$dataList[] = $row;
 		}
 
@@ -203,11 +204,11 @@ function getDataList($data)
 			"datalist" => [
 				"column" => $columnlist,
 				"data" => $dataList,
-				"dataMatrix" => $dataMatrix,
-				"dataList" => $dataList,
-				"HoliLeaveDayList" => $HoliLeaveDayList,
-				"AuditList" => $AuditList,
-				"AuditorIds" => $AuditorIds
+				// "dataMatrix" => $dataMatrix,
+				// "dataList" => $dataList,
+				// "HoliLeaveDayList" => $HoliLeaveDayList,
+				// "AuditList" => $AuditList,
+				// "AuditorIds" => $AuditorIds
 			]
 		];
 	} catch (PDOException $e) {

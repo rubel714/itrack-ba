@@ -29,6 +29,10 @@ import {
   Checkbox,
   ListItemText,
 } from "@material-ui/core";
+// react-tabulator
+import "react-tabulator/lib/styles.css"; // required styles
+import "react-tabulator/lib/css/tabulator.min.css"; // theme
+import { ReactTabulator, reactFormatter } from "react-tabulator";
 
 const AuditCalendar = (props) => {
   const serverpage = "auditcalendar"; // this is .php server page
@@ -249,12 +253,21 @@ const AuditCalendar = (props) => {
 
         {/* <!-- ####---THIS CLASS IS USE FOR TABLE GRID---####s --> */}
 
-        <CustomTable
+       {/*  <CustomTable
           columns={dataList.column ? dataList.column : []}
           rows={dataList.data ? dataList.data : {}}
-          // actioncontrol={actioncontrol}
           ispagination={false}
-        />
+        />*/}
+
+        
+                  <ReactTabulator 
+          data={dataList.data ? dataList.data : []}
+          columns={dataList.column ? dataList.column : []}
+  height="600px"
+  layout="fitData"
+  
+           />
+
       </div>
       {/* <!-- BODY CONTAINER END --> */}
     </>
