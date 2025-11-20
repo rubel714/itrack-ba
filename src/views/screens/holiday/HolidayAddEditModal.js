@@ -85,18 +85,18 @@ const DepartmentAddEditModal = (props) => {
         {/* <!-- Modal content --> */}
         <div class="modal-content-small" >
           <div class="modalHeader">
-            <h4>Add/Edit Holiday</h4>
+            <h4>Add/Edit Weekend</h4>
           </div>
 
           <div class="modalItemColumnOne">
-            <label>Holidate*</label>
+            <label>Weekend Date*</label>
             <input
               type="date"
               id="HoliDate"
               name="HoliDate"
               style={{"width":"50%"}}
               class={errorObject.HoliDate}
-              placeholder="Enter Holidate"
+              placeholder="Enter Weekend Date"
               value={currentRow.HoliDate}
               onChange={(e) => handleChange(e)}
             />

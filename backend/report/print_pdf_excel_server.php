@@ -549,7 +549,7 @@ function HoliDyExport()
 	ORDER BY `HoliDate` DESC;";
 
 	$tableProperties["query_field"] = array("HoliDate","YearName","MonthName","DayName");
-	$tableProperties["table_header"] = array('Holidate', 'Year', 'Month', 'Day');
+	$tableProperties["table_header"] = array('Weekend Date', 'Year', 'Month', 'Day');
 	$tableProperties["align"] = array("left", "left", "left", "left");
 	$tableProperties["width_print_pdf"] = array("30%","20%","20%","20%"); //when exist serial then here total 95% and 5% use for serial
 	$tableProperties["width_excel"] = array("20", "15", "20", "20");
@@ -561,11 +561,11 @@ function HoliDyExport()
 
 	//Report header list
 	$tableProperties["header_list"][0] = $siteTitle;
-	$tableProperties["header_list"][1] = 'Holidays';
+	$tableProperties["header_list"][1] = 'Weekend List';
 	// $tableProperties["header_list"][1] = 'Heading 2';
 
 	//Report save name. Not allow any type of special character
-	$tableProperties["report_save_name"] = 'Holidays';
+	$tableProperties["report_save_name"] = 'Weekend';
 }
 
 function LeaveExport()

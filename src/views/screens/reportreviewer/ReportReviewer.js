@@ -1114,14 +1114,14 @@ getLeadAuditorList(rowData.LeadAuditorId);
               />
       
 
-               <label>Factory Holiday</label>
+               <label>Factory Weekend</label>
               <input
                 type="text"
                 id="FactoryHoliday"
                 name="FactoryHoliday"
                 disabled={true}
                 // class={errorObject.FactoryHoliday}
-                placeholder="Enter Factory Holiday"
+                placeholder="Enter Factory Weekend"
                 value={currentRow.FactoryHoliday}
                 onChange={(e) => handleChange(e)}
               />

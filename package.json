@@ -1,6 +1,6 @@
 {
   "name": "dispensing-tool",
-  "version": "1.0.24",
+  "version": "1.0.25",
   "private": true,
   "homepage": "",
   "dependencies": {
@@ -29,11 +29,12 @@
     "react-scripts": "3.4.1",
     "react-spinners": "^0.10.6",
     "react-swipeable-views": "^0.14.0",
+    "react-tabulator": "^0.15.0",
     "react-to-print": "^2.14.15",
     "react-window": "^1.8.9",
-    "react-tabulator": "^0.15.0",
     "reactstrap": "8.4.1",
-    "sweetalert": "^2.1.2"
+    "sweetalert": "^2.1.2",
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "react-scripts start",

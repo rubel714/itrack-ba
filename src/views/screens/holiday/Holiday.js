@@ -43,7 +43,7 @@ const Holiday = (props) => {
     // { field: 'SL', label: 'SL',width:'10%',align:'center',visible:true,sort:false,filter:false },
     {
       field: "HoliDate",
-      label: "Holidate",
+      label: "Weekend Date",
       align: "left",
       visible: true,
       sort: true,
@@ -209,7 +209,7 @@ const Holiday = (props) => {
         {/* <!-- ######-----TOP HEADER-----####### --> */}
         <div class="topHeader">
           <h4>
-            <a href="javascript:void(0)" onClick={() => props.history.push("/home")}>Home</a> ❯ Settings ❯ Holiday
+            <a href="javascript:void(0)" onClick={() => props.history.push("/home")}>Home</a> ❯ Settings ❯ Weekend
           </h4>
         </div>
 

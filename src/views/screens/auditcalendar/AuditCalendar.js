@@ -33,9 +33,11 @@ import {
 import "react-tabulator/lib/styles.css"; // required styles
 import "react-tabulator/lib/css/tabulator.min.css"; // theme
 import { ReactTabulator, reactFormatter } from "react-tabulator";
+import * as XLSX from "xlsx";
 
 const AuditCalendar = (props) => {
   const serverpage = "auditcalendar"; // this is .php server page
+  const tableRef = useRef(null);
 
   const { useState } = React;
   const [bFirst, setBFirst] = useState(true);
@@ -83,6 +85,54 @@ const AuditCalendar = (props) => {
         "&TimeStamp=" +
         Date.now()
     );
+  };
+
+  // Export Tabulator data to Excel
+  const exportToExcel = () => {
+    try {
+      // Get the data from dataList
+      const exportData = dataList.data || [];
+      const columns = dataList.column || [];
+
+      if (exportData.length === 0) {
+        alert("No data to export");
+        return;
+      }
+
+      // Prepare data for export
+      const worksheetData = [];
+
+      // Add headers
+      const headers = columns.map((col) => col.title || col.field || "");
+      worksheetData.push(headers);
+
+      // Add data rows
+      exportData.forEach((row) => {
+        const rowData = columns.map((col) => {
+          const field = col.field;
+          return row[field] !== undefined ? row[field] : "";
+        });
+        worksheetData.push(rowData);
+      });
+
+      // Create workbook and worksheet
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+
+      // Add worksheet to workbook
+      XLSX.utils.book_append_sheet(wb, ws, "Audit Calendar");
+
+      // Generate file name with date
+      const fileName = `audit_calendar_${moment().format(
+        "YYYY-MM-DD-H-m-s"
+      )}.xlsx`;
+
+      // Save file
+      XLSX.writeFile(wb, fileName);
+    } catch (error) {
+      console.error("Export error:", error);
+      alert("Error exporting to Excel: " + error.message);
+    }
   };
   /* =====End of Excel Export Code==== */
 
@@ -147,7 +197,6 @@ const AuditCalendar = (props) => {
   }, [StartDate, EndDate]);
 
   function createColumnList() {
-
     /**Get column for table */
     // let params = {
     //   action: "getDataList",
@@ -156,9 +205,7 @@ const AuditCalendar = (props) => {
     //   StartDate: StartDate,
     //   EndDate: EndDate,
     // };
-
     // ExecuteQuery(serverpage, params);
-  
     // setColumnList([
     //   { field: "rownumber", label: "SL", align: "center", width: "3%" },
     //   {
@@ -199,7 +246,6 @@ const AuditCalendar = (props) => {
     //   },
     // ]);
   }
-
 
   /**Get data for table list */
   function getDataList() {
@@ -249,25 +295,40 @@ const AuditCalendar = (props) => {
               />
             </div>
           </div>
+{/* 
+          <div>
+            <button
+              onClick={exportToExcel}
+              style={{
+                padding: "8px 16px",
+                backgroundColor: "#28a745",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                marginTop: "20px",
+              }}
+            >
+              Export to Excel
+            </button>
+          </div> */}
         </div>
 
         {/* <!-- ####---THIS CLASS IS USE FOR TABLE GRID---####s --> */}
 
-       {/*  <CustomTable
+        {/*  <CustomTable
           columns={dataList.column ? dataList.column : []}
           rows={dataList.data ? dataList.data : {}}
           ispagination={false}
         />*/}
 
-        
-                  <ReactTabulator 
+        <ReactTabulator
+          ref={tableRef}
           data={dataList.data ? dataList.data : []}
           columns={dataList.column ? dataList.column : []}
-  height="600px"
-  layout="fitData"
-  
-           />
-
+          height="600px"
+          layout="fitData"
+        />
       </div>
       {/* <!-- BODY CONTAINER END --> */}
     </>

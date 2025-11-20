@@ -1303,7 +1303,7 @@ const CoordinatorInput = (props) => {
                 onChange={(e) => handleChange(e)}
               />
       
-              <label>Factory Holiday</label>
+              <label>Factory Weekend</label>
              <FormControl sx={{ width: 300 }}>
                 <Select
                   multiple
@@ -1327,17 +1327,6 @@ const CoordinatorInput = (props) => {
                   ))}
                 </Select>
               </FormControl>
-              {/* <input
-                type="text"
-                id="FactoryHoliday"
-                name="FactoryHoliday"
-                disabled={permissionType == 1}
-                // class={errorObject.FactoryHoliday}
-                placeholder="Enter Factory Holiday"
-                value={currentRow.FactoryHoliday}
-                onChange={(e) => handleChange(e)}
-              />
-       */}
 
               <label>Program *</label>
               <Autocomplete

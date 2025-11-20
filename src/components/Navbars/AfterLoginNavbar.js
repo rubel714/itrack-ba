@@ -210,7 +210,7 @@ function AfterLoginNavbar(props) {
                         href="javascript:void(0)"
                         onClick={() => props.history.push("holiday")}
                       >
-                        Holiday
+                        Weekend
                       </a>
                     </li>
                   )}
@@ -585,7 +585,7 @@ function AfterLoginNavbar(props) {
                           href="javascript:void(0)"
                           onClick={() => props.history.push("holiday")}
                         >
-                          Holiday
+                          Weekend
                         </a>
                       </li>
                     )}
