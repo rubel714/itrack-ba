@@ -20,7 +20,14 @@ import {
 import ExecuteQueryHook from "../../../components/hooks/ExecuteQueryHook";
 import moment from "moment";
 import "../../../assets/css/audit.css";
-import { MenuItem, FormControl, InputLabel, Select, Checkbox, ListItemText } from "@material-ui/core";
+import {
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
+  Checkbox,
+  ListItemText,
+} from "@material-ui/core";
 
 const Invoice = (props) => {
   const permissionType = props.permissionType;
@@ -187,9 +194,7 @@ const Invoice = (props) => {
     };
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
-      setAuditorList(
-        [{ id: "", name: "Select" }].concat(res.data.datalist)
-      );
+      setAuditorList([{ id: "", name: "Select" }].concat(res.data.datalist));
 
       setCurrReportWriterId(selectReportWriterId);
     });
@@ -321,8 +326,7 @@ const Invoice = (props) => {
         [{ id: "", name: "Select Team Auditor" }].concat(res.data.datalist)
       );
 
-      setCurrTeamAuditorId(selectTeamAuditorId?selectTeamAuditorId:[]);
-
+      setCurrTeamAuditorId(selectTeamAuditorId ? selectTeamAuditorId : []);
     });
   }
 
@@ -441,10 +445,10 @@ const Invoice = (props) => {
     setErrorObject({ ...errorObject, [name]: null });
     setCurrentRow(data);
   };
-    const handleChangeMulpleCbo = (event) => {
+  const handleChangeMulpleCbo = (event) => {
     let data = { ...currentRow };
 
-  // console.log('selected: ', selected);
+    // console.log('selected: ', selected);
 
     // console.log('eventeventeventevent: ', event);
     // console.log('eventeventeventevent TeamAuditorList: ', TeamAuditorList);
@@ -452,10 +456,10 @@ const Invoice = (props) => {
     // console.log('value: ', value);
     setCurrTeamAuditorId(typeof value === "string" ? value.split(",") : value);
 
-    data["TeamAuditorId"] = typeof value === "string" ? value.split(",") : value;
+    data["TeamAuditorId"] =
+      typeof value === "string" ? value.split(",") : value;
     // setErrorObject({ ...errorObject, [name]: null });
     setCurrentRow(data);
-
   };
   const validateForm = () => {
     let validateFields = [];
@@ -560,15 +564,15 @@ const Invoice = (props) => {
       filter: true,
       width: "6%",
     },
-    // {
-    //   field: "LeadStatusName",
-    //   label: "Lead Status",
-    //   align: "left",
-    //   visible: true,
-    //   sort: true,
-    //   filter: true,
-    //   width: "7%",
-    // },
+    {
+      field: "LeadStatusName",
+      label: "Lead Status",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "6%",
+    },
     {
       field: "BuyerName",
       label: "Buyer",
@@ -578,15 +582,15 @@ const Invoice = (props) => {
       filter: true,
       width: "7%",
     },
-    {
-      field: "NextFollowupDate",
-      label: "Next Followup Date",
-      align: "left",
-      visible: true,
-      sort: true,
-      filter: true,
-      width: "6%",
-    },
+    // {
+    //   field: "NextFollowupDate",
+    //   label: "Next Followup Date",
+    //   align: "left",
+    //   visible: true,
+    //   sort: true,
+    //   filter: true,
+    //   width: "6%",
+    // },
     {
       field: "AssessmentNo",
       label: "Assessment No",
@@ -793,7 +797,7 @@ const Invoice = (props) => {
     getLeadAuditorList(rowData.LeadAuditorId);
     // setCurrLeadAuditorId(rowData.LeadAuditorId);
     // setCurrTeamAuditorId(rowData.TeamAuditorId);
-    
+
     getTeamAuditorList(JSON.parse(rowData.TeamAuditorId || "[]"));
     setCurrAuditTypeId(rowData.AuditTypeId);
 
@@ -861,23 +865,24 @@ const Invoice = (props) => {
         </div>
 
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
-       {toggle && ( <div class="searchAdd">
-          
-              <Button
-                label={"Export"}
-                class={"btnPrint"}
-                onClick={PrintPDFExcelExportFunction}
-              />
-              {/* <Button label={"ADD"} class={"btnAdd"} onClick={addData} /> */}
+        {toggle && (
+          <div class="searchAdd">
+            <Button
+              label={"Export"}
+              class={"btnPrint"}
+              onClick={PrintPDFExcelExportFunction}
+            />
+            {/* <Button label={"ADD"} class={"btnAdd"} onClick={addData} /> */}
 
-          {/* {!toggle && (
+            {/* {!toggle && (
             <Button
               label={"Back to List"}
               class={"btnClose"}
               onClick={showListView}
             />
           )} */}
-        </div>)}
+          </div>
+        )}
 
         {/* <!-- ####---THIS CLASS IS USE FOR TABLE GRID---####s --> */}
 
@@ -892,7 +897,6 @@ const Invoice = (props) => {
         {!toggle && (
           <>
             <div class="formEntryColumnThree">
-
               <label>Activity *</label>
               <Autocomplete
                 autoHighlight
@@ -970,7 +974,7 @@ const Invoice = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
- <label>Group Name</label>
+              <label>Group Name</label>
               <input
                 type="text"
                 id="FactoryGroupName"
@@ -991,8 +995,7 @@ const Invoice = (props) => {
                 // onChange={(e) => handleChange(e)}
               />
 
- 
-             <label>Factory Address</label>
+              <label>Factory Address</label>
               <input
                 type="text"
                 id="FactoryAddress"
@@ -1004,7 +1007,7 @@ const Invoice = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-               <label>Factory Contact Person</label>
+              <label>Factory Contact Person</label>
               <input
                 type="text"
                 id="FactoryContactPerson"
@@ -1016,7 +1019,7 @@ const Invoice = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-               <label>Factory Contact Person Phone</label>
+              <label>Factory Contact Person Phone</label>
               <input
                 type="text"
                 id="FactoryContactPersonPhone"
@@ -1027,8 +1030,8 @@ const Invoice = (props) => {
                 value={currentRow.FactoryContactPersonPhone}
                 onChange={(e) => handleChange(e)}
               />
-      
-               <label>Factory Contact Person Email</label>
+
+              <label>Factory Contact Person Email</label>
               <input
                 type="text"
                 id="FactoryContactPersonEmail"
@@ -1039,9 +1042,8 @@ const Invoice = (props) => {
                 value={currentRow.FactoryContactPersonEmail}
                 onChange={(e) => handleChange(e)}
               />
-      
 
-               <label>Factory Weekend</label>
+              <label>Factory Weekend</label>
               <input
                 type="text"
                 id="FactoryHoliday"
@@ -1052,7 +1054,6 @@ const Invoice = (props) => {
                 value={currentRow.FactoryHoliday}
                 onChange={(e) => handleChange(e)}
               />
-      
 
               <label>Program *</label>
               <Autocomplete
@@ -1215,12 +1216,11 @@ const Invoice = (props) => {
                 )}
               />
 
-
               <label>Lead Status</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
-                disabled={true}
+                disabled={permissionType == 1}
                 className="chosen_dropdown"
                 id="LeadStatusId"
                 name="LeadStatusId"
@@ -1253,14 +1253,14 @@ const Invoice = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
-  <label>Man Day</label>
+              <label>Manday(s)</label>
               <input
                 type="number"
                 id="ManDay"
                 name="ManDay"
                 disabled={true}
                 // class={errorObject.ManDay}
-                placeholder="Enter Man Day"
+                placeholder="Enter Manday(s)"
                 value={currentRow.ManDay}
                 onChange={(e) => handleChange(e)}
               />
@@ -1297,7 +1297,7 @@ const Invoice = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
-  <label>Lead Generated by (Department)</label>
+              <label>Lead Generated by (Department)</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
@@ -1392,18 +1392,6 @@ const Invoice = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-
-
-
-
-
-
-
-
-
-
-
-
               <label>Assessment No.</label>
               <input
                 type="text"
@@ -1427,8 +1415,7 @@ const Invoice = (props) => {
                 value={currentRow.AuditStartDate}
                 onChange={(e) => handleChange(e)}
               />
- 
-             
+
               <label>Audit End Date</label>
               <input
                 type="date"
@@ -1475,7 +1462,7 @@ const Invoice = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
- 
+
               <label>Lead Auditor</label>
               <Autocomplete
                 autoHighlight
@@ -1530,13 +1517,15 @@ const Invoice = (props) => {
                 >
                   {(TeamAuditorList || []).map((auditor) => (
                     <MenuItem key={auditor.id} value={auditor.id}>
-                      <Checkbox checked={currTeamAuditorId.includes(auditor.id)} />
+                      <Checkbox
+                        checked={currTeamAuditorId.includes(auditor.id)}
+                      />
                       <ListItemText primary={auditor.name} />
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
-              
+
               {/* <Autocomplete
                 autoHighlight
                 disableClearable
@@ -1572,7 +1561,6 @@ const Invoice = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               /> */}
- 
 
               <label>Audit Type</label>
               <Autocomplete
@@ -1634,8 +1622,6 @@ const Invoice = (props) => {
                 value={currentRow.WindowEnd}
                 onChange={(e) => handleChange(e)}
               />
- 
-
 
               <label>Report Writer</label>
               <Autocomplete
@@ -1687,7 +1673,7 @@ const Invoice = (props) => {
                   type="radio"
                   id="PaymentStatus"
                   name="PaymentStatus"
-                  disabled={true}
+                  disabled={permissionType == 1}
                   value="Yes"
                   checked={currentRow.PaymentStatus == "Yes"}
                   onChange={handleChangeRadio}
@@ -1698,13 +1684,13 @@ const Invoice = (props) => {
                   type="radio"
                   id="PaymentStatus"
                   name="PaymentStatus"
-                  disabled={true}
+                  disabled={permissionType == 1}
                   value="No"
                   checked={currentRow.PaymentStatus == "No"}
                   onChange={handleChangeRadio}
                 ></input>
               </div>
-     
+
               <label>No Of Employee</label>
               <input
                 type="text"
@@ -1722,20 +1708,19 @@ const Invoice = (props) => {
                 type="number"
                 id="AuditFee"
                 name="AuditFee"
-                disabled={true}
+                disabled={permissionType == 1}
                 // class={errorObject.AuditFee}
                 placeholder="Enter Audit Fee"
                 value={currentRow.AuditFee}
                 onChange={(e) => handleChange(e)}
               />
-  
-            
+
               <label>OPE</label>
               <input
                 type="number"
                 id="OPE"
                 name="OPE"
-                disabled={true}
+                disabled={permissionType == 1}
                 // class={errorObject.OPE}
                 placeholder="Enter OPE"
                 value={currentRow.OPE}
@@ -1747,23 +1732,19 @@ const Invoice = (props) => {
                 type="number"
                 id="OthersAmount"
                 name="OthersAmount"
-                disabled={true}
+                disabled={permissionType == 1}
                 // class={errorObject.OthersAmount}
                 placeholder="Enter Others Amount"
                 value={currentRow.OthersAmount}
                 onChange={(e) => handleChange(e)}
               />
 
-
-            
-
-
               <label>Revenue (BDT)</label>
               <input
                 type="number"
                 id="RevenueBDT"
                 name="RevenueBDT"
-                disabled={true}
+                disabled={permissionType == 1}
                 // class={errorObject.RevenueBDT}
                 placeholder="Enter Revenue BDT"
                 value={currentRow.RevenueBDT}
@@ -1774,13 +1755,13 @@ const Invoice = (props) => {
                 type="text"
                 id="PINo"
                 name="PINo"
-                disabled={true}
+                disabled={permissionType == 1}
                 // class={errorObject.PINo}
                 placeholder="Enter PI No"
                 value={currentRow.PINo}
                 onChange={(e) => handleChange(e)}
               />
-  
+
               {/* <label>Attached Documents</label>
               <input
                 type="text"
@@ -1792,7 +1773,6 @@ const Invoice = (props) => {
                 value={currentRow.AttachedDocuments}
                 onChange={(e) => handleChange(e)}
               />  */}
- 
 
               <label>Send Mail</label>
               <input
@@ -1804,7 +1784,7 @@ const Invoice = (props) => {
                 checked={currentRow.IsSendMail}
                 onChange={handleChangeCheck}
               />
-         </div>
+            </div>
 
             <div class="formEntryColumnThree">
               <label>Invoice To</label>
@@ -1812,7 +1792,7 @@ const Invoice = (props) => {
                 type="text"
                 id="InvoiceTo"
                 name="InvoiceTo"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.InvoiceTo}
                 placeholder="Enter Invoice To"
@@ -1825,7 +1805,7 @@ const Invoice = (props) => {
                 type="text"
                 id="NameofApplicant"
                 name="NameofApplicant"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.NameofApplicant}
                 placeholder="Enter Name of Applicant"
@@ -1838,7 +1818,7 @@ const Invoice = (props) => {
                 type="text"
                 id="InvoiceAddress"
                 name="InvoiceAddress"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.InvoiceAddress}
                 placeholder="Enter Address"
@@ -1851,20 +1831,20 @@ const Invoice = (props) => {
                 type="text"
                 id="InvoiceEmail"
                 name="InvoiceEmail"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.InvoiceEmail}
                 placeholder="Enter Email"
                 value={currentRow.InvoiceEmail}
                 onChange={(e) => handleChange(e)}
               />
- 
+
               <label>Mobile</label>
               <input
                 type="text"
                 id="InvoiceMobile"
                 name="InvoiceMobile"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.InvoiceMobile}
                 placeholder="Enter Mobile"
@@ -1877,7 +1857,7 @@ const Invoice = (props) => {
                 type="number"
                 id="Discount"
                 name="Discount"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.Discount}
                 placeholder="Enter Discount"
@@ -1885,7 +1865,6 @@ const Invoice = (props) => {
                 onChange={(e) => handleChange(e)}
               />
             </div>
-
 
             <div class="modalItemButton">
               <Button
@@ -1897,7 +1876,7 @@ const Invoice = (props) => {
                 <Button
                   label={"Update"}
                   class={"btnUpdate"}
-                disabled={ permissionType == 1}
+                  disabled={permissionType == 1}
                   onClick={addEditAPICall}
                 />
               )}

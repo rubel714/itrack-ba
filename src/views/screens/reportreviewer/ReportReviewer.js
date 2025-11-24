@@ -614,15 +614,15 @@ const ReportReviewer = (props) => {
       filter: true,
       width: "6%",
     },
-    // {
-    //   field: "LeadStatusName",
-    //   label: "Lead Status",
-    //   align: "left",
-    //   visible: true,
-    //   sort: true,
-    //   filter: true,
-    //   width: "7%",
-    // },
+    {
+      field: "LeadStatusName",
+      label: "Lead Status",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "7%",
+    },
     // {
     //   field: "BuyerName",
     //   label: "Buyer",
@@ -632,15 +632,15 @@ const ReportReviewer = (props) => {
     //   filter: true,
     //   width: "7%",
     // },
-    {
-      field: "NextFollowupDate",
-      label: "Next Followup Date",
-      align: "left",
-      visible: true,
-      sort: true,
-      filter: true,
-      width: "6%",
-    },
+    // {
+    //   field: "NextFollowupDate",
+    //   label: "Next Followup Date",
+    //   align: "left",
+    //   visible: true,
+    //   sort: true,
+    //   filter: true,
+    //   width: "6%",
+    // },
     {
       field: "AssessmentNo",
       label: "Assessment No",
@@ -1296,7 +1296,8 @@ getLeadAuditorList(rowData.LeadAuditorId);
               <Autocomplete
                 autoHighlight
                 disableClearable
-                disabled={true}
+                // disabled={true}
+                disabled={ permissionType == 1}
                 className="chosen_dropdown"
                 id="LeadStatusId"
                 name="LeadStatusId"
@@ -1330,14 +1331,14 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 )}
               />
 
-              <label>Man Day</label>
+              <label>Manday(s)</label>
               <input
                 type="number"
                 id="ManDay"
                 name="ManDay"
                 disabled={true}
                 // class={errorObject.ManDay}
-                placeholder="Enter Man Day"
+                placeholder="Enter Manday(s)"
                 value={currentRow.ManDay}
                 onChange={(e) => handleChange(e)}
               />

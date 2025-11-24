@@ -42,7 +42,7 @@ try {
     // Sender
     $mail->setFrom('do_not_reply@ng-ssl.com', 'Do Not Reply');
 
-
+    $extraCCEmail = array("akter.hossain@intertek.com"=>"Akter Hossain");   
 
 
     $sql = "select ifnull(a.CoordinatorId,0) CoordinatorId, ifnull(a.LeadAuditorId,0) LeadAuditorId, 
@@ -79,6 +79,15 @@ try {
 
     $AuditStartDate = $resultdata[0]['AuditStartDate'];
     $AuditEndDate = $resultdata[0]['AuditEndDate'];
+    $AuditStartEndDate = "";
+    if($AuditStartDate && $AuditEndDate){
+        $AuditStartEndDate = "$AuditStartDate - $AuditEndDate";
+    }else if($AuditStartDate){
+        $AuditStartEndDate = $AuditStartDate;
+    }else if($AuditEndDate){
+        $AuditStartEndDate = $AuditEndDate;
+    }
+
     $AssessmentNo = $resultdata[0]['AssessmentNo'];
     $BuyerName = $resultdata[0]['BuyerName'];
     $ProgramName = $resultdata[0]['ProgramName'];
@@ -150,6 +159,12 @@ try {
     }
     // $mail->addCC('account@yourdomain.com');
 
+    if(count($extraCCEmail)>0){
+        foreach($extraCCEmail as $ccemail=> $ccname ){
+            $mail->addCC($ccemail, $ccname);
+        }
+    }
+
     // multiple attachments
     // $files = [
     // '/home/yourcpaneluser/public_html/files/test.pdf',
@@ -192,7 +207,7 @@ try {
                     </tr>
                     <tr>
                         <td>Audit Date</td>
-                        <td>$AuditStartDate</td>
+                        <td>$AuditStartEndDate</td>
                         <td>Program</td>
                         <td>$ProgramName</td>
                     </tr>
@@ -205,7 +220,7 @@ try {
                     <tr>
                         <td>State</td>
                         <td>$State</td>
-                        <td>MD</td>
+                        <td>Manday(s)</td>
                         <td>$ManDay</td>
                     </tr>
                     <tr>
@@ -216,7 +231,7 @@ try {
                     </tr>
                     <tr>
                         <td>Auditor Name (Lead)</td>
-                        <td>$TeamAuditorName</td>
+                        <td>$LeadAuditorName</td>
                         <td>Window</td>
                         <td>$WindowDates</td>
                     </tr>

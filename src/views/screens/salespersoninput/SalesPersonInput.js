@@ -1071,14 +1071,14 @@ const SalesPersonInput = (props) => {
                 )}
               />
 
-              <label>Man Day</label>
+              <label>Manday(s)</label>
               <input
                 type="number"
                 id="ManDay"
                 name="ManDay"
                 disabled={currentRow.StatusId == 5 || permissionType == 1}
                 // class={errorObject.ManDay}
-                placeholder="Enter Man Day"
+                placeholder="Enter Manday(s)"
                 value={currentRow.ManDay}
                 onChange={(e) => handleChange(e)}
               />

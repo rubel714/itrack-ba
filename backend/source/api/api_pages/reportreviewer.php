@@ -94,6 +94,8 @@ function dataAddEdit($data)
 
 		$id = $data->rowData->id;
 
+		$LeadStatusId = $data->rowData->LeadStatusId ? $data->rowData->LeadStatusId : null;
+
 		$IsReportReceivedFromWriter = $data->rowData->IsReportReceivedFromWriter ? $data->rowData->IsReportReceivedFromWriter : null;
 		$ReportReceivedDate = $data->rowData->ReportReceivedDate ? $data->rowData->ReportReceivedDate : null;
 		$LocalReviewerId = $data->rowData->LocalReviewerId ? $data->rowData->LocalReviewerId : null;
@@ -111,8 +113,8 @@ function dataAddEdit($data)
 
 			$u = new updateq();
 			$u->table = 't_transaction';
-			$u->columns = ['IsReportReceivedFromWriter','ReportReceivedDate','LocalReviewerId','StandardTAT','StrategicTAT','ReportReleaseStatus','ReportReleasedStatusId','OverseasSendingDate','AuditorLogInTime','AduditorLogOutTime','ReportResult','LastReportReviewerUpdateUserId','LastUpdateUserId'];
-			$u->values = [$IsReportReceivedFromWriter,$ReportReceivedDate,$LocalReviewerId,$StandardTAT,$StrategicTAT,$ReportReleaseStatus,$ReportReleasedStatusId,$OverseasSendingDate,$AuditorLogInTime,$AduditorLogOutTime,$ReportResult,$UserId,$UserId];
+			$u->columns = ['LeadStatusId','IsReportReceivedFromWriter','ReportReceivedDate','LocalReviewerId','StandardTAT','StrategicTAT','ReportReleaseStatus','ReportReleasedStatusId','OverseasSendingDate','AuditorLogInTime','AduditorLogOutTime','ReportResult','LastReportReviewerUpdateUserId','LastUpdateUserId'];
+			$u->values = [$LeadStatusId,$IsReportReceivedFromWriter,$ReportReceivedDate,$LocalReviewerId,$StandardTAT,$StrategicTAT,$ReportReleaseStatus,$ReportReleasedStatusId,$OverseasSendingDate,$AuditorLogInTime,$AduditorLogOutTime,$ReportResult,$UserId,$UserId];
 			$u->pks = ['TransactionId'];
 			$u->pk_values = [$id];
 			$u->build_query();

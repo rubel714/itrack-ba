@@ -80,6 +80,13 @@ function dataAddEdit($data)
 
 		$id = $data->rowData->id;
 
+		$LeadStatusId = $data->rowData->LeadStatusId ? $data->rowData->LeadStatusId : null;
+		$PaymentStatus = $data->rowData->PaymentStatus ? $data->rowData->PaymentStatus : "No";
+		$AuditFee = $data->rowData->AuditFee ? $data->rowData->AuditFee : null;
+		$OPE = $data->rowData->OPE ? $data->rowData->OPE : null;
+		$OthersAmount = $data->rowData->OthersAmount ? $data->rowData->OthersAmount : null;
+		$PINo = $data->rowData->PINo ? $data->rowData->PINo : null;
+		$RevenueBDT = $data->rowData->RevenueBDT ? $data->rowData->RevenueBDT : null;
 
 		$InvoiceTo = $data->rowData->InvoiceTo ? $data->rowData->InvoiceTo : null;
 		$NameofApplicant = $data->rowData->NameofApplicant ? $data->rowData->NameofApplicant : null;
@@ -94,8 +101,8 @@ function dataAddEdit($data)
 
 			$u = new updateq();
 			$u->table = 't_transaction';
-			$u->columns = ['InvoiceTo','NameofApplicant','InvoiceAddress','InvoiceEmail','InvoiceMobile','Discount',"LastInvoiceUpdateUserId","LastUpdateUserId"];
-			$u->values = [$InvoiceTo,$NameofApplicant,$InvoiceAddress,$InvoiceEmail,$InvoiceMobile,$Discount,$UserId,$UserId];
+			$u->columns = ['LeadStatusId','PaymentStatus','AuditFee','OPE','OthersAmount','PINo','RevenueBDT','InvoiceTo','NameofApplicant','InvoiceAddress','InvoiceEmail','InvoiceMobile','Discount',"LastInvoiceUpdateUserId","LastUpdateUserId"];
+			$u->values = [$LeadStatusId,$PaymentStatus,$AuditFee,$OPE,$OthersAmount,$PINo,$RevenueBDT,$InvoiceTo,$NameofApplicant,$InvoiceAddress,$InvoiceEmail,$InvoiceMobile,$Discount,$UserId,$UserId];
 			$u->pks = ['TransactionId'];
 			$u->pk_values = [$id];
 			$u->build_query();

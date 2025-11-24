@@ -295,7 +295,7 @@ const AuditCalendar = (props) => {
               />
             </div>
           </div>
-{/* 
+
           <div>
             <button
               onClick={exportToExcel}
@@ -311,7 +311,7 @@ const AuditCalendar = (props) => {
             >
               Export to Excel
             </button>
-          </div> */}
+          </div>
         </div>
 
         {/* <!-- ####---THIS CLASS IS USE FOR TABLE GRID---####s --> */}

@@ -1533,7 +1533,7 @@ const CoordinatorInput = (props) => {
                 )}
               />
 
-              <label>Man Day</label>
+              <label>Manday(s)</label>
               <input
                 type="number"
                 id="ManDay"
@@ -1541,7 +1541,7 @@ const CoordinatorInput = (props) => {
                 disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.ManDay}
-                placeholder="Enter Man Day"
+                placeholder="Enter Manday(s)"
                 value={currentRow.ManDay}
                 onChange={(e) => handleChange(e)}
               />
