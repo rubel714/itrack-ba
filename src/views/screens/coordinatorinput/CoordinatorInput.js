@@ -5,7 +5,7 @@ import {
   Edit,
   AddAPhoto,
   PictureAsPdf,
-  Email,
+  Email,Remove,SendOutlined
 } from "@material-ui/icons";
 import { Button } from "../../../components/CustomControl/Button";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -51,6 +51,9 @@ const CoordinatorInput = (props) => {
 
   const [FactoryList, setFactoryList] = useState(null);
   const [currFactoryId, setCurrFactoryId] = useState(null);
+
+  const [StateList, setStateList] = useState(null);
+  const [currStateId, setCurrStateId] = useState(null);
 
   const [ProgramList, setProgramList] = useState(null);
   const [currProgramId, setCurrProgramId] = useState(null);
@@ -153,22 +156,26 @@ const CoordinatorInput = (props) => {
   /* =====End of Excel Export Code==== */
 
   function LoaderModal({ loading }) {
-  if (!loading) return null;
-  return (
-    <div style={{
-      position: "fixed",
-      top: 0, left: 0, right: 0, bottom: 0,
-      background: "rgba(0,0,0,0.3)",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      zIndex: 9999
-    }}>
-      <FadeLoader color="#da2525ff" />
-    </div>
-  );
-}
-
+    if (!loading) return null;
+    return (
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: "rgba(0,0,0,0.3)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 9999,
+        }}
+      >
+        <FadeLoader color="#da2525ff" />
+      </div>
+    );
+  }
 
   const handleChangeFilterDate = (e) => {
     const { name, value } = e.target;
@@ -186,6 +193,7 @@ const CoordinatorInput = (props) => {
   React.useEffect(() => {
     getActivityList("");
     getFactoryList("");
+    getStateList("");
     getProgramList("");
     getCoordinatorList("");
     getAuditStageList("");
@@ -233,6 +241,22 @@ const CoordinatorInput = (props) => {
       );
 
       setCurrFactoryId(selectFactoryId);
+    });
+  }
+
+  function getStateList(selectStateId) {
+    let params = {
+      action: "StateList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+    };
+
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      setStateList(
+        [{ id: "", name: "Select State" }].concat(res.data.datalist)
+      );
+
+      setCurrStateId(selectStateId);
     });
   }
 
@@ -429,7 +453,7 @@ const CoordinatorInput = (props) => {
     });
   }
 
-    function getDaysList(selectDays) {
+  function getDaysList(selectDays) {
     let params = {
       action: "getDaysList",
       lan: language(),
@@ -441,7 +465,7 @@ const CoordinatorInput = (props) => {
       //   [{ id: "", name: "Select Days" }].concat(res.data.datalist)
       // );
 
-          setDaysList(res.data.datalist);
+      setDaysList(res.data.datalist);
 
       setCurrDays(selectDays);
     });
@@ -510,6 +534,11 @@ const CoordinatorInput = (props) => {
     if (name === "FactoryId") {
       data["FactoryId"] = value;
       setCurrFactoryId(value);
+    }
+
+    if (name === "StateId") {
+      data["StateId"] = value;
+      setCurrStateId(value);
     }
 
     if (name === "ProgramId") {
@@ -609,7 +638,6 @@ const CoordinatorInput = (props) => {
     setCurrentRow(data);
   };
 
-  
   const handleChangeMulpleCboDays = (event) => {
     let data = { ...currentRow };
 
@@ -622,7 +650,6 @@ const CoordinatorInput = (props) => {
     // console.log('value==========: ', (typeof value === "string" ? value.split(",") : value));
     let FactoryHoliday = value.join(",");
     setCurrDays(FactoryHoliday);
-
 
     // setCurrTeamAuditorId(typeof value === "string" ? value.split(",") : value);
 
@@ -752,15 +779,15 @@ const CoordinatorInput = (props) => {
       filter: true,
       width: "7%",
     },
-    {
-      field: "NextFollowupDate",
-      label: "Next Followup Date",
-      align: "left",
-      visible: true,
-      sort: true,
-      filter: true,
-      width: "6%",
-    },
+    // {
+    //   field: "NextFollowupDate",
+    //   label: "Next Followup Date",
+    //   align: "left",
+    //   visible: true,
+    //   sort: true,
+    //   filter: true,
+    //   width: "6%",
+    // },
     {
       field: "AssessmentNo",
       label: "Assessment No",
@@ -800,7 +827,7 @@ const CoordinatorInput = (props) => {
     {
       field: "custom",
       label: "Action",
-      width: "5%",
+      width: "10%",
       align: "center",
       visible: true,
       sort: false,
@@ -889,6 +916,7 @@ const CoordinatorInput = (props) => {
       ActivityId: "",
       FactoryId: "",
       FactoryAddress: "",
+      StateId: "",
       FactoryGroupName: "",
       ProgramId: "",
       ExpireDate: "",
@@ -918,6 +946,7 @@ const CoordinatorInput = (props) => {
       WindowEnd: "",
       PaymentStatus: "No",
       ReportWriterId: "",
+      ReportWritingDate: "",
       NoOfEmployee: "",
       AuditFee: "",
       OPE: "",
@@ -926,6 +955,8 @@ const CoordinatorInput = (props) => {
       AttachedDocuments: "",
       AuditTypeId: "",
       IsSendMail: 0,
+      FileUploaded: 0,
+      ReportSentToCustomer: 0,
 
       FormData: null,
     });
@@ -991,6 +1022,7 @@ const CoordinatorInput = (props) => {
   const editData = (rowData) => {
     setCurrActivityId(rowData.ActivityId);
     setCurrFactoryId(rowData.FactoryId);
+    setCurrStateId(rowData.StateId);
     setCurrProgramId(rowData.ProgramId);
     setCurrCoordinatorId(rowData.CoordinatorId);
     setCurrAuditStageId(rowData.AuditStageId);
@@ -1255,7 +1287,7 @@ const CoordinatorInput = (props) => {
                 // onChange={(e) => handleChange(e)}
               />
 
-             <label>Factory Address</label>
+              <label>Factory Address</label>
               <input
                 type="text"
                 id="FactoryAddress"
@@ -1267,7 +1299,44 @@ const CoordinatorInput = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-               <label>Factory Contact Person</label>
+              <label>State</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                disabled={permissionType == 1}
+                // disabled={true}
+                // className="chosen_dropdown"
+                className={`chosen_dropdown ${
+                  errorObject.StateId ? errorObject.StateId : ""
+                }`}
+                id="StateId"
+                name="StateId"
+                autoComplete
+                // class={errorObject.StateId}
+                options={StateList ? StateList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select State" }}
+                value={
+                  StateList
+                    ? StateList[
+                        StateList.findIndex((list) => list.id === currStateId)
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown("StateId", valueobj ? valueobj.id : "")
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+              <label>Factory Contact Person</label>
               <input
                 type="text"
                 id="FactoryContactPerson"
@@ -1279,7 +1348,7 @@ const CoordinatorInput = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-               <label>Factory Contact Person Phone</label>
+              <label>Factory Contact Person Phone</label>
               <input
                 type="text"
                 id="FactoryContactPersonPhone"
@@ -1290,8 +1359,8 @@ const CoordinatorInput = (props) => {
                 value={currentRow.FactoryContactPersonPhone}
                 onChange={(e) => handleChange(e)}
               />
-      
-               <label>Factory Contact Person Email</label>
+
+              <label>Factory Contact Person Email</label>
               <input
                 type="text"
                 id="FactoryContactPersonEmail"
@@ -1302,17 +1371,23 @@ const CoordinatorInput = (props) => {
                 value={currentRow.FactoryContactPersonEmail}
                 onChange={(e) => handleChange(e)}
               />
-      
+
               <label>Factory Weekend</label>
-             <FormControl sx={{ width: 300 }}>
+              <FormControl sx={{ width: 300 }}>
                 <Select
                   multiple
                   disabled={permissionType == 1}
-                  value={currDays.length>0?currDays.split(","): []}
+                  value={currDays.length > 0 ? currDays.split(",") : []}
                   onChange={handleChangeMulpleCboDays}
+                  title={currDays ? currDays : ""}
                   renderValue={(selected) =>
                     (DaysList || [])
-                      .filter((a) => (currDays.length>0?currDays.split(","):[]).includes(a.id))
+                      .filter((a) =>
+                        (currDays.length > 0
+                          ? currDays.split(",")
+                          : []
+                        ).includes(a.id)
+                      )
                       .map((a) => a.name)
                       .join(", ")
                   }
@@ -1320,7 +1395,7 @@ const CoordinatorInput = (props) => {
                   {(DaysList || []).map((obj) => (
                     <MenuItem key={obj.id} value={obj.id}>
                       <Checkbox
-                        checked={(currDays.split(",")).includes(obj.id)}
+                        checked={currDays.split(",").includes(obj.id)}
                       />
                       <ListItemText primary={obj.name} />
                     </MenuItem>
@@ -1791,6 +1866,7 @@ const CoordinatorInput = (props) => {
                 id="LeadAuditorId"
                 name="LeadAuditorId"
                 autoComplete
+                
                 // class={errorObject.LeadAuditorId}
                 options={LeadAuditorList ? LeadAuditorList : []}
                 getOptionLabel={(option) => option.name}
@@ -1822,11 +1898,20 @@ const CoordinatorInput = (props) => {
 
               <label>Team Auditor</label>
               <FormControl sx={{ width: 300 }}>
+                
                 <Select
                   multiple
                   disabled={permissionType == 1}
                   value={currTeamAuditorId}
                   onChange={handleChangeMulpleCboTeamAuditor}
+                  title={currTeamAuditorId
+                    .map((id) => {
+                      const auditor = (TeamAuditorList || []).find((a) => a.id === id);
+                      return auditor ? auditor.name : "";
+                    })
+                    .filter(Boolean)
+                    .join(", ")
+                  }
                   renderValue={(selected) =>
                     (TeamAuditorList || [])
                       .filter((a) => currTeamAuditorId.includes(a.id))
@@ -1994,6 +2079,18 @@ const CoordinatorInput = (props) => {
                 )}
               />
 
+              <label>Report Writing Date</label>
+              <input
+                type="date"
+                id="ReportWritingDate"
+                name="ReportWritingDate"
+                disabled={permissionType == 1}
+                // class={errorObject.Window}
+                placeholder="Enter Report Writing Date"
+                value={currentRow.ReportWritingDate}
+                onChange={(e) => handleChange(e)}
+              />
+
               <label>Payment Status</label>
               <div>
                 <label>Yes</label>
@@ -2096,6 +2193,28 @@ const CoordinatorInput = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
+              <label>File Uploaded</label>
+              <input
+                id="FileUploaded"
+                name="FileUploaded"
+                disabled={ permissionType == 1}
+                type="checkbox"
+                class={"formCheckBox"}
+                checked={currentRow.FileUploaded}
+                onChange={handleChangeCheck}
+              />
+
+              <label>Report Sent to Customer</label>
+              <input
+                id="ReportSentToCustomer"
+                name="ReportSentToCustomer"
+                disabled={ permissionType == 1}
+                type="checkbox"
+                class={"formCheckBox"}
+                checked={currentRow.ReportSentToCustomer}
+                onChange={handleChangeCheck}
+              />
+
               <label>Attached Documents</label>
               {/* <input
                 type="text"
@@ -2112,6 +2231,7 @@ const CoordinatorInput = (props) => {
                 disabled={permissionType == 1}
                 onClick={FileUploadModalShow}
               />
+
 
               {/* <label>Send Mail</label>
               <input
@@ -2164,8 +2284,7 @@ const CoordinatorInput = (props) => {
         />
       )}
 
-        <LoaderModal loading={mailsendloading} />
-       
+      <LoaderModal loading={mailsendloading} />
 
       {/* {showModal && (
         <SalesPersonInputAddEditModal

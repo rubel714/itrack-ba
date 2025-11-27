@@ -245,6 +245,16 @@ function AfterLoginNavbar(props) {
                       </a>
                     </li>
                   )}
+                     {menuShowPermision("state") === 1 && (
+                    <li>
+                      <a
+                        href="javascript:void(0)"
+                        onClick={() => props.history.push("state")}
+                      >
+                        State List
+                      </a>
+                    </li>
+                  )}
                 </ul>
               </li>
             )}

@@ -28,6 +28,7 @@ import {
   Checkbox,
   ListItemText,
 } from "@material-ui/core";
+import { tr } from "date-fns/locale";
 
 const Invoice = (props) => {
   const permissionType = props.permissionType;
@@ -46,6 +47,9 @@ const Invoice = (props) => {
 
   const [FactoryList, setFactoryList] = useState(null);
   const [currFactoryId, setCurrFactoryId] = useState(null);
+
+  const [StateList, setStateList] = useState(null);
+  const [currStateId, setCurrStateId] = useState(null);
 
   const [ProgramList, setProgramList] = useState(null);
   const [currProgramId, setCurrProgramId] = useState(null);
@@ -107,6 +111,8 @@ const Invoice = (props) => {
   React.useEffect(() => {
     getActivityList("");
     getFactoryList("");
+    
+    getStateList("");
     getProgramList("");
     getCoordinatorList("");
     getAuditStageList("");
@@ -153,6 +159,23 @@ const Invoice = (props) => {
       setCurrFactoryId(selectFactoryId);
     });
   }
+
+    function getStateList(selectStateId) {
+      let params = {
+        action: "StateList",
+        lan: language(),
+        UserId: UserInfo.UserId,
+      };
+  
+      apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+        setStateList(
+          [{ id: "", name: "Select State" }].concat(res.data.datalist)
+        );
+  
+        setCurrStateId(selectStateId);
+      });
+    }
+  
 
   function getProgramList(selectProgramId) {
     let params = {
@@ -382,7 +405,10 @@ const Invoice = (props) => {
       data["FactoryId"] = value;
       setCurrFactoryId(value);
     }
-
+    if (name === "StateId") {
+      data["StateId"] = value;
+      setCurrStateId(value);
+    }
     if (name === "ProgramId") {
       data["ProgramId"] = value;
       setCurrProgramId(value);
@@ -766,6 +792,8 @@ const Invoice = (props) => {
       Window: "",
       PaymentStatus: "No",
       ReportWriterId: "",
+      
+      ReportWritingDate: "",
       NoOfEmployee: "",
       AuditFee: "",
       OPE: "",
@@ -783,6 +811,8 @@ const Invoice = (props) => {
   const editData = (rowData) => {
     setCurrActivityId(rowData.ActivityId);
     setCurrFactoryId(rowData.FactoryId);
+    setCurrStateId(rowData.StateId);
+
     setCurrProgramId(rowData.ProgramId);
     setCurrCoordinatorId(rowData.CoordinatorId);
     setCurrAuditStageId(rowData.AuditStageId);
@@ -1007,6 +1037,47 @@ const Invoice = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
+
+              <label>State</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                disabled={true}
+                // disabled={true}
+                // className="chosen_dropdown"
+                className={`chosen_dropdown ${
+                  errorObject.StateId ? errorObject.StateId : ""
+                }`}
+                id="StateId"
+                name="StateId"
+                autoComplete
+                // class={errorObject.StateId}
+                options={StateList ? StateList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select State" }}
+                value={
+                  StateList
+                    ? StateList[
+                        StateList.findIndex(
+                          (list) => list.id === currStateId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown("StateId", valueobj ? valueobj.id : "")
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+
               <label>Factory Contact Person</label>
               <input
                 type="text"
@@ -1049,6 +1120,7 @@ const Invoice = (props) => {
                 id="FactoryHoliday"
                 name="FactoryHoliday"
                 disabled={true}
+                title={currentRow.FactoryHoliday ? currentRow.FactoryHoliday : ""}
                 // class={errorObject.FactoryHoliday}
                 placeholder="Enter Factory Weekend"
                 value={currentRow.FactoryHoliday}
@@ -1508,6 +1580,14 @@ const Invoice = (props) => {
                   disabled={true}
                   value={currTeamAuditorId}
                   onChange={handleChangeMulpleCbo}
+                      title={currTeamAuditorId
+                    .map((id) => {
+                      const auditor = (TeamAuditorList || []).find((a) => a.id === id);
+                      return auditor ? auditor.name : "";
+                    })
+                    .filter(Boolean)
+                    .join(", ")
+                  }
                   renderValue={(selected) =>
                     (TeamAuditorList || [])
                       .filter((a) => currTeamAuditorId.includes(a.id))
@@ -1660,7 +1740,17 @@ const Invoice = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
-
+              <label>Report Writing Date</label>
+              <input
+                type="date"
+                id="ReportWritingDate"
+                name="ReportWritingDate"
+                disabled={true}
+                // class={errorObject.Window}
+                placeholder="Enter Report Writing Date"
+                value={currentRow.ReportWritingDate}
+                onChange={(e) => handleChange(e)}
+              />
               <label>Payment Status</label>
               <div>
                 <label>Yes</label>
@@ -1760,6 +1850,29 @@ const Invoice = (props) => {
                 placeholder="Enter PI No"
                 value={currentRow.PINo}
                 onChange={(e) => handleChange(e)}
+              />
+
+
+              <label>File Uploaded</label>
+              <input
+                id="FileUploaded"
+                name="FileUploaded"
+                disabled={ true}
+                type="checkbox"
+                class={"formCheckBox"}
+                checked={currentRow.FileUploaded}
+                onChange={handleChangeCheck}
+              />
+
+                <label>Report Sent to Customer</label>
+              <input
+                id="ReportSentToCustomer"
+                name="ReportSentToCustomer"
+                disabled={ true}
+                type="checkbox"
+                class={"formCheckBox"}
+                checked={currentRow.ReportSentToCustomer}
+                onChange={handleChangeCheck}
               />
 
               {/* <label>Attached Documents</label>

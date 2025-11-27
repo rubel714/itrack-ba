@@ -50,6 +50,9 @@ switch ($task) {
 	case "ZoneExport":
 		ZoneExport();
 		break;
+	case "StateExport":
+		StateExport();
+		break;
 	case "MemberExport":
 		MemberExport();
 		break;
@@ -418,6 +421,36 @@ function ZoneExport()
 
 	//Report save name. Not allow any type of special character
 	$tableProperties["report_save_name"] = 'UserZone_List';
+}
+
+
+function StateExport()
+{
+
+	global $sql, $tableProperties, $TEXT, $siteTitle;
+
+	$sql = "SELECT `StateName`,ColorCode
+	FROM t_state 
+	ORDER BY `StateName`;";
+
+	$tableProperties["query_field"] = array("StateName","ColorCode");
+	$tableProperties["table_header"] = array('State Name','Color Code');
+	$tableProperties["align"] = array("left","left");
+	$tableProperties["width_print_pdf"] = array("80%","20%"); //when exist serial then here total 95% and 5% use for serial
+	$tableProperties["width_excel"] = array("80","20");
+	$tableProperties["precision"] = array("string","string"); //string,date,datetime,0,1,2,3,4
+	$tableProperties["total"] = array(0,0); //not total=0, total=1
+	$tableProperties["color_code"] = array(0,1); //colorcode field = 1 not color code field = 0
+	$tableProperties["header_logo"] = 0; //include header left and right logo. 0 or 1
+	$tableProperties["footer_signatory"] = 0; //include footer signatory. 0 or 1
+
+	//Report header list
+	$tableProperties["header_list"][0] = $siteTitle;
+	$tableProperties["header_list"][1] = 'State List';
+	// $tableProperties["header_list"][1] = 'Heading 2';
+
+	//Report save name. Not allow any type of special character
+	$tableProperties["report_save_name"] = 'State_List';
 }
 
 

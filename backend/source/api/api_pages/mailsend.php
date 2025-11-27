@@ -40,7 +40,7 @@ try {
     // $mail->Port       = 465;   // if ssl use 465 , if tls use 587
 
     // Sender
-    $mail->setFrom('do_not_reply@ng-ssl.com', 'Do Not Reply');
+    $mail->setFrom('do_not_reply@ng-ssl.com', 'BGD BA Audit Admin'); // from email and name
 
     $extraCCEmail = array("akter.hossain@intertek.com"=>"Akter Hossain");   
 
@@ -53,7 +53,10 @@ try {
 
         case when a.Window is not null then DATE_FORMAT(a.Window, '%d-%b-%Y') else '' end Window
         ,case when a.WindowEnd is not null then DATE_FORMAT(a.WindowEnd, '%d-%b-%Y') else '' end WindowEnd,
-        g.AuditorName as ReportWriterName,a.FactoryAddress,a.FactoryContactPersonPhone,a.FactoryContactPerson
+        g.AuditorName as ReportWriterName,
+        case when a.ReportWritingDate is not null then DATE_FORMAT(a.ReportWritingDate, '%d-%b-%Y') else '' end ReportWritingDate,
+        
+        a.FactoryAddress,a.FactoryContactPersonPhone,a.FactoryContactPerson
         ,a.FactoryContactPersonEmail,a.FactoryHoliday,h.CountryName
 
         from t_transaction a
@@ -99,6 +102,7 @@ try {
     $Window = $resultdata[0]['Window'];
     $WindowEnd = $resultdata[0]['WindowEnd'];
     $ReportWriterName = $resultdata[0]['ReportWriterName'];
+    $ReportWritingDate = $resultdata[0]['ReportWritingDate'];
     $CountryName = $resultdata[0]['CountryName'];
 
      $WindowDates = "";
@@ -244,26 +248,27 @@ try {
                     <tr>
                         <td>Report Writer</td>
                         <td>$ReportWriterName</td>
+                        <td>Report Writing Date</td>
+                        <td>$ReportWritingDate</td>
+                    </tr>
+                    <tr>
+                        
                         <td>Factory Location/Address</td>
                         <td>$FactoryAddress</td>
-                    </tr>
-                    <tr>
                         <td>Contact Person Phone</td>
                         <td>$FactoryContactPersonPhone</td>
+                    </tr>
+                    <tr>
                         <td>Contact Person</td>
                         <td>$FactoryContactPerson</td>
-                    </tr>
-                    <tr>
                         <td>Contact Person Email</td>
                         <td>$FactoryContactPersonEmail</td>
-                        <td>Country</td>
-                        <td>$CountryName</td>
                     </tr>
                     <tr>
+                        <td>Country</td>
+                        <td>$CountryName</td>
                         <td>Factory Weekend</td>
                         <td>$FactoryHoliday</td>
-                        <td></td>
-                        <td></td>
                     </tr>
                  
                     <tr>

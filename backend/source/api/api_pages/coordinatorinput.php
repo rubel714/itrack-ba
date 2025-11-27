@@ -48,8 +48,8 @@ function getDataList($data)
 		a.LeadStatusId, h.LeadStatusName,a.ManDay,a.BuyerId,i.BuyerName,a.NextFollowupDate,
 		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks
 		, a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, a.CountryId, a.LeadAuditorId, REPLACE(a.TeamAuditorIds, '" . '"' . "', '') as TeamAuditorId, a.AuditTypeId, 
-		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT, 
-		a.AttachedDocuments, a.IsSendMail
+		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId,a.ReportWritingDate, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT, 
+		a.AttachedDocuments, a.IsSendMail,a.StateId,a.FileUploaded,a.ReportSentToCustomer
 	   FROM `t_transaction` a
 	   INNER JOIN `t_activity` b ON a.`ActivityId` = b.`ActivityId`
 	   LEFT JOIN `t_factory` c ON a.`FactoryId` = c.`FactoryId`
@@ -140,6 +140,7 @@ function dataAddEdit($data)
 		$WindowEnd = $data->rowData->WindowEnd ? $data->rowData->WindowEnd : null;
 		$PaymentStatus = $data->rowData->PaymentStatus ? $data->rowData->PaymentStatus : "No";
 		$ReportWriterId = $data->rowData->ReportWriterId ? $data->rowData->ReportWriterId : null;
+		$ReportWritingDate = $data->rowData->ReportWritingDate ? $data->rowData->ReportWritingDate : null;
 		$NoOfEmployee = $data->rowData->NoOfEmployee ? $data->rowData->NoOfEmployee : null;
 		$AuditFee = $data->rowData->AuditFee ? $data->rowData->AuditFee : null;
 		$OPE = $data->rowData->OPE ? $data->rowData->OPE : null;
@@ -148,6 +149,9 @@ function dataAddEdit($data)
 		$RevenueBDT = $data->rowData->RevenueBDT ? $data->rowData->RevenueBDT : null;
 		$AttachedDocuments = $data->rowData->AttachedDocuments ? $data->rowData->AttachedDocuments : [];
 		$IsSendMail = $data->rowData->IsSendMail ? $data->rowData->IsSendMail : 0;
+		$StateId = $data->rowData->StateId ? $data->rowData->StateId : null;
+		$FileUploaded = $data->rowData->FileUploaded ? $data->rowData->FileUploaded : 0;
+		$ReportSentToCustomer = $data->rowData->ReportSentToCustomer ? $data->rowData->ReportSentToCustomer : 0;
 		// $ReportReleaseStatus = $data->rowData->ReportReleaseStatus ? $data->rowData->ReportReleaseStatus : "No";
 
 
@@ -368,6 +372,7 @@ function dataAddEdit($data)
 				"WindowEnd",
 				"PaymentStatus",
 				"ReportWriterId",
+				"ReportWritingDate",
 				"NoOfEmployee",
 				"AuditFee",
 				"OPE",
@@ -376,6 +381,9 @@ function dataAddEdit($data)
 				"RevenueBDT",
 				"AttachedDocuments",
 				"IsSendMail",
+				"FileUploaded",
+				"ReportSentToCustomer",
+				"StateId",
 				"StandardTAT",
 				"StrategicTAT",
 				"LastCoordinatorInputUpdateUserId",
@@ -414,6 +422,7 @@ function dataAddEdit($data)
 				$WindowEnd,
 				$PaymentStatus,
 				$ReportWriterId,
+				$ReportWritingDate,
 				$NoOfEmployee,
 				$AuditFee,
 				$OPE,
@@ -422,6 +431,9 @@ function dataAddEdit($data)
 				$RevenueBDT,
 				json_encode($AttachedDocumentsArr),
 				$IsSendMail,
+				$FileUploaded,
+				$ReportSentToCustomer,
+				$StateId,
 				$StandardTAT,
 				$StrategicTAT,
 				$UserId,

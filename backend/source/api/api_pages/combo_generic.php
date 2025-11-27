@@ -76,6 +76,9 @@ switch ($task) {
 	case "FactoryList":
 		$returnData = FactoryList($data);
 		break;
+	case "StateList":
+		$returnData = StateList($data);
+		break;
 	case "getMemberList":
 		$returnData = getMemberList($data);
 		break;
@@ -678,6 +681,29 @@ function FactoryList($data)
 	 			 	FROM `t_factory` a
 					inner join t_factorygroup b on a.FactoryGroupId = b.FactoryGroupId
 					ORDER BY a.FactoryName;";
+
+		$resultdata = $dbh->query($query);
+
+		$returnData = [
+			"success" => 1,
+			"status" => 200,
+			"message" => "",
+			"datalist" => $resultdata
+		];
+	} catch (PDOException $e) {
+		$returnData = msg(0, 500, $e->getMessage());
+	}
+
+	return $returnData;
+}
+
+function StateList($data)
+{
+	try {
+		$dbh = new Db();
+		$query = "SELECT a.`StateId` id, a.StateName `name`
+	 			 	FROM `t_state` a
+					ORDER BY a.StateName;";
 
 		$resultdata = $dbh->query($query);
 
