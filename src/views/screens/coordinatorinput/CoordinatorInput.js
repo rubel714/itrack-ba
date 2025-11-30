@@ -714,6 +714,15 @@ const CoordinatorInput = (props) => {
       width: "13%",
     },
     {
+      field: "SalesEntryUserName",
+      label: "Input User",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "7%",
+    },
+    {
       field: "FactoryName",
       label: "Factory Name",
       align: "left",
@@ -742,15 +751,15 @@ const CoordinatorInput = (props) => {
       width: "7%",
     },
 
-    {
-      field: "OpportunityDate",
-      label: "Opportunity Date",
-      align: "left",
-      visible: true,
-      sort: true,
-      filter: true,
-      width: "6%",
-    },
+    // {
+    //   field: "OpportunityDate",
+    //   label: "Opportunity Date",
+    //   align: "left",
+    //   visible: true,
+    //   sort: true,
+    //   filter: true,
+    //   width: "6%",
+    // },
 
     {
       field: "AuditStageName",

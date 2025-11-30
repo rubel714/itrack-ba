@@ -655,7 +655,7 @@ const Invoice = (props) => {
     },
     {
       field: "InvoiceTo",
-      label: "Invoice To",
+      label: "Invoice Number",
       align: "left",
       visible: true,
       sort: true,
@@ -1900,7 +1900,7 @@ const Invoice = (props) => {
             </div>
 
             <div class="formEntryColumnThree">
-              <label>Invoice To</label>
+              <label>Invoice Number</label>
               <input
                 type="text"
                 id="InvoiceTo"
@@ -1908,7 +1908,7 @@ const Invoice = (props) => {
                 disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.InvoiceTo}
-                placeholder="Enter Invoice To"
+                placeholder="Enter Invoice Number"
                 value={currentRow.InvoiceTo}
                 onChange={(e) => handleChange(e)}
               />

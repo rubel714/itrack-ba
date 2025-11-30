@@ -46,7 +46,7 @@ function getDataList($data)
 		d.FactoryGroupName,	a.ProgramId,e.ProgramName,a.ExpireDate,a.OpportunityDate,a.TentativeOfferPrice,
 		a.CertificateBody,a.CoordinatorId,f.UserName as CoordinatorName, a.AuditStageId, g.AuditStageName,
 		a.LeadStatusId, h.LeadStatusName,a.ManDay,a.BuyerId,i.BuyerName,a.NextFollowupDate,
-		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks
+		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks,l.UserName as SalesEntryUserName
 		, a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, a.CountryId, a.LeadAuditorId, REPLACE(a.TeamAuditorIds, '" . '"' . "', '') as TeamAuditorId, a.AuditTypeId, 
 		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId,a.ReportWritingDate, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT, 
 		a.AttachedDocuments, a.IsSendMail,a.StateId,a.FileUploaded,a.ReportSentToCustomer
@@ -61,6 +61,8 @@ function getDataList($data)
 	   LEFT JOIN `t_buyer` i ON a.`BuyerId` = i.`BuyerId`
 	   LEFT JOIN `t_department` j ON a.`DepartmentId` = j.`DepartmentId`
 	   LEFT JOIN `t_member` k ON a.`MemberId` = k.`MemberId`
+	   LEFT JOIN `t_users` l ON a.`UserId` = l.`UserId`
+
 	   where ((a.AuditStartDate between '$StartDate' and '$EndDate') OR (a.AuditStartDate is null))
 	   AND a.StatusId = 5
 	   AND (a.CoordinatorId = $UserId OR $UserId=0)

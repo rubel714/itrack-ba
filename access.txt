@@ -39,9 +39,9 @@ REACT_APP_FRONT_URL=https://itrackba.ng-ssl.com/
 =================Web .env================================================
 FAST_REFRESH = false
 CHOKIDAR_USEPOLLING=true
-REACT_APP_BASE_NAME=
-REACT_APP_API_URL=http://175.29.124.231/backend/
-REACT_APP_FRONT_URL=http://175.29.124.231/
+REACT_APP_BASE_NAME=/itrackba
+REACT_APP_API_URL=http://175.29.124.231/itrackba/backend/
+REACT_APP_FRONT_URL=http://175.29.124.231/itrackba/
 
 
 =================Web env.php================================================

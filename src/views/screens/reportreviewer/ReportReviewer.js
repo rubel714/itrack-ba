@@ -2010,14 +2010,14 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 ></input>
               </div> */}
  
-              <label>Invoice To</label>
+              <label>Invoice Number</label>
               <input
                 type="text"
                 id="InvoiceTo"
                 name="InvoiceTo"
                 disabled={true}
                 // class={errorObject.InvoiceTo}
-                placeholder="Enter Invoice To"
+                placeholder="Enter Invoice Number"
                 value={currentRow.InvoiceTo}
                 onChange={(e) => handleChange(e)}
               />
