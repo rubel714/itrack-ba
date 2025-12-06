@@ -902,6 +902,7 @@ const CoordinatorInput = (props) => {
   const addData = () => {
     setCurrActivityId("");
     setCurrFactoryId("");
+    setCurrStateId("");
     setCurrProgramId("");
     setCurrCoordinatorId("");
     setCurrAuditStageId("");
@@ -924,8 +925,13 @@ const CoordinatorInput = (props) => {
       InvoiceNo: selectedDate,
       ActivityId: "",
       FactoryId: "",
+
       FactoryAddress: "",
+      FactoryContactPerson: "",
+      FactoryContactPersonPhone: "",
+      FactoryContactPersonEmail : "",
       StateId: "",
+
       FactoryGroupName: "",
       ProgramId: "",
       ExpireDate: "",

@@ -42,6 +42,9 @@ const SalesPersonInput = (props) => {
   const [FactoryList, setFactoryList] = useState(null);
   const [currFactoryId, setCurrFactoryId] = useState(null);
 
+  const [StateList, setStateList] = useState(null);
+  const [currStateId, setCurrStateId] = useState(null);
+
   const [ProgramList, setProgramList] = useState(null);
   const [currProgramId, setCurrProgramId] = useState(null);
 
@@ -103,6 +106,7 @@ const SalesPersonInput = (props) => {
   React.useEffect(() => {
     getActivityList("");
     getFactoryList("");
+    getStateList("");
     getProgramList("");
     getCoordinatorList("");
     getAuditStageList("");
@@ -143,6 +147,22 @@ const SalesPersonInput = (props) => {
       );
 
       setCurrFactoryId(selectFactoryId);
+    });
+  }
+
+  function getStateList(selectStateId) {
+    let params = {
+      action: "StateList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+    };
+
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      setStateList(
+        [{ id: "", name: "Select State" }].concat(res.data.datalist)
+      );
+
+      setCurrStateId(selectStateId);
     });
   }
 
@@ -280,6 +300,10 @@ const SalesPersonInput = (props) => {
       data["FactoryId"] = value;
       setCurrFactoryId(value);
     }
+    if (name === "StateId") {
+      data["StateId"] = value;
+      setCurrStateId(value);
+    }
 
     if (name === "ProgramId") {
       data["ProgramId"] = value;
@@ -351,75 +375,62 @@ const SalesPersonInput = (props) => {
     return isValid;
   };
 
-
-
-
   function addEditAPICall() {
     if (validateForm()) {
-
-
-      if(currentRow.CurrStatusId == 5){
-      swal({
-        title: "Are you sure?",
-        text: "You want to forward this report to audit team. This will be lock for you!",
-        icon: "warning",
-        buttons: {
-          confirm: {
-            text: "Yes",
-            value: true,
-            visible: true,
-            className: "",
-            closeModal: true,
+      if (currentRow.CurrStatusId == 5) {
+        swal({
+          title: "Are you sure?",
+          text: "You want to forward this report to audit team. This will be lock for you!",
+          icon: "warning",
+          buttons: {
+            confirm: {
+              text: "Yes",
+              value: true,
+              visible: true,
+              className: "",
+              closeModal: true,
+            },
+            cancel: {
+              text: "No",
+              value: null,
+              visible: true,
+              className: "",
+              closeModal: true,
+            },
           },
-          cancel: {
-            text: "No",
-            value: null,
-            visible: true,
-            className: "",
-            closeModal: true,
-          },
-        },
-        dangerMode: true,
-      }).then((allowAction) => {
-
-        if (allowAction) {
-          addEditAPICallToServer();
-        }
-
-      });
-    }else{
-      addEditAPICallToServer();
-    }
-
-
-    }
-  }
-
-
-  function addEditAPICallToServer(){
-     let params = {
-        action: "dataAddEdit",
-        lan: language(),
-        UserId: UserInfo.UserId,
-        rowData: currentRow,
-      };
-
-      apiCall.post(serverpage, { params }, apiOption()).then((res) => {
-        props.openNoticeModal({
-          isOpen: true,
-          msg: res.data.message,
-          msgtype: res.data.success,
+          dangerMode: true,
+        }).then((allowAction) => {
+          if (allowAction) {
+            addEditAPICallToServer();
+          }
         });
-
-        if (res.data.success === 1) {
-          setToggle(true); // true=show tabel, false= show add/edit form
-          getDataList();
-        }
-      });
+      } else {
+        addEditAPICallToServer();
+      }
+    }
   }
 
+  function addEditAPICallToServer() {
+    let params = {
+      action: "dataAddEdit",
+      lan: language(),
+      UserId: UserInfo.UserId,
+      rowData: currentRow,
+    };
 
+    apiCall.post(serverpage, { params }, apiOption()).then((res) => {
+      props.openNoticeModal({
+        isOpen: true,
+        msg: res.data.message,
+        msgtype: res.data.success,
+      });
 
+      if (res.data.success === 1) {
+        setToggle(true); // true=show tabel, false= show add/edit form
+        getDataList();
+      }
+    });
+  }
 
   function showListView() {
     setToggle(true);
@@ -589,12 +600,14 @@ const SalesPersonInput = (props) => {
           }}
         />
 
-        {rowData.StatusId == 1 && permissionType == 0 && (<DeleteOutline
-          className={"table-delete-icon"}
-          onClick={() => {
-            deleteData(rowData);
-          }}
-        />)}
+        {rowData.StatusId == 1 && permissionType == 0 && (
+          <DeleteOutline
+            className={"table-delete-icon"}
+            onClick={() => {
+              deleteData(rowData);
+            }}
+          />
+        )}
       </>
     );
   }
@@ -602,6 +615,7 @@ const SalesPersonInput = (props) => {
   const addData = () => {
     setCurrActivityId("");
     setCurrFactoryId("");
+    setCurrStateId("");
     setCurrProgramId("");
     setCurrCoordinatorId("");
     setCurrAuditStageId("");
@@ -620,6 +634,10 @@ const SalesPersonInput = (props) => {
       ActivityId: "",
       FactoryId: "",
       FactoryAddress: "",
+      FactoryContactPerson: "",
+      FactoryContactPersonPhone: "",
+      FactoryContactPersonEmail: "",
+      StateId: "",
       FactoryGroupName: "",
       ProgramId: "",
       ExpireDate: "",
@@ -646,6 +664,7 @@ const SalesPersonInput = (props) => {
   const editData = (rowData) => {
     setCurrActivityId(rowData.ActivityId);
     setCurrFactoryId(rowData.FactoryId);
+    setCurrStateId(rowData.StateId);
     setCurrProgramId(rowData.ProgramId);
     setCurrCoordinatorId(rowData.CoordinatorId);
     setCurrAuditStageId(rowData.AuditStageId);
@@ -854,7 +873,93 @@ const SalesPersonInput = (props) => {
                 }
                 // onChange={(e) => handleChange(e)}
               />
-{/* 
+
+              <label>Factory Address</label>
+              <input
+                type="text"
+                id="FactoryAddress"
+                name="FactoryAddress"
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
+                // class={errorObject.FactoryAddress}
+                placeholder="Enter Factory Address"
+                value={currentRow.FactoryAddress}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>State</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
+                // disabled={true}
+                // className="chosen_dropdown"
+                className={`chosen_dropdown ${
+                  errorObject.StateId ? errorObject.StateId : ""
+                }`}
+                id="StateId"
+                name="StateId"
+                autoComplete
+                // class={errorObject.StateId}
+                options={StateList ? StateList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select State" }}
+                value={
+                  StateList
+                    ? StateList[
+                        StateList.findIndex((list) => list.id === currStateId)
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown("StateId", valueobj ? valueobj.id : "")
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+              <label>Factory Contact Person</label>
+              <input
+                type="text"
+                id="FactoryContactPerson"
+                name="FactoryContactPerson"
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
+                // class={errorObject.FactoryContactPerson}
+                placeholder="Enter Factory Contact Person"
+                value={currentRow.FactoryContactPerson}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Factory Contact Person Phone</label>
+              <input
+                type="text"
+                id="FactoryContactPersonPhone"
+                name="FactoryContactPersonPhone"
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
+                // class={errorObject.FactoryContactPersonPhone}
+                placeholder="Enter Factory Contact Person Phone"
+                value={currentRow.FactoryContactPersonPhone}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Factory Contact Person Email</label>
+              <input
+                type="text"
+                id="FactoryContactPersonEmail"
+                name="FactoryContactPersonEmail"
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
+                // class={errorObject.FactoryContactPersonEmail}
+                placeholder="Enter Factory Contact Person Email"
+                value={currentRow.FactoryContactPersonEmail}
+                onChange={(e) => handleChange(e)}
+              />
+
+              {/* 
               <label>Factory Location</label>
               <input
                 type="text"

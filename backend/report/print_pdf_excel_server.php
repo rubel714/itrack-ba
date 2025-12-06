@@ -249,19 +249,20 @@ function FactoryExport()
 {
 	global $sql, $tableProperties, $TEXT, $siteTitle;
 
-	$sql = "SELECT a.FactoryName,a.FactoryCode, b.FactoryGroupName
+	$sql = "SELECT a.FactoryName,a.FactoryCode, b.FactoryGroupName,c.StateName
 		FROM t_factory a
 		INNER JOIN t_factorygroup b on a.FactoryGroupId=b.FactoryGroupId
+		LEFT JOIN t_state c on a.StateId=c.StateId
 		ORDER BY a.`FactoryName` ASC;";
 
 
-	$tableProperties["query_field"] = array("FactoryName", "FactoryCode", "FactoryGroupName");
-	$tableProperties["table_header"] = array('Factory Name', 'Factory Code', 'Factory Group');
-	$tableProperties["align"] = array("left", "left", "left");
-	$tableProperties["width_print_pdf"] = array("15%", "15%", "15%"); //when exist serial then here total 95% and 5% use for serial
-	$tableProperties["width_excel"] = array("25", "20", "20");
-	$tableProperties["precision"] = array("string", "string", "string"); //string,date,datetime,0,1,2,3,4
-	$tableProperties["total"] = array(0, 0, 0); //not total=0, total=1
+	$tableProperties["query_field"] = array("FactoryName", "FactoryCode", "FactoryGroupName", "StateName");
+	$tableProperties["table_header"] = array('Factory Name', 'Factory Code', 'Factory Group', 'State');
+	$tableProperties["align"] = array("left", "left", "left", "left");
+	$tableProperties["width_print_pdf"] = array("15%", "15%", "15%", "15%"); //when exist serial then here total 95% and 5% use for serial
+	$tableProperties["width_excel"] = array("25", "20", "20", "20");
+	$tableProperties["precision"] = array("string", "string", "string", "string"); //string,date,datetime,0,1,2,3,4
+	$tableProperties["total"] = array(0, 0, 0, 0); //not total=0, total=1
 	$tableProperties["color_code"] = array(0, 0, 0); //colorcode field = 1 not color code field = 0
 	$tableProperties["header_logo"] = 0; //include header left and right logo. 0 or 1
 	$tableProperties["footer_signatory"] = 0; //include footer signatory. 0 or 1

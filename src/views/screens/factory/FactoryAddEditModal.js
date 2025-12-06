@@ -37,6 +37,9 @@ const FactoryAddEditModal = (props) => {
 
   const [FactoryGroupList, setFactoryGroupList] = useState(null);
   const [currFactoryGroupId, setCurrFactoryGroupId] = useState(null);
+ 
+  const [StateList, setStateList] = useState(null);
+  const [currStateId, setCurrStateId] = useState(null);
 
   // const { isLoading, data: dataList, error, ExecuteQuery } = ExecuteQueryHook(); //Fetch data
 
@@ -51,6 +54,7 @@ const FactoryAddEditModal = (props) => {
 
   React.useEffect(() => {
     getFactoryGroupList(props.currentRow.FactoryGroupId);
+    getStateList(props.currentRow.StateId);
   }, []);
 
   function getFactoryGroupList(selectFactoryGroupId) {
@@ -66,6 +70,22 @@ const FactoryAddEditModal = (props) => {
       );
 
       setCurrFactoryGroupId(selectFactoryGroupId);
+    });
+  }
+
+  function getStateList(selectStateId) {
+    let params = {
+      action: "StateList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+    };
+
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      setStateList(
+        [{ id: "", name: "Select State" }].concat(res.data.datalist)
+      );
+
+      setCurrStateId(selectStateId);
     });
   }
 
@@ -88,6 +108,11 @@ const FactoryAddEditModal = (props) => {
     if (name === "FactoryGroupId") {
       data["FactoryGroupId"] = value;
       setCurrFactoryGroupId(value);
+    }
+
+    if (name === "StateId") {
+      data["StateId"] = value;
+      setCurrStateId(value);
     }
 
     setErrorObject({ ...errorObject, [name]: null });
@@ -559,6 +584,47 @@ const FactoryAddEditModal = (props) => {
               onChange={(event, valueobj) =>
                 handleChangeFilterDropDown(
                   "FactoryGroupId",
+                  valueobj ? valueobj.id : ""
+                )
+              }
+              renderOption={(option) => (
+                <Typography className="chosen_dropdown_font">
+                  {option.name}
+                </Typography>
+              )}
+              renderInput={(params) => (
+                <TextField {...params} variant="standard" fullWidth />
+              )}
+            />
+
+
+
+
+            
+            <label>State</label>
+            <Autocomplete
+              autoHighlight
+              disableClearable
+              className="chosen_dropdown"
+              id="StateId"
+              name="StateId"
+              autoComplete
+              // class={errorObject.StateId}
+              options={StateList ? StateList : []}
+              getOptionLabel={(option) => option.name}
+              defaultValue={{ id: 0, name: "Select State" }}
+              value={
+                StateList
+                  ? StateList[
+                      StateList.findIndex(
+                        (list) => list.id === currStateId
+                      )
+                    ]
+                  : null
+              }
+              onChange={(event, valueobj) =>
+                handleChangeFilterDropDown(
+                  "StateId",
                   valueobj ? valueobj.id : ""
                 )
               }

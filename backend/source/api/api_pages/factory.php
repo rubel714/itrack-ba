@@ -29,9 +29,10 @@ function getDataList($data){
 	try{
 		$dbh = new Db();
 		$query = "SELECT a.FactoryId AS id,b.FactoryGroupName, a.FactoryGroupId,
-		a.FactoryName,a.PhoneNo,a.Email,a.Address, a.FactoryCode,a.Locations,a.ContactInfo
+		a.FactoryName,a.PhoneNo,a.Email,a.Address, a.FactoryCode,a.Locations,a.ContactInfo,a.StateId,c.StateName
 		FROM t_factory a
 		INNER JOIN t_factorygroup b on a.FactoryGroupId=b.FactoryGroupId
+		LEFT JOIN t_state c on a.StateId=c.StateId
 		ORDER BY a.`FactoryName` ASC;";		
 		
 		$resultdataresult = $dbh->query($query);
@@ -77,6 +78,7 @@ function dataAddEdit($data) {
 		$FactoryGroupId = $data->rowData->FactoryGroupId;
 		$FactoryName = $data->rowData->FactoryName;
 		$FactoryCode = $data->rowData->FactoryCode;
+		$StateId = $data->rowData->StateId?$data->rowData->StateId:null;
 		$Locations = $data->rowData->Locations?$data->rowData->Locations:[];
 		$ContactInfo = $data->rowData->ContactInfo?$data->rowData->ContactInfo:[];
 		// $Email = $data->rowData->Email;
@@ -104,8 +106,8 @@ function dataAddEdit($data) {
 			if($FactoryId == ""){
 				$q = new insertq();
 				$q->table = 't_factory';
-				$q->columns = ['FactoryGroupId','FactoryName','FactoryCode','Locations','ContactInfo'];
-				$q->values = [$FactoryGroupId,$FactoryName,$FactoryCode,$Locations,$ContactInfo];
+				$q->columns = ['FactoryGroupId','FactoryName','FactoryCode','Locations','ContactInfo','StateId'];
+				$q->values = [$FactoryGroupId,$FactoryName,$FactoryCode,$Locations,$ContactInfo,$StateId];
 				$q->pks = ['FactoryId'];
 				$q->bUseInsetId = false;
 				$q->build_query();
@@ -113,8 +115,8 @@ function dataAddEdit($data) {
 			}else{
 				$u = new updateq();
 				$u->table = 't_factory';
-				$u->columns = ['FactoryGroupId','FactoryName','FactoryCode','Locations','ContactInfo'];
-				$u->values = [$FactoryGroupId,$FactoryName,$FactoryCode,$Locations,$ContactInfo];
+				$u->columns = ['FactoryGroupId','FactoryName','FactoryCode','Locations','ContactInfo','StateId'];
+				$u->values = [$FactoryGroupId,$FactoryName,$FactoryCode,$Locations,$ContactInfo,$StateId];
 				$u->pks = ['FactoryId'];
 				$u->pk_values = [$FactoryId];
 				$u->build_query();

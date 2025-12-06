@@ -56,7 +56,7 @@ const Factory = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "20%",
+      width: "10%",
     },
      {
       field: "FactoryGroupName",
@@ -66,6 +66,15 @@ const Factory = (props) => {
       sort: true,
       filter: true,
       width: "20%",
+    },
+     {
+      field: "StateName",
+      label: "State",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "15%",
     },
     {
       field: "custom",
@@ -129,6 +138,7 @@ const Factory = (props) => {
             FactoryGroupId:"",
             FactoryName: "",
             FactoryCode: "",
+            StateId: "",
             FormData: null,
           });
     openModal();
