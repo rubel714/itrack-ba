@@ -46,7 +46,7 @@ function getDataList($data)
 		d.FactoryGroupName,	a.ProgramId,e.ProgramName,a.ExpireDate,a.OpportunityDate,a.TentativeOfferPrice,
 		a.CertificateBody,a.CoordinatorId,f.UserName as CoordinatorName, a.AuditStageId, g.AuditStageName,
 		a.LeadStatusId, h.LeadStatusName,a.ManDay,a.BuyerId,i.BuyerName,a.NextFollowupDate,
-		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks,l.UserName as SalesEntryUserName
+		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks,a.Comments,l.UserName as SalesEntryUserName
 		, a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, a.CountryId, a.LeadAuditorId, REPLACE(a.TeamAuditorIds, '" . '"' . "', '') as TeamAuditorId, a.AuditTypeId, 
 		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId,a.ReportWritingDate, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT, 
 		a.AttachedDocuments, a.IsSendMail,a.StateId,a.FileUploaded,a.ReportSentToCustomer
@@ -121,6 +121,7 @@ function dataAddEdit($data)
 		$DepartmentId = $data->rowData->DepartmentId ? $data->rowData->DepartmentId : null;
 		$MemberId = $data->rowData->MemberId ? $data->rowData->MemberId : null;
 		$Remarks = $data->rowData->Remarks ? $data->rowData->Remarks : null;
+		$Comments = $data->rowData->Comments ? $data->rowData->Comments : null;
 
 		////////////////////////////////////Co ordinator////////////////////////////////////////////////////
 
@@ -363,6 +364,7 @@ function dataAddEdit($data)
 				'DepartmentId',
 				'MemberId',
 				'Remarks',
+				'Comments',
 				"AssessmentNo",
 				"AuditStartDate",
 				"AuditEndDate",
@@ -413,6 +415,7 @@ function dataAddEdit($data)
 				$DepartmentId,
 				$MemberId,
 				$Remarks,
+				$Comments,
 				$AssessmentNo,
 				$AuditStartDate,
 				$AuditEndDate,

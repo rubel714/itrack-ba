@@ -5,7 +5,9 @@ import {
   Edit,
   AddAPhoto,
   PictureAsPdf,
-  Email,Remove,SendOutlined
+  Email,
+  Remove,
+  SendOutlined,
 } from "@material-ui/icons";
 import { Button } from "../../../components/CustomControl/Button";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -660,7 +662,7 @@ const CoordinatorInput = (props) => {
 
   const validateForm = () => {
     let validateFields = [];
-    validateFields = ["ActivityId", "FactoryId", "ProgramId"];
+    validateFields = ["ActivityId", "FactoryId", "ProgramId", "CoordinatorId"];
     let errorData = {};
     let isValid = true;
     validateFields.map((field) => {
@@ -929,7 +931,7 @@ const CoordinatorInput = (props) => {
       FactoryAddress: "",
       FactoryContactPerson: "",
       FactoryContactPersonPhone: "",
-      FactoryContactPersonEmail : "",
+      FactoryContactPersonEmail: "",
       StateId: "",
 
       FactoryGroupName: "",
@@ -947,6 +949,7 @@ const CoordinatorInput = (props) => {
       DepartmentId: "",
       MemberId: "",
       Remarks: "",
+      Comments: "",
       StatusId: 5,
 
       AssessmentNo: "",
@@ -1506,13 +1509,15 @@ const CoordinatorInput = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Coordinator</label>
+              <label>Coordinator *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
                 disabled={permissionType == 1}
                 // disabled={true}
-                className="chosen_dropdown"
+                className={`chosen_dropdown ${
+                  errorObject.CoordinatorId ? errorObject.CoordinatorId : ""
+                }`}
                 id="CoordinatorId"
                 name="CoordinatorId"
                 autoComplete
@@ -1755,7 +1760,7 @@ const CoordinatorInput = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Remarks/Note</label>
+              <label>Business Type</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
@@ -1767,7 +1772,7 @@ const CoordinatorInput = (props) => {
                 //  class={errorObject.Remarks}
                 options={RemarksList ? RemarksList : []}
                 getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Remarks/Note" }}
+                defaultValue={{ id: 0, name: "Select Business Type" }}
                 value={
                   RemarksList
                     ? RemarksList[
@@ -1787,6 +1792,18 @@ const CoordinatorInput = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
+              <label>Comments</label>
+              <input
+                type="text"
+                id="Comments"
+                name="Comments"
+                disabled={permissionType == 1}
+                // class={errorObject.Comments}
+                placeholder="Enter Comments"
+                value={currentRow.Comments}
+                onChange={(e) => handleChange(e)}
+              />
+
               {/* <input
                 type="text"
                 id="Remarks"
@@ -1794,7 +1811,7 @@ const CoordinatorInput = (props) => {
                 disabled={ permissionType == 1}
                 // disabled={true}
                 // class={errorObject.Remarks}
-                placeholder="Enter Remarks/Note"
+                placeholder="Enter Business Type"
                 value={currentRow.Remarks}
                 onChange={(e) => handleChange(e)}
               /> */}
@@ -1881,7 +1898,6 @@ const CoordinatorInput = (props) => {
                 id="LeadAuditorId"
                 name="LeadAuditorId"
                 autoComplete
-                
                 // class={errorObject.LeadAuditorId}
                 options={LeadAuditorList ? LeadAuditorList : []}
                 getOptionLabel={(option) => option.name}
@@ -1913,7 +1929,6 @@ const CoordinatorInput = (props) => {
 
               <label>Team Auditor</label>
               <FormControl sx={{ width: 300 }}>
-                
                 <Select
                   multiple
                   disabled={permissionType == 1}
@@ -1921,12 +1936,13 @@ const CoordinatorInput = (props) => {
                   onChange={handleChangeMulpleCboTeamAuditor}
                   title={currTeamAuditorId
                     .map((id) => {
-                      const auditor = (TeamAuditorList || []).find((a) => a.id === id);
+                      const auditor = (TeamAuditorList || []).find(
+                        (a) => a.id === id
+                      );
                       return auditor ? auditor.name : "";
                     })
                     .filter(Boolean)
-                    .join(", ")
-                  }
+                    .join(", ")}
                   renderValue={(selected) =>
                     (TeamAuditorList || [])
                       .filter((a) => currTeamAuditorId.includes(a.id))
@@ -2212,7 +2228,7 @@ const CoordinatorInput = (props) => {
               <input
                 id="FileUploaded"
                 name="FileUploaded"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 type="checkbox"
                 class={"formCheckBox"}
                 checked={currentRow.FileUploaded}
@@ -2223,7 +2239,7 @@ const CoordinatorInput = (props) => {
               <input
                 id="ReportSentToCustomer"
                 name="ReportSentToCustomer"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 type="checkbox"
                 class={"formCheckBox"}
                 checked={currentRow.ReportSentToCustomer}
@@ -2246,7 +2262,6 @@ const CoordinatorInput = (props) => {
                 disabled={permissionType == 1}
                 onClick={FileUploadModalShow}
               />
-
 
               {/* <label>Send Mail</label>
               <input

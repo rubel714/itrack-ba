@@ -299,6 +299,16 @@ const SalesPersonInput = (props) => {
     if (name === "FactoryId") {
       data["FactoryId"] = value;
       setCurrFactoryId(value);
+      //console.log('StateIdStateIdStateId: ', 22222222222);
+
+      // let StateId = FactoryList[
+      //             FactoryList.findIndex(
+      //               (list) => list.id === value
+      //             )
+      //           ].StateId;
+      //           console.log('StateId: ', StateId);
+
+      // setCurrStateId(StateId? StateId : "");
     }
     if (name === "StateId") {
       data["StateId"] = value;
@@ -362,7 +372,7 @@ const SalesPersonInput = (props) => {
 
   const validateForm = () => {
     let validateFields = [];
-    validateFields = ["ActivityId", "FactoryId", "ProgramId"];
+    validateFields = ["ActivityId", "FactoryId", "ProgramId", "CoordinatorId"];
     let errorData = {};
     let isValid = true;
     validateFields.map((field) => {
@@ -655,6 +665,7 @@ const SalesPersonInput = (props) => {
       Remarks: "",
       StatusId: 1,
       CurrStatusId: 1,
+      Comments: "",
       FormData: null,
     });
     // openModal();
@@ -1069,12 +1080,15 @@ const SalesPersonInput = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Coordinator</label>
+              <label>Coordinator *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
                 disabled={currentRow.StatusId == 5 || permissionType == 1}
-                className="chosen_dropdown"
+                // className="chosen_dropdown"
+                className={`chosen_dropdown ${
+                  errorObject.CoordinatorId ? errorObject.CoordinatorId : ""
+                }`}
                 id="CoordinatorId"
                 name="CoordinatorId"
                 autoComplete
@@ -1317,7 +1331,7 @@ const SalesPersonInput = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Remarks/Note</label>
+              <label>Business Type</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
@@ -1329,7 +1343,7 @@ const SalesPersonInput = (props) => {
                 //  class={errorObject.Remarks}
                 options={RemarksList ? RemarksList : []}
                 getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Remarks/Note" }}
+                defaultValue={{ id: 0, name: "Select Business Type" }}
                 value={
                   RemarksList
                     ? RemarksList[
@@ -1349,12 +1363,25 @@ const SalesPersonInput = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
+
+              <label>Comments</label>
+              <input
+                type="text"
+                id="Comments"
+                name="Comments"
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
+                // class={errorObject.Comments}
+                placeholder="Enter Comments"
+                value={currentRow.Comments}
+                onChange={(e) => handleChange(e)}
+              />
+
               {/* <input
                 type="text"
                 id="Remarks"
                 name="Remarks"
                 // class={errorObject.Remarks}
-                placeholder="Enter Remarks/Note"
+                placeholder="Enter Business Type"
                 value={currentRow.Remarks}
                 onChange={(e) => handleChange(e)}
               /> */}

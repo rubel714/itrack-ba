@@ -11,7 +11,7 @@ Password: zz2X40U92sDsHqa9
 
 FAST_REFRESH = false
 CHOKIDAR_USEPOLLING=true
-REACT_APP_BASE_NAME=/itrack-ba
+REACT_APP_BASE_NAME=
 REACT_APP_API_URL=http://localhost/itrack-ba/backend/
 REACT_APP_FRONT_URL= http://localhost/itrack-ba/
 

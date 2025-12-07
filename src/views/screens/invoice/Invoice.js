@@ -111,7 +111,7 @@ const Invoice = (props) => {
   React.useEffect(() => {
     getActivityList("");
     getFactoryList("");
-    
+
     getStateList("");
     getProgramList("");
     getCoordinatorList("");
@@ -160,22 +160,21 @@ const Invoice = (props) => {
     });
   }
 
-    function getStateList(selectStateId) {
-      let params = {
-        action: "StateList",
-        lan: language(),
-        UserId: UserInfo.UserId,
-      };
-  
-      apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
-        setStateList(
-          [{ id: "", name: "Select State" }].concat(res.data.datalist)
-        );
-  
-        setCurrStateId(selectStateId);
-      });
-    }
-  
+  function getStateList(selectStateId) {
+    let params = {
+      action: "StateList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+    };
+
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      setStateList(
+        [{ id: "", name: "Select State" }].concat(res.data.datalist)
+      );
+
+      setCurrStateId(selectStateId);
+    });
+  }
 
   function getProgramList(selectProgramId) {
     let params = {
@@ -489,7 +488,7 @@ const Invoice = (props) => {
   };
   const validateForm = () => {
     let validateFields = [];
-    validateFields = ["ActivityId", "FactoryId", "ProgramId"];
+    validateFields = ["ActivityId", "FactoryId", "ProgramId", "CoordinatorId"];
     let errorData = {};
     let isValid = true;
     validateFields.map((field) => {
@@ -780,6 +779,7 @@ const Invoice = (props) => {
       DepartmentId: "",
       MemberId: "",
       Remarks: "",
+      Comments: "",
       StatusId: 5,
 
       AssessmentNo: "",
@@ -792,7 +792,7 @@ const Invoice = (props) => {
       Window: "",
       PaymentStatus: "No",
       ReportWriterId: "",
-      
+
       ReportWritingDate: "",
       NoOfEmployee: "",
       AuditFee: "",
@@ -1037,7 +1037,6 @@ const Invoice = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-
               <label>State</label>
               <Autocomplete
                 autoHighlight
@@ -1058,9 +1057,7 @@ const Invoice = (props) => {
                 value={
                   StateList
                     ? StateList[
-                        StateList.findIndex(
-                          (list) => list.id === currStateId
-                        )
+                        StateList.findIndex((list) => list.id === currStateId)
                       ]
                     : null
                 }
@@ -1076,7 +1073,6 @@ const Invoice = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
-
 
               <label>Factory Contact Person</label>
               <input
@@ -1120,7 +1116,9 @@ const Invoice = (props) => {
                 id="FactoryHoliday"
                 name="FactoryHoliday"
                 disabled={true}
-                title={currentRow.FactoryHoliday ? currentRow.FactoryHoliday : ""}
+                title={
+                  currentRow.FactoryHoliday ? currentRow.FactoryHoliday : ""
+                }
                 // class={errorObject.FactoryHoliday}
                 placeholder="Enter Factory Weekend"
                 value={currentRow.FactoryHoliday}
@@ -1212,12 +1210,14 @@ const Invoice = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Coordinator</label>
+              <label>Coordinator *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
                 disabled={true}
-                className="chosen_dropdown"
+                className={`chosen_dropdown ${
+                  errorObject.CoordinatorId ? errorObject.CoordinatorId : ""
+                }`}
                 id="CoordinatorId"
                 name="CoordinatorId"
                 autoComplete
@@ -1452,15 +1452,27 @@ const Invoice = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Remarks/Note</label>
+              <label>Business Type</label>
               <input
                 type="text"
                 id="Remarks"
                 name="Remarks"
                 disabled={true}
                 // class={errorObject.Remarks}
-                placeholder="Enter Remarks/Note"
+                placeholder="Enter Business Type"
                 value={currentRow.Remarks}
+                onChange={(e) => handleChange(e)}
+              />
+
+       <label>Comments</label>
+              <input
+                type="text"
+                id="Comments"
+                name="Comments"
+                disabled={true}
+                // class={errorObject.Comments}
+                placeholder="Enter Comments"
+                value={currentRow.Comments}
                 onChange={(e) => handleChange(e)}
               />
 
@@ -1580,14 +1592,15 @@ const Invoice = (props) => {
                   disabled={true}
                   value={currTeamAuditorId}
                   onChange={handleChangeMulpleCbo}
-                      title={currTeamAuditorId
+                  title={currTeamAuditorId
                     .map((id) => {
-                      const auditor = (TeamAuditorList || []).find((a) => a.id === id);
+                      const auditor = (TeamAuditorList || []).find(
+                        (a) => a.id === id
+                      );
                       return auditor ? auditor.name : "";
                     })
                     .filter(Boolean)
-                    .join(", ")
-                  }
+                    .join(", ")}
                   renderValue={(selected) =>
                     (TeamAuditorList || [])
                       .filter((a) => currTeamAuditorId.includes(a.id))
@@ -1852,23 +1865,22 @@ const Invoice = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-
               <label>File Uploaded</label>
               <input
                 id="FileUploaded"
                 name="FileUploaded"
-                disabled={ true}
+                disabled={true}
                 type="checkbox"
                 class={"formCheckBox"}
                 checked={currentRow.FileUploaded}
                 onChange={handleChangeCheck}
               />
 
-                <label>Report Sent to Customer</label>
+              <label>Report Sent to Customer</label>
               <input
                 id="ReportSentToCustomer"
                 name="ReportSentToCustomer"
-                disabled={ true}
+                disabled={true}
                 type="checkbox"
                 class={"formCheckBox"}
                 checked={currentRow.ReportSentToCustomer}

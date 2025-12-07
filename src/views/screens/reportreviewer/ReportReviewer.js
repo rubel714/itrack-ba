@@ -832,6 +832,7 @@ const ReportReviewer = (props) => {
       DepartmentId: "",
       MemberId: "",
       Remarks: "",
+      Comments: "",
       StatusId: 5,
 
       AssessmentNo: "",
@@ -1531,17 +1532,30 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Remarks/Note</label>
+              <label>Business Type</label>
               <input
                 type="text"
                 id="Remarks"
                 name="Remarks"
                 disabled={true}
                 // class={errorObject.Remarks}
-                placeholder="Enter Remarks/Note"
+                placeholder="Enter Business Type"
                 value={currentRow.Remarks}
                 onChange={(e) => handleChange(e)}
               />
+
+                     <label>Comments</label>
+              <input
+                type="text"
+                id="Comments"
+                name="Comments"
+                disabled={true}
+                // class={errorObject.Comments}
+                placeholder="Enter Comments"
+                value={currentRow.Comments}
+                onChange={(e) => handleChange(e)}
+              />
+
 
               <label>Assessment No.</label>
               <input

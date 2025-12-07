@@ -38,7 +38,7 @@ function getDataList($data)
 		a.CertificateBody,a.CoordinatorId,f.UserName as CoordinatorName, a.AuditStageId, g.AuditStageName,
 		a.LeadStatusId, h.LeadStatusName,a.ManDay,a.BuyerId,i.BuyerName,a.NextFollowupDate,
 		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks,a.StatusId, a.StatusId as CurrStatusId
-		,l.UserName as SalesEntryUserName
+		,l.UserName as SalesEntryUserName,a.Comments
 	   FROM `t_transaction` a
 	   INNER JOIN `t_activity` b ON a.`ActivityId` = b.`ActivityId`
 	   LEFT JOIN `t_factory` c ON a.`FactoryId` = c.`FactoryId`
@@ -106,6 +106,7 @@ function dataAddEdit($data)
 		$DepartmentId = $data->rowData->DepartmentId ? $data->rowData->DepartmentId : null;
 		$MemberId = $data->rowData->MemberId ? $data->rowData->MemberId : null;
 		$Remarks = $data->rowData->Remarks ? $data->rowData->Remarks : null;
+		$Comments = $data->rowData->Comments ? $data->rowData->Comments : null;
 		$StatusId = $data->rowData->StatusId ? $data->rowData->StatusId : 1;
 		$CurrStatusId = $data->rowData->CurrStatusId ? $data->rowData->CurrStatusId : 1;
 		// $StatusId = 1;
@@ -120,11 +121,11 @@ function dataAddEdit($data)
 				$q->columns = ['TransactionTypeId', 'TransactionDate', 'InvoiceNo', 'ActivityId', 'FactoryId','FactoryAddress',
 				'FactoryContactPerson',
 				'FactoryContactPersonPhone',
-				'FactoryContactPersonEmail','StateId', 'ProgramId', 'ExpireDate', 'OpportunityDate', 'TentativeOfferPrice', 'CertificateBody', 'CoordinatorId', 'AuditStageId', 'LeadStatusId', 'ManDay', 'BuyerId', 'NextFollowupDate', 'DepartmentId', 'MemberId', 'Remarks', 'UserId', 'LastSalesInputUpdateUserId', 'StatusId', 'LastUpdateUserId'];
+				'FactoryContactPersonEmail','StateId', 'ProgramId', 'ExpireDate', 'OpportunityDate', 'TentativeOfferPrice', 'CertificateBody', 'CoordinatorId', 'AuditStageId', 'LeadStatusId', 'ManDay', 'BuyerId', 'NextFollowupDate', 'DepartmentId', 'MemberId', 'Remarks','Comments', 'UserId', 'LastSalesInputUpdateUserId', 'StatusId', 'LastUpdateUserId'];
 				$q->values = [$TransactionTypeId, $TransactionDate, $InvoiceNo, $ActivityId, $FactoryId,$FactoryAddress,
 				$FactoryContactPerson,
 				$FactoryContactPersonPhone,
-				$FactoryContactPersonEmail, $StateId, $ProgramId, $ExpireDate, $OpportunityDate, $TentativeOfferPrice, $CertificateBody, $CoordinatorId, $AuditStageId, $LeadStatusId, $ManDay, $BuyerId, $NextFollowupDate, $DepartmentId, $MemberId, $Remarks, $UserId, $UserId, $CurrStatusId, $UserId];
+				$FactoryContactPersonEmail, $StateId, $ProgramId, $ExpireDate, $OpportunityDate, $TentativeOfferPrice, $CertificateBody, $CoordinatorId, $AuditStageId, $LeadStatusId, $ManDay, $BuyerId, $NextFollowupDate, $DepartmentId, $MemberId, $Remarks, $Comments, $UserId, $UserId, $CurrStatusId, $UserId];
 				$q->pks = ['TransactionId'];
 				$q->bUseInsetId = true;
 				$q->build_query();
@@ -132,8 +133,8 @@ function dataAddEdit($data)
 			} else {
 				$u = new updateq();
 				$u->table = 't_transaction';
-				$u->columns = ['ActivityId', 'FactoryId','FactoryAddress','FactoryContactPerson','FactoryContactPersonPhone','FactoryContactPersonEmail','StateId', 'ProgramId', 'ExpireDate', 'OpportunityDate', 'TentativeOfferPrice', 'CertificateBody', 'CoordinatorId', 'AuditStageId', 'LeadStatusId', 'ManDay', 'BuyerId', 'NextFollowupDate', 'DepartmentId', 'MemberId', 'Remarks', 'LastSalesInputUpdateUserId', 'LastUpdateUserId', 'StatusId'];
-				$u->values = [$ActivityId, $FactoryId,$FactoryAddress,$FactoryContactPerson,$FactoryContactPersonPhone,$FactoryContactPersonEmail, $StateId, $ProgramId, $ExpireDate, $OpportunityDate, $TentativeOfferPrice, $CertificateBody, $CoordinatorId, $AuditStageId, $LeadStatusId, $ManDay, $BuyerId, $NextFollowupDate, $DepartmentId, $MemberId, $Remarks, $UserId, $UserId, $CurrStatusId];
+				$u->columns = ['ActivityId', 'FactoryId','FactoryAddress','FactoryContactPerson','FactoryContactPersonPhone','FactoryContactPersonEmail','StateId', 'ProgramId', 'ExpireDate', 'OpportunityDate', 'TentativeOfferPrice', 'CertificateBody', 'CoordinatorId', 'AuditStageId', 'LeadStatusId', 'ManDay', 'BuyerId', 'NextFollowupDate', 'DepartmentId', 'MemberId', 'Remarks','Comments', 'LastSalesInputUpdateUserId', 'LastUpdateUserId', 'StatusId'];
+				$u->values = [$ActivityId, $FactoryId,$FactoryAddress,$FactoryContactPerson,$FactoryContactPersonPhone,$FactoryContactPersonEmail, $StateId, $ProgramId, $ExpireDate, $OpportunityDate, $TentativeOfferPrice, $CertificateBody, $CoordinatorId, $AuditStageId, $LeadStatusId, $ManDay, $BuyerId, $NextFollowupDate, $DepartmentId, $MemberId, $Remarks, $Comments, $UserId, $UserId, $CurrStatusId];
 				$u->pks = ['TransactionId'];
 				$u->pk_values = [$id];
 				$u->build_query();

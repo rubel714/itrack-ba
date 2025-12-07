@@ -677,7 +677,7 @@ function FactoryList($data)
 {
 	try {
 		$dbh = new Db();
-		$query = "SELECT a.`FactoryId` id, a.FactoryName `name`, b.FactoryGroupName, a.Address
+		$query = "SELECT a.`FactoryId` id, a.FactoryName `name`, b.FactoryGroupName, a.Address, a.StateId
 	 			 	FROM `t_factory` a
 					inner join t_factorygroup b on a.FactoryGroupId = b.FactoryGroupId
 					ORDER BY a.FactoryName;";
