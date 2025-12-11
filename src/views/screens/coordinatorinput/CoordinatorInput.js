@@ -969,6 +969,7 @@ const CoordinatorInput = (props) => {
       AuditFee: "",
       OPE: "",
       OthersAmount: "",
+      Discount:"",
       PINo: "",
       AttachedDocuments: "",
       AuditTypeId: "",
@@ -1149,7 +1150,7 @@ const CoordinatorInput = (props) => {
         {toggle && (
           <div class="searchAdd">
             <div>
-              <label>Start Date</label>
+              <label>Audit Start Date - Start</label>
               <div class="">
                 <input
                   type="date"
@@ -1162,7 +1163,8 @@ const CoordinatorInput = (props) => {
             </div>
 
             <div>
-              <label>End Date</label>
+              <label>Audit Start Date - End</label>
+
               <div class="">
                 <input
                   type="date"
@@ -2209,6 +2211,19 @@ const CoordinatorInput = (props) => {
                 // class={errorObject.RevenueBDT}
                 placeholder="Enter Revenue BDT"
                 value={currentRow.RevenueBDT}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Discount (%)</label>
+              <input
+                type="number"
+                id="Discount"
+                name="Discount"
+                disabled={permissionType == 1}
+                // disabled={true}
+                // class={errorObject.Discount}
+                placeholder="Enter Discount"
+                value={currentRow.Discount}
                 onChange={(e) => handleChange(e)}
               />
 

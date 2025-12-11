@@ -49,7 +49,7 @@ function getDataList($data)
 		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks,a.Comments,l.UserName as SalesEntryUserName
 		, a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, a.CountryId, a.LeadAuditorId, REPLACE(a.TeamAuditorIds, '" . '"' . "', '') as TeamAuditorId, a.AuditTypeId, 
 		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId,a.ReportWritingDate, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT, 
-		a.AttachedDocuments, a.IsSendMail,a.StateId,a.FileUploaded,a.ReportSentToCustomer
+		a.AttachedDocuments, a.IsSendMail,a.StateId,a.FileUploaded,a.ReportSentToCustomer,a.Discount
 	   FROM `t_transaction` a
 	   INNER JOIN `t_activity` b ON a.`ActivityId` = b.`ActivityId`
 	   LEFT JOIN `t_factory` c ON a.`FactoryId` = c.`FactoryId`
@@ -150,6 +150,7 @@ function dataAddEdit($data)
 		$OthersAmount = $data->rowData->OthersAmount ? $data->rowData->OthersAmount : null;
 		$PINo = $data->rowData->PINo ? $data->rowData->PINo : null;
 		$RevenueBDT = $data->rowData->RevenueBDT ? $data->rowData->RevenueBDT : null;
+		$Discount = $data->rowData->Discount ? $data->rowData->Discount : null;
 		$AttachedDocuments = $data->rowData->AttachedDocuments ? $data->rowData->AttachedDocuments : [];
 		$IsSendMail = $data->rowData->IsSendMail ? $data->rowData->IsSendMail : 0;
 		$StateId = $data->rowData->StateId ? $data->rowData->StateId : null;
@@ -383,6 +384,7 @@ function dataAddEdit($data)
 				"OthersAmount",
 				"PINo",
 				"RevenueBDT",
+				"Discount",
 				"AttachedDocuments",
 				"IsSendMail",
 				"FileUploaded",
@@ -434,6 +436,7 @@ function dataAddEdit($data)
 				$OthersAmount,
 				$PINo,
 				$RevenueBDT,
+				$Discount,
 				json_encode($AttachedDocumentsArr),
 				$IsSendMail,
 				$FileUploaded,

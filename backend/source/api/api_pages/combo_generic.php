@@ -106,6 +106,9 @@ switch ($task) {
 	case "getReleasedStatusList":
 		$returnData = getReleasedStatusList($data);
 		break;
+	case "getInvoiceStatusList":
+		$returnData = getInvoiceStatusList($data);
+		break;
 
 
 	case "MonthList":
@@ -928,6 +931,30 @@ function getReleasedStatusList($data)
 		$query = "SELECT a.`ReportReleasedStatusId` id, a.ReportReleasedStatus `name`
 	 			 	FROM t_releasedstatus a
 					ORDER BY a.ReportReleasedStatus;";
+
+		$resultdata = $dbh->query($query);
+
+		$returnData = [
+			"success" => 1,
+			"status" => 200,
+			"message" => "",
+			"datalist" => $resultdata
+		];
+	} catch (PDOException $e) {
+		$returnData = msg(0, 500, $e->getMessage());
+	}
+
+	return $returnData;
+}
+
+function getInvoiceStatusList($data)
+{
+	
+	try {
+		$dbh = new Db();
+		$query = "SELECT a.`InvStatusId` id, a.InvStatusName `name`
+	 			 	FROM t_invoice_status a
+					ORDER BY a.InvStatusName;";
 
 		$resultdata = $dbh->query($query);
 

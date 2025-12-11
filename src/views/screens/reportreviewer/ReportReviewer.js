@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef } from "react";
+import React, { forwardRef, useRef, useEffect } from "react";
 import swal from "sweetalert";
 import {
   DeleteOutline,
@@ -20,7 +20,14 @@ import {
 import ExecuteQueryHook from "../../../components/hooks/ExecuteQueryHook";
 import moment from "moment";
 import "../../../assets/css/audit.css";
-import { MenuItem, FormControl, InputLabel, Select, Checkbox, ListItemText } from "@material-ui/core";
+import {
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
+  Checkbox,
+  ListItemText,
+} from "@material-ui/core";
 
 const ReportReviewer = (props) => {
   const permissionType = props.permissionType;
@@ -48,7 +55,6 @@ const ReportReviewer = (props) => {
 
   const [CoordinatorList, setCoordinatorList] = useState(null);
   const [currCoordinatorId, setCurrCoordinatorId] = useState(null);
-
 
   const [AuditStageList, setAuditStageList] = useState(null);
   const [currAuditStageId, setCurrAuditStageId] = useState(null);
@@ -87,6 +93,9 @@ const ReportReviewer = (props) => {
   const [currReportReleasedStatusId, setCurrReportReleasedStatusId] =
     useState(null);
 
+  const [StartDate, setStartDate] = useState(moment().add(-30, "days").format("YYYY-MM-DD"));
+  const [EndDate, setEndDate] = useState(moment().format("YYYY-MM-DD"));
+
   const { isLoading, data: dataList, error, ExecuteQuery } = ExecuteQueryHook(); //Fetch data
   const [selectedDate, setSelectedDate] = useState(
     moment().format("YYYY-MM-DD")
@@ -102,6 +111,10 @@ const ReportReviewer = (props) => {
       finalUrl +
         "?action=ReportReviewerExport" +
         "&reportType=excel" +
+        "&StartDate=" +
+        StartDate +
+        "&EndDate=" +
+        EndDate +
         "&UserId=" +
         UserInfo.UserId +
         "&RoleId=" +
@@ -112,10 +125,23 @@ const ReportReviewer = (props) => {
   };
   /* =====End of Excel Export Code==== */
 
+  const handleChangeFilterDate = (e) => {
+    const { name, value } = e.target;
+    if (name === "StartDate") {
+      setStartDate(value);
+      //getTransactionList(currDepartmentId, currUserId, value, EndDate);
+    }
+
+    if (name === "EndDate") {
+      setEndDate(value);
+      // getTransactionList(currDepartmentId, currUserId, StartDate, value);
+    }
+  };
+
   React.useEffect(() => {
     getActivityList("");
     getFactoryList("");
-    
+
     getStateList("");
     getProgramList("");
     getCoordinatorList("");
@@ -166,22 +192,21 @@ const ReportReviewer = (props) => {
     });
   }
 
-    function getStateList(selectStateId) {
-      let params = {
-        action: "StateList",
-        lan: language(),
-        UserId: UserInfo.UserId,
-      };
-  
-      apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
-        setStateList(
-          [{ id: "", name: "Select State" }].concat(res.data.datalist)
-        );
-  
-        setCurrStateId(selectStateId);
-      });
-    }
-  
+  function getStateList(selectStateId) {
+    let params = {
+      action: "StateList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+    };
+
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      setStateList(
+        [{ id: "", name: "Select State" }].concat(res.data.datalist)
+      );
+
+      setCurrStateId(selectStateId);
+    });
+  }
 
   function getProgramList(selectProgramId) {
     let params = {
@@ -240,9 +265,7 @@ const ReportReviewer = (props) => {
     };
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
-      setAuditorList(
-        [{ id: "", name: "Select" }].concat(res.data.datalist)
-      );
+      setAuditorList([{ id: "", name: "Select" }].concat(res.data.datalist));
 
       setCurrReportWriterId(selectReportWriterId);
     });
@@ -373,7 +396,7 @@ const ReportReviewer = (props) => {
         [{ id: "", name: "Select Team Auditor" }].concat(res.data.datalist)
       );
 
-       setCurrTeamAuditorId(selectTeamAuditorId?selectTeamAuditorId:[]);
+      setCurrTeamAuditorId(selectTeamAuditorId ? selectTeamAuditorId : []);
     });
   }
 
@@ -520,10 +543,10 @@ const ReportReviewer = (props) => {
     setErrorObject({ ...errorObject, [name]: null });
     setCurrentRow(data);
   };
-    const handleChangeMulpleCbo = (event) => {
+  const handleChangeMulpleCbo = (event) => {
     let data = { ...currentRow };
 
-  // console.log('selected: ', selected);
+    // console.log('selected: ', selected);
 
     // console.log('eventeventeventevent: ', event);
     // console.log('eventeventeventevent TeamAuditorList: ', TeamAuditorList);
@@ -531,10 +554,10 @@ const ReportReviewer = (props) => {
     // console.log('value: ', value);
     setCurrTeamAuditorId(typeof value === "string" ? value.split(",") : value);
 
-    data["TeamAuditorId"] = typeof value === "string" ? value.split(",") : value;
+    data["TeamAuditorId"] =
+      typeof value === "string" ? value.split(",") : value;
     // setErrorObject({ ...errorObject, [name]: null });
     setCurrentRow(data);
-
   };
   const validateForm = () => {
     let validateFields = [];
@@ -755,6 +778,10 @@ const ReportReviewer = (props) => {
     setBFirst(false);
   }
 
+  useEffect(() => {
+    getDataList();
+  }, [StartDate, EndDate]);
+
   /**Get data for table list */
   function getDataList() {
     let params = {
@@ -762,6 +789,8 @@ const ReportReviewer = (props) => {
       lan: language(),
       UserId: UserInfo.UserId,
       RoleId: UserInfo.RoleId[0],
+      StartDate: StartDate,
+      EndDate: EndDate,
     };
     // console.log('LoginUserInfo params: ', params);
 
@@ -845,7 +874,7 @@ const ReportReviewer = (props) => {
       Window: "",
       PaymentStatus: "No",
       ReportWriterId: "",
-      
+
       ReportWritingDate: "",
       NoOfEmployee: "",
       AuditFee: "",
@@ -855,6 +884,11 @@ const ReportReviewer = (props) => {
       AuditTypeId: "",
       IsSendMail: 0,
       ReportReleaseStatus: "No",
+      
+      InvStatusId:"",
+      InvStatusName:"",
+      ReleaseDate:"",
+      InvoiceComments:"",
 
       IsReportReceivedFromWriter: "No",
       ReportReceivedDate: "",
@@ -887,10 +921,10 @@ const ReportReviewer = (props) => {
 
     getMemberList(rowData.DepartmentId, rowData.MemberId);
     setCurrCountryId(rowData.CountryId);
-getLeadAuditorList(rowData.LeadAuditorId);
+    getLeadAuditorList(rowData.LeadAuditorId);
     // setCurrLeadAuditorId(rowData.LeadAuditorId);
     // setCurrTeamAuditorId(rowData.TeamAuditorId);
-    
+
     getTeamAuditorList(JSON.parse(rowData.TeamAuditorId || "[]"));
 
     setCurrAuditTypeId(rowData.AuditTypeId);
@@ -961,24 +995,49 @@ getLeadAuditorList(rowData.LeadAuditorId);
         </div>
 
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
-        {toggle && ( <div class="searchAdd">
-         
-              <Button
-                label={"Export"}
-                class={"btnPrint"}
-                onClick={PrintPDFExcelExportFunction}
-              />
-              {/* <Button label={"ADD"} class={"btnAdd"} onClick={addData} /> */}
-         
+        {toggle && (
+          <div class="searchAdd">
+            <div>
+              <label>Audit End Date - Start</label>
+              <div class="">
+                <input
+                  type="date"
+                  id="StartDate"
+                  name="StartDate"
+                  value={StartDate}
+                  onChange={(e) => handleChangeFilterDate(e)}
+                />
+              </div>
+            </div>
 
-          {/* {!toggle && (
+            <div>
+              <label>Audit End Date - End</label>
+              <div class="">
+                <input
+                  type="date"
+                  id="EndDate"
+                  name="EndDate"
+                  value={EndDate}
+                  onChange={(e) => handleChangeFilterDate(e)}
+                />
+              </div>
+            </div>
+            <Button
+              label={"Export"}
+              class={"btnPrint"}
+              onClick={PrintPDFExcelExportFunction}
+            />
+            {/* <Button label={"ADD"} class={"btnAdd"} onClick={addData} /> */}
+
+            {/* {!toggle && (
             <Button
               label={"Back to List"}
               class={"btnClose"}
               onClick={showListView}
             />
           )} */}
-        </div> )}
+          </div>
+        )}
 
         {/* <!-- ####---THIS CLASS IS USE FOR TABLE GRID---####s --> */}
 
@@ -1072,7 +1131,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
- <label>Group Name</label>
+              <label>Group Name</label>
               <input
                 type="text"
                 id="FactoryGroupName"
@@ -1092,10 +1151,8 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 }
                 // onChange={(e) => handleChange(e)}
               />
-              
-              
- 
-             <label>Factory Address</label>
+
+              <label>Factory Address</label>
               <input
                 type="text"
                 id="FactoryAddress"
@@ -1106,7 +1163,6 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 value={currentRow.FactoryAddress}
                 onChange={(e) => handleChange(e)}
               />
-
 
               <label>State</label>
               <Autocomplete
@@ -1128,9 +1184,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 value={
                   StateList
                     ? StateList[
-                        StateList.findIndex(
-                          (list) => list.id === currStateId
-                        )
+                        StateList.findIndex((list) => list.id === currStateId)
                       ]
                     : null
                 }
@@ -1147,8 +1201,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 )}
               />
 
-
-               <label>Factory Contact Person</label>
+              <label>Factory Contact Person</label>
               <input
                 type="text"
                 id="FactoryContactPerson"
@@ -1160,7 +1213,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 onChange={(e) => handleChange(e)}
               />
 
-               <label>Factory Contact Person Phone</label>
+              <label>Factory Contact Person Phone</label>
               <input
                 type="text"
                 id="FactoryContactPersonPhone"
@@ -1171,8 +1224,8 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 value={currentRow.FactoryContactPersonPhone}
                 onChange={(e) => handleChange(e)}
               />
-      
-               <label>Factory Contact Person Email</label>
+
+              <label>Factory Contact Person Email</label>
               <input
                 type="text"
                 id="FactoryContactPersonEmail"
@@ -1183,21 +1236,21 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 value={currentRow.FactoryContactPersonEmail}
                 onChange={(e) => handleChange(e)}
               />
-      
 
-               <label>Factory Weekend</label>
+              <label>Factory Weekend</label>
               <input
                 type="text"
                 id="FactoryHoliday"
                 name="FactoryHoliday"
                 disabled={true}
-                title={currentRow.FactoryHoliday ? currentRow.FactoryHoliday : ""}
+                title={
+                  currentRow.FactoryHoliday ? currentRow.FactoryHoliday : ""
+                }
                 // class={errorObject.FactoryHoliday}
                 placeholder="Enter Factory Weekend"
                 value={currentRow.FactoryHoliday}
                 onChange={(e) => handleChange(e)}
               />
-      
 
               <label>Program *</label>
               <Autocomplete
@@ -1249,7 +1302,6 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 onChange={(e) => handleChange(e)}
               />
 
-
               <label>Opportunity Date</label>
               <input
                 type="date"
@@ -1274,7 +1326,6 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 onChange={(e) => handleChange(e)}
               />
 
-
               <label>CB (Certificate Body)</label>
               <input
                 type="text"
@@ -1286,7 +1337,6 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 value={currentRow.CertificateBody}
                 onChange={(e) => handleChange(e)}
               />
-
 
               <label>Coordinator</label>
               <Autocomplete
@@ -1369,7 +1419,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 autoHighlight
                 disableClearable
                 // disabled={true}
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 className="chosen_dropdown"
                 id="LeadStatusId"
                 name="LeadStatusId"
@@ -1519,7 +1569,6 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 )}
               />
 
-
               <label>Next Followup Date</label>
               <input
                 type="date"
@@ -1544,7 +1593,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 onChange={(e) => handleChange(e)}
               />
 
-                     <label>Comments</label>
+              <label>Comments</label>
               <input
                 type="text"
                 id="Comments"
@@ -1555,7 +1604,6 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 value={currentRow.Comments}
                 onChange={(e) => handleChange(e)}
               />
-
 
               <label>Assessment No.</label>
               <input
@@ -1580,10 +1628,6 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 value={currentRow.AuditStartDate}
                 onChange={(e) => handleChange(e)}
               />
- 
-             
-
-              
 
               <label>Audit End Date</label>
               <input
@@ -1631,7 +1675,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
- 
+
               <label>Lead Auditor</label>
               <Autocomplete
                 autoHighlight
@@ -1679,12 +1723,13 @@ getLeadAuditorList(rowData.LeadAuditorId);
                   onChange={handleChangeMulpleCbo}
                   title={currTeamAuditorId
                     .map((id) => {
-                      const auditor = (TeamAuditorList || []).find((a) => a.id === id);
+                      const auditor = (TeamAuditorList || []).find(
+                        (a) => a.id === id
+                      );
                       return auditor ? auditor.name : "";
                     })
                     .filter(Boolean)
-                    .join(", ")
-                  }
+                    .join(", ")}
                   renderValue={(selected) =>
                     (TeamAuditorList || [])
                       .filter((a) => currTeamAuditorId.includes(a.id))
@@ -1694,7 +1739,9 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 >
                   {(TeamAuditorList || []).map((auditor) => (
                     <MenuItem key={auditor.id} value={auditor.id}>
-                      <Checkbox checked={currTeamAuditorId.includes(auditor.id)} />
+                      <Checkbox
+                        checked={currTeamAuditorId.includes(auditor.id)}
+                      />
                       <ListItemText primary={auditor.name} />
                     </MenuItem>
                   ))}
@@ -1736,7 +1783,6 @@ getLeadAuditorList(rowData.LeadAuditorId);
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               /> */}
- 
 
               <label>Audit Type</label>
               <Autocomplete
@@ -1787,7 +1833,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 value={currentRow.Window}
                 onChange={(e) => handleChange(e)}
               />
- 
+
               <label>Window End</label>
               <input
                 type="date"
@@ -1801,7 +1847,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
               />
 
               <label>Report Writer</label>
-               <Autocomplete
+              <Autocomplete
                 autoHighlight
                 disableClearable
                 disabled={true}
@@ -1876,7 +1922,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                   onChange={handleChangeRadio}
                 ></input>
               </div>
- 
+
               <label>No Of Employee</label>
               <input
                 type="text"
@@ -1900,7 +1946,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 value={currentRow.AuditFee}
                 onChange={(e) => handleChange(e)}
               />
- 
+
               <label>OPE</label>
               <input
                 type="number"
@@ -1948,7 +1994,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 value={currentRow.AttachedDocuments}
                 onChange={(e) => handleChange(e)}
               /> */}
- 
+
               <label>PI No</label>
               <input
                 type="text"
@@ -1960,23 +2006,23 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 value={currentRow.PINo}
                 onChange={(e) => handleChange(e)}
               />
- 
- <label>File Uploaded</label>
+
+              <label>File Uploaded</label>
               <input
                 id="FileUploaded"
                 name="FileUploaded"
-                disabled={ true}
+                disabled={true}
                 type="checkbox"
                 class={"formCheckBox"}
                 checked={currentRow.FileUploaded}
                 onChange={handleChangeCheck}
               />
 
-                <label>Report Sent to Customer</label>
+              <label>Report Sent to Customer</label>
               <input
                 id="ReportSentToCustomer"
                 name="ReportSentToCustomer"
-                disabled={ true}
+                disabled={true}
                 type="checkbox"
                 class={"formCheckBox"}
                 checked={currentRow.ReportSentToCustomer}
@@ -2023,7 +2069,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                   onChange={handleChangeRadio}
                 ></input>
               </div> */}
- 
+
               <label>Invoice Number</label>
               <input
                 type="text"
@@ -2071,7 +2117,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 value={currentRow.InvoiceEmail}
                 onChange={(e) => handleChange(e)}
               />
-  
+
               <label>Mobile</label>
               <input
                 type="text"
@@ -2095,13 +2141,45 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 value={currentRow.Discount}
                 onChange={(e) => handleChange(e)}
               />
-              </div >
-   
+
+              <label>Invoice Status</label>
+              <input
+                type="text"
+                id="InvStatusName"
+                name="InvStatusName"
+                disabled={true}
+                // class={errorObject.InvStatusName}
+                placeholder="Enter Invoice Status"
+                value={currentRow.InvStatusName}
+                onChange={(e) => handleChange(e)}
+              />
+               <label>Release Date</label>
+              <input
+                type="text"
+                id="ReleaseDate"
+                name="ReleaseDate"
+                disabled={true}
+                // class={errorObject.ReleaseDate}
+                placeholder="Enter Release Date"
+                value={currentRow.ReleaseDate}
+                onChange={(e) => handleChange(e)}
+              />
+              <label>Invoice Comments</label>
+              <input
+                type="text"
+                id="InvoiceComments"
+                name="InvoiceComments"
+                disabled={true}
+                // class={errorObject.InvoiceComments}
+                placeholder="Enter Invoice Comments"
+                value={currentRow.InvoiceComments}
+                onChange={(e) => handleChange(e)}
+              />
+            </div>
 
             <div class="formEntryColumnThree">
-
               <label>Report Received From Writer</label>
-              <div >
+              <div>
                 <label>Yes</label>
                 <input
                   style={{
@@ -2112,7 +2190,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                   type="radio"
                   id="IsReportReceivedFromWriter"
                   name="IsReportReceivedFromWriter"
-                  disabled={ permissionType == 1}
+                  disabled={permissionType == 1}
                   // disabled={true}
                   value="Yes"
                   checked={currentRow.IsReportReceivedFromWriter == "Yes"}
@@ -2124,7 +2202,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                   type="radio"
                   id="IsReportReceivedFromWriter"
                   name="IsReportReceivedFromWriter"
-                disabled={ permissionType == 1}
+                  disabled={permissionType == 1}
                   // disabled={true}
                   value="No"
                   checked={currentRow.IsReportReceivedFromWriter == "No"}
@@ -2137,7 +2215,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 type="date"
                 id="ReportReceivedDate"
                 name="ReportReceivedDate"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.ReportReceivedDate}
                 placeholder="Enter Report Received Date"
@@ -2149,7 +2227,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
               <Autocomplete
                 autoHighlight
                 disableClearable
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 className="chosen_dropdown"
                 id="LocalReviewerId"
@@ -2189,27 +2267,26 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 type="date"
                 id="StandardTAT"
                 name="StandardTAT"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.StandardTAT}
                 placeholder="Enter Standard TAT"
                 value={currentRow.StandardTAT}
                 onChange={(e) => handleChange(e)}
               />
-     
+
               <label>Strategic TAT</label>
               <input
                 type="date"
                 id="StrategicTAT"
                 name="StrategicTAT"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.StrategicTAT}
                 placeholder="Enter Strategic TAT"
                 value={currentRow.StrategicTAT}
                 onChange={(e) => handleChange(e)}
               />
-
 
               <label>Report Release</label>
               <div>
@@ -2223,7 +2300,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                   type="radio"
                   id="ReportReleaseStatus"
                   name="ReportReleaseStatus"
-                disabled={ permissionType == 1}
+                  disabled={permissionType == 1}
                   value="Yes"
                   checked={currentRow.ReportReleaseStatus == "Yes"}
                   onChange={handleChangeRadio}
@@ -2234,14 +2311,13 @@ getLeadAuditorList(rowData.LeadAuditorId);
                   type="radio"
                   id="ReportReleaseStatus"
                   name="ReportReleaseStatus"
-                disabled={ permissionType == 1}
+                  disabled={permissionType == 1}
                   value="No"
                   checked={currentRow.ReportReleaseStatus == "No"}
                   onChange={handleChangeRadio}
                 ></input>
               </div>
 
-              
               {/* <label>Report Released Status</label>
               <Autocomplete
                 autoHighlight
@@ -2285,7 +2361,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 type="date"
                 id="OverseasSendingDate"
                 name="OverseasSendingDate"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.OverseasSendingDate}
                 placeholder="Enter Overseas Sending Date"
@@ -2297,20 +2373,20 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 type="datetime-local"
                 id="AuditorLogInTime"
                 name="AuditorLogInTime"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.AuditorLogInTime}
                 placeholder="Enter Auditor Log In Time"
                 value={currentRow.AuditorLogInTime}
                 onChange={(e) => handleChange(e)}
               />
-          
+
               <label>Aduditor Log Out Time</label>
               <input
                 type="datetime-local"
                 id="AduditorLogOutTime"
                 name="AduditorLogOutTime"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.AduditorLogOutTime}
                 placeholder="Enter Aduditor Log Out Time"
@@ -2318,12 +2394,12 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 onChange={(e) => handleChange(e)}
               />
 
-                <label>Report Result</label>
+              <label>Report Result</label>
               <input
                 type="text"
                 id="ReportResult"
                 name="ReportResult"
-                disabled={ permissionType == 1}
+                disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.ReportResult}
                 placeholder="Enter Report Result"
@@ -2342,7 +2418,7 @@ getLeadAuditorList(rowData.LeadAuditorId);
                 <Button
                   label={"Update"}
                   class={"btnUpdate"}
-                disabled={ permissionType == 1}
+                  disabled={permissionType == 1}
                   onClick={addEditAPICall}
                 />
               )}

@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef } from "react";
+import React, { forwardRef, useRef, useEffect } from "react";
 import swal from "sweetalert";
 import {
   DeleteOutline,
@@ -87,6 +87,14 @@ const Invoice = (props) => {
   const [AuditorList, setAuditorList] = useState(null);
   const [currReportWriterId, setCurrReportWriterId] = useState(null);
 
+  const [InvoiceStatusList, setInvoiceStatusList] = useState(null);
+  const [currInvStatusId, setCurrInvStatusId] = useState(null);
+
+  const [StartDate, setStartDate] = useState(moment().format("YYYY-MM-DD"));
+  const [EndDate, setEndDate] = useState(
+    moment().add(30, "days").format("YYYY-MM-DD")
+  );
+
   const { isLoading, data: dataList, error, ExecuteQuery } = ExecuteQueryHook(); //Fetch data
   const [selectedDate, setSelectedDate] = useState(
     moment().format("YYYY-MM-DD")
@@ -102,11 +110,28 @@ const Invoice = (props) => {
       finalUrl +
         "?action=InvoiceExport" +
         "&reportType=excel" +
+        "&StartDate=" +
+        StartDate +
+        "&EndDate=" +
+        EndDate +
         "&TimeStamp=" +
         Date.now()
     );
   };
   /* =====End of Excel Export Code==== */
+
+  const handleChangeFilterDate = (e) => {
+    const { name, value } = e.target;
+    if (name === "StartDate") {
+      setStartDate(value);
+      //getTransactionList(currDepartmentId, currUserId, value, EndDate);
+    }
+
+    if (name === "EndDate") {
+      setEndDate(value);
+      // getTransactionList(currDepartmentId, currUserId, StartDate, value);
+    }
+  };
 
   React.useEffect(() => {
     getActivityList("");
@@ -124,6 +149,7 @@ const Invoice = (props) => {
     // getLeadAuditorList("");
     // getTeamAuditorList("");
     getAuditTypeList("");
+    getInvoiceStatusList("");
 
     // console.log("calling use effect");
   }, []);
@@ -368,6 +394,23 @@ const Invoice = (props) => {
     });
   }
 
+  
+  function getInvoiceStatusList(selectInvStatusId) {
+    let params = {
+      action: "getInvoiceStatusList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+    };
+
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      setInvoiceStatusList(
+        [{ id: "", name: "Select Invoice Status" }].concat(res.data.datalist)
+      );
+
+      setCurrInvStatusId(selectInvStatusId);
+    });
+  }
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     let data = { ...currentRow };
@@ -460,6 +503,10 @@ const Invoice = (props) => {
     if (name === "AuditTypeId") {
       data["AuditTypeId"] = value;
       setCurrAuditTypeId(value);
+    }
+    if (name === "InvStatusId") {
+      data["InvStatusId"] = value;
+      setCurrInvStatusId(value);
     }
 
     if (name === "ReportWriterId") {
@@ -705,12 +752,18 @@ const Invoice = (props) => {
     setBFirst(false);
   }
 
+  useEffect(() => {
+    getDataList();
+  }, [StartDate, EndDate]);
+
   /**Get data for table list */
   function getDataList() {
     let params = {
       action: "getDataList",
       lan: language(),
       UserId: UserInfo.UserId,
+      StartDate: StartDate,
+      EndDate: EndDate,
     };
     // console.log('LoginUserInfo params: ', params);
 
@@ -754,6 +807,7 @@ const Invoice = (props) => {
     setCurrLeadAuditorId("");
     setCurrTeamAuditorId([]);
     setCurrAuditTypeId("");
+    setCurrInvStatusId("");
     setCurrReportWriterId("");
 
     setCurrentRow({
@@ -801,7 +855,10 @@ const Invoice = (props) => {
       AttachedDocuments: "",
       AuditTypeId: "",
       IsSendMail: 0,
-
+      Discount:"",
+      InvStatusId:"",
+      ReleaseDate:"",
+      InvoiceComments:"",
       FormData: null,
     });
     // openModal();
@@ -830,6 +887,7 @@ const Invoice = (props) => {
 
     getTeamAuditorList(JSON.parse(rowData.TeamAuditorId || "[]"));
     setCurrAuditTypeId(rowData.AuditTypeId);
+    setCurrInvStatusId(rowData.InvStatusId);
 
     getAuditorList(rowData.ReportWriterId);
     // setCurrReportWriterId(rowData.ReportWriterId);
@@ -897,6 +955,31 @@ const Invoice = (props) => {
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
         {toggle && (
           <div class="searchAdd">
+            <div>
+              <label>Audit Start Date - Start</label>
+              <div class="">
+                <input
+                  type="date"
+                  id="StartDate"
+                  name="StartDate"
+                  value={StartDate}
+                  onChange={(e) => handleChangeFilterDate(e)}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label>Audit Start Date - End</label>
+              <div class="">
+                <input
+                  type="date"
+                  id="EndDate"
+                  name="EndDate"
+                  value={EndDate}
+                  onChange={(e) => handleChangeFilterDate(e)}
+                />
+              </div>
+            </div>
             <Button
               label={"Export"}
               class={"btnPrint"}
@@ -1464,7 +1547,7 @@ const Invoice = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-       <label>Comments</label>
+              <label>Comments</label>
               <input
                 type="text"
                 id="Comments"
@@ -1989,6 +2072,74 @@ const Invoice = (props) => {
                 value={currentRow.Discount}
                 onChange={(e) => handleChange(e)}
               />
+
+
+              
+              <label>Invoice Status</label>
+              <Autocomplete
+                autoHighlight
+                disableClearable
+                disabled={permissionType == 1}
+                className="chosen_dropdown"
+                id="InvStatusId"
+                name="InvStatusId"
+                autoComplete
+                //  class={errorObject.InvStatusId}
+                options={InvoiceStatusList ? InvoiceStatusList : []}
+                getOptionLabel={(option) => option.name}
+                defaultValue={{ id: 0, name: "Select Invoice Status" }}
+                value={
+                  InvoiceStatusList
+                    ? InvoiceStatusList[
+                        InvoiceStatusList.findIndex(
+                          (list) => list.id === currInvStatusId
+                        )
+                      ]
+                    : null
+                }
+                onChange={(event, valueobj) =>
+                  handleChangeDropDown(
+                    "InvStatusId",
+                    valueobj ? valueobj.id : ""
+                  )
+                }
+                renderOption={(option) => (
+                  <Typography className="chosen_dropdown_font">
+                    {option.name}
+                  </Typography>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" fullWidth />
+                )}
+              />
+
+              
+              <label>Release Date</label>
+              <input
+                type="date"
+                id="ReleaseDate"
+                name="ReleaseDate"
+                disabled={permissionType == 1}
+                // class={errorObject.ReleaseDate}
+                placeholder="Enter Release Date"
+                value={currentRow.ReleaseDate}
+                onChange={(e) => handleChange(e)}
+              />
+
+
+
+              <label>Comments</label>
+              <input
+                type="text"
+                id="InvoiceComments"
+                name="InvoiceComments"
+                disabled={permissionType == 1}
+                // class={errorObject.InvoiceComments}
+                placeholder="Enter Comments"
+                value={currentRow.InvoiceComments}
+                onChange={(e) => handleChange(e)}
+              />
+
             </div>
 
             <div class="modalItemButton">

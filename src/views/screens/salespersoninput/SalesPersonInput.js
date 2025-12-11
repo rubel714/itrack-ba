@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef } from "react";
+import React, { forwardRef, useRef, useEffect } from "react";
 import swal from "sweetalert";
 import {
   DeleteOutline,
@@ -75,6 +75,11 @@ const SalesPersonInput = (props) => {
   const [MemberList, setMemberList] = useState(null);
   const [currMemberId, setCurrMemberId] = useState(null);
 
+  
+    const [StartDate, setStartDate] = useState(moment().add(-30, "days").format("YYYY-MM-DD"));
+    const [EndDate, setEndDate] = useState(moment().format("YYYY-MM-DD"));
+  
+
   // handleChangeWidthHeight
   const { isLoading, data: dataList, error, ExecuteQuery } = ExecuteQueryHook(); //Fetch data
   // const UserInfo = LoginUserInfo();
@@ -93,6 +98,10 @@ const SalesPersonInput = (props) => {
       finalUrl +
         "?action=SalesPersonInputExport" +
         "&reportType=excel" +
+          "&StartDate=" +
+        StartDate +
+        "&EndDate=" +
+        EndDate +
         "&UserId=" +
         UserInfo.UserId +
         "&RoleId=" +
@@ -102,6 +111,20 @@ const SalesPersonInput = (props) => {
     );
   };
   /* =====End of Excel Export Code==== */
+
+    const handleChangeFilterDate = (e) => {
+    const { name, value } = e.target;
+    if (name === "StartDate") {
+      setStartDate(value);
+      //getTransactionList(currDepartmentId, currUserId, value, EndDate);
+    }
+
+    if (name === "EndDate") {
+      setEndDate(value);
+      // getTransactionList(currDepartmentId, currUserId, StartDate, value);
+    }
+  };
+
 
   React.useEffect(() => {
     getActivityList("");
@@ -476,6 +499,15 @@ const SalesPersonInput = (props) => {
       width: "10%",
     },
     {
+      field: "TransactionDate",
+      label: "Input Date",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "7%",
+    },
+    {
       field: "SalesEntryUserName",
       label: "Input User",
       align: "left",
@@ -586,6 +618,10 @@ const SalesPersonInput = (props) => {
     setBFirst(false);
   }
 
+    useEffect(() => {
+      getDataList();
+    }, [StartDate, EndDate]);
+  
   /**Get data for table list */
   function getDataList() {
     let params = {
@@ -593,6 +629,8 @@ const SalesPersonInput = (props) => {
       lan: language(),
       UserId: UserInfo.UserId,
       RoleId: UserInfo.RoleId[0],
+      StartDate: StartDate,
+      EndDate: EndDate,
     };
     // console.log('LoginUserInfo params: ', params);
 
@@ -751,22 +789,42 @@ const SalesPersonInput = (props) => {
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
         {toggle && (
           <div class="searchAdd">
-            <>
+       
+       <div>
+              <label>Input Start Date</label>
+              <div class="">
+                <input
+                  type="date"
+                  id="StartDate"
+                  name="StartDate"
+                  value={StartDate}
+                  onChange={(e) => handleChangeFilterDate(e)}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label>Input End Date</label>
+              <div class="">
+                <input
+                  type="date"
+                  id="EndDate"
+                  name="EndDate"
+                  value={EndDate}
+                  onChange={(e) => handleChangeFilterDate(e)}
+                />
+              </div>
+            </div>
+
               <Button
                 label={"Export"}
                 class={"btnPrint"}
                 onClick={PrintPDFExcelExportFunction}
               />
               <Button label={"ADD"} class={"btnAdd"} onClick={addData} />
-            </>
+          
 
-            {/* {!toggle && (
-            <Button
-              label={"Back to List"}
-              class={"btnClose"}
-              onClick={showListView}
-            />
-          )} */}
+
           </div>
         )}
 

@@ -25,6 +25,8 @@ function getDataList($data)
 {
 	try {
 		$dbh = new Db();
+		$StartDate = trim($data->StartDate);
+		$EndDate = trim($data->EndDate) . " 23-59-59";
 
 		$query = "SELECT a.TransactionId AS id,a.TransactionTypeId,DATE(a.`TransactionDate`) TransactionDate,
 		a.InvoiceNo,a.ActivityId,b.ActivityName,a.FactoryId,c.FactoryName,
@@ -36,8 +38,7 @@ function getDataList($data)
 		, a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, a.CountryId, a.LeadAuditorId, REPLACE(a.TeamAuditorIds, '".'"'."', '') as TeamAuditorId, a.AuditTypeId, 
 		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId,a.ReportWritingDate, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT, 
 		a.AttachedDocuments, a.IsSendMail,a.FileUploaded,a.ReportSentToCustomer,a.StateId,
-
-		a.InvoiceTo, a.NameofApplicant, a.InvoiceAddress, a.InvoiceEmail, a.InvoiceMobile, a.Discount
+		a.InvoiceTo, a.NameofApplicant, a.InvoiceAddress, a.InvoiceEmail, a.InvoiceMobile, a.Discount,a.InvStatusId,a.ReleaseDate,a.InvoiceComments
 	   FROM `t_transaction` a
 	   INNER JOIN `t_activity` b ON a.`ActivityId` = b.`ActivityId`
 	   LEFT JOIN `t_factory` c ON a.`FactoryId` = c.`FactoryId`
@@ -49,7 +50,8 @@ function getDataList($data)
 	   LEFT JOIN `t_buyer` i ON a.`BuyerId` = i.`BuyerId`
 	   LEFT JOIN `t_department` j ON a.`DepartmentId` = j.`DepartmentId`
 	   LEFT JOIN `t_member` k ON a.`MemberId` = k.`MemberId`
-	   WHERE a.StatusId = 5
+	   where ((a.AuditStartDate between '$StartDate' and '$EndDate') OR (a.AuditStartDate is null))
+	   and a.StatusId = 5
 	   ORDER BY a.`TransactionDate` DESC, a.InvoiceNo ASC;";
 
 		$resultdata = $dbh->query($query);
@@ -94,15 +96,17 @@ function dataAddEdit($data)
 		$InvoiceEmail = $data->rowData->InvoiceEmail ? $data->rowData->InvoiceEmail : null;
 		$InvoiceMobile = $data->rowData->InvoiceMobile ? $data->rowData->InvoiceMobile : null;
 		$Discount = $data->rowData->Discount ? $data->rowData->Discount : null;
-		
-
+		$InvStatusId = $data->rowData->InvStatusId ? $data->rowData->InvStatusId : null;
+		$ReleaseDate = $data->rowData->ReleaseDate ? $data->rowData->ReleaseDate : null;
+		$InvoiceComments = $data->rowData->InvoiceComments ? $data->rowData->InvoiceComments : null;
+		 
 		try {
 			$aQuerys = array();
 
 			$u = new updateq();
 			$u->table = 't_transaction';
-			$u->columns = ['LeadStatusId','PaymentStatus','AuditFee','OPE','OthersAmount','PINo','RevenueBDT','InvoiceTo','NameofApplicant','InvoiceAddress','InvoiceEmail','InvoiceMobile','Discount',"LastInvoiceUpdateUserId","LastUpdateUserId"];
-			$u->values = [$LeadStatusId,$PaymentStatus,$AuditFee,$OPE,$OthersAmount,$PINo,$RevenueBDT,$InvoiceTo,$NameofApplicant,$InvoiceAddress,$InvoiceEmail,$InvoiceMobile,$Discount,$UserId,$UserId];
+			$u->columns = ['LeadStatusId','PaymentStatus','AuditFee','OPE','OthersAmount','PINo','RevenueBDT','InvoiceTo','NameofApplicant','InvoiceAddress','InvoiceEmail','InvoiceMobile','Discount','InvStatusId','ReleaseDate','InvoiceComments',"LastInvoiceUpdateUserId","LastUpdateUserId"];
+			$u->values = [$LeadStatusId,$PaymentStatus,$AuditFee,$OPE,$OthersAmount,$PINo,$RevenueBDT,$InvoiceTo,$NameofApplicant,$InvoiceAddress,$InvoiceEmail,$InvoiceMobile,$Discount,$InvStatusId,$ReleaseDate,$InvoiceComments,$UserId,$UserId];
 			$u->pks = ['TransactionId'];
 			$u->pk_values = [$id];
 			$u->build_query();

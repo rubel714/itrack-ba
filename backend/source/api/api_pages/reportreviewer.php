@@ -34,6 +34,10 @@ function getDataList($data)
 
 		$currDate = date('Y-m-d');
 
+		$StartDate = trim($data->StartDate);
+		$EndDate = trim($data->EndDate) . " 23-59-59";
+
+
 		$query = "SELECT a.TransactionId AS id,a.TransactionTypeId,DATE(a.`TransactionDate`) TransactionDate,
 		a.InvoiceNo,a.ActivityId,b.ActivityName,a.FactoryId,c.FactoryName,
 		a.FactoryAddress,a.FactoryContactPerson,a.FactoryContactPersonPhone,a.FactoryContactPersonEmail,a.FactoryHoliday
@@ -45,7 +49,7 @@ function getDataList($data)
 		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId,a.ReportWritingDate, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT, 
 		a.AttachedDocuments, a.IsSendMail,a.FileUploaded,a.ReportSentToCustomer,a.StateId, a.ReportReleaseStatus,
 
-		a.InvoiceTo, a.NameofApplicant, a.InvoiceAddress, a.InvoiceEmail, a.InvoiceMobile, a.Discount
+		a.InvoiceTo, a.NameofApplicant, a.InvoiceAddress, a.InvoiceEmail, a.InvoiceMobile, a.Discount,a.InvStatusId ,s.InvStatusName,a.ReleaseDate,a.InvoiceComments
 		 ,a.IsReportReceivedFromWriter,a.ReportReceivedDate,a.`LocalReviewerId`,q.UserName as LocalReviewer,
 		 a.StandardTAT,a.StrategicTAT, a.`ReportReleasedStatusId`,r.ReportReleasedStatus,
 		 a.OverseasSendingDate,a.AuditorLogInTime,a.AduditorLogOutTime,a.ReportResult
@@ -62,10 +66,12 @@ function getDataList($data)
 	   LEFT JOIN `t_member` k ON a.`MemberId` = k.`MemberId`
 	   LEFT JOIN `t_users` q ON a.`LocalReviewerId` = q.`UserId`
 	   LEFT JOIN `t_releasedstatus` r ON a.`ReportReleasedStatusId` = r.`ReportReleasedStatusId`
-	   WHERE a.StatusId = 5
-	   AND a.AuditEndDate<'$currDate'
-	   ORDER BY a.`ReportReleaseStatus` ASC, a.AuditEndDate DESC;";
+	   LEFT JOIN `t_invoice_status` s ON a.`InvStatusId` = s.`InvStatusId`
 
+	   WHERE a.StatusId = 5
+	   and ((a.AuditEndDate between '$StartDate' and '$EndDate') OR (a.AuditEndDate is null))
+	   ORDER BY a.`ReportReleaseStatus` ASC, a.AuditEndDate DESC;";
+// AND a.AuditEndDate<'$currDate'
 		$resultdata = $dbh->query($query);
 
 		$returnData = [
