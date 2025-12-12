@@ -394,7 +394,6 @@ const Invoice = (props) => {
     });
   }
 
-  
   function getInvoiceStatusList(selectInvStatusId) {
     let params = {
       action: "getInvoiceStatusList",
@@ -855,10 +854,9 @@ const Invoice = (props) => {
       AttachedDocuments: "",
       AuditTypeId: "",
       IsSendMail: 0,
-      Discount:"",
-      InvStatusId:"",
-      ReleaseDate:"",
-      InvoiceComments:"",
+      Discount: "",
+      InvStatusId: "",
+      InvoiceComments: "",
       FormData: null,
     });
     // openModal();
@@ -1992,6 +1990,35 @@ const Invoice = (props) => {
                 checked={currentRow.IsSendMail}
                 onChange={handleChangeCheck}
               />
+              <label>Audit Book</label>
+              <div>
+                <label>Yes</label>
+                <input
+                  style={{
+                    width: "15px",
+                    height: "15px",
+                    "margin-right": "15px",
+                  }}
+                  type="radio"
+                  id="AuditBook"
+                  name="AuditBook"
+                  disabled={true}
+                  value="Yes"
+                  checked={currentRow.AuditBook == "Yes"}
+                  onChange={handleChangeRadio}
+                ></input>
+                <label>No</label>
+                <input
+                  style={{ width: "15px", height: "15px" }}
+                  type="radio"
+                  id="AuditBook"
+                  name="AuditBook"
+                  disabled={true}
+                  value="No"
+                  checked={currentRow.AuditBook == "No"}
+                  onChange={handleChangeRadio}
+                ></input>
+              </div>
             </div>
 
             <div class="formEntryColumnThree">
@@ -2073,8 +2100,6 @@ const Invoice = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-
-              
               <label>Invoice Status</label>
               <Autocomplete
                 autoHighlight
@@ -2113,19 +2138,6 @@ const Invoice = (props) => {
                 )}
               />
 
-              
-              <label>Release Date</label>
-              <input
-                type="date"
-                id="ReleaseDate"
-                name="ReleaseDate"
-                disabled={permissionType == 1}
-                // class={errorObject.ReleaseDate}
-                placeholder="Enter Release Date"
-                value={currentRow.ReleaseDate}
-                onChange={(e) => handleChange(e)}
-              />
-
 
 
               <label>Comments</label>
@@ -2139,7 +2151,6 @@ const Invoice = (props) => {
                 value={currentRow.InvoiceComments}
                 onChange={(e) => handleChange(e)}
               />
-
             </div>
 
             <div class="modalItemButton">

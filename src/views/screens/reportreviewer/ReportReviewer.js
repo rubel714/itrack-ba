@@ -93,7 +93,9 @@ const ReportReviewer = (props) => {
   const [currReportReleasedStatusId, setCurrReportReleasedStatusId] =
     useState(null);
 
-  const [StartDate, setStartDate] = useState(moment().add(-30, "days").format("YYYY-MM-DD"));
+  const [StartDate, setStartDate] = useState(
+    moment().add(-30, "days").format("YYYY-MM-DD")
+  );
   const [EndDate, setEndDate] = useState(moment().format("YYYY-MM-DD"));
 
   const { isLoading, data: dataList, error, ExecuteQuery } = ExecuteQueryHook(); //Fetch data
@@ -884,11 +886,10 @@ const ReportReviewer = (props) => {
       AuditTypeId: "",
       IsSendMail: 0,
       ReportReleaseStatus: "No",
-      
-      InvStatusId:"",
-      InvStatusName:"",
-      ReleaseDate:"",
-      InvoiceComments:"",
+
+      InvStatusId: "",
+      InvStatusName: "",
+      InvoiceComments: "",
 
       IsReportReceivedFromWriter: "No",
       ReportReceivedDate: "",
@@ -899,6 +900,8 @@ const ReportReviewer = (props) => {
       OverseasSendingDate: "",
       AuditorLogInTime: "",
       AduditorLogOutTime: "",
+      ReleaseDate: "",
+
 
       FormData: null,
     });
@@ -2039,7 +2042,35 @@ const ReportReviewer = (props) => {
                 checked={currentRow.IsSendMail}
                 onChange={handleChangeCheck}
               />
-
+              <label>Audit Book</label>
+              <div>
+                <label>Yes</label>
+                <input
+                  style={{
+                    width: "15px",
+                    height: "15px",
+                    "margin-right": "15px",
+                  }}
+                  type="radio"
+                  id="AuditBook"
+                  name="AuditBook"
+                  disabled={true}
+                  value="Yes"
+                  checked={currentRow.AuditBook == "Yes"}
+                  onChange={handleChangeRadio}
+                ></input>
+                <label>No</label>
+                <input
+                  style={{ width: "15px", height: "15px" }}
+                  type="radio"
+                  id="AuditBook"
+                  name="AuditBook"
+                  disabled={true}
+                  value="No"
+                  checked={currentRow.AuditBook == "No"}
+                  onChange={handleChangeRadio}
+                ></input>
+              </div>
               {/* <label>Report Release</label>
               <div>
                 <label>Yes</label>
@@ -2153,17 +2184,7 @@ const ReportReviewer = (props) => {
                 value={currentRow.InvStatusName}
                 onChange={(e) => handleChange(e)}
               />
-               <label>Release Date</label>
-              <input
-                type="text"
-                id="ReleaseDate"
-                name="ReleaseDate"
-                disabled={true}
-                // class={errorObject.ReleaseDate}
-                placeholder="Enter Release Date"
-                value={currentRow.ReleaseDate}
-                onChange={(e) => handleChange(e)}
-              />
+    
               <label>Invoice Comments</label>
               <input
                 type="text"
@@ -2404,6 +2425,17 @@ const ReportReviewer = (props) => {
                 // class={errorObject.ReportResult}
                 placeholder="Enter Report Result"
                 value={currentRow.ReportResult}
+                onChange={(e) => handleChange(e)}
+              />
+                            <label>Release Date</label>
+              <input
+                type="date"
+                id="ReleaseDate"
+                name="ReleaseDate"
+                disabled={permissionType == 1}
+                // class={errorObject.ReleaseDate}
+                placeholder="Enter Release Date"
+                value={currentRow.ReleaseDate}
                 onChange={(e) => handleChange(e)}
               />
             </div>

@@ -706,15 +706,15 @@ const CoordinatorInput = (props) => {
 
   const columnList = [
     { field: "rownumber", label: "SL", align: "center", width: "3%" },
-    {
-      field: "ActivityName",
-      label: "Activity",
-      align: "left",
-      visible: true,
-      sort: true,
-      filter: true,
-      width: "13%",
-    },
+    // {
+    //   field: "ActivityName",
+    //   label: "Activity",
+    //   align: "left",
+    //   visible: true,
+    //   sort: true,
+    //   filter: true,
+    //   width: "13%",
+    // },
     {
       field: "SalesEntryUserName",
       label: "Input User",
@@ -723,6 +723,15 @@ const CoordinatorInput = (props) => {
       sort: true,
       filter: true,
       width: "7%",
+    },
+        {
+      field: "AssessmentNo",
+      label: "Assessment No",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "6%",
     },
     {
       field: "FactoryName",
@@ -734,6 +743,26 @@ const CoordinatorInput = (props) => {
       width: "12%",
     },
     {
+      field: "StateName",
+      label: "State",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "8%",
+    },
+
+    {
+      field: "BuyerName",
+      label: "Buyer",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "7%",
+    },
+
+    {
       field: "ProgramName",
       label: "Program",
       align: "left",
@@ -744,29 +773,19 @@ const CoordinatorInput = (props) => {
     },
 
     {
-      field: "ExpireDate",
-      label: "Expire Date",
+      field: "AuditStageName",
+      label: "Audit Stage",
       align: "left",
       visible: true,
       sort: true,
       filter: true,
-      width: "7%",
+      width: "6%",
     },
 
-    // {
-    //   field: "OpportunityDate",
-    //   label: "Opportunity Date",
-    //   align: "left",
-    //   visible: true,
-    //   sort: true,
-    //   filter: true,
-    //   width: "6%",
-    // },
-
     {
-      field: "AuditStageName",
-      label: "Audit Stage",
-      align: "left",
+      field: "ManDay",
+      label: "Man Day",
+      align: "right",
       visible: true,
       sort: true,
       filter: true,
@@ -779,35 +798,18 @@ const CoordinatorInput = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "7%",
+      width: "8%",
     },
-    {
-      field: "BuyerName",
-      label: "Buyer",
+     {
+      field: "AuditBook",
+      label: "Audit Book",
       align: "left",
       visible: true,
       sort: true,
       filter: true,
-      width: "7%",
+      width: "8%",
     },
-    // {
-    //   field: "NextFollowupDate",
-    //   label: "Next Followup Date",
-    //   align: "left",
-    //   visible: true,
-    //   sort: true,
-    //   filter: true,
-    //   width: "6%",
-    // },
-    {
-      field: "AssessmentNo",
-      label: "Assessment No",
-      align: "left",
-      visible: true,
-      sort: true,
-      filter: true,
-      width: "6%",
-    },
+
     {
       field: "AuditStartDate",
       label: "Audit Start Date",
@@ -827,13 +829,13 @@ const CoordinatorInput = (props) => {
       width: "5%",
     },
     {
-      field: "RevenueBDT",
-      label: "Revenue (BDT)",
-      align: "right",
+      field: "Comments",
+      label: "Comments",
+      align: "left",
       visible: true,
       sort: true,
       filter: true,
-      width: "5%",
+      width: "8%",
     },
     {
       field: "custom",
@@ -969,13 +971,14 @@ const CoordinatorInput = (props) => {
       AuditFee: "",
       OPE: "",
       OthersAmount: "",
-      Discount:"",
+      Discount: "",
       PINo: "",
       AttachedDocuments: "",
       AuditTypeId: "",
       IsSendMail: 0,
       FileUploaded: 0,
       ReportSentToCustomer: 0,
+      AuditBook: "No",
 
       FormData: null,
     });
@@ -2260,6 +2263,36 @@ const CoordinatorInput = (props) => {
                 checked={currentRow.ReportSentToCustomer}
                 onChange={handleChangeCheck}
               />
+
+              <label>Audit Book</label>
+              <div>
+                <label>Yes</label>
+                <input
+                  style={{
+                    width: "15px",
+                    height: "15px",
+                    "margin-right": "15px",
+                  }}
+                  type="radio"
+                  id="AuditBook"
+                  name="AuditBook"
+                  disabled={permissionType == 1}
+                  value="Yes"
+                  checked={currentRow.AuditBook == "Yes"}
+                  onChange={handleChangeRadio}
+                ></input>
+                <label>No</label>
+                <input
+                  style={{ width: "15px", height: "15px" }}
+                  type="radio"
+                  id="AuditBook"
+                  name="AuditBook"
+                  disabled={permissionType == 1}
+                  value="No"
+                  checked={currentRow.AuditBook == "No"}
+                  onChange={handleChangeRadio}
+                ></input>
+              </div>
 
               <label>Attached Documents</label>
               {/* <input

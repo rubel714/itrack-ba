@@ -49,7 +49,7 @@ function getDataList($data)
 		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks,a.Comments,l.UserName as SalesEntryUserName
 		, a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, a.CountryId, a.LeadAuditorId, REPLACE(a.TeamAuditorIds, '" . '"' . "', '') as TeamAuditorId, a.AuditTypeId, 
 		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId,a.ReportWritingDate, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT, 
-		a.AttachedDocuments, a.IsSendMail,a.StateId,a.FileUploaded,a.ReportSentToCustomer,a.Discount
+		a.AuditBook, a.AttachedDocuments, a.IsSendMail,a.StateId,m.StateName,a.FileUploaded,a.ReportSentToCustomer,a.Discount
 	   FROM `t_transaction` a
 	   INNER JOIN `t_activity` b ON a.`ActivityId` = b.`ActivityId`
 	   LEFT JOIN `t_factory` c ON a.`FactoryId` = c.`FactoryId`
@@ -62,6 +62,7 @@ function getDataList($data)
 	   LEFT JOIN `t_department` j ON a.`DepartmentId` = j.`DepartmentId`
 	   LEFT JOIN `t_member` k ON a.`MemberId` = k.`MemberId`
 	   LEFT JOIN `t_users` l ON a.`UserId` = l.`UserId`
+	   LEFT JOIN `t_state` m ON a.`StateId` = m.`StateId`
 
 	   where ((a.AuditStartDate between '$StartDate' and '$EndDate') OR (a.AuditStartDate is null))
 	   AND a.StatusId = 5
@@ -156,6 +157,8 @@ function dataAddEdit($data)
 		$StateId = $data->rowData->StateId ? $data->rowData->StateId : null;
 		$FileUploaded = $data->rowData->FileUploaded ? $data->rowData->FileUploaded : 0;
 		$ReportSentToCustomer = $data->rowData->ReportSentToCustomer ? $data->rowData->ReportSentToCustomer : 0;
+		$AuditBook = $data->rowData->AuditBook ? $data->rowData->AuditBook : "No";
+
 		// $ReportReleaseStatus = $data->rowData->ReportReleaseStatus ? $data->rowData->ReportReleaseStatus : "No";
 
 
@@ -386,6 +389,7 @@ function dataAddEdit($data)
 				"RevenueBDT",
 				"Discount",
 				"AttachedDocuments",
+				"AuditBook",
 				"IsSendMail",
 				"FileUploaded",
 				"ReportSentToCustomer",
@@ -438,6 +442,7 @@ function dataAddEdit($data)
 				$RevenueBDT,
 				$Discount,
 				json_encode($AttachedDocumentsArr),
+				$AuditBook,
 				$IsSendMail,
 				$FileUploaded,
 				$ReportSentToCustomer,

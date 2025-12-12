@@ -47,7 +47,7 @@ function getDataList($data)
 		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks,a.Comments
 		, a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, a.CountryId, a.LeadAuditorId, REPLACE(a.TeamAuditorIds, '".'"'."', '') as TeamAuditorId, a.AuditTypeId, 
 		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId,a.ReportWritingDate, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT, 
-		a.AttachedDocuments, a.IsSendMail,a.FileUploaded,a.ReportSentToCustomer,a.StateId, a.ReportReleaseStatus,
+		a.AuditBook,a.AttachedDocuments, a.IsSendMail,a.FileUploaded,a.ReportSentToCustomer,a.StateId, a.ReportReleaseStatus,
 
 		a.InvoiceTo, a.NameofApplicant, a.InvoiceAddress, a.InvoiceEmail, a.InvoiceMobile, a.Discount,a.InvStatusId ,s.InvStatusName,a.ReleaseDate,a.InvoiceComments
 		 ,a.IsReportReceivedFromWriter,a.ReportReceivedDate,a.`LocalReviewerId`,q.UserName as LocalReviewer,
@@ -113,14 +113,15 @@ function dataAddEdit($data)
 		$AuditorLogInTime = $data->rowData->AuditorLogInTime ? $data->rowData->AuditorLogInTime : null;
 		$AduditorLogOutTime = $data->rowData->AduditorLogOutTime ? $data->rowData->AduditorLogOutTime : null;
 		$ReportResult = $data->rowData->ReportResult ? $data->rowData->ReportResult : null;
+		$ReleaseDate = $data->rowData->ReleaseDate ? $data->rowData->ReleaseDate : null;
 		
 		try {
 			$aQuerys = array();
 
 			$u = new updateq();
 			$u->table = 't_transaction';
-			$u->columns = ['LeadStatusId','IsReportReceivedFromWriter','ReportReceivedDate','LocalReviewerId','StandardTAT','StrategicTAT','ReportReleaseStatus','ReportReleasedStatusId','OverseasSendingDate','AuditorLogInTime','AduditorLogOutTime','ReportResult','LastReportReviewerUpdateUserId','LastUpdateUserId'];
-			$u->values = [$LeadStatusId,$IsReportReceivedFromWriter,$ReportReceivedDate,$LocalReviewerId,$StandardTAT,$StrategicTAT,$ReportReleaseStatus,$ReportReleasedStatusId,$OverseasSendingDate,$AuditorLogInTime,$AduditorLogOutTime,$ReportResult,$UserId,$UserId];
+			$u->columns = ['LeadStatusId','IsReportReceivedFromWriter','ReportReceivedDate','LocalReviewerId','StandardTAT','StrategicTAT','ReportReleaseStatus','ReportReleasedStatusId','OverseasSendingDate','AuditorLogInTime','AduditorLogOutTime','ReportResult','ReleaseDate','LastReportReviewerUpdateUserId','LastUpdateUserId'];
+			$u->values = [$LeadStatusId,$IsReportReceivedFromWriter,$ReportReceivedDate,$LocalReviewerId,$StandardTAT,$StrategicTAT,$ReportReleaseStatus,$ReportReleasedStatusId,$OverseasSendingDate,$AuditorLogInTime,$AduditorLogOutTime,$ReportResult,$ReleaseDate,$UserId,$UserId];
 			$u->pks = ['TransactionId'];
 			$u->pk_values = [$id];
 			$u->build_query();
