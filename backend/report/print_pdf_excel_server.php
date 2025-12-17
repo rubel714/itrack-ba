@@ -872,7 +872,7 @@ function InvoiceExport()
 		
 		,a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, l.CountryName, m.AuditorName as LeadAuditor, 
 		n.AuditorName as TeamAuditor, o.AuditTypeName, 
-		a.Window,a.WindowEnd, a.PaymentStatus, p.UserName as ReportWriter, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.RevenueBDT,a.PINo, 
+		a.Window,a.WindowEnd, a.PaymentStatus, p.AuditorName as ReportWriter, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.RevenueBDT,a.PINo, 
 		 a.IsSendMail,a.InvoiceTo, a.NameofApplicant, a.InvoiceAddress, a.InvoiceEmail, a.InvoiceMobile, a.Discount
 		 ,q.InvStatusName,a.InvoiceComments
 	   FROM `t_transaction` a
@@ -890,7 +890,7 @@ function InvoiceExport()
 	   LEFT JOIN `t_auditor` m ON a.`LeadAuditorId` = m.`AuditorId`
 	   LEFT JOIN `t_auditor` n ON a.`TeamAuditorId` = n.`AuditorId`
 	   LEFT JOIN `t_audittype` o ON a.`AuditTypeId` = o.`AuditTypeId`
-	   LEFT JOIN `t_users` p ON a.`ReportWriterId` = p.`UserId`
+	   LEFT JOIN `t_auditor` p ON a.`ReportWriterId` = p.`AuditorId`
 	   LEFT JOIN `t_invoice_status` q ON a.`InvStatusId` = q.`InvStatusId`
 	   
 	   where ((a.AuditStartDate between '$StartDate' and '$EndDate') OR (a.AuditStartDate is null))
@@ -945,7 +945,7 @@ function ReportReviewerExport()
 		
 		,a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, l.CountryName, m.AuditorName as LeadAuditor, 
 		n.AuditorName as TeamAuditor, o.AuditTypeName, 
-		a.Window,a.WindowEnd, a.PaymentStatus, p.UserName as ReportWriter, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT, 
+		a.Window,a.WindowEnd, a.PaymentStatus, p.AuditorName as ReportWriter, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT, 
 		 a.IsSendMail,a.InvoiceTo, a.NameofApplicant, a.InvoiceAddress, a.InvoiceEmail, a.InvoiceMobile, a.Discount
 		  ,s.InvStatusName,a.InvoiceComments
 		 ,a.IsReportReceivedFromWriter,a.ReportReceivedDate,q.UserName as LocalReviewer,a.StandardTAT,a.StrategicTAT, a.ReportReleaseStatus,
@@ -965,7 +965,7 @@ function ReportReviewerExport()
 	   LEFT JOIN `t_auditor` m ON a.`LeadAuditorId` = m.`AuditorId`
 	   LEFT JOIN `t_auditor` n ON a.`TeamAuditorId` = n.`AuditorId`
 	   LEFT JOIN `t_audittype` o ON a.`AuditTypeId` = o.`AuditTypeId`
-	   LEFT JOIN `t_users` p ON a.`ReportWriterId` = p.`UserId`
+	   LEFT JOIN `t_auditor` p ON a.`ReportWriterId` = p.`AuditorId`
 	   LEFT JOIN `t_users` q ON a.`LocalReviewerId` = q.`UserId`
 	   LEFT JOIN `t_releasedstatus` r ON a.`ReportReleasedStatusId` = r.`ReportReleasedStatusId`
 	   LEFT JOIN `t_invoice_status` s ON a.`InvStatusId` = s.`InvStatusId`
