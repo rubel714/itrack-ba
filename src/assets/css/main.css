@@ -831,3 +831,8 @@ input {
   background-color:var(--secondary-color) !important;
   color: black !important;
 } 
+
+.bold-total {
+  font-weight: bold;
+  /* background-color: #f0f0f0; */
+}

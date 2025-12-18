@@ -4,6 +4,7 @@ import { apiCall, apiOption, LoginUserInfo, language } from "../../actions/api";
 function AfterLoginNavbar(props) {
   const [userInfo, setUserInfo] = React.useState(LoginUserInfo());
 
+  const [dashboardToogle, setDashboardToogle] = React.useState(false);
   const [settingsToogle, setSettingsToogle] = React.useState(false);
   const [securityToogle, setSecurityToogle] = React.useState(false);
   const [auditToogle, setAuditToogle] = React.useState(false);
@@ -39,10 +40,12 @@ function AfterLoginNavbar(props) {
 
   //   }
   const menuParentClick = (menuParentName) => {
-    console.log("menuParentName: ", menuParentName);
-    console.log("settingsToogle: ", settingsToogle);
-
-    if (menuParentName == "Settings") {
+    // console.log("menuParentName: ", menuParentName);
+    // console.log("settingsToogle: ", settingsToogle);
+    
+    if (menuParentName == "dashboard") {
+      setDashboardToogle(!dashboardToogle);
+    } else if (menuParentName == "Settings") {
       setSettingsToogle(!settingsToogle);
     } else if (menuParentName == "Security") {
       setSecurityToogle(!securityToogle);
@@ -77,6 +80,44 @@ function AfterLoginNavbar(props) {
                 Home
               </a>
             </li>
+
+            {menuShowPermision("dashboard") === 1 && (
+              <li
+                class="dropdownMenu"
+                onClick={() => menuParentClick("dashboard")}
+              >
+                {" "}
+                Dashboard
+                <ul
+                  className={`dropdownList ${dashboardToogle ? "show" : "hide"}`}
+                >
+                  {menuShowPermision("reportreviewdashboard") === 1 && (
+                    <li>
+                      <a
+                        href="javascript:void(0)"
+                        onClick={() => props.history.push("reportreviewdashboard")}
+                      >
+                        Report Review Dashboard
+                      </a>
+                    </li>
+                  )}
+
+                  {menuShowPermision("programandbuyerwisetat") === 1 && (
+                    <li>
+                      <a
+                        href="javascript:void(0)"
+                        onClick={() => props.history.push("programandbuyerwisetat")}
+                      >
+                        Program & Buyer wise TAT
+                      </a>
+                    </li>
+                  )}
+              
+                </ul>
+              </li>
+            )}
+
+
 
             {menuShowPermision("settings") === 1 && (
               <li

@@ -16,7 +16,11 @@ import LoginPage from "views/screens/LoginPage.js";
 // import DashboardPage from "views/screens/DashboardPage";
 import MyProfile from "views/screens/myprofile/index.js";
 import CheckPermission from "views/screens/CheckPermission.js";
-import Dashboard from "views/screens/dashboard/index.js";
+// import Dashboard from "views/screens/dashboard/index.js";
+
+import ReportReviewDashboard from "views/screens/reportreviewdashboard/index.js";
+
+
 import BusinessLine from "views/screens/businessline/index.js";
 import Buyer from "views/screens/buyer/index.js";
 import UserEntry from "views/screens/userentry/index.js";
@@ -84,7 +88,8 @@ ReactDOM.render(
       			<Route path="/myprofileweb" render={(props) => <MyProfile {...props} />} />
             <Route path="/check-permission" render={(props) => <CheckPermission {...props} />} />
 
-            <Route path="/dashboard" render={(props) => <Dashboard {...props} />} />
+            {/* <Route path="/dashboard" render={(props) => <Dashboard {...props} />} /> */}
+            <Route path="/reportreviewdashboard" render={(props) => <ReportReviewDashboard {...props} />} />
 
             <Route path="/businessline" render={(props) => <BusinessLine {...props} />} />
             <Route path="/buyer" render={(props) => <Buyer {...props} />} />
