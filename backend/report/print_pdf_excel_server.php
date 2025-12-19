@@ -90,6 +90,10 @@ switch ($task) {
 		ReportReviewerExport();
 		break;
 
+	case "ReportReviewDashboardByReleaseDateExport":
+		ReportReviewDashboardByReleaseDateExport();
+		break;
+
 
 
 
@@ -1026,6 +1030,51 @@ function ReportReviewerExport()
 
 	//Report save name. Not allow any type of special character
 	$tableProperties["report_save_name"] = 'Report_Reviewer';
+}
+
+
+
+
+
+function ReportReviewDashboardByReleaseDateExport()
+{
+	global $sql, $tableProperties, $TEXT, $siteTitle;
+
+	$UserId = $_REQUEST['UserId'];
+	$RoleId = $_REQUEST['RoleId'];
+	if($RoleId == 1){
+		$UserId = 0;
+	}
+
+	
+	$StartDate = $_REQUEST['StartDate'];
+	$EndDate = $_REQUEST['EndDate'] . " 23-59-59";
+
+	$sql = "SELECT b.ProgramName, COUNT(a.`TransactionId`) AuditCount
+			FROM `t_transaction` a
+			INNER JOIN t_program b ON a.ProgramId=b.ProgramId
+			where (a.ReleaseDate between '$StartDate' and '$EndDate')
+	 		GROUP BY b.ProgramName
+			ORDER BY AuditCount DESC;"; 
+
+	$tableProperties["query_field"] = array("ProgramName", "AuditCount");
+	$tableProperties["table_header"] = array("Program", "No of Reports");
+	$tableProperties["align"] = array("left", "right");
+	$tableProperties["width_print_pdf"] = array("10%", "10%"); //when exist serial then here total 95% and 5% use for serial
+	$tableProperties["width_excel"] = array("40", "25");
+	$tableProperties["precision"] = array("string", 0); //string,date,datetime,0,1,2,3,4
+	$tableProperties["total"] = array(0, 1); //not total=0, total=1
+	$tableProperties["color_code"] = array(0, 0); //colorcode field = 1 not color code field = 0
+	$tableProperties["header_logo"] = 0; //include header left and right logo. 0 or 1
+	$tableProperties["footer_signatory"] = 0; //include footer signatory. 0 or 1
+
+	//Report header list
+	$tableProperties["header_list"][0] = $siteTitle;
+	$tableProperties["header_list"][1] = 'Report Review Dashboard ('.$_REQUEST['StartDate'].' to '.$_REQUEST['EndDate'].')';
+	// $tableProperties["header_list"][1] = 'Heading 2';
+
+	//Report save name. Not allow any type of special character
+	$tableProperties["report_save_name"] = 'Report_Review_Dashboard';
 }
 
 

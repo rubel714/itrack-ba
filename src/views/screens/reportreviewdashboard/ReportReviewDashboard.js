@@ -38,6 +38,7 @@ import * as XLSX from "xlsx-js-style";
 const ReportReviewDashboard = (props) => {
   const serverpage = "reportreviewdashboard"; // this is .php server page
   const tableRef = useRef(null);
+  const tableRefByReleaseDate = useRef(null);
 
   const { useState } = React;
   const [bFirst, setBFirst] = useState(true);
@@ -46,30 +47,43 @@ const ReportReviewDashboard = (props) => {
 
   // const [errorObject, setErrorObject] = useState({});
   const UserInfo = LoginUserInfo();
-
-  const [ProgramList, setProgramList] = useState(null);
-  const [currProgramId, setCurrProgramId] = useState(null);
-
-  const [AuditorList, setAuditorList] = useState(null);
-  const [currReportWriterId, setCurrReportWriterId] = useState(null);
-
+ 
   const [StartDate, setStartDate] = useState(moment().format("YYYY-MM-DD"));
-  const [EndDate, setEndDate] = useState(
-    moment().add(30, "days").format("YYYY-MM-DD")
-  );
+    const [EndDate, setEndDate] = useState(moment().format("YYYY-MM-DD"));
+  // const [EndDate, setEndDate] = useState(
+  //   moment().add(30, "days").format("YYYY-MM-DD")
+  // );
 
   const [columnList, setColumnList] = useState([]); // Table column list
 
   // handleChangeWidthHeight
   const { isLoading, data: dataList, error, ExecuteQuery } = ExecuteQueryHook(); //Fetch data
-  // const UserInfo = LoginUserInfo();
-  const [selectedDate, setSelectedDate] = useState(
-    //new Date()
-    moment().format("YYYY-MM-DD")
-  );
-
+  const { isLoading:isLoading1, data: dataListByReleaseDate, error1, ExecuteQuery:ExecuteQueryByReleaseDate } = ExecuteQueryHook(); //Fetch data
+ 
   /* =====Start of Excel Export Code==== */
   const EXCEL_EXPORT_URL = process.env.REACT_APP_API_URL;
+
+  const PrintPDFExcelExportFunction = (reportType) => {
+    let finalUrl = EXCEL_EXPORT_URL + "report/print_pdf_excel_server.php";
+
+    window.open(
+      finalUrl +
+        "?action=ReportReviewDashboardByReleaseDateExport" +
+        "&reportType=excel" +
+        "&StartDate=" +
+        StartDate +
+        "&EndDate=" +
+        EndDate +
+        "&UserId=" +
+        UserInfo.UserId +
+        "&RoleId=" +
+        UserInfo.RoleId[0] +
+        "&TimeStamp=" +
+        Date.now()
+    );
+  };
+
+
 
   // Export Tabulator data to Excel
   const exportToExcel = () => {
@@ -93,7 +107,7 @@ const ReportReviewDashboard = (props) => {
 
       // Add title row
       // const titleRow = [`Report Review Dashboard (${moment(StartDate).format("MMM DD, YYYY")} - ${moment(EndDate).format("MMM DD, YYYY")})`];
-      const titleRow = ['Report Review Dashboard'];
+      const titleRow = ["Report Review Dashboard"];
       worksheetData.push(titleRow);
 
       // Add headers
@@ -128,48 +142,49 @@ const ReportReviewDashboard = (props) => {
       const ws = XLSX.utils.aoa_to_sheet(worksheetData);
 
       // Apply formatting
-      const range = XLSX.utils.decode_range(ws['!ref']);
+      const range = XLSX.utils.decode_range(ws["!ref"]);
       const totalRowIndex = worksheetData.length - 1;
       const lastColIndex = range.e.c; // Last column index
-      
+
       // Style title row (row 0) - merged cell
       const titleCell = XLSX.utils.encode_cell({ r: 0, c: 0 });
       if (ws[titleCell]) {
         ws[titleCell].s = {
           font: { bold: true, sz: 14 },
-          alignment: { horizontal: "center", vertical: "center" }
+          alignment: { horizontal: "center", vertical: "center" },
         };
       }
       // Merge title across all columns
-      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: lastColIndex } }];
-      
+      ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: lastColIndex } }];
+
       for (let col = range.s.c; col <= range.e.c; col++) {
         // Bold header row (row 1)
         const headerCell = XLSX.utils.encode_cell({ r: 1, c: col });
         if (ws[headerCell]) {
           ws[headerCell].s = {
             font: { bold: true },
-            fill: { fgColor: { rgb: "D3D3D3" } }
+            // fill: { fgColor: { rgb: "D3D3D3" } },
           };
         }
-        
+
         // Bold totals row (last row)
         const totalCell = XLSX.utils.encode_cell({ r: totalRowIndex, c: col });
         if (ws[totalCell]) {
           ws[totalCell].s = {
             font: { bold: true },
-            fill: { fgColor: { rgb: "FFFF00" } }
+            // fill: { fgColor: { rgb: "FFFF00" } },
           };
         }
       }
 
       // Bold and color last column (Grand Total column) for all data rows
-      for (let row = 2; row < totalRowIndex; row++) { // Skip title, header and totals row
+      for (let row = 2; row < totalRowIndex; row++) {
+        // Skip title, header and totals row
         const cellAddress = XLSX.utils.encode_cell({ r: row, c: lastColIndex });
         if (ws[cellAddress]) {
           ws[cellAddress].s = {
             font: { bold: true },
-            fill: { fgColor: { rgb: "FFFF00" } }
+            // fill: { fgColor: { rgb: "FFFF00" } },
           };
         }
       }
@@ -189,6 +204,8 @@ const ReportReviewDashboard = (props) => {
       alert("Error exporting to Excel: " + error.message);
     }
   };
+
+ 
   /* =====End of Excel Export Code==== */
 
   const handleChangeFilterDate = (e) => {
@@ -202,11 +219,35 @@ const ReportReviewDashboard = (props) => {
     }
   };
 
-  React.useEffect(() => {
-    // getProgramList("");
-    // getAuditorList("");
-  }, []);
+
+  
+  const columnListByReleaseDate = [
+    // { field: "rownumber", label: "SL", align: "center", width: "3%" },
  
+    {
+      field: "ProgramName",
+      title: "Program",
+      hozAlign: "left",
+      headerHozAlign: "left",
+      // filter: true,
+      width: "400",
+    },
+    {
+      field: "AuditCount",
+      title: "No of Reports",
+      hozAlign: "right",
+      headerHozAlign: "right",
+      // filter: true,
+      width: "180",
+      cssClass: "bold-total", 
+      bottomCalc: "sum"
+    }
+  ];
+
+
+  React.useEffect(() => {
+  }, []);
+
   if (bFirst) {
     /**First time call for datalist */
     getDataList();
@@ -214,10 +255,8 @@ const ReportReviewDashboard = (props) => {
   }
 
   useEffect(() => {
-    getDataList();
+    getDataByReleaseDateList();
   }, [StartDate, EndDate]);
-
-
 
   /**Get data for table list */
   function getDataList() {
@@ -225,12 +264,29 @@ const ReportReviewDashboard = (props) => {
       action: "getDataList",
       lan: language(),
       UserId: UserInfo.UserId,
-      StartDate: StartDate,
-      EndDate: EndDate,
+      // StartDate: StartDate,
+      // EndDate: EndDate,
     };
 
     ExecuteQuery(serverpage, params);
   }
+
+
+
+  /**Get data for table list */
+  function getDataByReleaseDateList() {
+    let params = {
+      action: "getDataByReleaseDateList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+      StartDate: StartDate,
+      EndDate: EndDate,
+    };
+
+    ExecuteQueryByReleaseDate(serverpage, params);
+  }
+  
+
 
   return (
     <>
@@ -242,32 +298,6 @@ const ReportReviewDashboard = (props) => {
 
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
         <div class="searchAdd">
-          <div>
-            <label>Start Date</label>
-            <div class="">
-              <input
-                type="date"
-                id="StartDate"
-                name="StartDate"
-                value={StartDate}
-                onChange={(e) => handleChangeFilterDate(e)}
-              />
-            </div>
-          </div>
-
-          <div>
-            <label>End Date</label>
-            <div class="">
-              <input
-                type="date"
-                id="EndDate"
-                name="EndDate"
-                value={EndDate}
-                onChange={(e) => handleChangeFilterDate(e)}
-              />
-            </div>
-          </div>
-
           <div>
             <button
               onClick={exportToExcel}
@@ -288,11 +318,6 @@ const ReportReviewDashboard = (props) => {
 
         {/* <!-- ####---THIS CLASS IS USE FOR TABLE GRID---####s --> */}
 
-        {/*  <CustomTable
-          columns={dataList.column ? dataList.column : []}
-          rows={dataList.data ? dataList.data : {}}
-          ispagination={false}
-        />*/}
 
         <ReactTabulator
           ref={tableRef}
@@ -300,10 +325,68 @@ const ReportReviewDashboard = (props) => {
           columns={dataList.column ? dataList.column : []}
           height="200px"
           layout="fitData"
-          initialSort={[             //set the initial sort order of the data
-        {column:"RowTotal", dir:"desc"},
-    ]}
-          
+          initialSort={[
+            //set the initial sort order of the data
+            { column: "RowTotal", dir: "desc" },
+          ]}
+        />
+
+
+{/* <!-- TABLE SEARCH AND GROUP ADD --> */}
+        <div class="searchAdd">
+          <div>
+            <label>Release Start Date</label>
+            <div class="">
+              <input
+                type="date"
+                id="StartDate"
+                name="StartDate"
+                value={StartDate}
+                onChange={(e) => handleChangeFilterDate(e)}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label>Release End Date</label>
+            <div class="">
+              <input
+                type="date"
+                id="EndDate"
+                name="EndDate"
+                value={EndDate}
+                onChange={(e) => handleChangeFilterDate(e)}
+              />
+            </div>
+          </div>
+
+          <div>
+            <button
+              onClick={() => PrintPDFExcelExportFunction('excel')}
+              style={{
+                padding: "8px 16px",
+                backgroundColor: "#28a745",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                marginTop: "20px",
+              }}
+            >
+              Export to Excel
+            </button>
+          </div>
+        </div>
+        <ReactTabulator
+          ref={tableRefByReleaseDate}
+          data={dataListByReleaseDate ? dataListByReleaseDate : []}
+          columns={columnListByReleaseDate  }
+          height="330px"
+          layout="fitData"
+          initialSort={[
+            //set the initial sort order of the data
+            { column: "AuditCount", dir: "desc" },
+          ]}
         />
       </div>
       {/* <!-- BODY CONTAINER END --> */}

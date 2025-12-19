@@ -10,6 +10,9 @@ switch ($task) {
 	case "getDataList":
 		$returnData = getDataList($data);
 		break;
+	case "getDataByReleaseDateList":
+		$returnData = getDataByReleaseDateList($data);
+		break;
 
 	default:
 		echo "{failure:true}";
@@ -41,23 +44,23 @@ function getDataList($data)
 		$serial = 0;
 
 		$columnlist = array();
-		$columnlist[] = ["field" => "Serial", "title" => "SL", "align" => "center", "width" => 20, "frozen" => true];
+		//$columnlist[] = ["field" => "Serial", "title" => "SL", "align" => "center", "width" => 20, "frozen" => true];
 		$columnlist[] = ["field" => "LeadStatusName", "title" => "Lead Status", "filter" => true, "width" => 120, "frozen" => true];
 		foreach ($pivotedData as $status => $programs) {
 			foreach ($programs as $programName => $auditCount) {
 				// You can process each cell value here if needed
-				$columnlist[] = ["field" => "P_" . str_replace(" ", "_", $programName), "title" => $programName,  "width" => 80, "align" => "center",  "bottomCalc" => "sum", "cssClass" => "total-column"];
+				$columnlist[] = ["field" => "P_" . str_replace(" ", "_", $programName), "title" => $programName,  "width" => 80, "hozAlign" => "center", "headerHozAlign" => "center",  "bottomCalc" => "sum", "cssClass" => "total-column"];
 			}
 			break; // Just need the first row to get program names
 
 		}
 		// Add Total column at the end
-		$columnlist[] = ["field" => "RowTotal", "title" => "Grand Total", "width" => 120, "align" => "center", "cssClass" => "bold-total", "bottomCalc" => "sum"];
+		$columnlist[] = ["field" => "RowTotal", "title" => "Grand Total", "width" => 120, "hozAlign" => "center", "headerHozAlign" => "center", "cssClass" => "bold-total", "bottomCalc" => "sum"];
 
 
 		foreach ($pivotedData as $status => $programs) {
 			$row = [];
-			$row["Serial"] = ++$serial;
+			//$row["Serial"] = ++$serial;
 			$row["LeadStatusName"] = $status;
 			
 			$rowTotal = 0; // Initialize row total
@@ -87,6 +90,37 @@ function getDataList($data)
 	return $returnData;
 }
 
+
+
+function getDataByReleaseDateList($data)
+{
+	try {
+		$dbh = new Db();
+
+		$StartDate = trim($data->StartDate);
+		$EndDate = trim($data->EndDate) . " 23:59:59";
+
+		$query = "SELECT b.ProgramName, COUNT(a.`TransactionId`) AuditCount
+			FROM `t_transaction` a
+			INNER JOIN t_program b ON a.ProgramId=b.ProgramId
+			where (a.ReleaseDate between '$StartDate' and '$EndDate')
+	 
+			GROUP BY b.ProgramName
+			ORDER BY AuditCount DESC;";
+		$resultdata = $dbh->query($query);
+
+		$returnData = [
+			"success" => 1,
+			"status" => 200,
+			"message" => "",
+			"datalist" => $resultdata
+		];
+	} catch (PDOException $e) {
+		$returnData = msg(0, 500, $e->getMessage());
+	}
+
+	return $returnData;
+}
 
 
 
