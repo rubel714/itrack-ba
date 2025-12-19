@@ -33,7 +33,7 @@ import {
 import "react-tabulator/lib/styles.css"; // required styles
 import "react-tabulator/lib/css/tabulator.min.css"; // theme
 import { ReactTabulator, reactFormatter } from "react-tabulator";
-import * as XLSX from "xlsx";
+import * as XLSX from "xlsx-js-style";
 
 const ReportReviewDashboard = (props) => {
   const serverpage = "reportreviewdashboard"; // this is .php server page
@@ -71,27 +71,16 @@ const ReportReviewDashboard = (props) => {
   /* =====Start of Excel Export Code==== */
   const EXCEL_EXPORT_URL = process.env.REACT_APP_API_URL;
 
-  // const PrintPDFExcelExportFunction = (reportType) => {
-  //   let finalUrl = EXCEL_EXPORT_URL + "report/print_pdf_excel_server.php";
-
-    // window.open(
-    //   finalUrl +
-    //     "?action=CoordinatorInputExport" +
-    //     "&reportType=excel" +
-    //     "&StartDate=" +
-    //     StartDate +
-    //     "&EndDate=" +
-    //     EndDate +
-    //     "&TimeStamp=" +
-    //     Date.now()
-    // );
-  // };
-
   // Export Tabulator data to Excel
   const exportToExcel = () => {
     try {
-      // Get the data from dataList
-      const exportData = dataList.data || [];
+      // Get the sorted data from the Tabulator instance
+      if (!tableRef.current) {
+        alert("Table not initialized");
+        return;
+      }
+
+      const exportData = tableRef.current.table.getData("active"); // Gets data in current sorted/filtered order
       const columns = dataList.column || [];
 
       if (exportData.length === 0) {
@@ -101,6 +90,11 @@ const ReportReviewDashboard = (props) => {
 
       // Prepare data for export
       const worksheetData = [];
+
+      // Add title row
+      // const titleRow = [`Report Review Dashboard (${moment(StartDate).format("MMM DD, YYYY")} - ${moment(EndDate).format("MMM DD, YYYY")})`];
+      const titleRow = ['Report Review Dashboard'];
+      worksheetData.push(titleRow);
 
       // Add headers
       const headers = columns.map((col) => col.title || col.field || "");
@@ -115,9 +109,70 @@ const ReportReviewDashboard = (props) => {
         worksheetData.push(rowData);
       });
 
+      // Calculate and add totals row
+      const totalsRow = columns.map((col) => {
+        if (col.bottomCalc === "sum") {
+          // Calculate sum for this column
+          const sum = exportData.reduce((acc, row) => {
+            const value = parseFloat(row[col.field]) || 0;
+            return acc + value;
+          }, 0);
+          return sum;
+        }
+        return col.field === "ReportWriter" ? "Total:" : ""; // Add "Total:" label in first text column
+      });
+      worksheetData.push(totalsRow);
+
       // Create workbook and worksheet
       const wb = XLSX.utils.book_new();
       const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+
+      // Apply formatting
+      const range = XLSX.utils.decode_range(ws['!ref']);
+      const totalRowIndex = worksheetData.length - 1;
+      const lastColIndex = range.e.c; // Last column index
+      
+      // Style title row (row 0) - merged cell
+      const titleCell = XLSX.utils.encode_cell({ r: 0, c: 0 });
+      if (ws[titleCell]) {
+        ws[titleCell].s = {
+          font: { bold: true, sz: 14 },
+          alignment: { horizontal: "center", vertical: "center" }
+        };
+      }
+      // Merge title across all columns
+      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: lastColIndex } }];
+      
+      for (let col = range.s.c; col <= range.e.c; col++) {
+        // Bold header row (row 1)
+        const headerCell = XLSX.utils.encode_cell({ r: 1, c: col });
+        if (ws[headerCell]) {
+          ws[headerCell].s = {
+            font: { bold: true },
+            fill: { fgColor: { rgb: "D3D3D3" } }
+          };
+        }
+        
+        // Bold totals row (last row)
+        const totalCell = XLSX.utils.encode_cell({ r: totalRowIndex, c: col });
+        if (ws[totalCell]) {
+          ws[totalCell].s = {
+            font: { bold: true },
+            fill: { fgColor: { rgb: "FFFF00" } }
+          };
+        }
+      }
+
+      // Bold and color last column (Grand Total column) for all data rows
+      for (let row = 2; row < totalRowIndex; row++) { // Skip title, header and totals row
+        const cellAddress = XLSX.utils.encode_cell({ r: row, c: lastColIndex });
+        if (ws[cellAddress]) {
+          ws[cellAddress].s = {
+            font: { bold: true },
+            fill: { fgColor: { rgb: "FFFF00" } }
+          };
+        }
+      }
 
       // Add worksheet to workbook
       XLSX.utils.book_append_sheet(wb, ws, "Data");
@@ -243,8 +298,11 @@ const ReportReviewDashboard = (props) => {
           ref={tableRef}
           data={dataList.data ? dataList.data : []}
           columns={dataList.column ? dataList.column : []}
-          height="600px"
+          height="200px"
           layout="fitData"
+          initialSort={[             //set the initial sort order of the data
+        {column:"RowTotal", dir:"desc"},
+    ]}
           
         />
       </div>
