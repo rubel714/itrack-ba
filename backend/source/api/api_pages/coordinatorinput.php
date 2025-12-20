@@ -206,7 +206,7 @@ function dataAddEdit($data)
 					// $result = $conn->query($sql);
 					// $row = $result->fetch_assoc();
 
-					$sql = "select COUNT(*) as cnt	from t_holiday where HoliDate = '$date';";
+					$sql = "select COUNT(*) as cnt	from t_holiday where DayType='holiday' and HoliDate = '$date';";
 					$resultdata1 = $dbh->query($sql);
 					if ($resultdata1[0]['cnt'] > 0) {
 						continue; // skip holiday
@@ -224,7 +224,7 @@ function dataAddEdit($data)
 
 
 
-				//================== Start for StandardTATDay==========================
+				//================== Start for StrategicTAT==========================
 				$date = $AuditEndDate; // date('Y-m-d');
 				$workingDays = 1;
 				$dayCount = 0;
@@ -258,7 +258,7 @@ function dataAddEdit($data)
 				$StrategicTATDate = date_create($AuditEndDate);
 				date_add($StrategicTATDate, date_interval_create_from_date_string("$dayCount days"));
 				$StrategicTAT = date_format($StrategicTATDate, "Y-m-d");
-				//================== End for StandardTATDay==========================
+				//================== End for StrategicTAT==========================
 
 
 				// echo "StandardTAT: $StandardTAT, StrategicTAT: $StrategicTAT";

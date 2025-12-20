@@ -1,15 +1,4 @@
 import React, { forwardRef, useRef, useEffect } from "react";
-import swal from "sweetalert";
-import {
-  DeleteOutline,
-  Edit,
-  AddAPhoto,
-  PictureAsPdf,
-} from "@material-ui/icons";
-import { Button } from "../../../components/CustomControl/Button";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import { Typography, TextField } from "@material-ui/core";
-import CustomTable from "components/CustomTable/CustomTable";
 import {
   apiCall,
   apiCallReport,
@@ -21,14 +10,6 @@ import ExecuteQueryHook from "../../../components/hooks/ExecuteQueryHook";
 import moment from "moment";
 import "../../../assets/css/audit.css";
 
-import {
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Select,
-  Checkbox,
-  ListItemText,
-} from "@material-ui/core";
 // react-tabulator
 import "react-tabulator/lib/styles.css"; // required styles
 import "react-tabulator/lib/css/tabulator.min.css"; // theme
@@ -239,7 +220,7 @@ const ReportReviewDashboard = (props) => {
       headerHozAlign: "right",
       // filter: true,
       width: "180",
-      cssClass: "bold-total", 
+      // cssClass: "bold-total", 
       bottomCalc: "sum"
     }
   ];

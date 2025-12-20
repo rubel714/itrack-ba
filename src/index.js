@@ -19,6 +19,7 @@ import CheckPermission from "views/screens/CheckPermission.js";
 // import Dashboard from "views/screens/dashboard/index.js";
 
 import ReportReviewDashboard from "views/screens/reportreviewdashboard/index.js";
+import ProgramAndBuyerWiseTat from "views/screens/programandbuyerwisetat/index.js";
 
 
 import BusinessLine from "views/screens/businessline/index.js";
@@ -90,6 +91,7 @@ ReactDOM.render(
 
             {/* <Route path="/dashboard" render={(props) => <Dashboard {...props} />} /> */}
             <Route path="/reportreviewdashboard" render={(props) => <ReportReviewDashboard {...props} />} />
+            <Route path="/programandbuyerwisetat" render={(props) => <ProgramAndBuyerWiseTat {...props} />} />
 
             <Route path="/businessline" render={(props) => <BusinessLine {...props} />} />
             <Route path="/buyer" render={(props) => <Buyer {...props} />} />

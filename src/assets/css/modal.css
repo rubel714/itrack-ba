@@ -75,6 +75,15 @@
     word-wrap: break-word;
 
 }
+.tableTwoColumn {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    row-gap: 8px;
+    column-gap: 10px;
+    padding:16px;
+}
+
+
 .modalItemColumnOne {
     display: grid;
     grid-template-columns: 30% 70%;
