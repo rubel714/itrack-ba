@@ -49,25 +49,268 @@ const ProgramAndBuyerWisetat = (props) => {
   /* =====Start of Excel Export Code==== */
   const EXCEL_EXPORT_URL = process.env.REACT_APP_API_URL;
 
-  const PrintPDFExcelExportFunction = (reportType) => {
-    let finalUrl = EXCEL_EXPORT_URL + "report/print_pdf_excel_server.php";
+  
+    // Export Tabulator data to Excel
+    const exportToExcelProgramWiseTAT = () => {
+      try {
+        // Get the sorted data from the Tabulator instance
+        if (!tableRefByProgram.current) {
+          alert("Table not initialized");
+          return;
+        }
+  
+        const exportData = tableRefByProgram.current.table.getData("active"); // Gets data in current sorted/filtered order
+        const columns = columnListByProgram || [];
+  
+        if (exportData.length === 0) {
+          alert("No data to export");
+          return;
+        }
+  
+        // Prepare data for export
+        const worksheetData = [];
+  
+        // Add title row
+        // const titleRow = [`Report Review Dashboard (${moment(StartDate).format("MMM DD, YYYY")} - ${moment(EndDate).format("MMM DD, YYYY")})`];
+        const titleRow = ["Program wise TAT Day"];
+        worksheetData.push(titleRow);
+  
+        // Add headers
+        const headers = columns.map((col) => col.title || col.field || "");
+        worksheetData.push(headers);
+  
+        // Add data rows
+        exportData.forEach((row) => {
+          const rowData = columns.map((col) => {
+            const field = col.field;
+            return row[field] !== undefined ? row[field] : "";
+          });
+          worksheetData.push(rowData);
+        });
+  
+        // Calculate and add totals row
+        const totalsRow = columns.map((col) => {
+          if (col.bottomCalc === "sum") {
+            // Calculate sum for this column
+            const sum = exportData.reduce((acc, row) => {
+              const value = parseFloat(row[col.field]) || 0;
+              return acc + value;
+            }, 0);
+            return sum;
+          }
+          return col.field === "ReportWriter" ? "Total:" : ""; // Add "Total:" label in first text column
+        });
+        worksheetData.push(totalsRow);
+  
+        // Create workbook and worksheet
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+  
+        // Apply formatting
+        const range = XLSX.utils.decode_range(ws["!ref"]);
+        const totalRowIndex = worksheetData.length - 1;
+        const lastColIndex = range.e.c; // Last column index
+  
+        // Style title row (row 0) - merged cell
+        const titleCell = XLSX.utils.encode_cell({ r: 0, c: 0 });
+        if (ws[titleCell]) {
+          ws[titleCell].s = {
+            font: { bold: true, sz: 14 },
+            alignment: { horizontal: "center", vertical: "center" },
+          };
+        }
+        // Merge title across all columns
+        ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: lastColIndex } }];
+  
+        for (let col = range.s.c; col <= range.e.c; col++) {
+          // Bold header row (row 1)
+          const headerCell = XLSX.utils.encode_cell({ r: 1, c: col });
+          if (ws[headerCell]) {
+            ws[headerCell].s = {
+              font: { bold: true },
+              // fill: { fgColor: { rgb: "D3D3D3" } },
+            };
+          }
+  
+          // Bold totals row (last row)
+          const totalCell = XLSX.utils.encode_cell({ r: totalRowIndex, c: col });
+          if (ws[totalCell]) {
+            ws[totalCell].s = {
+              font: { bold: true },
+              // fill: { fgColor: { rgb: "FFFF00" } },
+            };
+          }
+        }
+  
+        // Bold and color last column (Grand Total column) for all data rows
+        // for (let row = 2; row < totalRowIndex; row++) {
+        //   // Skip title, header and totals row
+        //   const cellAddress = XLSX.utils.encode_cell({ r: row, c: lastColIndex });
+        //   if (ws[cellAddress]) {
+        //     ws[cellAddress].s = {
+        //       font: { bold: true },
+        //       // fill: { fgColor: { rgb: "FFFF00" } },
+        //     };
+        //   }
+        // }
+  
+        // Add worksheet to workbook
+        XLSX.utils.book_append_sheet(wb, ws, "Data");
+  
+        // Generate file name with date
+        const fileName = `Program_wise_TAT_Day_${moment().format(
+          "YYYY-MM-DD-H-m-s"
+        )}.xlsx`;
+  
+        // Save file
+        XLSX.writeFile(wb, fileName);
+      } catch (error) {
+        console.error("Export error:", error);
+        alert("Error exporting to Excel: " + error.message);
+      }
+    };
+  
 
-    window.open(
-      finalUrl +
-        "?action=ReportReviewDashboardByReleaseDateExport" +
-        "&reportType=excel" +
-        "&StartDate=" +
-        StartDate +
-        "&EndDate=" +
-        EndDate +
-        "&UserId=" +
-        UserInfo.UserId +
-        "&RoleId=" +
-        UserInfo.RoleId[0] +
-        "&TimeStamp=" +
-        Date.now()
-    );
-  };
+
+
+     const exportToExcelBuyerWiseTATDay = () => {
+      try {
+        // Get the sorted data from the Tabulator instance
+        if (!tableRefByProgram.current) {
+          alert("Table not initialized");
+          return;
+        }
+  
+        const exportData = tableRefByBuyer.current.table.getData("active"); // Gets data in current sorted/filtered order
+        const columns = columnListByBuyer || [];
+  
+        if (exportData.length === 0) {
+          alert("No data to export");
+          return;
+        }
+  
+        // Prepare data for export
+        const worksheetData = [];
+  
+        // Add title row
+        // const titleRow = [`Report Review Dashboard (${moment(StartDate).format("MMM DD, YYYY")} - ${moment(EndDate).format("MMM DD, YYYY")})`];
+        const titleRow = ["Buyer wise TAT Day"];
+        worksheetData.push(titleRow);
+  
+        // Add headers
+        const headers = columns.map((col) => col.title || col.field || "");
+        worksheetData.push(headers);
+  
+        // Add data rows
+        exportData.forEach((row) => {
+          const rowData = columns.map((col) => {
+            const field = col.field;
+            return row[field] !== undefined ? row[field] : "";
+          });
+          worksheetData.push(rowData);
+        });
+  
+        // Calculate and add totals row
+        const totalsRow = columns.map((col) => {
+          if (col.bottomCalc === "sum") {
+            // Calculate sum for this column
+            const sum = exportData.reduce((acc, row) => {
+              const value = parseFloat(row[col.field]) || 0;
+              return acc + value;
+            }, 0);
+            return sum;
+          }
+          return col.field === "ReportWriter" ? "Total:" : ""; // Add "Total:" label in first text column
+        });
+        worksheetData.push(totalsRow);
+  
+        // Create workbook and worksheet
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+  
+        // Apply formatting
+        const range = XLSX.utils.decode_range(ws["!ref"]);
+        const totalRowIndex = worksheetData.length - 1;
+        const lastColIndex = range.e.c; // Last column index
+  
+        // Style title row (row 0) - merged cell
+        const titleCell = XLSX.utils.encode_cell({ r: 0, c: 0 });
+        if (ws[titleCell]) {
+          ws[titleCell].s = {
+            font: { bold: true, sz: 14 },
+            alignment: { horizontal: "center", vertical: "center" },
+          };
+        }
+        // Merge title across all columns
+        ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: lastColIndex } }];
+  
+        for (let col = range.s.c; col <= range.e.c; col++) {
+          // Bold header row (row 1)
+          const headerCell = XLSX.utils.encode_cell({ r: 1, c: col });
+          if (ws[headerCell]) {
+            ws[headerCell].s = {
+              font: { bold: true },
+              // fill: { fgColor: { rgb: "D3D3D3" } },
+            };
+          }
+  
+          // Bold totals row (last row)
+          const totalCell = XLSX.utils.encode_cell({ r: totalRowIndex, c: col });
+          if (ws[totalCell]) {
+            ws[totalCell].s = {
+              font: { bold: true },
+              // fill: { fgColor: { rgb: "FFFF00" } },
+            };
+          }
+        }
+  
+        // Bold and color last column (Grand Total column) for all data rows
+        // for (let row = 2; row < totalRowIndex; row++) {
+        //   // Skip title, header and totals row
+        //   const cellAddress = XLSX.utils.encode_cell({ r: row, c: lastColIndex });
+        //   if (ws[cellAddress]) {
+        //     ws[cellAddress].s = {
+        //       font: { bold: true },
+        //       // fill: { fgColor: { rgb: "FFFF00" } },
+        //     };
+        //   }
+        // }
+  
+        // Add worksheet to workbook
+        XLSX.utils.book_append_sheet(wb, ws, "Data");
+  
+        // Generate file name with date
+        const fileName = `Buyer_wise_TAT_Day_${moment().format(
+          "YYYY-MM-DD-H-m-s"
+        )}.xlsx`;
+  
+        // Save file
+        XLSX.writeFile(wb, fileName);
+      } catch (error) {
+        console.error("Export error:", error);
+        alert("Error exporting to Excel: " + error.message);
+      }
+    };
+  
+  // const PrintPDFExcelExportFunction = (reportType) => {
+  //   let finalUrl = EXCEL_EXPORT_URL + "report/print_pdf_excel_server.php";
+
+  //   window.open(
+  //     finalUrl +
+  //       "?action=ReportReviewDashboardByReleaseDateExport" +
+  //       "&reportType=excel" +
+  //       "&StartDate=" +
+  //       StartDate +
+  //       "&EndDate=" +
+  //       EndDate +
+  //       "&UserId=" +
+  //       UserInfo.UserId +
+  //       "&RoleId=" +
+  //       UserInfo.RoleId[0] +
+  //       "&TimeStamp=" +
+  //       Date.now()
+  //   );
+  // };
 
   /* =====End of Excel Export Code==== */
 
@@ -100,7 +343,6 @@ const ProgramAndBuyerWisetat = (props) => {
       headerHozAlign: "right",
       // filter: true,
       width: "150",
-      // cssClass: "bold-total",
       bottomCalc: "sum",
     },
     {
@@ -110,8 +352,7 @@ const ProgramAndBuyerWisetat = (props) => {
       headerHozAlign: "right",
       // filter: true,
       width: "120",
-      // cssClass: "bold-total",
-      bottomCalc: "sum",
+      // bottomCalc: "sum",
     },
     {
       field: "StandardTATDay",
@@ -120,8 +361,7 @@ const ProgramAndBuyerWisetat = (props) => {
       headerHozAlign: "right",
       // filter: true,
       width: "130",
-      // cssClass: "bold-total",
-      bottomCalc: "sum",
+      // bottomCalc: "sum",
     },
   ];
 
@@ -129,7 +369,7 @@ const ProgramAndBuyerWisetat = (props) => {
     // { field: "rownumber", label: "SL", align: "center", width: "3%" },
 
     {
-      field: "ProgramName",
+      field: "BuyerName",
       title: "Buyer Name",
       hozAlign: "left",
       headerHozAlign: "left",
@@ -137,34 +377,31 @@ const ProgramAndBuyerWisetat = (props) => {
       width: "200",
     },
     {
-      field: "AuditCount",
+      field: "ReportReleased",
       title: "Report Released",
       hozAlign: "right",
       headerHozAlign: "right",
       // filter: true,
       width: "150",
-      // cssClass: "bold-total",
       bottomCalc: "sum",
     },
     {
-      field: "AuditCount",
+      field: "CurrentTAT",
       title: "Current TAT",
       hozAlign: "right",
       headerHozAlign: "right",
       // filter: true,
       width: "120",
-      // cssClass: "bold-total",
-      bottomCalc: "sum",
+      // bottomCalc: "sum",
     },
     {
-      field: "AuditCount",
+      field: "StandardTATDay",
       title: "Standard TAT",
       hozAlign: "right",
       headerHozAlign: "right",
       // filter: true,
       width: "130",
-      // cssClass: "bold-total",
-      bottomCalc: "sum",
+      // bottomCalc: "sum",
     },
   ];
 
@@ -261,7 +498,7 @@ const ProgramAndBuyerWisetat = (props) => {
                 <span>Program wise TAT Day</span>
 
                 <button
-                  onClick={() => PrintPDFExcelExportFunction("excel")}
+                  onClick={() => exportToExcelProgramWiseTAT()}
                   style={{
                     padding: "8px 16px",
                     backgroundColor: "#28a745",
@@ -301,7 +538,7 @@ const ProgramAndBuyerWisetat = (props) => {
               >
                 <span>Buyer wise TAT Day</span>
                 <button
-                  onClick={() => PrintPDFExcelExportFunction("excel")}
+                  onClick={() => exportToExcelBuyerWiseTATDay()}
                   style={{
                     padding: "8px 16px",
                     backgroundColor: "#28a745",
