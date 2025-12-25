@@ -1061,7 +1061,7 @@ function ReportReviewDashboardByReleaseDateExport()
 	$tableProperties["table_header"] = array("Program", "No of Reports");
 	$tableProperties["align"] = array("left", "right");
 	$tableProperties["width_print_pdf"] = array("10%", "10%"); //when exist serial then here total 95% and 5% use for serial
-	$tableProperties["width_excel"] = array("40", "25");
+	$tableProperties["width_excel"] = array("60", "30");
 	$tableProperties["precision"] = array("string", 0); //string,date,datetime,0,1,2,3,4
 	$tableProperties["total"] = array(0, 1); //not total=0, total=1
 	$tableProperties["color_code"] = array(0, 0); //colorcode field = 1 not color code field = 0
@@ -1070,7 +1070,7 @@ function ReportReviewDashboardByReleaseDateExport()
 
 	//Report header list
 	$tableProperties["header_list"][0] = $siteTitle;
-	$tableProperties["header_list"][1] = 'Report Review Dashboard ('.$_REQUEST['StartDate'].' to '.$_REQUEST['EndDate'].')';
+	$tableProperties["header_list"][1] = 'Report Review Dashboard - Daily Reports Finalized ('.$_REQUEST['StartDate'].' to '.$_REQUEST['EndDate'].')';
 	// $tableProperties["header_list"][1] = 'Heading 2';
 
 	//Report save name. Not allow any type of special character

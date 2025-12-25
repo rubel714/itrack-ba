@@ -87,8 +87,8 @@ const ReportReviewDashboard = (props) => {
       const worksheetData = [];
 
       // Add title row
-      // const titleRow = [`Report Review Dashboard (${moment(StartDate).format("MMM DD, YYYY")} - ${moment(EndDate).format("MMM DD, YYYY")})`];
-      const titleRow = ["Report Review Dashboard"];
+      // const titleRow = [`Report Review Dashboard - Pending Reports Status (${moment(StartDate).format("MMM DD, YYYY")} - ${moment(EndDate).format("MMM DD, YYYY")})`];
+      const titleRow = ["Report Review Dashboard - Pending Reports Status"];
       worksheetData.push(titleRow);
 
       // Add headers
@@ -174,7 +174,7 @@ const ReportReviewDashboard = (props) => {
       XLSX.utils.book_append_sheet(wb, ws, "Data");
 
       // Generate file name with date
-      const fileName = `report_review_dashboard_${moment().format(
+      const fileName = `Report_Review_Dashboard_${moment().format(
         "YYYY-MM-DD-H-m-s"
       )}.xlsx`;
 
@@ -278,18 +278,22 @@ const ReportReviewDashboard = (props) => {
         </div>
 
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
-        <div class="searchAdd">
+        <div class="searchAdd" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
+            <span>Pending Reports Status</span>
+          </div>
+
           <div>
             <button
               onClick={exportToExcel}
               style={{
-                padding: "8px 16px",
+                padding: "0px 16px",
                 backgroundColor: "#28a745",
                 color: "white",
                 border: "none",
                 borderRadius: "4px",
                 cursor: "pointer",
-                marginTop: "20px",
+                // marginTop: "20px",
               }}
             >
               Export to Excel
@@ -314,48 +318,54 @@ const ReportReviewDashboard = (props) => {
 
 
 {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
-        <div class="searchAdd">
+        <div class="searchAdd" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
-            <label>Release Start Date</label>
-            <div class="">
-              <input
-                type="date"
-                id="StartDate"
-                name="StartDate"
-                value={StartDate}
-                onChange={(e) => handleChangeFilterDate(e)}
-              />
-            </div>
+            <span>Daily Reports Finalized</span>
           </div>
 
-          <div>
-            <label>Release End Date</label>
-            <div class="">
-              <input
-                type="date"
-                id="EndDate"
-                name="EndDate"
-                value={EndDate}
-                onChange={(e) => handleChangeFilterDate(e)}
-              />
+          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+            <div>
+              <label>Release Start Date</label>
+              <div class="">
+                <input
+                  type="date"
+                  id="StartDate"
+                  name="StartDate"
+                  value={StartDate}
+                  onChange={(e) => handleChangeFilterDate(e)}
+                />
+              </div>
             </div>
-          </div>
 
-          <div>
-            <button
-              onClick={() => PrintPDFExcelExportFunction('excel')}
-              style={{
-                padding: "8px 16px",
-                backgroundColor: "#28a745",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-                marginTop: "20px",
-              }}
-            >
-              Export to Excel
-            </button>
+            <div>
+              <label>Release End Date</label>
+              <div class="">
+                <input
+                  type="date"
+                  id="EndDate"
+                  name="EndDate"
+                  value={EndDate}
+                  onChange={(e) => handleChangeFilterDate(e)}
+                />
+              </div>
+            </div>
+
+            <div>
+              <button
+                onClick={() => PrintPDFExcelExportFunction('excel')}
+                style={{
+                  padding: "0px 16px",
+                  backgroundColor: "#28a745",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  // marginTop: "20px",
+                }}
+              >
+                Export to Excel
+              </button>
+            </div>
           </div>
         </div>
         <ReactTabulator

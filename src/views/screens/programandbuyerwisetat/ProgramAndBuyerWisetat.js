@@ -71,8 +71,8 @@ const ProgramAndBuyerWisetat = (props) => {
         const worksheetData = [];
   
         // Add title row
-        // const titleRow = [`Report Review Dashboard (${moment(StartDate).format("MMM DD, YYYY")} - ${moment(EndDate).format("MMM DD, YYYY")})`];
-        const titleRow = ["Program wise TAT Day"];
+        const titleRow = [`Program wise TAT Day (${moment(StartDate).format("MMM DD, YYYY")} - ${moment(EndDate).format("MMM DD, YYYY")})`];
+        // const titleRow = ["Program wise TAT Day"];
         worksheetData.push(titleRow);
   
         // Add headers
@@ -193,8 +193,8 @@ const ProgramAndBuyerWisetat = (props) => {
         const worksheetData = [];
   
         // Add title row
-        // const titleRow = [`Report Review Dashboard (${moment(StartDate).format("MMM DD, YYYY")} - ${moment(EndDate).format("MMM DD, YYYY")})`];
-        const titleRow = ["Buyer wise TAT Day"];
+        const titleRow = [`Buyer wise TAT Day (${moment(StartDate).format("MMM DD, YYYY")} - ${moment(EndDate).format("MMM DD, YYYY")})`];
+        // const titleRow = ["Buyer wise TAT Day"];
         worksheetData.push(titleRow);
   
         // Add headers
@@ -500,7 +500,7 @@ const ProgramAndBuyerWisetat = (props) => {
                 <button
                   onClick={() => exportToExcelProgramWiseTAT()}
                   style={{
-                    padding: "8px 16px",
+                    padding: "0px 16px",
                     backgroundColor: "#28a745",
                     color: "white",
                     border: "none",
@@ -540,7 +540,7 @@ const ProgramAndBuyerWisetat = (props) => {
                 <button
                   onClick={() => exportToExcelBuyerWiseTATDay()}
                   style={{
-                    padding: "8px 16px",
+                    padding: "0px 16px",
                     backgroundColor: "#28a745",
                     color: "white",
                     border: "none",
