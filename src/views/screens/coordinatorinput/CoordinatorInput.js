@@ -662,7 +662,7 @@ const CoordinatorInput = (props) => {
 
   const validateForm = () => {
     let validateFields = [];
-    validateFields = ["ActivityId", "FactoryId", "ProgramId", "CoordinatorId"];
+    validateFields = ["ActivityId", "FactoryId", "ProgramId", "CoordinatorId","BuyerId"];
     let errorData = {};
     let isValid = true;
     validateFields.map((field) => {
@@ -1645,17 +1645,20 @@ const CoordinatorInput = (props) => {
                 value={currentRow.ManDay}
                 onChange={(e) => handleChange(e)}
               />
-              <label>Buyer</label>
+              <label>Buyer *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
                 disabled={permissionType == 1}
                 // disabled={true}
-                className="chosen_dropdown"
+                // className="chosen_dropdown"
+                className={`chosen_dropdown ${
+                  errorObject.BuyerId ? errorObject.BuyerId : ""
+                }`}
                 id="BuyerId"
                 name="BuyerId"
                 autoComplete
-                //  class={errorObject.BuyerId}
+                // className={errorObject.BuyerId}
                 options={BuyerList ? BuyerList : []}
                 getOptionLabel={(option) => option.name}
                 defaultValue={{ id: 0, name: "Select Buyer" }}

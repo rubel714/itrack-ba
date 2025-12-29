@@ -395,7 +395,7 @@ const SalesPersonInput = (props) => {
 
   const validateForm = () => {
     let validateFields = [];
-    validateFields = ["ActivityId", "FactoryId", "ProgramId", "CoordinatorId"];
+    validateFields = ["ActivityId", "FactoryId", "ProgramId", "CoordinatorId","BuyerId"];
     let errorData = {};
     let isValid = true;
     validateFields.map((field) => {
@@ -1271,12 +1271,14 @@ const SalesPersonInput = (props) => {
               {/* </div> */}
 
               {/* <div class="control-row pt-10"> */}
-              <label>Buyer</label>
+              <label>Buyer *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
                 disabled={currentRow.StatusId == 5 || permissionType == 1}
-                className="chosen_dropdown"
+                  className={`chosen_dropdown ${
+                  errorObject.BuyerId ? errorObject.BuyerId : ""
+                }`}
                 id="BuyerId"
                 name="BuyerId"
                 autoComplete
