@@ -38,6 +38,7 @@ function LoginPage(props) {
   const [clientList, setClientList] = useState(null);
   const [branchList, setBranchList] = useState(null);
   const [bFirst, setBFirst] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
   React.useEffect(() => {
     document.body.classList.add("login-page");
@@ -133,12 +134,29 @@ function LoginPage(props) {
                 onChange={(e) => handleChange(e)}
               />
               <label>Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                onChange={(e) => handleChange(e)}
-              />
+              <div style={{ position: 'relative', display: 'inline-block', width: '100%' }}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  name="password"
+                  onChange={(e) => handleChange(e)}
+                  style={{ width: '100%', paddingRight: '40px' }}
+                />
+                <span
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '10px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    color: '#666'
+                  }}
+                >
+                  {showPassword ? '👁️' : '👁️‍🗨️'}
+                </span>
+              </div>
             </div>
 
             <Button label={"Login"} class={"btnLogin"} onClick={LoginPage} />

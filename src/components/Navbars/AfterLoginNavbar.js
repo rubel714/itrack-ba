@@ -129,6 +129,16 @@ function AfterLoginNavbar(props) {
                 <ul
                   className={`dropdownList ${settingsToogle ? "show" : "hide"}`}
                 >
+                {menuShowPermision("programcategory") === 1 && (
+                    <li>
+                      <a
+                        href="javascript:void(0)"
+                        onClick={() => props.history.push("programcategory")}
+                      >
+                        Program Category
+                      </a>
+                    </li>
+                  )}
                   {menuShowPermision("programs") === 1 && (
                     <li>
                       <a

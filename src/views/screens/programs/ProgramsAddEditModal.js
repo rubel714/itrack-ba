@@ -253,8 +253,7 @@ const ProgramsAddEditModal = (props) => {
                 <TextField {...params} variant="standard" fullWidth />
               )}
             />
-            {/* </div>
-          <div class="modalItem"> */}
+{/*  
             <label>Is it Multiple</label>
             <input
               type="text"
@@ -264,8 +263,7 @@ const ProgramsAddEditModal = (props) => {
               placeholder="Enter Is it Multiple"
               value={currentRow.IsitMultiple}
               onChange={(e) => handleChange(e)}
-            />
-            {/* </div> */}
+            />    */}
           </div>
 
           <div class="modalItemButton">

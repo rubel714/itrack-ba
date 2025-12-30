@@ -28,6 +28,7 @@ import UserEntry from "views/screens/userentry/index.js";
 // import Team from "views/screens/team/index.js";
 // import TeamMemberAssign from "views/screens/teammemberassign/index.js";
 import Programs from "views/screens/programs/index.js";
+import ProgramCategory from "views/screens/programcategory/index.js";
 import FactoryGroups from "views/screens/factorygroups/index.js";
 import Factory from "views/screens/factory/index.js";
 import AuditStage from "views/screens/auditstage/index.js";
@@ -100,6 +101,7 @@ ReactDOM.render(
             <Route path="/teammemberassign" render={(props) => <TeamMemberAssign {...props} />} /> */}
 
             <Route path="/programs" render={(props) => <Programs {...props} />} />
+            <Route path="/programcategory" render={(props) => <ProgramCategory {...props} />} />
             <Route path="/factorygroups" render={(props) => <FactoryGroups {...props} />} />
             <Route path="/factory" render={(props) => <Factory {...props} />} />
             <Route path="/auditstage" render={(props) => <AuditStage {...props} />} />

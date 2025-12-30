@@ -1,21 +1,16 @@
-import React, { forwardRef, useRef } from "react";
+import React from "react";
 import swal from "sweetalert";
 import { DeleteOutline, Edit } from "@material-ui/icons";
 import { Button } from "../../../components/CustomControl/Button";
 
 import CustomTable from "components/CustomTable/CustomTable";
-import {
-  apiCall,
-  apiOption,
-  LoginUserInfo,
-  language,
-} from "../../../actions/api";
+import { apiCall, apiOption, LoginUserInfo, language } from "../../../actions/api";
 import ExecuteQueryHook from "../../../components/hooks/ExecuteQueryHook";
 
-import ProgramsAddEditModal from "./ProgramsAddEditModal";
+import ProgramCategoryAddEditModal from "./ProgramCategoryAddEditModal";
 
-const Programs = (props) => {
-  const serverpage = "programs"; // this is .php server page
+const ProgramCategory = (props) => {
+  const serverpage = "programcategory"; // this is .php server page
 
   const permissionType = props.permissionType;
   const { useState } = React;
@@ -23,7 +18,7 @@ const Programs = (props) => {
   const [currentRow, setCurrentRow] = useState([]);
   const [showModal, setShowModal] = useState(false); //true=show modal, false=hide modal
 
-  const { isLoading, data: dataList, error, ExecuteQuery } = ExecuteQueryHook(); //Fetch data
+  const { data: dataList, ExecuteQuery } = ExecuteQueryHook(); //Fetch data
   const UserInfo = LoginUserInfo();
 
   /* =====Start of Excel Export Code==== */
@@ -34,78 +29,25 @@ const Programs = (props) => {
 
     window.open(
       finalUrl +
-        "?action=ProgramExport" +
-        "&reportType=excel" +
-        "&TimeStamp=" +
-        Date.now()
+      "?action=ProgramCategoryExport" +
+      "&reportType=excel" +
+      "&TimeStamp=" +
+      Date.now()
     );
   };
   /* =====End of Excel Export Code==== */
 
+
   const columnList = [
     { field: "rownumber", label: "SL", align: "center", width: "5%" },
     {
-      field: "ProgramName",
-      label: "Program Name",
-      align: "left",
-      visible: true,
-      sort: true,
-      filter: true,
-    },
-    {
-      field: "TATDayType",
-      label: "TAT Day Type",
-      align: "left",
-      visible: true,
-      sort: true,
-      filter: true,
-      width: "20%",
-    },
-    {
-      field: "StandardTATDay",
-      label: "Standard TAT Day",
-      align: "right",
-      visible: true,
-      sort: true,
-      filter: true,
-      width: "12%",
-    },
-    {
-      field: "StrategiceTATDay",
-      label: "Strategice TAT Day",
-      align: "right",
-      visible: true,
-      sort: true,
-      filter: true,
-      width: "12%",
-    },
-    {
       field: "ProgramCategoryName",
-      label: "Category",
+      label: "Program Category Name",
       align: "left",
       visible: true,
       sort: true,
       filter: true,
-      width: "20%",
     },
-    // {
-    //   field: "IsitMultiple",
-    //   label: "Is it Multiple",
-    //   align: "left",
-    //   visible: true,
-    //   sort: true,
-    //   filter: true,
-    //   width: "10%",
-    // },
-    // {
-    //   field: "IsActiveName",
-    //   label: "Status",
-    //   width: "10%",
-    //   align: "center",
-    //   visible: false,
-    //   sort: true,
-    //   filter: true,
-    // },
     {
       field: "custom",
       label: "Action",
@@ -117,6 +59,7 @@ const Programs = (props) => {
     },
   ];
 
+
   if (bFirst) {
     /**First time call for datalist */
     getDataList();
@@ -125,12 +68,13 @@ const Programs = (props) => {
 
   /**Get data for table list */
   function getDataList() {
+
+
     let params = {
       action: "getDataList",
       lan: language(),
       UserId: UserInfo.UserId,
     };
-    // console.log('LoginUserInfo params: ', params);
 
     ExecuteQuery(serverpage, params);
   }
@@ -139,55 +83,48 @@ const Programs = (props) => {
   function actioncontrol(rowData) {
     return (
       <>
-        {permissionType === 0 && (
-          <Edit
-            className={"table-edit-icon"}
-            onClick={() => {
-              editData(rowData);
-            }}
-          />
-        )}
+        {permissionType === 0 && (<Edit
+          className={"table-edit-icon"}
+          onClick={() => {
+            editData(rowData);
+          }}
+        />)}
 
-        {permissionType === 0 && (
-          <DeleteOutline
-            className={"table-delete-icon"}
-            onClick={() => {
-              deleteData(rowData);
-            }}
-          />
-        )}
+        {permissionType === 0 && (<DeleteOutline
+          className={"table-delete-icon"}
+          onClick={() => {
+            deleteData(rowData);
+          }}
+        />)}
       </>
     );
   }
 
   const addData = () => {
-    // console.log("rowData: ", rowData);
-    // console.log("dataList: ", dataList);
 
     setCurrentRow({
       id: "",
-      ProgramName: "",
-      TATDayTypeId: "",
-      StandardTATDay: "",
-      StrategiceTATDay: "",
-      ProgramCategoryId: "",
-      IsitMultiple: "",
+      ProgramCategoryName: "",
     });
     openModal();
   };
 
   const editData = (rowData) => {
+
     setCurrentRow(rowData);
     openModal();
   };
+
 
   function openModal() {
     setShowModal(true); //true=modal show, false=modal hide
   }
 
   function modalCallback(response) {
+    //response = close, addedit
     getDataList();
     setShowModal(false); //true=modal show, false=modal hide
+
   }
 
   const deleteData = (rowData) => {
@@ -220,6 +157,9 @@ const Programs = (props) => {
   };
 
   function deleteApi(rowData) {
+
+
+
     let params = {
       action: "deleteData",
       lan: language(),
@@ -228,7 +168,6 @@ const Programs = (props) => {
     };
 
     apiCall.post(serverpage, { params }, apiOption()).then((res) => {
-      console.log("res: ", res);
       props.openNoticeModal({
         isOpen: true,
         msg: res.data.message,
@@ -236,7 +175,9 @@ const Programs = (props) => {
       });
       getDataList();
     });
+
   }
+
 
   return (
     <>
@@ -244,53 +185,33 @@ const Programs = (props) => {
         {/* <!-- ######-----TOP HEADER-----####### --> */}
         <div class="topHeader">
           <h4>
-            <a
-              href="javascript:void(0)"
-              onClick={() => props.history.push("/home")}
-            >
-              Home
-            </a>{" "}
-            ❯ Settings ❯ Programs
+            <a href="javascript:void(0)" onClick={() => props.history.push("/home")}>Home</a> ❯ Settings ❯ Program Category
           </h4>
         </div>
 
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
         <div class="searchAdd">
-          <Button
-            label={"Export"}
-            class={"btnPrint"}
-            onClick={PrintPDFExcelExportFunction}
-          />
-          <Button
-            disabled={permissionType}
-            label={"ADD"}
-            class={"btnAdd"}
-            onClick={addData}
-          />
+        
+          <Button label={"Export"} class={"btnPrint"} onClick={PrintPDFExcelExportFunction} />
+          <Button disabled={permissionType} label={"ADD"} class={"btnAdd"} onClick={addData} />
+   
         </div>
 
         {/* <!-- ####---THIS CLASS IS USE FOR TABLE GRID PRODUCT INFORMATION---####s --> */}
-        {/* <div class="subContainer">
-          <div className="App tableHeight"> */}
-        <CustomTable
-          columns={columnList}
-          rows={dataList ? dataList : {}}
-          actioncontrol={actioncontrol}
-        />
-        {/* </div>
-        </div> */}
+          <CustomTable
+            columns={columnList}
+            rows={dataList ? dataList : {}}
+            actioncontrol={actioncontrol}
+          />
       </div>
       {/* <!-- BODY CONTAINER END --> */}
 
-      {showModal && (
-        <ProgramsAddEditModal
-          masterProps={props}
-          currentRow={currentRow}
-          modalCallback={modalCallback}
-        />
-      )}
+
+      {showModal && (<ProgramCategoryAddEditModal masterProps={props} currentRow={currentRow} modalCallback={modalCallback} />)}
+
+
     </>
   );
 };
 
-export default Programs;
+export default ProgramCategory;

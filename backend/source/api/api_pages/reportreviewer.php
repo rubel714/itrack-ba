@@ -69,7 +69,7 @@ function getDataList($data)
 	   LEFT JOIN `t_invoice_status` s ON a.`InvStatusId` = s.`InvStatusId`
 
 	   WHERE a.StatusId = 5
-	   and ((a.AuditEndDate between '$StartDate' and '$EndDate') OR (a.AuditEndDate is null))
+	   and (a.AuditEndDate between '$StartDate' and '$EndDate')
 	   ORDER BY a.`ReportReleaseStatus` ASC, a.AuditEndDate DESC;";
 // AND a.AuditEndDate<'$currDate'
 		$resultdata = $dbh->query($query);
