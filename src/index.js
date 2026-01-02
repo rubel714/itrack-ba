@@ -55,6 +55,7 @@ import CoordinatorInput from "views/screens/coordinatorinput/index.js";
 import ReportReviewer from "views/screens/reportreviewer/index.js";
 import Invoice from "views/screens/invoice/index.js";
 import AuditCalendar from "views/screens/auditcalendar/index.js";
+import SalesPersonInputReport from "views/screens/salespersoninputreport/index.js";
 import UserContextProvider from './context/user-info-context';
 
 // import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
@@ -130,6 +131,7 @@ ReactDOM.render(
             <Route path="/invoice" render={(props) => <Invoice {...props} />} />
 
             <Route path="/auditcalendar" render={(props) => <AuditCalendar {...props} />} />
+            <Route path="/salespersoninputreport" render={(props) => <SalesPersonInputReport {...props} />} />
 
             <Route path="/" render={(props) => <Index {...props} />} />
 

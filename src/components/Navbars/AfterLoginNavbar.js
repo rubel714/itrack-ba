@@ -461,6 +461,17 @@ function AfterLoginNavbar(props) {
                       </a>
                     </li>
                   )}
+
+                   {menuShowPermision("salespersoninputreport") === 1 && (
+                    <li>
+                      <a
+                        href="javascript:void(0)"
+                        onClick={() => props.history.push("salespersoninputreport")}
+                      >
+                        Sales Person Input Report
+                      </a>
+                    </li>
+                  )}
                 </ul>
               </li>
             )}
