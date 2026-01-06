@@ -546,9 +546,10 @@ const CoordinatorInput = (props) => {
     if (name === "ProgramId") {
       data["ProgramId"] = value;
       setCurrProgramId(value);
-
-      getLeadAuditorList(value, "");
-      getTeamAuditorList(value, "");
+      if (value) {
+        getLeadAuditorList(value, "");
+        getTeamAuditorList(value, "");
+      }
     }
 
     if (name === "CoordinatorId") {
@@ -662,7 +663,40 @@ const CoordinatorInput = (props) => {
 
   const validateForm = () => {
     let validateFields = [];
-    validateFields = ["ActivityId", "FactoryId", "ProgramId", "CoordinatorId","BuyerId"];
+    validateFields = [
+      "ActivityId",
+      "FactoryId",
+      "FactoryAddress",
+      "StateId",
+      "FactoryContactPerson",
+      "FactoryContactPersonPhone",
+      "FactoryContactPersonEmail",
+      "FactoryHoliday",
+      "ProgramId",
+      "TentativeOfferPrice",
+      "CertificateBody",
+      "CoordinatorId",
+      "AuditStageId",
+      "LeadStatusId",
+      "ManDay",
+      "BuyerId",
+      "MemberId",
+      "NextFollowupDate",
+      "Remarks",
+      "Comments",
+      "AssessmentNo",
+      "CountryId",
+      "LeadAuditorId",
+      "TeamAuditorId",
+      "AuditTypeId",
+      "ReportWriterId",
+      "NoOfEmployee",
+      "AuditFee",
+      "OPE",
+      "OthersAmount",
+      "RevenueBDT",
+      "PINo",
+    ];
     let errorData = {};
     let isValid = true;
     validateFields.map((field) => {
@@ -724,7 +758,7 @@ const CoordinatorInput = (props) => {
       filter: true,
       width: "7%",
     },
-        {
+    {
       field: "AssessmentNo",
       label: "Assessment No",
       align: "left",
@@ -800,7 +834,7 @@ const CoordinatorInput = (props) => {
       filter: true,
       width: "8%",
     },
-     {
+    {
       field: "AuditBook",
       label: "Audit Book",
       align: "left",
@@ -1289,7 +1323,7 @@ const CoordinatorInput = (props) => {
                 )}
               />
 
-              <label>Group Name</label>
+              <label>Group Name *</label>
               <input
                 type="text"
                 id="FactoryGroupName"
@@ -1310,19 +1344,19 @@ const CoordinatorInput = (props) => {
                 // onChange={(e) => handleChange(e)}
               />
 
-              <label>Factory Address</label>
+              <label>Factory Address *</label>
               <input
                 type="text"
                 id="FactoryAddress"
                 name="FactoryAddress"
                 disabled={permissionType == 1}
-                // class={errorObject.FactoryAddress}
+                className={errorObject.FactoryAddress}
                 placeholder="Enter Factory Address"
                 value={currentRow.FactoryAddress}
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>State</label>
+              <label>State *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
@@ -1359,49 +1393,52 @@ const CoordinatorInput = (props) => {
                 )}
               />
 
-              <label>Factory Contact Person</label>
+              <label>Factory Contact Person *</label>
               <input
                 type="text"
                 id="FactoryContactPerson"
                 name="FactoryContactPerson"
                 disabled={permissionType == 1}
-                // class={errorObject.FactoryContactPerson}
+                className={errorObject.FactoryContactPerson}
                 placeholder="Enter Factory Contact Person"
                 value={currentRow.FactoryContactPerson}
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Factory Contact Person Phone</label>
+              <label>Factory Contact Person Phone *</label>
               <input
                 type="text"
                 id="FactoryContactPersonPhone"
                 name="FactoryContactPersonPhone"
                 disabled={permissionType == 1}
-                // class={errorObject.FactoryContactPersonPhone}
+                className={errorObject.FactoryContactPersonPhone}
                 placeholder="Enter Factory Contact Person Phone"
                 value={currentRow.FactoryContactPersonPhone}
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Factory Contact Person Email</label>
+              <label>Factory Contact Person Email *</label>
               <input
                 type="text"
                 id="FactoryContactPersonEmail"
                 name="FactoryContactPersonEmail"
                 disabled={permissionType == 1}
-                // class={errorObject.FactoryContactPersonEmail}
+                className={errorObject.FactoryContactPersonEmail}
                 placeholder="Enter Factory Contact Person Email"
                 value={currentRow.FactoryContactPersonEmail}
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Factory Weekend</label>
+              <label>Factory Weekend *</label>
               <FormControl sx={{ width: 300 }}>
                 <Select
                   multiple
                   disabled={permissionType == 1}
                   value={currDays.length > 0 ? currDays.split(",") : []}
                   onChange={handleChangeMulpleCboDays}
+                  className={`chosen_dropdown ${
+                    errorObject.FactoryHoliday ? errorObject.FactoryHoliday : ""
+                  }`}
                   title={currDays ? currDays : ""}
                   renderValue={(selected) =>
                     (DaysList || [])
@@ -1488,27 +1525,27 @@ const CoordinatorInput = (props) => {
                 value={currentRow.OpportunityDate}
                 onChange={(e) => handleChange(e)}
               />
-              <label>Tentative Offer Price</label>
+              <label>Tentative Offer Price *</label>
               <input
                 type="number"
                 id="TentativeOfferPrice"
                 name="TentativeOfferPrice"
                 disabled={permissionType == 1}
                 // disabled={true}
-                // class={errorObject.TentativeOfferPrice}
+                className={errorObject.TentativeOfferPrice}
                 placeholder="Enter Tentative Offer Price"
                 value={currentRow.TentativeOfferPrice}
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>CB (Certificate Body)</label>
+              <label>CB (Certificate Body) *</label>
               <input
                 type="text"
                 id="CertificateBody"
                 name="CertificateBody"
                 disabled={permissionType == 1}
                 // disabled={true}
-                // class={errorObject.CertificateBody}
+                className={errorObject.CertificateBody}
                 placeholder="Enter Certificate Body"
                 value={currentRow.CertificateBody}
                 onChange={(e) => handleChange(e)}
@@ -1555,17 +1592,19 @@ const CoordinatorInput = (props) => {
                 )}
               />
 
-              <label>Audit Stage</label>
+              <label>Audit Stage *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
                 // disabled={true}
                 disabled={permissionType == 1}
-                className="chosen_dropdown"
+                // className="chosen_dropdown"
                 id="AuditStageId"
                 name="AuditStageId"
                 autoComplete
-                //  class={errorObject.AuditStageId}
+                className={`chosen_dropdown ${
+                  errorObject.AuditStageId ? errorObject.AuditStageId : ""
+                }`}
                 options={AuditStageList ? AuditStageList : []}
                 getOptionLabel={(option) => option.name}
                 defaultValue={{ id: 0, name: "Select Audit Stage" }}
@@ -1594,13 +1633,15 @@ const CoordinatorInput = (props) => {
                 )}
               />
 
-              <label>Lead Status</label>
+              <label>Lead Status *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
                 disabled={permissionType == 1}
                 // disabled={true}
-                className="chosen_dropdown"
+                className={`chosen_dropdown ${
+                  errorObject.LeadStatusId ? errorObject.LeadStatusId : ""
+                }`}
                 id="LeadStatusId"
                 name="LeadStatusId"
                 autoComplete
@@ -1633,14 +1674,14 @@ const CoordinatorInput = (props) => {
                 )}
               />
 
-              <label>Manday(s)</label>
+              <label>Manday(s) *</label>
               <input
                 type="number"
                 id="ManDay"
                 name="ManDay"
                 disabled={permissionType == 1}
                 // disabled={true}
-                // class={errorObject.ManDay}
+                className={errorObject.ManDay}
                 placeholder="Enter Manday(s)"
                 value={currentRow.ManDay}
                 onChange={(e) => handleChange(e)}
@@ -1721,13 +1762,15 @@ const CoordinatorInput = (props) => {
                 )}
               />
 
-              <label>Lead Generated by (Person)</label>
+              <label>Lead Generated by (Person) *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
                 disabled={permissionType == 1}
                 // disabled={true}
-                className="chosen_dropdown"
+                className={`chosen_dropdown ${
+                  errorObject.MemberId ? errorObject.MemberId : ""
+                }`}
                 id="MemberId"
                 name="MemberId"
                 autoComplete
@@ -1755,25 +1798,27 @@ const CoordinatorInput = (props) => {
                 )}
               />
 
-              <label>Next Followup Date</label>
+              <label>Next Followup Date *</label>
               <input
                 type="date"
                 id="NextFollowupDate"
                 name="NextFollowupDate"
                 disabled={permissionType == 1}
                 // disabled={true}
-                // class={errorObject.NextFollowupDate}
+                className={errorObject.NextFollowupDate}
                 placeholder="Enter Next Followup Date"
                 value={currentRow.NextFollowupDate}
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Business Type</label>
+              <label>Business Type *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
                 disabled={permissionType == 1}
-                className="chosen_dropdown"
+                className={`chosen_dropdown ${
+                  errorObject.Remarks ? errorObject.Remarks : ""
+                }`}
                 id="Remarks"
                 name="Remarks"
                 autoComplete
@@ -1800,13 +1845,13 @@ const CoordinatorInput = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
-              <label>Comments</label>
+              <label>Comments *</label>
               <input
                 type="text"
                 id="Comments"
                 name="Comments"
                 disabled={permissionType == 1}
-                // class={errorObject.Comments}
+                className={errorObject.Comments}
                 placeholder="Enter Comments"
                 value={currentRow.Comments}
                 onChange={(e) => handleChange(e)}
@@ -1826,13 +1871,13 @@ const CoordinatorInput = (props) => {
             </div>
 
             <div class="formEntryColumnThree">
-              <label>Assessment No.</label>
+              <label>Assessment No. *</label>
               <input
                 type="text"
                 id="AssessmentNo"
                 name="AssessmentNo"
                 disabled={permissionType == 1}
-                // class={errorObject.AssessmentNo}
+                className={errorObject.AssessmentNo}
                 placeholder="Enter Assessment No"
                 value={currentRow.AssessmentNo}
                 onChange={(e) => handleChange(e)}
@@ -1862,12 +1907,14 @@ const CoordinatorInput = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Country</label>
+              <label>Country *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
                 disabled={permissionType == 1}
-                className="chosen_dropdown"
+                className={`chosen_dropdown ${
+                  errorObject.CountryId ? errorObject.CountryId : ""
+                }`}
                 id="CountryId"
                 name="CountryId"
                 autoComplete
@@ -1897,12 +1944,14 @@ const CoordinatorInput = (props) => {
                 )}
               />
 
-              <label>Lead Auditor</label>
+              <label>Lead Auditor *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
                 disabled={permissionType == 1}
-                className="chosen_dropdown"
+                className={`chosen_dropdown ${
+                  errorObject.LeadAuditorId ? errorObject.LeadAuditorId : ""
+                }`}
                 id="LeadAuditorId"
                 name="LeadAuditorId"
                 autoComplete
@@ -1935,13 +1984,16 @@ const CoordinatorInput = (props) => {
                 )}
               />
 
-              <label>Team Auditor</label>
+              <label>Team Auditor *</label>
               <FormControl sx={{ width: 300 }}>
                 <Select
                   multiple
                   disabled={permissionType == 1}
                   value={currTeamAuditorId}
                   onChange={handleChangeMulpleCboTeamAuditor}
+                  className={`chosen_dropdown ${
+                    errorObject.TeamAuditorId ? errorObject.TeamAuditorId : ""
+                  }`}
                   title={currTeamAuditorId
                     .map((id) => {
                       const auditor = (TeamAuditorList || []).find(
@@ -2004,12 +2056,14 @@ const CoordinatorInput = (props) => {
                 )}
               />
  */}
-              <label>Audit Type</label>
+              <label>Audit Type *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
                 disabled={permissionType == 1}
-                className="chosen_dropdown"
+                className={`chosen_dropdown ${
+                  errorObject.AuditTypeId ? errorObject.AuditTypeId : ""
+                }`}
                 id="AuditTypeId"
                 name="AuditTypeId"
                 autoComplete
@@ -2068,12 +2122,14 @@ const CoordinatorInput = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Report Writer</label>
+              <label>Report Writer *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
                 disabled={permissionType == 1}
-                className="chosen_dropdown"
+                className={`chosen_dropdown ${
+                  errorObject.ReportWriterId ? errorObject.ReportWriterId : ""
+                }`}
                 id="ReportWriterId"
                 name="ReportWriterId"
                 autoComplete
@@ -2130,7 +2186,7 @@ const CoordinatorInput = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Payment Status</label>
+              <label>Payment Status *</label>
               <div>
                 <label>Yes</label>
                 <input
@@ -2160,61 +2216,61 @@ const CoordinatorInput = (props) => {
                 ></input>
               </div>
 
-              <label>No Of Employee</label>
+              <label>No Of Employee *</label>
               <input
                 type="text"
                 id="NoOfEmployee"
                 name="NoOfEmployee"
                 disabled={permissionType == 1}
-                // class={errorObject.NoOfEmployee}
+                className={errorObject.NoOfEmployee}
                 placeholder="Enter No Of Employee"
                 value={currentRow.NoOfEmployee}
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Audit Fee</label>
+              <label>Audit Fee *</label>
               <input
                 type="number"
                 id="AuditFee"
                 name="AuditFee"
                 disabled={permissionType == 1}
-                // class={errorObject.AuditFee}
+                className={errorObject.AuditFee}
                 placeholder="Enter Audit Fee"
                 value={currentRow.AuditFee}
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>OPE</label>
+              <label>OPE *</label>
               <input
                 type="number"
                 id="OPE"
                 name="OPE"
                 disabled={permissionType == 1}
-                // class={errorObject.OPE}
+                className={errorObject.OPE}
                 placeholder="Enter OPE"
                 value={currentRow.OPE}
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Others Amount</label>
+              <label>Others Amount *</label>
               <input
                 type="number"
                 id="OthersAmount"
                 name="OthersAmount"
                 disabled={permissionType == 1}
-                // class={errorObject.OthersAmount}
+                className={errorObject.OthersAmount}
                 placeholder="Enter Others Amount"
                 value={currentRow.OthersAmount}
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Revenue (BDT)</label>
+              <label>Revenue (BDT) *</label>
               <input
                 type="number"
                 id="RevenueBDT"
                 name="RevenueBDT"
                 disabled={permissionType == 1}
-                // class={errorObject.RevenueBDT}
+                className={errorObject.RevenueBDT}
                 placeholder="Enter Revenue BDT"
                 value={currentRow.RevenueBDT}
                 onChange={(e) => handleChange(e)}
@@ -2233,13 +2289,13 @@ const CoordinatorInput = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>PI No</label>
+              <label>PI No *</label>
               <input
                 type="text"
                 id="PINo"
                 name="PINo"
                 disabled={permissionType == 1}
-                // class={errorObject.PINo}
+                className={errorObject.PINo}
                 placeholder="Enter PI No"
                 value={currentRow.PINo}
                 onChange={(e) => handleChange(e)}

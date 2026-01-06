@@ -352,7 +352,11 @@ const ProgramAndBuyerWisetat = (props) => {
       headerHozAlign: "right",
       // filter: true,
       width: "120",
-      // bottomCalc: "sum",
+      bottomCalc: "sum",
+           bottomCalcFormatter: function (cell) {
+        let value = cell.getValue();
+        return value ? value.toFixed(2) : "0.00";
+    }
     },
     {
       field: "StandardTATDay",
@@ -361,7 +365,11 @@ const ProgramAndBuyerWisetat = (props) => {
       headerHozAlign: "right",
       // filter: true,
       width: "130",
-      // bottomCalc: "sum",
+      bottomCalc: "sum",
+           bottomCalcFormatter: function (cell) {
+        let value = cell.getValue();
+        return value ? value.toFixed(2) : "0.00";
+    }
     },
   ];
 
@@ -392,7 +400,11 @@ const ProgramAndBuyerWisetat = (props) => {
       headerHozAlign: "right",
       // filter: true,
       width: "120",
-      // bottomCalc: "sum",
+      bottomCalc: "sum",
+      bottomCalcFormatter: function (cell) {
+        let value = cell.getValue();
+        return value ? value.toFixed(2) : "0.00";
+    }
     },
     {
       field: "StandardTATDay",
@@ -401,7 +413,11 @@ const ProgramAndBuyerWisetat = (props) => {
       headerHozAlign: "right",
       // filter: true,
       width: "130",
-      // bottomCalc: "sum",
+      bottomCalc: "sum",
+           bottomCalcFormatter: function (cell) {
+        let value = cell.getValue();
+        return value ? value.toFixed(2) : "0.00";
+    }
     },
   ];
 
