@@ -75,10 +75,10 @@ const SalesPersonInput = (props) => {
   const [MemberList, setMemberList] = useState(null);
   const [currMemberId, setCurrMemberId] = useState(null);
 
-  
-    const [StartDate, setStartDate] = useState(moment().add(-30, "days").format("YYYY-MM-DD"));
-    const [EndDate, setEndDate] = useState(moment().format("YYYY-MM-DD"));
-  
+  const [StartDate, setStartDate] = useState(
+    moment().add(-30, "days").format("YYYY-MM-DD")
+  );
+  const [EndDate, setEndDate] = useState(moment().format("YYYY-MM-DD"));
 
   // handleChangeWidthHeight
   const { isLoading, data: dataList, error, ExecuteQuery } = ExecuteQueryHook(); //Fetch data
@@ -98,7 +98,7 @@ const SalesPersonInput = (props) => {
       finalUrl +
         "?action=SalesPersonInputExport" +
         "&reportType=excel" +
-          "&StartDate=" +
+        "&StartDate=" +
         StartDate +
         "&EndDate=" +
         EndDate +
@@ -112,7 +112,7 @@ const SalesPersonInput = (props) => {
   };
   /* =====End of Excel Export Code==== */
 
-    const handleChangeFilterDate = (e) => {
+  const handleChangeFilterDate = (e) => {
     const { name, value } = e.target;
     if (name === "StartDate") {
       setStartDate(value);
@@ -124,7 +124,6 @@ const SalesPersonInput = (props) => {
       // getTransactionList(currDepartmentId, currUserId, StartDate, value);
     }
   };
-
 
   React.useEffect(() => {
     getActivityList("");
@@ -395,7 +394,28 @@ const SalesPersonInput = (props) => {
 
   const validateForm = () => {
     let validateFields = [];
-    validateFields = ["ActivityId", "FactoryId", "ProgramId", "CoordinatorId","BuyerId"];
+    validateFields = [
+      "ActivityId",
+      "FactoryId",
+      "FactoryAddress",
+      "StateId",
+      "FactoryContactPerson",
+      "FactoryContactPersonPhone",
+      "FactoryContactPersonEmail",
+      "ProgramId",
+      "TentativeOfferPrice",
+      "CertificateBody",
+      ,
+      "AuditStageId",
+      "LeadStatusId",
+      "ManDay",
+      "CoordinatorId",
+      "BuyerId",
+      "MemberId",
+      "NextFollowupDate",
+      "Remarks",
+      "Comments",
+    ];
     let errorData = {};
     let isValid = true;
     validateFields.map((field) => {
@@ -618,10 +638,10 @@ const SalesPersonInput = (props) => {
     setBFirst(false);
   }
 
-    useEffect(() => {
-      getDataList();
-    }, [StartDate, EndDate]);
-  
+  useEffect(() => {
+    getDataList();
+  }, [StartDate, EndDate]);
+
   /**Get data for table list */
   function getDataList() {
     let params = {
@@ -789,8 +809,7 @@ const SalesPersonInput = (props) => {
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
         {toggle && (
           <div class="searchAdd">
-       
-       <div>
+            <div>
               <label>Input Start Date</label>
               <div class="">
                 <input
@@ -816,15 +835,12 @@ const SalesPersonInput = (props) => {
               </div>
             </div>
 
-              <Button
-                label={"Export"}
-                class={"btnPrint"}
-                onClick={PrintPDFExcelExportFunction}
-              />
-              <Button label={"ADD"} class={"btnAdd"} onClick={addData} />
-          
-
-
+            <Button
+              label={"Export"}
+              class={"btnPrint"}
+              onClick={PrintPDFExcelExportFunction}
+            />
+            <Button label={"ADD"} class={"btnAdd"} onClick={addData} />
           </div>
         )}
 
@@ -922,7 +938,7 @@ const SalesPersonInput = (props) => {
                 )}
               />
 
-              <label>Group Name</label>
+              <label>Group Name *</label>
               <input
                 type="text"
                 id="FactoryGroupName"
@@ -943,19 +959,19 @@ const SalesPersonInput = (props) => {
                 // onChange={(e) => handleChange(e)}
               />
 
-              <label>Factory Address</label>
+              <label>Factory Address *</label>
               <input
                 type="text"
                 id="FactoryAddress"
                 name="FactoryAddress"
                 disabled={currentRow.StatusId == 5 || permissionType == 1}
-                // class={errorObject.FactoryAddress}
+                className={errorObject.FactoryAddress}
                 placeholder="Enter Factory Address"
                 value={currentRow.FactoryAddress}
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>State</label>
+              <label>State *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
@@ -992,37 +1008,37 @@ const SalesPersonInput = (props) => {
                 )}
               />
 
-              <label>Factory Contact Person</label>
+              <label>Factory Contact Person *</label>
               <input
                 type="text"
                 id="FactoryContactPerson"
                 name="FactoryContactPerson"
                 disabled={currentRow.StatusId == 5 || permissionType == 1}
-                // class={errorObject.FactoryContactPerson}
+                className={errorObject.FactoryContactPerson}
                 placeholder="Enter Factory Contact Person"
                 value={currentRow.FactoryContactPerson}
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Factory Contact Person Phone</label>
+              <label>Factory Contact Person Phone *</label>
               <input
                 type="text"
                 id="FactoryContactPersonPhone"
                 name="FactoryContactPersonPhone"
                 disabled={currentRow.StatusId == 5 || permissionType == 1}
-                // class={errorObject.FactoryContactPersonPhone}
+                className={errorObject.FactoryContactPersonPhone}
                 placeholder="Enter Factory Contact Person Phone"
                 value={currentRow.FactoryContactPersonPhone}
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Factory Contact Person Email</label>
+              <label>Factory Contact Person Email *</label>
               <input
                 type="text"
                 id="FactoryContactPersonEmail"
                 name="FactoryContactPersonEmail"
                 disabled={currentRow.StatusId == 5 || permissionType == 1}
-                // class={errorObject.FactoryContactPersonEmail}
+                className={errorObject.FactoryContactPersonEmail}
                 placeholder="Enter Factory Contact Person Email"
                 value={currentRow.FactoryContactPersonEmail}
                 onChange={(e) => handleChange(e)}
@@ -1114,25 +1130,25 @@ const SalesPersonInput = (props) => {
               {/* </div>
 
             <div class="control-row pt-10"> */}
-              <label>Tentative Offer Price</label>
+              <label>Tentative Offer Price *</label>
               <input
                 type="number"
                 id="TentativeOfferPrice"
                 name="TentativeOfferPrice"
                 disabled={currentRow.StatusId == 5 || permissionType == 1}
-                // class={errorObject.TentativeOfferPrice}
+                className={errorObject.TentativeOfferPrice}
                 placeholder="Enter Tentative Offer Price"
                 value={currentRow.TentativeOfferPrice}
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>CB (Certificate Body)</label>
+              <label>CB (Certificate Body) *</label>
               <input
                 type="text"
                 id="CertificateBody"
                 name="CertificateBody"
                 disabled={currentRow.StatusId == 5 || permissionType == 1}
-                // class={errorObject.CertificateBody}
+                className={errorObject.CertificateBody}
                 placeholder="Enter Certificate Body"
                 value={currentRow.CertificateBody}
                 onChange={(e) => handleChange(e)}
@@ -1181,12 +1197,14 @@ const SalesPersonInput = (props) => {
               {/* </div> */}
 
               {/* <div class="control-row pt-10"> */}
-              <label>Audit Stage</label>
+              <label>Audit Stage *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
                 disabled={currentRow.StatusId == 5 || permissionType == 1}
-                className="chosen_dropdown"
+                className={`chosen_dropdown ${
+                  errorObject.AuditStageId ? errorObject.AuditStageId : ""
+                }`}
                 id="AuditStageId"
                 name="AuditStageId"
                 autoComplete
@@ -1219,12 +1237,14 @@ const SalesPersonInput = (props) => {
                 )}
               />
 
-              <label>Lead Status</label>
+              <label>Lead Status *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
                 disabled={currentRow.StatusId == 5 || permissionType == 1}
-                className="chosen_dropdown"
+                className={`chosen_dropdown ${
+                  errorObject.LeadStatusId ? errorObject.LeadStatusId : ""
+                }`}
                 id="LeadStatusId"
                 name="LeadStatusId"
                 autoComplete
@@ -1257,13 +1277,13 @@ const SalesPersonInput = (props) => {
                 )}
               />
 
-              <label>Manday(s)</label>
+              <label>Manday(s) *</label>
               <input
                 type="number"
                 id="ManDay"
                 name="ManDay"
                 disabled={currentRow.StatusId == 5 || permissionType == 1}
-                // class={errorObject.ManDay}
+                className={errorObject.ManDay}
                 placeholder="Enter Manday(s)"
                 value={currentRow.ManDay}
                 onChange={(e) => handleChange(e)}
@@ -1276,7 +1296,7 @@ const SalesPersonInput = (props) => {
                 autoHighlight
                 disableClearable
                 disabled={currentRow.StatusId == 5 || permissionType == 1}
-                  className={`chosen_dropdown ${
+                className={`chosen_dropdown ${
                   errorObject.BuyerId ? errorObject.BuyerId : ""
                 }`}
                 id="BuyerId"
@@ -1344,12 +1364,14 @@ const SalesPersonInput = (props) => {
                 )}
               />
 
-              <label>Lead Generated by (Person)</label>
+              <label>Lead Generated by (Person) *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
                 disabled={currentRow.StatusId == 5 || permissionType == 1}
-                className="chosen_dropdown"
+                className={`chosen_dropdown ${
+                  errorObject.MemberId ? errorObject.MemberId : ""
+                }`}
                 id="MemberId"
                 name="MemberId"
                 autoComplete
@@ -1379,24 +1401,26 @@ const SalesPersonInput = (props) => {
               {/* </div> */}
 
               {/* <div class="control-row pt-10"> */}
-              <label>Next Followup Date</label>
+              <label>Next Followup Date *</label>
               <input
                 type="date"
                 id="NextFollowupDate"
                 name="NextFollowupDate"
                 disabled={currentRow.StatusId == 5 || permissionType == 1}
-                // class={errorObject.NextFollowupDate}
+                className={errorObject.NextFollowupDate}
                 placeholder="Enter Next Followup Date"
                 value={currentRow.NextFollowupDate}
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Business Type</label>
+              <label>Business Type *</label>
               <Autocomplete
                 autoHighlight
                 disableClearable
                 disabled={currentRow.StatusId == 5 || permissionType == 1}
-                className="chosen_dropdown"
+                className={`chosen_dropdown ${
+                  errorObject.Remarks ? errorObject.Remarks : ""
+                }`}
                 id="Remarks"
                 name="Remarks"
                 autoComplete
@@ -1424,13 +1448,13 @@ const SalesPersonInput = (props) => {
                 )}
               />
 
-              <label>Comments</label>
+              <label>Comments *</label>
               <input
                 type="text"
                 id="Comments"
                 name="Comments"
                 disabled={currentRow.StatusId == 5 || permissionType == 1}
-                // class={errorObject.Comments}
+                className={errorObject.Comments}
                 placeholder="Enter Comments"
                 value={currentRow.Comments}
                 onChange={(e) => handleChange(e)}
