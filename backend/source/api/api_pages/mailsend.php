@@ -2,24 +2,10 @@
 $lan = trim($data->lan);
 $UserId = trim($data->UserId);
 $TransactionId = $data->rowData->id;
-
-// $returnData = [
-// 				"success" => 0,
-// 				"status" => 400,
-// 				"message" => $TransactionId
-// 			];
-// return $returnData;
-// exit;
-
 require 'phpmailer/vendor/autoload.php';
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
 $mail = new PHPMailer(true);
-
-// echo "<pre>";
-// print_r($data);
 
 try {
     $dbh = new Db();
@@ -128,27 +114,71 @@ try {
     }
     // $mail->addAddress('rubel714@gmail.com', 'Test Receiver');
 
-    $TeamAuditorNames = "-";
-    if ($TeamAuditorIds != '[]') {
-        $Ids = json_decode($TeamAuditorIds);
+    // $TeamAuditorNames = "-";
+    // if ($TeamAuditorIds != '[]') {
+    //     $Ids = json_decode($TeamAuditorIds);
 
-        foreach ($Ids as $TAId) {
-            $sql = "select AuditorName,Email from t_auditor where AuditorId=$TAId";
+    //     foreach ($Ids as $TAId) {
+    //         $sql = "select AuditorName,Email from t_auditor where AuditorId=$TAId";
+    //         $resultdata = $dbh->query($sql);
+    //         $TeamAuditorEmail = $resultdata[0]['Email'];
+    //         $TeamAuditorName = $resultdata[0]['AuditorName'];
+
+    //         if ($TeamAuditorNames == "-") {
+    //             $TeamAuditorNames = $TeamAuditorName;
+    //         } else {
+    //             $TeamAuditorNames .= ", " . $TeamAuditorName;
+    //         }
+
+    //         if ($TeamAuditorEmail) {
+    //             $mail->addAddress($TeamAuditorEmail, $TeamAuditorName);
+    //         }
+    //     }
+    // }
+
+
+      $TeamAuditorNames = "";
+    // if ($TeamAuditorIds != '[]') {
+        // $Ids = json_decode($TeamAuditorIds);
+
+        // foreach ($Ids as $TAId) {
+            $sql = "select b.AuditorName, b.Email, DATE_FORMAT(a.AssignDate, '%d-%b-%Y') as AssignDate, 
+            TIME_FORMAT(a.StartTime, '%l:%i %p') as StartTime, TIME_FORMAT(a.EndTime, '%l:%i %p') as EndTime 
+            from t_transaction_auditor_assign a 
+            inner join t_auditor b on a.AuditorId = b.AuditorId 
+            where a.TransactionId=$TransactionId
+            order by a.AssignDate ASC; ";
             $resultdata = $dbh->query($sql);
-            $TeamAuditorEmail = $resultdata[0]['Email'];
-            $TeamAuditorName = $resultdata[0]['AuditorName'];
 
-            if ($TeamAuditorNames == "-") {
-                $TeamAuditorNames = $TeamAuditorName;
-            } else {
-                $TeamAuditorNames .= ", " . $TeamAuditorName;
-            }
+            foreach ($resultdata as $row) {
 
-            if ($TeamAuditorEmail) {
-                $mail->addAddress($TeamAuditorEmail, $TeamAuditorName);
+                $AssignDate = $row['AssignDate'];
+                $StartTime = $row['StartTime'];
+                $EndTime = $row['EndTime'];
+                $TeamAuditorEmail = $row['Email'];
+                $TeamAuditorName = $row['AuditorName'];
+
+                // if ($TeamAuditorNames == "-") {
+                //     $TeamAuditorNames = $TeamAuditorName;
+                // } else {
+                //     $TeamAuditorNames .= ", " . $TeamAuditorName;
+                // }
+
+
+                 $TeamAuditorNames .= "<tr>
+                    <td>$AssignDate</td>
+                    <td>$TeamAuditorName</td>
+                    <td>$StartTime</td>
+                    <td>$EndTime</td></tr>";
+
+                if ($TeamAuditorEmail) {
+                    $mail->addAddress($TeamAuditorEmail, $TeamAuditorName);
+                }
+
             }
-        }
-    }
+        // }
+    // }
+
 
 
     $sql = "select UserName,Email from t_users where UserId=$CoordinatorId";
@@ -239,12 +269,31 @@ try {
                         <td>Window</td>
                         <td>$WindowDates</td>
                     </tr>
+
+                    <tr> 
+                        <td>Auditors (Team)</td> 
+                        <td colspan='3'>
+                        <table border='1' style='width:100%'>
+                            <tr> 
+                                <td>Date</td> 
+                                <td>Name</td> 
+                                <td>Start Time</td> 
+                                <td>End Time</td> 
+                            </tr>
+                            $TeamAuditorNames
+                            </table>
+                        </td> 
+                        
+                    </tr> 
+
                     <tr>
-                        <td>Auditor Name (Team)</td>
-                        <td>$TeamAuditorNames</td>
                         <td>Factory Name</td>
-                        <td>$FactoryName</td>
+                        <td colspan='3'>$FactoryName</td>
                     </tr>
+
+
+
+
                     <tr>
                         <td>Report Writer</td>
                         <td>$ReportWriterName</td>
@@ -290,6 +339,7 @@ try {
     // 		];
 
     //// $mail->send();
+    // exit;
 
     if ($mail->send()) {
 

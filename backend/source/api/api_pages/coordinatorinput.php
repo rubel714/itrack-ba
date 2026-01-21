@@ -10,11 +10,20 @@ switch ($task) {
 	case "getDataList":
 		$returnData = getDataList($data);
 		break;
+	case "getMemberDateAssignDataList":
+		$returnData = getMemberDateAssignDataList($data);
+		break;
 	case "dataAddEdit":
 		$returnData = dataAddEdit($data);
 		break;
+	case "MemberDateAssignDataAddEdit":
+		$returnData = MemberDateAssignDataAddEdit($data);
+		break;
 	case "deleteData":
 		$returnData = deleteData($data);
+		break;
+	case "deleteMemberDateAssignData":
+		$returnData = deleteMemberDateAssignData($data);
 		break;
 
 
@@ -91,6 +100,35 @@ function getDataList($data)
 }
 
 
+function getMemberDateAssignDataList($data)
+{
+	try {
+		$dbh = new Db();
+
+		$TransactionId = trim($data->TransactionId);
+
+		$query = "SELECT a.`Id`, a.`TransactionId`, a.`AuditorId`, DATE(a.`AssignDate`) as `AssignDate`, a.`StartTime`, a.`EndTime`,b.AuditorName
+	   FROM `t_transaction_auditor_assign` a
+	   INNER JOIN `t_auditor` b ON a.`AuditorId` = b.`AuditorId`
+
+	   where a.TransactionId = $TransactionId
+	   ORDER BY a.`AssignDate` ASC, a.`Id` ASC;";
+		$resultdata = $dbh->query($query);
+
+		$returnData = [
+			"success" => 1,
+			"status" => 200,
+			"message" => "",
+			"datalist" => $resultdata
+		];
+	} catch (PDOException $e) {
+		$returnData = msg(0, 500, $e->getMessage());
+	}
+
+	return $returnData;
+}
+
+
 function dataAddEdit($data)
 {
 
@@ -131,7 +169,7 @@ function dataAddEdit($data)
 		$FactoryContactPersonPhone = $data->rowData->FactoryContactPersonPhone ? $data->rowData->FactoryContactPersonPhone : null;
 		$FactoryContactPersonEmail = $data->rowData->FactoryContactPersonEmail ? $data->rowData->FactoryContactPersonEmail : null;
 		$FactoryHoliday = $data->rowData->FactoryHoliday ? $data->rowData->FactoryHoliday : null;
-		
+
 		$AssessmentNo = $data->rowData->AssessmentNo ? $data->rowData->AssessmentNo : null;
 		$AuditStartDate = $data->rowData->AuditStartDate ? $data->rowData->AuditStartDate : null;
 		$AuditEndDate = $data->rowData->AuditEndDate ? $data->rowData->AuditEndDate : null;
@@ -477,6 +515,101 @@ function dataAddEdit($data)
 
 
 
+function MemberDateAssignDataAddEdit($data)
+{
+
+	if ($_SERVER["REQUEST_METHOD"] != "POST") {
+		return $returnData = msg(0, 404, 'Page Not Found!');
+	} else {
+		$dbh = new Db();
+
+		$lan = trim($data->lan);
+		$UserId = trim($data->UserId);
+
+		$Id = $data->rowData->Id ? $data->rowData->Id : "";
+		$TransactionId = $data->rowData->TransactionId;
+		$AssignDate = $data->rowData->AssignDate;
+		$AuditorId = $data->rowData->AuditorId;
+		$StartTime = $data->rowData->StartTime;
+		$EndTime = $data->rowData->EndTime;
+
+
+		try {
+
+			$sql = "SELECT a.TransactionId, b.ProgramName, c.FactoryName, a.AuditStartDate, a.AuditEndDate, e.AuditorName,d.AssignDate
+					FROM t_transaction a
+					inner join t_program b on a.ProgramId = b.ProgramId
+					inner join t_factory c on a.FactoryId = c.FactoryId
+					inner join t_transaction_auditor_assign d on a.TransactionId = d.TransactionId 
+							and d.AuditorId = $AuditorId and d.AssignDate = '$AssignDate'
+					inner join t_auditor e on d.AuditorId = e.AuditorId;";
+
+			$resultdata = $dbh->query($sql);
+			if (count($resultdata) > 0) {
+				$DuplicateTransactionId = $resultdata[0]["TransactionId"];
+				$DuplicateProgramName = $resultdata[0]["ProgramName"];
+				$DuplicateFactoryName = $resultdata[0]["FactoryName"];
+				$DuplicateAssignDate = $resultdata[0]["AssignDate"];
+				$DuplicateAuditorName = $resultdata[0]["AuditorName"];
+
+				$DupMsg = $DuplicateAuditorName . ' is already assigned ' . $DuplicateProgramName . ", " . $DuplicateFactoryName . " ($DuplicateAssignDate)";
+				$returnData = msg(0, 500, $DupMsg);
+			} else {
+
+				$aQuerys = array();
+				if ($Id == "") {
+					$q = new insertq();
+					$q->table = 't_transaction_auditor_assign';
+					$q->columns = [
+						'TransactionId',
+						'AuditorId',
+						'AssignDate',
+						'StartTime',
+						'EndTime'
+					];
+					$q->values = [
+						$TransactionId,
+						$AuditorId,
+						$AssignDate,
+						$StartTime,
+						$EndTime
+					];
+					$q->pks = ['Id'];
+					$q->bUseInsetId = true;
+					$q->build_query();
+					$aQuerys[] = $q;
+				} else {
+					$u = new updateq();
+					$u->table = 't_transaction_auditor_assign';
+					$u->columns = ['AuditorId', 'AssignDate', 'StartTime', 'EndTime'];
+					$u->values = [$AuditorId, $AssignDate, $StartTime, $EndTime];
+					$u->pks = ['Id'];
+					$u->pk_values = [$Id];
+					$u->build_query();
+					$aQuerys[] = $u;
+				}
+
+				$res = exec_query($aQuerys, $UserId, $lan);
+				$success = ($res['msgType'] == 'success') ? 1 : 0;
+				$status = ($res['msgType'] == 'success') ? 200 : 500;
+
+				$returnData = [
+					"success" => $success,
+					"status" => $status,
+					"UserId" => $UserId,
+					"message" => $res['msg']
+				];
+			}
+		} catch (PDOException $e) {
+			$returnData = msg(0, 500, $e->getMessage());
+		}
+
+		return $returnData;
+	}
+}
+
+
+
 
 function deleteData($data)
 {
@@ -509,6 +642,53 @@ function deleteData($data)
 			$d->table = 't_transaction';
 			$d->pks = ['TransactionId'];
 			$d->pk_values = [$id];
+			$d->build_query();
+			$aQuerys[] = $d;
+
+			$res = exec_query($aQuerys, $UserId, $lan);
+			$success = ($res['msgType'] == 'success') ? 1 : 0;
+			$status = ($res['msgType'] == 'success') ? 200 : 500;
+
+			$returnData = [
+				"success" => $success,
+				"status" => $status,
+				"UserId" => $UserId,
+				"message" => $res['msg']
+			];
+		} catch (PDOException $e) {
+			$returnData = msg(0, 500, $e->getMessage());
+		}
+
+		return $returnData;
+	}
+}
+
+
+
+function deleteMemberDateAssignData($data)
+{
+
+	if ($_SERVER["REQUEST_METHOD"] != "POST") {
+		return $returnData = msg(0, 404, 'Page Not Found!');
+	}
+	// CHECKING EMPTY FIELDS
+	elseif (!isset($data->rowData->Id)) {
+		$fields = ['fields' => ['Id']];
+		return $returnData = msg(0, 422, 'Please Fill in all Required Fields!', $fields);
+	} else {
+
+		$Id = $data->rowData->Id;
+		$lan = trim($data->lan);
+		$UserId = trim($data->UserId);
+
+		try {
+
+			$dbh = new Db();
+
+			$d = new deleteq();
+			$d->table = 't_transaction_auditor_assign';
+			$d->pks = ['Id'];
+			$d->pk_values = [$Id];
 			$d->build_query();
 			$aQuerys[] = $d;
 

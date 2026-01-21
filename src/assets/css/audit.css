@@ -1,3 +1,14 @@
+.formEntryColumnTwo {
+    display: grid;
+    grid-template-columns: 20% 30% 20% 30%;
+    row-gap: 8px;
+    padding: 16px;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
 .formEntryColumnThree {
     display: grid;
     grid-template-columns: 13% 20% 13% 20% 13% 20%;

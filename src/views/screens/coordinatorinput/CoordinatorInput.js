@@ -33,6 +33,7 @@ import {
   ListItemText,
 } from "@material-ui/core";
 import FilesUploadModal from "./FilesUploadModal";
+import AssignTeamAuditorModal from "./AssignTeamAuditorModal";
 
 const CoordinatorInput = (props) => {
   const permissionType = props.permissionType;
@@ -104,10 +105,12 @@ const CoordinatorInput = (props) => {
 
   const [StartDate, setStartDate] = useState(moment().format("YYYY-MM-DD"));
   const [EndDate, setEndDate] = useState(
-    moment().add(30, "days").format("YYYY-MM-DD")
+    moment().add(30, "days").format("YYYY-MM-DD"),
   );
 
   const [showFileUploadModal, setShowFileUploadModal] = useState(false);
+  const [showTeamAuditorAssignModal, setShowTeamAuditorAssignModal] =
+    useState(false);
 
   // const fruits = {
   //   1: "Apple",
@@ -130,7 +133,7 @@ const CoordinatorInput = (props) => {
   // const UserInfo = LoginUserInfo();
   const [selectedDate, setSelectedDate] = useState(
     //new Date()
-    moment().format("YYYY-MM-DD")
+    moment().format("YYYY-MM-DD"),
   );
 
   /* =====Start of Excel Export Code==== */
@@ -152,7 +155,7 @@ const CoordinatorInput = (props) => {
         "&RoleId=" +
         UserInfo.RoleId[0] +
         "&TimeStamp=" +
-        Date.now()
+        Date.now(),
     );
   };
   /* =====End of Excel Export Code==== */
@@ -223,7 +226,7 @@ const CoordinatorInput = (props) => {
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
       setActivityList(
-        [{ id: "", name: "Select Activity" }].concat(res.data.datalist)
+        [{ id: "", name: "Select Activity" }].concat(res.data.datalist),
       );
 
       setCurrActivityId(selectActivityId);
@@ -239,7 +242,7 @@ const CoordinatorInput = (props) => {
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
       setFactoryList(
-        [{ id: "", name: "Select Factory" }].concat(res.data.datalist)
+        [{ id: "", name: "Select Factory" }].concat(res.data.datalist),
       );
 
       setCurrFactoryId(selectFactoryId);
@@ -255,7 +258,7 @@ const CoordinatorInput = (props) => {
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
       setStateList(
-        [{ id: "", name: "Select State" }].concat(res.data.datalist)
+        [{ id: "", name: "Select State" }].concat(res.data.datalist),
       );
 
       setCurrStateId(selectStateId);
@@ -271,7 +274,7 @@ const CoordinatorInput = (props) => {
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
       setProgramList(
-        [{ id: "", name: "Select Program" }].concat(res.data.datalist)
+        [{ id: "", name: "Select Program" }].concat(res.data.datalist),
       );
 
       setCurrProgramId(selectProgramId);
@@ -287,7 +290,7 @@ const CoordinatorInput = (props) => {
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
       setCoordinatorList(
-        [{ id: "", name: "Select" }].concat(res.data.datalist)
+        [{ id: "", name: "Select" }].concat(res.data.datalist),
       );
 
       setCurrCoordinatorId(selectCoordinatorId);
@@ -318,7 +321,7 @@ const CoordinatorInput = (props) => {
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
       setAuditStageList(
-        [{ id: "", name: "Select Audit Stage" }].concat(res.data.datalist)
+        [{ id: "", name: "Select Audit Stage" }].concat(res.data.datalist),
       );
 
       setCurrAuditStageId(selectAuditStageId);
@@ -334,7 +337,7 @@ const CoordinatorInput = (props) => {
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
       setLeadStatusList(
-        [{ id: "", name: "Select Lead Status" }].concat(res.data.datalist)
+        [{ id: "", name: "Select Lead Status" }].concat(res.data.datalist),
       );
 
       setCurrLeadStatusId(selectLeadStatusId);
@@ -350,7 +353,7 @@ const CoordinatorInput = (props) => {
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
       setBuyerList(
-        [{ id: "", name: "Select Buyer" }].concat(res.data.datalist)
+        [{ id: "", name: "Select Buyer" }].concat(res.data.datalist),
       );
 
       setCurrBuyerId(selectBuyerId);
@@ -366,7 +369,7 @@ const CoordinatorInput = (props) => {
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
       setDepartmentList(
-        [{ id: "", name: "Select Department" }].concat(res.data.datalist)
+        [{ id: "", name: "Select Department" }].concat(res.data.datalist),
       );
 
       setCurrDepartmentId(selectDepartmentId);
@@ -384,7 +387,7 @@ const CoordinatorInput = (props) => {
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
       console.log(res.data.datalist);
       setMemberList(
-        [{ id: "", name: "Select Member" }].concat(res.data.datalist)
+        [{ id: "", name: "Select Member" }].concat(res.data.datalist),
       );
 
       setCurrMemberId(selectMemberId ? selectMemberId : "");
@@ -400,7 +403,7 @@ const CoordinatorInput = (props) => {
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
       setCountryList(
-        [{ id: "", name: "Select Country" }].concat(res.data.datalist)
+        [{ id: "", name: "Select Country" }].concat(res.data.datalist),
       );
 
       setCurrCountryId(selectCountryId);
@@ -417,7 +420,7 @@ const CoordinatorInput = (props) => {
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
       setLeadAuditorList(
-        [{ id: "", name: "Select Lead Auditor" }].concat(res.data.datalist)
+        [{ id: "", name: "Select Lead Auditor" }].concat(res.data.datalist),
       );
 
       setCurrLeadAuditorId(selectLeadAuditorId ? selectLeadAuditorId : "");
@@ -448,7 +451,7 @@ const CoordinatorInput = (props) => {
 
     apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
       setAuditTypeList(
-        [{ id: "", name: "Select Audit Type" }].concat(res.data.datalist)
+        [{ id: "", name: "Select Audit Type" }].concat(res.data.datalist),
       );
 
       setCurrAuditTypeId(selectAuditTypeId);
@@ -1095,7 +1098,7 @@ const CoordinatorInput = (props) => {
     // getTeamAuditorList(rowData.ProgramId,rowData.TeamAuditorId);
     getTeamAuditorList(
       rowData.ProgramId,
-      JSON.parse(rowData.TeamAuditorId || "[]")
+      JSON.parse(rowData.TeamAuditorId || "[]"),
     );
 
     // setCurrLeadAuditorId(rowData.LeadAuditorId);
@@ -1164,7 +1167,7 @@ const CoordinatorInput = (props) => {
   }
 
   function fileUploadModalCallback(type) {
-    console.log("type: ", type);
+    // console.log("type: ", type);
 
     if (type != "Close") {
       let data = { ...currentRow };
@@ -1173,6 +1176,23 @@ const CoordinatorInput = (props) => {
     }
 
     setShowFileUploadModal(false);
+  }
+
+  function TeamAuditorAssignModalShow() {
+    // console.log("currentRow: ", currentRow.AuditStartDate,"===",currentRow.AuditEndDate);
+    if (currentRow.AuditStartDate && currentRow.AuditEndDate) {
+      setShowTeamAuditorAssignModal(true);
+    } else {
+      props.openNoticeModal({
+        isOpen: true,
+        msg: "Please select Audit Start Date and Audit End Date before assigning Team Auditor.",
+        msgtype: 0,
+      });
+    }
+  }
+
+  function teamAuditorAssignModalCallback(type) {
+    setShowTeamAuditorAssignModal(false);
   }
 
   return (
@@ -1263,7 +1283,7 @@ const CoordinatorInput = (props) => {
                   ActivityList
                     ? ActivityList[
                         ActivityList.findIndex(
-                          (list) => list.id === currActivityId
+                          (list) => list.id === currActivityId,
                         )
                       ]
                     : null
@@ -1271,7 +1291,7 @@ const CoordinatorInput = (props) => {
                 onChange={(event, valueobj) =>
                   handleChangeDropDown(
                     "ActivityId",
-                    valueobj ? valueobj.id : ""
+                    valueobj ? valueobj.id : "",
                   )
                 }
                 renderOption={(option) => (
@@ -1305,7 +1325,7 @@ const CoordinatorInput = (props) => {
                   FactoryList
                     ? FactoryList[
                         FactoryList.findIndex(
-                          (list) => list.id === currFactoryId
+                          (list) => list.id === currFactoryId,
                         )
                       ]
                     : null
@@ -1336,7 +1356,7 @@ const CoordinatorInput = (props) => {
                   currFactoryId
                     ? FactoryList[
                         FactoryList.findIndex(
-                          (list) => list.id === currFactoryId
+                          (list) => list.id === currFactoryId,
                         )
                       ].FactoryGroupName
                     : ""
@@ -1446,7 +1466,7 @@ const CoordinatorInput = (props) => {
                         (currDays.length > 0
                           ? currDays.split(",")
                           : []
-                        ).includes(a.id)
+                        ).includes(a.id),
                       )
                       .map((a) => a.name)
                       .join(", ")
@@ -1483,7 +1503,7 @@ const CoordinatorInput = (props) => {
                   ProgramList
                     ? ProgramList[
                         ProgramList.findIndex(
-                          (list) => list.id === currProgramId
+                          (list) => list.id === currProgramId,
                         )
                       ]
                     : null
@@ -1571,7 +1591,7 @@ const CoordinatorInput = (props) => {
                   CoordinatorList
                     ? CoordinatorList[
                         CoordinatorList.findIndex(
-                          (list) => list.id === currCoordinatorId
+                          (list) => list.id === currCoordinatorId,
                         )
                       ]
                     : null
@@ -1579,7 +1599,7 @@ const CoordinatorInput = (props) => {
                 onChange={(event, valueobj) =>
                   handleChangeDropDown(
                     "CoordinatorId",
-                    valueobj ? valueobj.id : ""
+                    valueobj ? valueobj.id : "",
                   )
                 }
                 renderOption={(option) => (
@@ -1612,7 +1632,7 @@ const CoordinatorInput = (props) => {
                   AuditStageList
                     ? AuditStageList[
                         AuditStageList.findIndex(
-                          (list) => list.id === currAuditStageId
+                          (list) => list.id === currAuditStageId,
                         )
                       ]
                     : null
@@ -1620,7 +1640,7 @@ const CoordinatorInput = (props) => {
                 onChange={(event, valueobj) =>
                   handleChangeDropDown(
                     "AuditStageId",
-                    valueobj ? valueobj.id : ""
+                    valueobj ? valueobj.id : "",
                   )
                 }
                 renderOption={(option) => (
@@ -1653,7 +1673,7 @@ const CoordinatorInput = (props) => {
                   LeadStatusList
                     ? LeadStatusList[
                         LeadStatusList.findIndex(
-                          (list) => list.id === currLeadStatusId
+                          (list) => list.id === currLeadStatusId,
                         )
                       ]
                     : null
@@ -1661,7 +1681,7 @@ const CoordinatorInput = (props) => {
                 onChange={(event, valueobj) =>
                   handleChangeDropDown(
                     "LeadStatusId",
-                    valueobj ? valueobj.id : ""
+                    valueobj ? valueobj.id : "",
                   )
                 }
                 renderOption={(option) => (
@@ -1741,7 +1761,7 @@ const CoordinatorInput = (props) => {
                   DepartmentList
                     ? DepartmentList[
                         DepartmentList.findIndex(
-                          (list) => list.id === currDepartmentId
+                          (list) => list.id === currDepartmentId,
                         )
                       ]
                     : null
@@ -1749,7 +1769,7 @@ const CoordinatorInput = (props) => {
                 onChange={(event, valueobj) =>
                   handleChangeDropDown(
                     "DepartmentId",
-                    valueobj ? valueobj.id : ""
+                    valueobj ? valueobj.id : "",
                   )
                 }
                 renderOption={(option) => (
@@ -1926,7 +1946,7 @@ const CoordinatorInput = (props) => {
                   CountryList
                     ? CountryList[
                         CountryList.findIndex(
-                          (list) => list.id === currCountryId
+                          (list) => list.id === currCountryId,
                         )
                       ]
                     : null
@@ -1963,7 +1983,7 @@ const CoordinatorInput = (props) => {
                   LeadAuditorList
                     ? LeadAuditorList[
                         LeadAuditorList.findIndex(
-                          (list) => list.id === currLeadAuditorId
+                          (list) => list.id === currLeadAuditorId,
                         )
                       ]
                     : null
@@ -1971,7 +1991,7 @@ const CoordinatorInput = (props) => {
                 onChange={(event, valueobj) =>
                   handleChangeDropDown(
                     "LeadAuditorId",
-                    valueobj ? valueobj.id : ""
+                    valueobj ? valueobj.id : "",
                   )
                 }
                 renderOption={(option) => (
@@ -1985,7 +2005,13 @@ const CoordinatorInput = (props) => {
               />
 
               <label>Team Auditor *</label>
-              <FormControl sx={{ width: 300 }}>
+              <Button
+                label={"Assign Team Auditors"}
+                class={"btnSave"}
+                disabled={permissionType == 1}
+                onClick={TeamAuditorAssignModalShow}
+              />
+              {/* <FormControl sx={{ width: 300 }}>
                 <Select
                   multiple
                   disabled={permissionType == 1}
@@ -2019,43 +2045,8 @@ const CoordinatorInput = (props) => {
                     </MenuItem>
                   ))}
                 </Select>
-              </FormControl>
+              </FormControl> */}
 
-              {/* <Autocomplete
-                autoHighlight
-                disableClearable
-                className="chosen_dropdown"
-                id="TeamAuditorId"
-                name="TeamAuditorId"
-                autoComplete
-                options={TeamAuditorList ? TeamAuditorList : []}
-                getOptionLabel={(option) => option.name}
-                defaultValue={{ id: 0, name: "Select Team Auditor" }}
-                value={
-                  TeamAuditorList
-                    ? TeamAuditorList[
-                        TeamAuditorList.findIndex(
-                          (list) => list.id === currTeamAuditorId
-                        )
-                      ]
-                    : null
-                }
-                onChange={(event, valueobj) =>
-                  handleChangeDropDown(
-                    "TeamAuditorId",
-                    valueobj ? valueobj.id : ""
-                  )
-                }
-                renderOption={(option) => (
-                  <Typography className="chosen_dropdown_font">
-                    {option.name}
-                  </Typography>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" fullWidth />
-                )}
-              />
- */}
               <label>Audit Type *</label>
               <Autocomplete
                 autoHighlight
@@ -2075,7 +2066,7 @@ const CoordinatorInput = (props) => {
                   AuditTypeList
                     ? AuditTypeList[
                         AuditTypeList.findIndex(
-                          (list) => list.id === currAuditTypeId
+                          (list) => list.id === currAuditTypeId,
                         )
                       ]
                     : null
@@ -2083,7 +2074,7 @@ const CoordinatorInput = (props) => {
                 onChange={(event, valueobj) =>
                   handleChangeDropDown(
                     "AuditTypeId",
-                    valueobj ? valueobj.id : ""
+                    valueobj ? valueobj.id : "",
                   )
                 }
                 renderOption={(option) => (
@@ -2153,7 +2144,7 @@ const CoordinatorInput = (props) => {
                   AuditorList
                     ? AuditorList[
                         AuditorList.findIndex(
-                          (list) => list.id === currReportWriterId
+                          (list) => list.id === currReportWriterId,
                         )
                       ]
                     : null
@@ -2161,7 +2152,7 @@ const CoordinatorInput = (props) => {
                 onChange={(event, valueobj) =>
                   handleChangeDropDown(
                     "ReportWriterId",
-                    valueobj ? valueobj.id : ""
+                    valueobj ? valueobj.id : "",
                   )
                 }
                 renderOption={(option) => (
@@ -2418,6 +2409,14 @@ const CoordinatorInput = (props) => {
           masterProps={props}
           currentRow={currentRow}
           fileUploadModalCallback={fileUploadModalCallback}
+        />
+      )}
+      {showTeamAuditorAssignModal && (
+        <AssignTeamAuditorModal
+          masterProps={props}
+          currentRow={currentRow}
+          TeamAuditorList={TeamAuditorList}
+          teamAuditorAssignModalCallback={teamAuditorAssignModalCallback}
         />
       )}
 

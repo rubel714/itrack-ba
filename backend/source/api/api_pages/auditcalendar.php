@@ -54,7 +54,7 @@ function getDataList($data)
 
 
 		///////////get audit list
-		$query = "SELECT a.`TransactionId`,a.`ProgramId`,b.`ProgramName`,c.FactoryName,c.Address,a.`LeadAuditorId`,
+		$query = "SELECT a.`TransactionId`,a.`ProgramId`,b.`ProgramName`,c.FactoryName,a.FactoryAddress,a.`LeadAuditorId`,
 		REPLACE(a.TeamAuditorIds, '" . '"' . "', '') as TeamAuditorIds,
 		a.`AuditStartDate`,`AuditEndDate`
 		FROM `t_transaction` a
@@ -62,15 +62,15 @@ function getDataList($data)
 		INNER JOIN `t_factory` c ON a.FactoryId=c.FactoryId
 		WHERE a.AuditStartDate <= '$EndDate'
   		AND a.AuditEndDate >='$StartDate'
-		AND (a.`LeadAuditorId` IS NOT NULL OR a.`TeamAuditorIds` <> '[]');";
+		AND (a.`LeadAuditorId` IS NOT NULL);";
+		// AND (a.`LeadAuditorId` IS NOT NULL OR a.`TeamAuditorIds` <> '[]');";
 		$resultdata = $dbh->query($query);
-		// $AuditList = array();
 		foreach ($resultdata as $row) {
 
-
+			$TransactionId = $row["TransactionId"];
 			$ProgramName = $row["ProgramName"];
 			$FactoryName = $row["FactoryName"];
-			$FactoryAddress = $row["Address"];
+			$FactoryAddress = $row["FactoryAddress"];
 
 			$LeadAuditorId = $row["LeadAuditorId"];
 			$TeamAuditorIds = $row["TeamAuditorIds"];
@@ -80,13 +80,12 @@ function getDataList($data)
 				$AuditorIds[] = $LeadAuditorId;
 			}
 
-			if ($TeamAuditorIds != '[]') {
-				$TeamAuditorIds = json_decode($TeamAuditorIds);
-				$AuditorIds = array_merge($AuditorIds, $TeamAuditorIds);
-			}
-
-			$AuditorIds = array_unique($AuditorIds);
-
+			// if ($TeamAuditorIds != '[]') {
+			// 	$TeamAuditorIds = json_decode($TeamAuditorIds);
+			// 	$AuditorIds = array_merge($AuditorIds, $TeamAuditorIds);
+			// }
+			
+			//$AuditorIds = array_unique($AuditorIds);
 
 
 			$asdate = date('Y-m-d', strtotime($row["AuditStartDate"]));
@@ -105,14 +104,20 @@ function getDataList($data)
 
 
 
-			// $row['AuditorIds'] = $AuditorIds;
-			// $AuditList[$row['TransactionId']] = $row;
+			
+			///////////get team auditor list under this audit
+			$query9 = "SELECT a.AuditorId, a.AssignDate
+			FROM `t_transaction_auditor_assign` a
+			WHERE a.TransactionId=$TransactionId;";
+			$resultdata9 = $dbh->query($query9);
+			foreach ($resultdata9 as $row9) {
+				// $AuditorIds[$row9['AuditorId']] = $row9['AssignDate'];
+				$idx =  date('Y-m-d', strtotime($row9['AssignDate']));
+
+				$dataMatrix[$idx][$row9['AuditorId']]["Msg"] = $ProgramName . ', ' . $FactoryName . ', ' . $FactoryAddress;
+			}
+
 		}
-
-
-
-
-
 
 
 
@@ -125,7 +130,6 @@ function getDataList($data)
 		$resultdata = $dbh->query($query);
 		$HoliDayList = array();
 		$LeaveDayList = array();
-		// $HoliLeaveDayList = array();
 		foreach ($resultdata as $row) {
 
 			if($row['DayType'] == "holiday"){
@@ -133,17 +137,7 @@ function getDataList($data)
 			}else{
 				$LeaveDayList[$row['HoliDate']."_".$row['AuditorId']] = $row;
 			}
-
-			// if (array_key_exists($row['HoliDate'], $HoliLeaveDayList)) {
-			// 	if ($HoliLeaveDayList[$row['HoliDate']]['DayType'] !== 'holiday') {
-			// 		$HoliLeaveDayList[$row['HoliDate']] = $row; // overwrite only if not holiday. because holiday has higher priority
-			// 	}
-			// } else {
-			// 	$HoliLeaveDayList[$row['HoliDate']] = $row;
-			// }
 		}
-
-
 
 		$columnlist = array();
 		$columnlist[] = ["field" => "Serial", "title" => "SL", "align" => "center", "width" => 20, "frozen"=>true];
@@ -154,36 +148,20 @@ function getDataList($data)
 			$columnlist[] = ["field" => "A_" . $auditorId, "title" => $auditorInfo['AuditorName'],  "width" => 120];
 		}
 
-
 		$dataList = array();
-		// $sl = 1;
 		$serial = 0;
 		foreach ($dataMatrix as $date => $rowobj) {
 
 			$row = [];
-			// $row["Serial"] = $sl++;
 			$row["Date"] = date('d-M-Y', strtotime($date));
 			$row["Day"] = date('D', strtotime($date));
 			foreach ($rowobj as $obj) {
 
 				$Msg = $obj['Msg'];
 
-
-			// if($row['DayType'] == "holiday"){
-			// 	$HoliDayList[$row['HoliDate']] = $row;
-			// }else{
-			// 	$LeaveDayList[$row['HoliDate']."_".$row['AuditorId']] = $row;
-			// }
-
 				if($Msg == ""){
 					if (array_key_exists($date, $HoliDayList)) {
 						$Msg = "Offday";
-						// if ($HoliLeaveDayList[$date]['DayType'] == "holiday") {
-						// 	$Msg = "Offday";
-						// } else if ($HoliLeaveDayList[$date]['AuditorId'] == $obj['AuditorId']) {
-						// 	$Msg = $HoliLeaveDayList[$date]['LeaveStatusName'];
-						// }
-
 					}else if (array_key_exists($date."_".$obj['AuditorId'], $LeaveDayList)) {
 						$Msg = $LeaveDayList[$date."_".$obj['AuditorId']]['LeaveStatusName'];
 					}
@@ -203,12 +181,7 @@ function getDataList($data)
 			"message" => "",
 			"datalist" => [
 				"column" => $columnlist,
-				"data" => $dataList,
-				// "dataMatrix" => $dataMatrix,
-				// "dataList" => $dataList,
-				// "HoliLeaveDayList" => $HoliLeaveDayList,
-				// "AuditList" => $AuditList,
-				// "AuditorIds" => $AuditorIds
+				"data" => $dataList
 			]
 		];
 	} catch (PDOException $e) {
