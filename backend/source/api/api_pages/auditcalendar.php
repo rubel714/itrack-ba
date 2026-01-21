@@ -94,7 +94,11 @@ function getDataList($data)
 				$idx =  date('Y-m-d', strtotime($asdate));
 
 				foreach ($AuditorIds as $AuditorId) {
-					$dataMatrix[$idx][$AuditorId]["Msg"] = $ProgramName . ', ' . $FactoryName . ', ' . $FactoryAddress;
+					if(isset($dataMatrix[$idx][$AuditorId]["Msg"]) && $dataMatrix[$idx][$AuditorId]["Msg"] != ""){
+						$dataMatrix[$idx][$AuditorId]["Msg"] .= ', '. $ProgramName . ', ' . $FactoryName . ', ' . $FactoryAddress;
+					}else{
+						$dataMatrix[$idx][$AuditorId]["Msg"] = $ProgramName . ', ' . $FactoryName . ', ' . $FactoryAddress;
+					}
 				}
 
 				$asdate = date('Y-m-d', strtotime($asdate . ' +1 day'));
@@ -114,7 +118,15 @@ function getDataList($data)
 				// $AuditorIds[$row9['AuditorId']] = $row9['AssignDate'];
 				$idx =  date('Y-m-d', strtotime($row9['AssignDate']));
 
-				$dataMatrix[$idx][$row9['AuditorId']]["Msg"] = $ProgramName . ', ' . $FactoryName . ', ' . $FactoryAddress;
+				//$dataMatrix[$idx][$row9['AuditorId']]["Msg"] = $ProgramName . ', ' . $FactoryName . ', ' . $FactoryAddress;
+
+				if(isset($dataMatrix[$idx][$row9['AuditorId']]["Msg"]) && $dataMatrix[$idx][$row9['AuditorId']]["Msg"] != ""){
+					$dataMatrix[$idx][$row9['AuditorId']]["Msg"] .= ', '. $ProgramName . ', ' . $FactoryName . ', ' . $FactoryAddress;
+				}else{
+					$dataMatrix[$idx][$row9['AuditorId']]["Msg"] = $ProgramName . ', ' . $FactoryName . ', ' . $FactoryAddress;
+				}
+
+				
 			}
 
 		}

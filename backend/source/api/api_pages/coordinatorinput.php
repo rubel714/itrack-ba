@@ -542,6 +542,8 @@ function MemberDateAssignDataAddEdit($data)
 					inner join t_factory c on a.FactoryId = c.FactoryId
 					inner join t_transaction_auditor_assign d on a.TransactionId = d.TransactionId 
 							and d.AuditorId = $AuditorId and d.AssignDate = '$AssignDate'
+							AND d.StartTime <= '$EndTime'
+							AND d.EndTime >='$StartTime'
 					inner join t_auditor e on d.AuditorId = e.AuditorId;";
 
 			$resultdata = $dbh->query($sql);
