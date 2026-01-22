@@ -88,7 +88,7 @@ const AssignTeamAuditorModal = (props) => {
 
 
   function importModalCallback(type) {
-    props.teamAuditorAssignModalCallback(type);
+    props.teamAuditorAssignModalCallback(dataList);
   }
 
   const handleChange = (e) => {

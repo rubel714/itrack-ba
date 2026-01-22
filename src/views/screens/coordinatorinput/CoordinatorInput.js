@@ -87,6 +87,7 @@ const CoordinatorInput = (props) => {
 
   const [TeamAuditorList, setTeamAuditorList] = useState(null);
   const [currTeamAuditorId, setCurrTeamAuditorId] = useState([]);
+  console.log('currTeamAuditorId: ', currTeamAuditorId);
 
   const [AuditTypeList, setAuditTypeList] = useState(null);
   const [currAuditTypeId, setCurrAuditTypeId] = useState(null);
@@ -1191,7 +1192,21 @@ const CoordinatorInput = (props) => {
     }
   }
 
-  function teamAuditorAssignModalCallback(type) {
+  function teamAuditorAssignModalCallback(assignedMembers) {
+
+    console.log('assignedMembers: ', assignedMembers);
+    // if (assignedMembers.length > 0) {
+      let data = { ...currentRow };
+      let assignedIds = assignedMembers.map((am) => am.AuditorId);
+      console.log('assignedIds: ', assignedIds);
+      data["TeamAuditorId"] = assignedIds;
+      // data["TeamAuditorId"] = [8,11,46,25];
+      // setCurrentRow(data);
+      setCurrTeamAuditorId(assignedIds);
+      // setCurrTeamAuditorId([8,11,46,25]);
+      setCurrentRow(data);
+    // }
+
     setShowTeamAuditorAssignModal(false);
   }
 
