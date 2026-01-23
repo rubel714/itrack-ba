@@ -52,7 +52,7 @@ function getDataList($data)
 		a.InvoiceTo, a.NameofApplicant, a.InvoiceAddress, a.InvoiceEmail, a.InvoiceMobile, a.Discount,a.InvStatusId ,s.InvStatusName,a.ReleaseDate,a.InvoiceComments
 		 ,a.IsReportReceivedFromWriter,a.ReportReceivedDate,a.`LocalReviewerId`,q.UserName as LocalReviewer,
 		 a.StandardTAT,a.StrategicTAT, a.`ReportReleasedStatusId`,r.ReportReleasedStatus,
-		 a.OverseasSendingDate,a.AuditorLogInTime,a.AduditorLogOutTime,a.ReportResult
+		 a.OverseasSendingDate,a.AuditorLogInTime,a.AduditorLogOutTime,a.ReportResult, p.AuditorName as ReportWriter
 	   FROM `t_transaction` a
 	   INNER JOIN `t_activity` b ON a.`ActivityId` = b.`ActivityId`
 	   LEFT JOIN `t_factory` c ON a.`FactoryId` = c.`FactoryId`
@@ -64,6 +64,7 @@ function getDataList($data)
 	   LEFT JOIN `t_buyer` i ON a.`BuyerId` = i.`BuyerId`
 	   LEFT JOIN `t_department` j ON a.`DepartmentId` = j.`DepartmentId`
 	   LEFT JOIN `t_member` k ON a.`MemberId` = k.`MemberId`
+	   LEFT JOIN `t_auditor` p ON a.`ReportWriterId` = p.`AuditorId`
 	   LEFT JOIN `t_users` q ON a.`LocalReviewerId` = q.`UserId`
 	   LEFT JOIN `t_releasedstatus` r ON a.`ReportReleasedStatusId` = r.`ReportReleasedStatusId`
 	   LEFT JOIN `t_invoice_status` s ON a.`InvStatusId` = s.`InvStatusId`

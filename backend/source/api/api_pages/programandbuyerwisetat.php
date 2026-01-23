@@ -35,8 +35,8 @@ function getDataList($data)
 			and a.AuditEndDate is not null
 			and a.ReleaseDate is not null;";
 		$resultdata = $dbh->query($query);
-// echo $query;
-// exit;
+		// echo $query;
+		// exit;
 		$dataList = array();
 		foreach ($resultdata as $row) {
 
@@ -87,7 +87,7 @@ function getDataList($data)
 				}
 
 				$row['CalDiffDaysAuditEndDateReleaseDate'] = $workingDays;
-				//================== End for StandardTATDay==========================
+				//================== End for StandardTATDay========================== 
 
 			}
 
@@ -100,10 +100,15 @@ function getDataList($data)
 
 		$dataListMatrixFinal = array();
 
+		$totalCurrentTAT = 0;
+		$totalReportReleased = 0;
 		foreach ($dataListMatrix as $row) {
 
 			if ($row['CalDiffDaysAuditEndDateReleaseDate'] > 0 && $row['ReportReleased'] > 0) {
 				$row['CurrentTAT'] = round($row['CalDiffDaysAuditEndDateReleaseDate'] / $row['ReportReleased'], 2);
+
+				$totalCurrentTAT += $row['CalDiffDaysAuditEndDateReleaseDate'];
+				$totalReportReleased += $row['ReportReleased'];
 			}
 			$dataListMatrixFinal[] = $row;
 		}
@@ -112,7 +117,11 @@ function getDataList($data)
 			"success" => 1,
 			"status" => 200,
 			"message" => "",
-			"datalist" => $dataListMatrixFinal
+			"datalist" => [
+				"data" => $dataListMatrixFinal,
+				"TotalCurrentTAT" => $totalCurrentTAT,
+				"TotalReportReleased" => $totalReportReleased
+			]
 		];
 	} catch (PDOException $e) {
 		$returnData = msg(0, 500, $e->getMessage());
@@ -157,7 +166,8 @@ function getDataByBuyerList($data)
 		$StartDate = trim($data->StartDate);
 		$EndDate = trim($data->EndDate) . " 23:59:59";
 
-		$query = "SELECT a.TransactionId, a.ProgramId, b.ProgramName,a.BuyerId, c.BuyerName, b.TATDayTypeId, 0 ReportReleased, 0 CurrentTAT, 
+		$query = "SELECT a.TransactionId, a.ProgramId, b.ProgramName,a.BuyerId, c.BuyerName, b.TATDayTypeId,
+		 0 ReportReleased, 0 CurrentTAT, 
 		b.StandardTATDay, a.AuditEndDate, a.ReleaseDate, 0 CalDiffDaysAuditEndDateReleaseDate
 			FROM `t_transaction` a
 			INNER JOIN t_program b ON a.ProgramId=b.ProgramId
@@ -166,10 +176,11 @@ function getDataByBuyerList($data)
 			and a.AuditEndDate is not null
 			and a.ReleaseDate is not null;";
 		$resultdata = $dbh->query($query);
-// echo $query;
-// exit;
+		// echo $query;
+		// exit;
 
 		$dataList = array();
+		$programWiseTAT = array();
 		foreach ($resultdata as $row) {
 
 			$StandardTAT = date("Y-m-d");
@@ -180,29 +191,20 @@ function getDataByBuyerList($data)
 			$TATDayTypeId = $row['TATDayTypeId'];
 			$StandardTATDay = $row['StandardTATDay'];
 
+			$programWiseTAT[$row['ProgramId']] = $row['StandardTATDay'];
+
+
 			if ($TATDayTypeId == 1) {
 				//Calendar day
 				if ($AuditEndDate !== $ReleaseDate) {
-					// $days = (new DateTime($AuditEndDate))->diff(new DateTime($ReleaseDate))->days;
-					// $row['CalDiffDaysAuditEndDateReleaseDate'] = $days;
 					$diff = (new DateTime($AuditEndDate))->diff(new DateTime($ReleaseDate));
 					$row['CalDiffDaysAuditEndDateReleaseDate'] = (int)$diff->format("%R%a"); //-15 or +15
 				}
 
-				// $StandardTATDate = date_create($AuditEndDate);
-				// date_add($StandardTATDate, date_interval_create_from_date_string("$StandardTATDay days"));
-				// $StandardTAT = date_format($StandardTATDate, "Y-m-d");
-
-				// $StrategicTATDate = date_create($AuditEndDate);
-				// date_add($StrategicTATDate, date_interval_create_from_date_string("$StrategiceTATDay days"));
-				// $StrategicTAT = date_format($StrategicTATDate, "Y-m-d");
 			} else if ($TATDayTypeId == 2) {
 				//working day
 
 				//================== Start for StandardTATDay==========================
-				// $AuditEndDate = date_create($AuditEndDate);
-				// $ReleaseDate = date_create($ReleaseDate);
-
 				$workingDays = 0;
 				while ($AuditEndDate <= $ReleaseDate) {
 					// Move to next day
@@ -226,15 +228,16 @@ function getDataByBuyerList($data)
 			$dataList[] = $row;
 		}
 
-// echo "<pre>";
-// print_r($dataList);
-// echo "</pre>";
-// exit;
+		// echo "<pre>";
+		// print_r($dataList);
+		// echo "</pre>";
+		// exit;
 
 		$dataListMatrix = GroupByBuyerArray($dataList);
 
-
 		$dataListMatrixFinal = array();
+		$totalReportReleased = 0;
+		$totalCurrentTAT = 0;
 
 		foreach ($dataListMatrix as $row) {
 
@@ -249,12 +252,27 @@ function getDataByBuyerList($data)
 			$dataListMatrixFinal[] = $row;
 		}
 
+
+		$totalReportReleased = array_sum(array_column($dataListMatrixFinal, 'ReportReleased'));
+		$totalCurrentTAT = array_sum(array_column($dataListMatrixFinal, 'CurrentTAT'));
+
+		$averageStandardTAT = count($programWiseTAT) > 0 ? round(array_sum($programWiseTAT) / count($programWiseTAT), 2) : 0;
+
 		$returnData = [
 			"success" => 1,
 			"status" => 200,
 			"message" => "",
-			"datalist" => $dataListMatrixFinal
+			// "datalist" => $dataListMatrixFinal
+			"datalist" => [
+				"data" => $dataListMatrixFinal,
+				"TotalCurrentTAT" => $totalCurrentTAT,
+				"TotalReportReleased" => $totalReportReleased,
+				"AverageStandardTAT" => $averageStandardTAT
+			]
 		];
+
+		
+
 	} catch (PDOException $e) {
 		$returnData = msg(0, 500, $e->getMessage());
 	}

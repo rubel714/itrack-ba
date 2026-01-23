@@ -607,15 +607,15 @@ const ReportReviewer = (props) => {
 
   const columnList = [
     { field: "rownumber", label: "SL", align: "center", width: "3%" },
-    {
-      field: "ActivityName",
-      label: "Activity",
-      align: "left",
-      visible: true,
-      sort: true,
-      filter: true,
-      width: "13%",
-    },
+    // {
+    //   field: "ActivityName",
+    //   label: "Activity",
+    //   align: "left",
+    //   visible: true,
+    //   sort: true,
+    //   filter: true,
+    //   width: "13%",
+    // },
     {
       field: "FactoryName",
       label: "Factory Name",
@@ -623,7 +623,7 @@ const ReportReviewer = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "12%",
+      // width: "12%",
     },
     {
       field: "ProgramName",
@@ -718,6 +718,15 @@ const ReportReviewer = (props) => {
       filter: true,
       width: "5%",
     },
+        {
+      field: "ReportWriter",
+      label: "Report Writer",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "8%",
+    },
     {
       field: "ReportReleaseStatus",
       label: "Report Release Status",
@@ -743,7 +752,7 @@ const ReportReviewer = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "5%",
+      width: "6%",
     },
     {
       field: "StrategicTAT",
@@ -752,7 +761,7 @@ const ReportReviewer = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "5%",
+      width: "6%",
     },
     // {
     //   field: "ReportReleasedStatus",

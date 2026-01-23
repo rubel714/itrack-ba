@@ -72,7 +72,7 @@ const ProgramAndBuyerWisetat = (props) => {
       // Add title row
       const titleRow = [
         `Program wise TAT Day (${moment(StartDate).format(
-          "MMM DD, YYYY"
+          "MMM DD, YYYY",
         )} - ${moment(EndDate).format("MMM DD, YYYY")})`,
       ];
       // const titleRow = ["Program wise TAT Day"];
@@ -103,9 +103,16 @@ const ProgramAndBuyerWisetat = (props) => {
         }
         if (col.bottomCalc === "avg") {
           // Calculate average for this column
-          const values = exportData.map(row => parseFloat(row[col.field]) || 0);
+          const values = exportData.map(
+            (row) => parseFloat(row[col.field]) || 0,
+          );
           const avg = values.reduce((a, b) => a + b, 0) / (values.length || 1);
           return parseFloat(avg.toFixed(2));
+        }
+        // Handle custom bottomCalc functions
+        if (typeof col.bottomCalc === "function") {
+          const values = exportData.map((row) => parseFloat(row[col.field]) || 0);
+          return col.bottomCalc(values, exportData, col.bottomCalcParams || {});
         }
         return col.field === "ProgramName" ? "Total:" : ""; // Add "Total:" label in first text column
       });
@@ -141,11 +148,12 @@ const ProgramAndBuyerWisetat = (props) => {
           };
         }
 
-        // Bold totals row (last row)
+        // Bold totals row (last row) with right alignment
         const totalCell = XLSX.utils.encode_cell({ r: totalRowIndex, c: col });
         if (ws[totalCell]) {
           ws[totalCell].s = {
             font: { bold: true },
+            alignment: { horizontal: col === 0 ? "left" : "right" },
             // fill: { fgColor: { rgb: "FFFF00" } },
           };
         }
@@ -168,7 +176,7 @@ const ProgramAndBuyerWisetat = (props) => {
 
       // Generate file name with date
       const fileName = `Program_wise_TAT_Day_${moment().format(
-        "YYYY-MM-DD-H-m-s"
+        "YYYY-MM-DD-H-m-s",
       )}.xlsx`;
 
       // Save file
@@ -201,7 +209,7 @@ const ProgramAndBuyerWisetat = (props) => {
       // Add title row
       const titleRow = [
         `Buyer wise TAT Day (${moment(StartDate).format(
-          "MMM DD, YYYY"
+          "MMM DD, YYYY",
         )} - ${moment(EndDate).format("MMM DD, YYYY")})`,
       ];
       // const titleRow = ["Buyer wise TAT Day"];
@@ -232,9 +240,16 @@ const ProgramAndBuyerWisetat = (props) => {
         }
         if (col.bottomCalc === "avg") {
           // Calculate average for this column
-          const values = exportData.map(row => parseFloat(row[col.field]) || 0);
+          const values = exportData.map(
+            (row) => parseFloat(row[col.field]) || 0,
+          );
           const avg = values.reduce((a, b) => a + b, 0) / (values.length || 1);
           return parseFloat(avg.toFixed(2));
+        }
+        // Handle custom bottomCalc functions
+        if (typeof col.bottomCalc === "function") {
+          const values = exportData.map((row) => parseFloat(row[col.field]) || 0);
+          return col.bottomCalc(values, exportData, col.bottomCalcParams || {});
         }
         return col.field === "BuyerName" ? "Total:" : ""; // Add "Total:" label in first text column
       });
@@ -270,11 +285,12 @@ const ProgramAndBuyerWisetat = (props) => {
           };
         }
 
-        // Bold totals row (last row)
+        // Bold totals row (last row) with right alignment
         const totalCell = XLSX.utils.encode_cell({ r: totalRowIndex, c: col });
         if (ws[totalCell]) {
           ws[totalCell].s = {
             font: { bold: true },
+            alignment: { horizontal: col === 0 ? "left" : "right" },
             // fill: { fgColor: { rgb: "FFFF00" } },
           };
         }
@@ -297,7 +313,7 @@ const ProgramAndBuyerWisetat = (props) => {
 
       // Generate file name with date
       const fileName = `Buyer_wise_TAT_Day_${moment().format(
-        "YYYY-MM-DD-H-m-s"
+        "YYYY-MM-DD-H-m-s",
       )}.xlsx`;
 
       // Save file
@@ -368,7 +384,17 @@ const ProgramAndBuyerWisetat = (props) => {
       headerHozAlign: "right",
       // filter: true,
       width: "120",
-      bottomCalc: "avg",
+      // bottomCalc: "avg",
+      bottomCalc: function (values, data, calcParams) {
+        if (dataList.TotalCurrentTAT && dataList.TotalReportReleased) {
+          return (
+            dataList.TotalCurrentTAT / dataList.TotalReportReleased
+          ).toFixed(2);
+        } else {
+          return 0;
+        }
+      },
+
       bottomCalcFormatterParams: {
         precision: 2,
       },
@@ -414,7 +440,20 @@ const ProgramAndBuyerWisetat = (props) => {
       headerHozAlign: "right",
       // filter: true,
       width: "120",
-      bottomCalc: "avg",
+      // bottomCalc: "avg",
+      bottomCalc: function (values, data, calcParams) {
+        if (
+          dataList.TotalCurrentTAT &&
+          dataList.TotalReportReleased
+        ) {
+          return (
+            dataList.TotalCurrentTAT /
+            dataList.TotalReportReleased
+          ).toFixed(2);
+        } else {
+          return 0;
+        }
+      },
       bottomCalcFormatterParams: {
         precision: 2,
       },
@@ -426,7 +465,10 @@ const ProgramAndBuyerWisetat = (props) => {
       headerHozAlign: "right",
       // filter: true,
       width: "130",
-      bottomCalc: "avg",
+      // bottomCalc: "avg",
+      bottomCalc: function (values, data, calcParams) {
+        return dataListByBuyer.AverageStandardTAT;
+      },
       bottomCalcFormatterParams: {
         precision: 2,
       },
@@ -543,7 +585,7 @@ const ProgramAndBuyerWisetat = (props) => {
             </div>
             <ReactTabulator
               ref={tableRefByProgram}
-              data={dataList ? dataList : []}
+              data={dataList.data ? dataList.data : []}
               columns={columnListByProgram}
               height="530px"
               layout="fitData"
@@ -583,7 +625,7 @@ const ProgramAndBuyerWisetat = (props) => {
             </div>
             <ReactTabulator
               ref={tableRefByBuyer}
-              data={dataListByBuyer ? dataListByBuyer : []}
+              data={dataListByBuyer.data ? dataListByBuyer.data : []}
               columns={columnListByBuyer}
               height="530px"
               layout="fitData"
