@@ -43,7 +43,7 @@ try {
         case when a.ReportWritingDate is not null then DATE_FORMAT(a.ReportWritingDate, '%d-%b-%Y') else '' end ReportWritingDate,
         
         a.FactoryAddress,a.FactoryContactPersonPhone,a.FactoryContactPerson
-        ,a.FactoryContactPersonEmail,a.FactoryHoliday,h.CountryName
+        ,a.FactoryContactPersonEmail,a.FactoryHoliday,h.CountryName,i.StateName
 
         from t_transaction a
         INNER JOIN t_factory b ON a.FactoryId=b.FactoryId
@@ -53,6 +53,7 @@ try {
         LEFT JOIN t_leadstatus f ON a.LeadStatusId=f.LeadStatusId
         LEFT JOIN t_auditor g ON a.ReportWriterId=g.AuditorId
         LEFT JOIN t_country h ON a.CountryId=h.CountryId 
+        LEFT JOIN t_state i ON a.StateId=i.StateId 
         where a.TransactionId=$TransactionId";
     $resultdata = $dbh->query($sql);
     $CoordinatorId = $resultdata[0]['CoordinatorId'];
@@ -81,7 +82,7 @@ try {
     $BuyerName = $resultdata[0]['BuyerName'];
     $ProgramName = $resultdata[0]['ProgramName'];
     $AuditStageName = $resultdata[0]['AuditStageName'];
-    $State = "";
+    $State = $resultdata[0]['StateName'];
     $ManDay = $resultdata[0]['ManDay'];
     $Remarks = $resultdata[0]['Remarks'];
     $LeadStatusName = $resultdata[0]['LeadStatusName'];
