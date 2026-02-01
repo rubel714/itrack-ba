@@ -229,7 +229,7 @@ try {
 
     // email content
     $mail->isHTML(true);
-    $mail->Subject = "Audit Schedule - $ProgramName - $FactoryName - $AssessmentNo - $AuditStartDate"; //$AuditStartDate
+    $mail->Subject = "Audit Schedule - $ProgramName - $BuyerName - $FactoryName - $AssessmentNo - $AuditStartDate"; //$AuditStartDate
 
     $bodyHTML    = "<span>Hello Auditor(s),</span>
                     <p>Please find below details of your audit assignment.</p>

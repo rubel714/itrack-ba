@@ -47,6 +47,7 @@ function getDataList($data)
 			$ReleaseDate = $row['ReleaseDate'];
 			$TATDayTypeId = $row['TATDayTypeId'];
 			$StandardTATDay = $row['StandardTATDay'];
+			$ProgramName = $row['ProgramName'];
 
 			if ($TATDayTypeId == 1) {
 				//Calendar day
@@ -72,7 +73,7 @@ function getDataList($data)
 				// $ReleaseDate = date_create($ReleaseDate);
 
 				$workingDays = 0;
-				while ($AuditEndDate <= $ReleaseDate) {
+				while ($AuditEndDate < $ReleaseDate) {
 					// Move to next day
 					$AuditEndDate = date('Y-m-d', strtotime($AuditEndDate . ' +1 day'));
 
@@ -206,7 +207,7 @@ function getDataByBuyerList($data)
 
 				//================== Start for StandardTATDay==========================
 				$workingDays = 0;
-				while ($AuditEndDate <= $ReleaseDate) {
+				while ($AuditEndDate < $ReleaseDate) {
 					// Move to next day
 					$AuditEndDate = date('Y-m-d', strtotime($AuditEndDate . ' +1 day'));
 
