@@ -336,6 +336,27 @@ function dataAddEdit($data)
 				if ($TAuditorId == "[]") {
 					continue;
 				}
+				// $query = "
+				// 	 SELECT a.TransactionId,b.ProgramName,c.FactoryName,a.AuditStartDate,a.AuditEndDate
+				// 	FROM t_transaction a
+				// 	inner join t_program b on a.ProgramId = b.ProgramId
+				// 	inner join t_factory c on a.FactoryId = c.FactoryId
+				// 	where a.TransactionId !=$id 
+				// 	AND a.AuditStartDate <= '$AuditEndDate'
+				// 	AND a.AuditEndDate >='$AuditStartDate'
+				// 	AND a.LeadAuditorId = '$TAuditorId'
+
+				// 	union all
+					 
+				// 	 SELECT a.TransactionId,b.ProgramName,c.FactoryName,a.AuditStartDate,a.AuditEndDate
+				// 	FROM t_transaction a
+				// 	inner join t_program b on a.ProgramId = b.ProgramId
+				// 	inner join t_factory c on a.FactoryId = c.FactoryId
+				// 	where a.TransactionId !=$id 
+				// 	AND a.AuditStartDate <= '$AuditEndDate'
+				// 	AND a.AuditEndDate >='$AuditStartDate'
+				// 	AND JSON_CONTAINS(REPLACE(a.TeamAuditorIds, '" . '"' . "', ''), '$TAuditorId');";
+
 				$query = "
 					 SELECT a.TransactionId,b.ProgramName,c.FactoryName,a.AuditStartDate,a.AuditEndDate
 					FROM t_transaction a
@@ -345,17 +366,21 @@ function dataAddEdit($data)
 					AND a.AuditStartDate <= '$AuditEndDate'
 					AND a.AuditEndDate >='$AuditStartDate'
 					AND a.LeadAuditorId = '$TAuditorId'
-
+					
 					union all
-					 
-					 SELECT a.TransactionId,b.ProgramName,c.FactoryName,a.AuditStartDate,a.AuditEndDate
-					FROM t_transaction a
-					inner join t_program b on a.ProgramId = b.ProgramId
-					inner join t_factory c on a.FactoryId = c.FactoryId
-					where a.TransactionId !=$id 
-					AND a.AuditStartDate <= '$AuditEndDate'
-					AND a.AuditEndDate >='$AuditStartDate'
-					AND JSON_CONTAINS(REPLACE(a.TeamAuditorIds, '" . '"' . "', ''), '$TAuditorId');";
+
+					SELECT m.TransactionId,n.ProgramName,o.FactoryName,p.AssignDate as AuditStartDate,p.AssignDate as AuditEndDate
+					FROM t_transaction m
+					inner join t_program n on m.ProgramId = n.ProgramId
+					inner join t_factory o on m.FactoryId = o.FactoryId
+					inner join t_transaction_auditor_assign p on m.TransactionId = p.TransactionId AND p.AuditorId = '$TAuditorId'
+					where m.TransactionId !=$id 
+					AND p.AssignDate <= '$AuditEndDate'
+					AND p.AssignDate >='$AuditStartDate'
+					AND p.AuditorId = '$TAuditorId'
+					
+					;";
+
 
 				$resultdata = $dbh->query($query);
 				if (count($resultdata) > 0) {
@@ -553,9 +578,11 @@ function MemberDateAssignDataAddEdit($data)
 					inner join t_program b on a.ProgramId = b.ProgramId
 					inner join t_factory c on a.FactoryId = c.FactoryId
 					inner join t_transaction_auditor_assign d on a.TransactionId = d.TransactionId 
-							and d.AuditorId = $AuditorId and d.AssignDate = '$AssignDate'
+							and d.AuditorId = $AuditorId 
+							and d.AssignDate = '$AssignDate'
 							AND d.StartTime <= '$EndTime'
 							AND d.EndTime >='$StartTime'
+							AND d.Id != '$Id'
 					inner join t_auditor e on d.AuditorId = e.AuditorId;";
 
 			$resultdata = $dbh->query($sql);
