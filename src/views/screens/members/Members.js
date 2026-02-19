@@ -64,6 +64,14 @@ const Members = (props) => {
       filter: true,
     },
     {
+      field: "DepartmentName",
+      label: "Department",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+    },
+    {
       field: "PhoneNo",
       label: "PhoneNo",
       align: "left",
