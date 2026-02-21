@@ -172,6 +172,17 @@ function AfterLoginNavbar(props) {
                     </li>
                   )}
 
+                  {menuShowPermision("membertarget") === 1 && (
+                    <li>
+                      <a
+                        href="javascript:void(0)"
+                        onClick={() => props.history.push("membertarget")}
+                      >
+                        Assign Member wise Target
+                      </a>
+                    </li>
+                  )}
+
                   {menuShowPermision("factorygroups") === 1 && (
                     <li>
                       <a

@@ -999,8 +999,8 @@ function YearList($data)
 	try {
 
 		$dbh = new Db();
-		$query = "SELECT distinct YearName id, YearName `name` FROM t_year
-		ORDER BY YearName DESC;";
+		$query = "SELECT YearId id, YearName `name` FROM t_year
+		ORDER BY YearId DESC;";
 		$resultdata = $dbh->query($query);
 
 		$returnData = [
