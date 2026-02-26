@@ -239,7 +239,7 @@ function dataAddEdit($data)
 				$date = $AuditEndDate; // date('Y-m-d');
 				$workingDays = 1;
 				$dayCount = 0;
-				while ($workingDays < $StandardTATDay) {
+				while ($workingDays <= $StandardTATDay) {
 					$dayCount++;
 
 					// Move to next day
@@ -278,7 +278,7 @@ function dataAddEdit($data)
 				$date = $AuditEndDate; // date('Y-m-d');
 				$workingDays = 1;
 				$dayCount = 0;
-				while ($workingDays < $StrategiceTATDay) {
+				while ($workingDays <= $StrategiceTATDay) {
 					$dayCount++;
 
 					// Move to next day
@@ -295,7 +295,7 @@ function dataAddEdit($data)
 					// $result = $conn->query($sql);
 					// $row = $result->fetch_assoc();
 
-					$sql = "select COUNT(*) as cnt	from t_holiday where HoliDate = '$date';";
+					$sql = "select COUNT(*) as cnt	from t_holiday where DayType = 'holiday' and HoliDate = '$date';";
 					$resultdata1 = $dbh->query($sql);
 					if ($resultdata1[0]['cnt'] > 0) {
 						continue; // skip holiday
