@@ -13,6 +13,9 @@ switch ($task) {
 	case "getDataByBuyerList":
 		$returnData = getDataByBuyerList($data);
 		break;
+	case "getOverallSummary":
+		$returnData = getOverallSummary($data);
+		break;
 
 	default:
 		echo "{failure:true}";
@@ -309,4 +312,119 @@ function GroupByBuyerArray($ArrayBase)
 	// $array2 = array_values($result);
 
 	return $result;
+}
+
+function getOverallSummary($data)
+{
+	try {
+		$dbh = new Db();
+
+		$StartDate = trim($data->StartDate);
+		$EndDate = trim($data->EndDate) . " 23:59:59";
+		$Today = date('Y-m-d');
+		$TodayEnd = $Today . " 23:59:59";
+
+		// Get today's onsite activity
+		$query = "SELECT COUNT(*) as cnt FROM t_transaction 
+				  WHERE DATE(CreatedDate) = '$Today' AND AuditTypeId = 1;";
+		$result = $dbh->query($query);
+		$TodaysOnsiteActivity = $result[0]['cnt'] ?? 0;
+
+		// Get MTD onsite activity
+		$query = "SELECT COUNT(*) as cnt FROM t_transaction 
+				  WHERE (CreatedDate BETWEEN '$StartDate' AND '$EndDate') AND AuditTypeId = 1;";
+		$result = $dbh->query($query);
+		$MTDOnsiteActivity = $result[0]['cnt'] ?? 0;
+
+		// Get target onsite activity (from t_target or hardcoded for now)
+		$query = "SELECT COALESCE(SUM(TargetValue), 0) as target FROM t_target 
+				  WHERE TargetTypeId = 1 AND YEAR(TargetDate) = YEAR('$StartDate') AND MONTH(TargetDate) = MONTH('$StartDate');";
+		$result = $dbh->query($query);
+		$TargetOnsiteActivity = $result[0]['target'] ?? 0;
+
+		// Get today's offsite activity
+		$query = "SELECT COUNT(*) as cnt FROM t_transaction 
+				  WHERE DATE(CreatedDate) = '$Today' AND AuditTypeId = 2;";
+		$result = $dbh->query($query);
+		$TodaysOffsiteActivity = $result[0]['cnt'] ?? 0;
+
+		// Get MTD offsite activity
+		$query = "SELECT COUNT(*) as cnt FROM t_transaction 
+				  WHERE (CreatedDate BETWEEN '$StartDate' AND '$EndDate') AND AuditTypeId = 2;";
+		$result = $dbh->query($query);
+		$MTDOffsiteActivity = $result[0]['cnt'] ?? 0;
+
+		// Get target offsite activity
+		$query = "SELECT COALESCE(SUM(TargetValue), 0) as target FROM t_target 
+				  WHERE TargetTypeId = 2 AND YEAR(TargetDate) = YEAR('$StartDate') AND MONTH(TargetDate) = MONTH('$StartDate');";
+		$result = $dbh->query($query);
+		$TargetOffsiteActivity = $result[0]['target'] ?? 0;
+
+		// Get today's perform jobs
+		$query = "SELECT COUNT(*) as cnt FROM t_transaction 
+				  WHERE DATE(AuditEndDate) = '$Today';";
+		$result = $dbh->query($query);
+		$TodaysPerformJobs = $result[0]['cnt'] ?? 0;
+
+		// Get MTD perform jobs
+		$query = "SELECT COUNT(*) as cnt FROM t_transaction 
+				  WHERE (AuditEndDate BETWEEN '$StartDate' AND '$EndDate');";
+		$result = $dbh->query($query);
+		$MTDPerformJobs = $result[0]['cnt'] ?? 0;
+
+		// Get today's perform mandays
+		$query = "SELECT COALESCE(SUM(ManDays), 0) as total FROM t_transaction 
+				  WHERE DATE(AuditEndDate) = '$Today';";
+		$result = $dbh->query($query);
+		$TodaysPerformMandays = $result[0]['total'] ?? 0;
+
+		// Get MTD perform mandays
+		$query = "SELECT COALESCE(SUM(ManDays), 0) as total FROM t_transaction 
+				  WHERE (AuditEndDate BETWEEN '$StartDate' AND '$EndDate');";
+		$result = $dbh->query($query);
+		$MTDPerformMandays = $result[0]['total'] ?? 0;
+
+		// Get today's revenue
+		$query = "SELECT COALESCE(SUM(Revenue), 0) as total FROM t_transaction 
+				  WHERE DATE(ReleaseDate) = '$Today';";
+		$result = $dbh->query($query);
+		$TodaysRevenue = $result[0]['total'] ?? 0;
+
+		// Get MTD revenue
+		$query = "SELECT COALESCE(SUM(Revenue), 0) as total FROM t_transaction 
+				  WHERE (ReleaseDate BETWEEN '$StartDate' AND '$EndDate');";
+		$result = $dbh->query($query);
+		$MTDRevenue = $result[0]['total'] ?? 0;
+
+		// Get target revenue
+		$query = "SELECT COALESCE(SUM(TargetValue), 0) as target FROM t_target 
+				  WHERE TargetTypeId = 3 AND YEAR(TargetDate) = YEAR('$StartDate') AND MONTH(TargetDate) = MONTH('$StartDate');";
+		$result = $dbh->query($query);
+		$TargetRevenue = $result[0]['target'] ?? 0;
+
+		$returnData = [
+			"success" => 1,
+			"status" => 200,
+			"message" => "",
+			"datalist" => [
+				"TodaysOnsiteActivity" => (int)$TodaysOnsiteActivity,
+				"MTDOnsiteActivity" => (int)$MTDOnsiteActivity,
+				"TargetOnsiteActivity" => (int)$TargetOnsiteActivity,
+				"TodaysOffsiteActivity" => (int)$TodaysOffsiteActivity,
+				"MTDOffsiteActivity" => (int)$MTDOffsiteActivity,
+				"TargetOffsiteActivity" => (int)$TargetOffsiteActivity,
+				"TodaysPerformJobs" => (int)$TodaysPerformJobs,
+				"MTDPerformJobs" => (int)$MTDPerformJobs,
+				"TodaysPerformMandays" => (float)$TodaysPerformMandays,
+				"MTDPerformMandays" => (float)$MTDPerformMandays,
+				"TodaysRevenue" => (float)$TodaysRevenue,
+				"MTDRevenue" => (float)$MTDRevenue,
+				"TargetRevenue" => (float)$TargetRevenue
+			]
+		];
+	} catch (PDOException $e) {
+		$returnData = msg(0, 500, $e->getMessage());
+	}
+
+	return $returnData;
 }

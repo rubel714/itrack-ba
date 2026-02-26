@@ -46,6 +46,13 @@ const SalesDashboard = (props) => {
     ExecuteQuery: ExecuteQueryByBuyer,
   } = ExecuteQueryHook(); //Fetch data
 
+  const {
+    isLoading: isLoadingOverall,
+    data: overallData,
+    error: errorOverall,
+    ExecuteQuery: ExecuteQueryOverall,
+  } = ExecuteQueryHook(); //Fetch overall summary data
+
   /* =====Start of Excel Export Code==== */
   const EXCEL_EXPORT_URL = process.env.REACT_APP_API_URL;
 
@@ -461,12 +468,14 @@ const SalesDashboard = (props) => {
     /**First time call for datalist */
     getDataList();
     getDataByBuyerList();
+    getOverallSummary();
     setBFirst(false);
   }
 
   useEffect(() => {
     getDataList();
     getDataByBuyerList();
+    getOverallSummary();
   }, [StartDate, EndDate]);
 
   /**Get data for table list */
@@ -494,6 +503,35 @@ const SalesDashboard = (props) => {
 
     ExecuteQueryByBuyer(serverpage, params);
   }
+
+  /**Get overall summary data */
+  function getOverallSummary() {
+    let params = {
+      action: "getOverallSummary",
+      lan: language(),
+      UserId: UserInfo.UserId,
+      StartDate: StartDate,
+      EndDate: EndDate,
+    };
+
+    ExecuteQueryOverall(serverpage, params);
+  }
+
+  // Helper function to calculate percentage
+  const calcPercentage = (value, target) => {
+    if (!target || target === 0) return 0;
+    return Math.round((value / target) * 100);
+  };
+
+  // Helper function to get progress bar color
+  const getProgressColor = (percentage) => {
+    if (percentage >= 80) return "#1cc88a";
+    if (percentage >= 50) return "#f6c23e";
+    return "#e74a3b";
+  };
+
+  // Safe accessor for overallData to prevent undefined errors
+  const overall = overallData || {};
 
   return (
     <>
@@ -530,6 +568,196 @@ const SalesDashboard = (props) => {
               />
             </div>
           </div>
+        </div>
+
+        {/* <!-- ####---OVERALL SUMMARY TABLE---#### --> */}
+        <div
+          style={{
+            backgroundColor: "#fff",
+            borderRadius: "8px",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+            marginBottom: "20px",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "rgb(246, 194, 62)",
+              color: "#fff",
+              padding: "12px 20px",
+              fontSize: "16px",
+              fontWeight: "600",
+              textAlign: "center",
+            }}
+          >
+            Overall
+          </div>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+            }}
+          >
+            <tbody>
+              {/* Row 1 - Onsite Activity */}
+              <tr style={{ backgroundColor: "#f8f9fc", transition: "background-color 0.2s" }}>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", width: "20%" }}>
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>Todays Onsite Activity</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", width: "10%", textAlign: "right" }}>
+                  <span style={{ fontWeight: "600", color: "#4e73df", fontSize: "16px" }}>{overall.TodaysOnsiteActivity || 0}</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", width: "20%" }}>
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>MTD Onsite Activity</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", width: "10%", textAlign: "right" }}>
+                  <span style={{ fontWeight: "600", color: "#1cc88a", fontSize: "16px" }}>{overall.MTDOnsiteActivity || 0}</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", width: "15%" }}>
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>Target</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", width: "10%", textAlign: "right" }}>
+                  <span style={{ fontWeight: "600", color: "#858796", fontSize: "16px" }}>{overall.TargetOnsiteActivity || 0}</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", width: "15%" }}>
+                  {(() => {
+                    const pct = calcPercentage(overall.MTDOnsiteActivity, overall.TargetOnsiteActivity);
+                    const color = getProgressColor(pct);
+                    return (
+                      <>
+                        <div style={{ width: "100%", backgroundColor: "#e9ecef", borderRadius: "4px", height: "8px" }}>
+                          <div style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: color, borderRadius: "4px", height: "8px", transition: "width 0.5s ease" }}></div>
+                        </div>
+                        <span style={{ fontSize: "11px", color: color }}>{pct}%</span>
+                      </>
+                    );
+                  })()}
+                </td>
+              </tr>
+
+              {/* Row 2 - Offsite Activity */}
+              <tr style={{ backgroundColor: "#fff", transition: "background-color 0.2s" }}>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>Todays Offsite Activity</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", textAlign: "right" }}>
+                  <span style={{ fontWeight: "600", color: "#4e73df", fontSize: "16px" }}>{overall.TodaysOffsiteActivity || 0}</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>MTD Offsite Activity</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", textAlign: "right" }}>
+                  <span style={{ fontWeight: "600", color: "#1cc88a", fontSize: "16px" }}>{overall.MTDOffsiteActivity || 0}</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>Target</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", textAlign: "right" }}>
+                  <span style={{ fontWeight: "600", color: "#858796", fontSize: "16px" }}>{overall.TargetOffsiteActivity || 0}</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
+                  {(() => {
+                    const pct = calcPercentage(overall.MTDOffsiteActivity, overall.TargetOffsiteActivity);
+                    const color = getProgressColor(pct);
+                    return (
+                      <>
+                        <div style={{ width: "100%", backgroundColor: "#e9ecef", borderRadius: "4px", height: "8px" }}>
+                          <div style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: color, borderRadius: "4px", height: "8px", transition: "width 0.5s ease" }}></div>
+                        </div>
+                        <span style={{ fontSize: "11px", color: color }}>{pct}%</span>
+                      </>
+                    );
+                  })()}
+                </td>
+              </tr>
+
+              {/* Row 3 - Perform Jobs */}
+              <tr style={{ backgroundColor: "#f8f9fc", transition: "background-color 0.2s" }}>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>Todays Perform Jobs</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", textAlign: "right" }}>
+                  <span style={{ fontWeight: "600", color: "#4e73df", fontSize: "16px" }}>{overall.TodaysPerformJobs || 0}</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>MTD Perform Jobs</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", textAlign: "right" }}>
+                  <span style={{ fontWeight: "600", color: "#1cc88a", fontSize: "16px" }}>{overall.MTDPerformJobs || 0}</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}></span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", textAlign: "right" }}>
+                  <span style={{ fontWeight: "600", color: "#858796", fontSize: "16px" }}>-</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
+                  <span style={{ fontSize: "11px", color: "#858796" }}>No Target</span>
+                </td>
+              </tr>
+
+              {/* Row 4 - Perform Mandays */}
+              <tr style={{ backgroundColor: "#fff", transition: "background-color 0.2s" }}>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>Todays Perform Mandays</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", textAlign: "right" }}>
+                  <span style={{ fontWeight: "600", color: "#4e73df", fontSize: "16px" }}>{overall.TodaysPerformMandays || 0}</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>MTD Perform Mandays</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", textAlign: "right" }}>
+                  <span style={{ fontWeight: "600", color: "#1cc88a", fontSize: "16px" }}>{overall.MTDPerformMandays || 0}</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}></span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", textAlign: "right" }}>
+                  <span style={{ fontWeight: "600", color: "#858796", fontSize: "16px" }}>-</span>
+                </td>
+                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
+                  <span style={{ fontSize: "11px", color: "#858796" }}>No Target</span>
+                </td>
+              </tr>
+
+              {/* Row 5 - Revenue */}
+              <tr style={{ backgroundColor: "#f8f9fc", transition: "background-color 0.2s" }}>
+                <td style={{ padding: "12px 20px" }}>
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>Todays Revenue</span>
+                </td>
+                <td style={{ padding: "12px 20px", textAlign: "right" }}>
+                  <span style={{ fontWeight: "600", color: "#4e73df", fontSize: "16px" }}>{overall.TodaysRevenue || 0}</span>
+                </td>
+                <td style={{ padding: "12px 20px" }}>
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>MTD Revenue</span>
+                </td>
+                <td style={{ padding: "12px 20px", textAlign: "right" }}>
+                  <span style={{ fontWeight: "600", color: "#1cc88a", fontSize: "16px" }}>{overall.MTDRevenue || 0}</span>
+                </td>
+                <td style={{ padding: "12px 20px" }}>
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>Target</span>
+                </td>
+                <td style={{ padding: "12px 20px", textAlign: "right" }}>
+                  <span style={{ fontWeight: "600", color: "#858796", fontSize: "16px" }}>{overall.TargetRevenue || 0}</span>
+                </td>
+                <td style={{ padding: "12px 20px" }}>
+                  {(() => {
+                    const pct = calcPercentage(overall.MTDRevenue, overall.TargetRevenue);
+                    const color = getProgressColor(pct);
+                    return (
+                      <>
+                        <div style={{ width: "100%", backgroundColor: "#e9ecef", borderRadius: "4px", height: "8px" }}>
+                          <div style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: color, borderRadius: "4px", height: "8px", transition: "width 0.5s ease" }}></div>
+                        </div>
+                        <span style={{ fontSize: "11px", color: color }}>{pct}%</span>
+                      </>
+                    );
+                  })()}
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         {/* <!-- ####---THIS CLASS IS USE FOR TABLE GRID---####s --> */}
