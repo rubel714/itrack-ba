@@ -39,12 +39,6 @@ const SalesDashboard = (props) => {
 
   // handleChangeWidthHeight
   const { isLoading, data: dataList, error, ExecuteQuery } = ExecuteQueryHook(); //Fetch data
-  const {
-    isLoading: isLoading1,
-    data: dataListByBuyer,
-    error1,
-    ExecuteQuery: ExecuteQueryByBuyer,
-  } = ExecuteQueryHook(); //Fetch data
 
   const {
     isLoading: isLoadingOverall,
@@ -118,7 +112,9 @@ const SalesDashboard = (props) => {
         }
         // Handle custom bottomCalc functions
         if (typeof col.bottomCalc === "function") {
-          const values = exportData.map((row) => parseFloat(row[col.field]) || 0);
+          const values = exportData.map(
+            (row) => parseFloat(row[col.field]) || 0,
+          );
           return col.bottomCalc(values, exportData, col.bottomCalcParams || {});
         }
         return col.field === "ProgramName" ? "Total:" : ""; // Add "Total:" label in first text column
@@ -194,143 +190,6 @@ const SalesDashboard = (props) => {
     }
   };
 
-  const exportToExcelBuyerWiseTATDay = () => {
-    try {
-      // Get the sorted data from the Tabulator instance
-      if (!tableRefByBuyer.current) {
-        alert("Table not initialized");
-        return;
-      }
-
-      const exportData = tableRefByBuyer.current.table.getData("active"); // Gets data in current sorted/filtered order
-      const columns = columnListByBuyer || [];
-
-      if (exportData.length === 0) {
-        alert("No data to export");
-        return;
-      }
-
-      // Prepare data for export
-      const worksheetData = [];
-
-      // Add title row
-      const titleRow = [
-        `Buyer wise TAT Day (${moment(StartDate).format(
-          "MMM DD, YYYY",
-        )} - ${moment(EndDate).format("MMM DD, YYYY")})`,
-      ];
-      // const titleRow = ["Buyer wise TAT Day"];
-      worksheetData.push(titleRow);
-
-      // Add headers
-      const headers = columns.map((col) => col.title || col.field || "");
-      worksheetData.push(headers);
-
-      // Add data rows
-      exportData.forEach((row) => {
-        const rowData = columns.map((col) => {
-          const field = col.field;
-          return row[field] !== undefined ? row[field] : "";
-        });
-        worksheetData.push(rowData);
-      });
-
-      // Calculate and add totals row
-      const totalsRow = columns.map((col) => {
-        if (col.bottomCalc === "sum") {
-          // Calculate sum for this column
-          const sum = exportData.reduce((acc, row) => {
-            const value = parseFloat(row[col.field]) || 0;
-            return acc + value;
-          }, 0);
-          return sum;
-        }
-        if (col.bottomCalc === "avg") {
-          // Calculate average for this column
-          const values = exportData.map(
-            (row) => parseFloat(row[col.field]) || 0,
-          );
-          const avg = values.reduce((a, b) => a + b, 0) / (values.length || 1);
-          return parseFloat(avg.toFixed(2));
-        }
-        // Handle custom bottomCalc functions
-        if (typeof col.bottomCalc === "function") {
-          const values = exportData.map((row) => parseFloat(row[col.field]) || 0);
-          return col.bottomCalc(values, exportData, col.bottomCalcParams || {});
-        }
-        return col.field === "BuyerName" ? "Total:" : ""; // Add "Total:" label in first text column
-      });
-      worksheetData.push(totalsRow);
-
-      // Create workbook and worksheet
-      const wb = XLSX.utils.book_new();
-      const ws = XLSX.utils.aoa_to_sheet(worksheetData);
-
-      // Apply formatting
-      const range = XLSX.utils.decode_range(ws["!ref"]);
-      const totalRowIndex = worksheetData.length - 1;
-      const lastColIndex = range.e.c; // Last column index
-
-      // Style title row (row 0) - merged cell
-      const titleCell = XLSX.utils.encode_cell({ r: 0, c: 0 });
-      if (ws[titleCell]) {
-        ws[titleCell].s = {
-          font: { bold: true, sz: 14 },
-          alignment: { horizontal: "center", vertical: "center" },
-        };
-      }
-      // Merge title across all columns
-      ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: lastColIndex } }];
-
-      for (let col = range.s.c; col <= range.e.c; col++) {
-        // Bold header row (row 1)
-        const headerCell = XLSX.utils.encode_cell({ r: 1, c: col });
-        if (ws[headerCell]) {
-          ws[headerCell].s = {
-            font: { bold: true },
-            // fill: { fgColor: { rgb: "D3D3D3" } },
-          };
-        }
-
-        // Bold totals row (last row) with right alignment
-        const totalCell = XLSX.utils.encode_cell({ r: totalRowIndex, c: col });
-        if (ws[totalCell]) {
-          ws[totalCell].s = {
-            font: { bold: true },
-            alignment: { horizontal: col === 0 ? "left" : "right" },
-            // fill: { fgColor: { rgb: "FFFF00" } },
-          };
-        }
-      }
-
-      // Bold and color last column (Grand Total column) for all data rows
-      // for (let row = 2; row < totalRowIndex; row++) {
-      //   // Skip title, header and totals row
-      //   const cellAddress = XLSX.utils.encode_cell({ r: row, c: lastColIndex });
-      //   if (ws[cellAddress]) {
-      //     ws[cellAddress].s = {
-      //       font: { bold: true },
-      //       // fill: { fgColor: { rgb: "FFFF00" } },
-      //     };
-      //   }
-      // }
-
-      // Add worksheet to workbook
-      XLSX.utils.book_append_sheet(wb, ws, "Data");
-
-      // Generate file name with date
-      const fileName = `Buyer_wise_TAT_Day_${moment().format(
-        "YYYY-MM-DD-H-m-s",
-      )}.xlsx`;
-
-      // Save file
-      XLSX.writeFile(wb, fileName);
-    } catch (error) {
-      console.error("Export error:", error);
-      alert("Error exporting to Excel: " + error.message);
-    }
-  };
- 
   /* =====End of Excel Export Code==== */
 
   const handleChangeFilterDate = (e) => {
@@ -345,120 +204,125 @@ const SalesDashboard = (props) => {
   };
 
   const columnListByProgram = [
-    // { field: "rownumber", label: "SL", align: "center", width: "3%" },
-
     {
       field: "ProgramName",
-      title: "Program",
+      title: "Sales Person",
       hozAlign: "left",
       headerHozAlign: "left",
-      // filter: true,
-      width: "200",
-    },
-    {
-      field: "ReportReleased",
-      title: "Report Released",
-      hozAlign: "right",
-      headerHozAlign: "right",
-      // filter: true,
       width: "150",
-      bottomCalc: "sum",
     },
     {
-      field: "CurrentTAT",
-      title: "Current TAT",
-      hozAlign: "right",
-      headerHozAlign: "right",
-      // filter: true,
-      width: "120",
-      // bottomCalc: "avg",
-      bottomCalc: function (values, data, calcParams) {
-        if (dataList.TotalCurrentTAT && dataList.TotalReportReleased) {
-          return (
-            dataList.TotalCurrentTAT / dataList.TotalReportReleased
-          ).toFixed(2);
-        } else {
-          return 0;
-        }
-      },
+      title: "Today Status", // Spanning header
 
-      bottomCalcFormatterParams: {
-        precision: 2,
-      },
+      hozAlign: "center",
+      headerHozAlign: "center",
+      columns: [
+        {
+          field: "ReportReleased",
+          title: "Onsite<br/>Activity",
+          hozAlign: "right",
+          headerHozAlign: "right",
+          // width: "90",
+        },
+        {
+          field: "CurrentTAT",
+          title: "Offsite<br/>Activity",
+          hozAlign: "right",
+          headerHozAlign: "right",
+          // width: "90",
+        },
+        {
+          field: "CurrentTAT",
+          title: "Perform<br/>Jobs",
+          hozAlign: "right",
+          headerHozAlign: "right",
+          // width: "88",
+        },
+        {
+          field: "CurrentTAT",
+          title: "Perform<br/>Mandays",
+          hozAlign: "right",
+          headerHozAlign: "right",
+          // width: "95",
+        },
+        {
+          field: "CurrentTAT",
+          title: "Revenue",
+          hozAlign: "right",
+          headerHozAlign: "right",
+          // width: "93", 
+        },
+      ],
     },
     {
-      field: "StandardTATDay",
-      title: "Standard TAT",
-      hozAlign: "right",
-      headerHozAlign: "right",
-      // filter: true,
-      width: "130",
-      bottomCalc: "avg",
-      bottomCalcFormatterParams: {
-        precision: 2,
-      },
-    },
-  ];
-
-  const columnListByBuyer = [
-    // { field: "rownumber", label: "SL", align: "center", width: "3%" },
-
-    {
-      field: "BuyerName",
-      title: "Buyer Name",
-      hozAlign: "left",
-      headerHozAlign: "left",
-      // filter: true,
-      width: "200",
-    },
-    {
-      field: "ReportReleased",
-      title: "Report Released",
-      hozAlign: "right",
-      headerHozAlign: "right",
-      // filter: true,
-      width: "150",
-      bottomCalc: "sum",
-    },
-    {
-      field: "CurrentTAT",
-      title: "Current TAT",
-      hozAlign: "right",
-      headerHozAlign: "right",
-      // filter: true,
-      width: "120",
-      // bottomCalc: "avg",
-      bottomCalc: function (values, data, calcParams) {
-        if (
-          dataList.TotalCurrentTAT &&
-          dataList.TotalReportReleased
-        ) {
-          return (
-            dataList.TotalCurrentTAT /
-            dataList.TotalReportReleased
-          ).toFixed(2);
-        } else {
-          return 0;
-        }
-      },
-      bottomCalcFormatterParams: {
-        precision: 2,
-      },
+      title: "MTD Activity", // Another spanning header
+      hozAlign: "center",
+      headerHozAlign: "center",
+       columns: [
+        {
+          field: "ReportReleased",
+          title: "Onsite<br/>Activity",
+          hozAlign: "right",
+          headerHozAlign: "right",
+          // width: "90",
+        },
+        {
+          field: "CurrentTAT",
+          title: "Offsite<br/>Activity",
+          hozAlign: "right",
+          headerHozAlign: "right",
+          // width: "90",
+        },
+        {
+          field: "CurrentTAT",
+          title: "Perform<br/>Jobs",
+          hozAlign: "right",
+          headerHozAlign: "right",
+          // width: "88",
+        },
+        {
+          field: "CurrentTAT",
+          title: "Perform<br/>Mandays",
+          hozAlign: "right",
+          headerHozAlign: "right",
+          // width: "95",
+        },
+        {
+          field: "CurrentTAT",
+          title: "Revenue",
+          hozAlign: "right",
+          headerHozAlign: "right",
+          // width: "93", 
+        },
+      ],
     },
     {
-      field: "StandardTATDay",
-      title: "Standard TAT",
-      hozAlign: "right",
-      headerHozAlign: "right",
-      // filter: true,
-      width: "130",
-      // bottomCalc: "avg",
-      bottomCalc: function (values, data, calcParams) {
-        return dataListByBuyer.AverageStandardTAT;
-      },
-      bottomCalcFormatterParams: {
-        precision: 2,
-      },
+      title: "Target", // Another spanning header
+      hozAlign: "center",
+      headerHozAlign: "center",
+      columns: [
+        {
+          field: "StandardTATDay",
+          title: "Onsite<br/>Activity",
+          hozAlign: "right",
+          headerHozAlign: "right",
+          // width: "90",
+        },
+        {
+          field: "StandardTATDay",
+          title: "Offsite<br/>Activity",
+          hozAlign: "right",
+          headerHozAlign: "right",
+          // width: "90",
+        },
+        {
+          field: "StandardTATDay",
+          title: "Revenue",
+          hozAlign: "right",
+          headerHozAlign: "right",
+          // width: "93",
+        },
+      ],
     },
   ];
 
@@ -467,14 +331,12 @@ const SalesDashboard = (props) => {
   if (bFirst) {
     /**First time call for datalist */
     getDataList();
-    getDataByBuyerList();
     getOverallSummary();
     setBFirst(false);
   }
 
   useEffect(() => {
     getDataList();
-    getDataByBuyerList();
     getOverallSummary();
   }, [StartDate, EndDate]);
 
@@ -489,19 +351,6 @@ const SalesDashboard = (props) => {
     };
 
     ExecuteQuery(serverpage, params);
-  }
-
-  /**Get data for table list */
-  function getDataByBuyerList() {
-    let params = {
-      action: "getDataByBuyerList",
-      lan: language(),
-      UserId: UserInfo.UserId,
-      StartDate: StartDate,
-      EndDate: EndDate,
-    };
-
-    ExecuteQueryByBuyer(serverpage, params);
   }
 
   /**Get overall summary data */
@@ -600,35 +449,135 @@ const SalesDashboard = (props) => {
           >
             <tbody>
               {/* Row 1 - Onsite Activity */}
-              <tr style={{ backgroundColor: "#f8f9fc", transition: "background-color 0.2s" }}>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", width: "20%" }}>
-                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>Todays Onsite Activity</span>
+              <tr
+                style={{
+                  backgroundColor: "#f8f9fc",
+                  transition: "background-color 0.2s",
+                }}
+              >
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                    width: "20%",
+                  }}
+                >
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>
+                    Todays Onsite Activity
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", width: "10%", textAlign: "right" }}>
-                  <span style={{ fontWeight: "600", color: "#4e73df", fontSize: "16px" }}>{overall.TodaysOnsiteActivity || 0}</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                    width: "10%",
+                    textAlign: "right",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: "600",
+                      color: "#4e73df",
+                      fontSize: "16px",
+                    }}
+                  >
+                    {overall.TodaysOnsiteActivity || 0}
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", width: "20%" }}>
-                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>MTD Onsite Activity</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                    width: "20%",
+                  }}
+                >
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>
+                    MTD Onsite Activity
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", width: "10%", textAlign: "right" }}>
-                  <span style={{ fontWeight: "600", color: "#1cc88a", fontSize: "16px" }}>{overall.MTDOnsiteActivity || 0}</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                    width: "10%",
+                    textAlign: "right",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: "600",
+                      color: "#1cc88a",
+                      fontSize: "16px",
+                    }}
+                  >
+                    {overall.MTDOnsiteActivity || 0}
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", width: "15%" }}>
-                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>Target</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                    width: "15%",
+                  }}
+                >
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>
+                    Target
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", width: "10%", textAlign: "right" }}>
-                  <span style={{ fontWeight: "600", color: "#858796", fontSize: "16px" }}>{overall.TargetOnsiteActivity || 0}</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                    width: "10%",
+                    textAlign: "right",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: "600",
+                      color: "#858796",
+                      fontSize: "16px",
+                    }}
+                  >
+                    {overall.TargetOnsiteActivity || 0}
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", width: "15%" }}>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                    width: "15%",
+                  }}
+                >
                   {(() => {
-                    const pct = calcPercentage(overall.MTDOnsiteActivity, overall.TargetOnsiteActivity);
+                    const pct = calcPercentage(
+                      overall.MTDOnsiteActivity,
+                      overall.TargetOnsiteActivity,
+                    );
                     const color = getProgressColor(pct);
                     return (
                       <>
-                        <div style={{ width: "100%", backgroundColor: "#e9ecef", borderRadius: "4px", height: "8px" }}>
-                          <div style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: color, borderRadius: "4px", height: "8px", transition: "width 0.5s ease" }}></div>
+                        <div
+                          style={{
+                            width: "100%",
+                            backgroundColor: "#e9ecef",
+                            borderRadius: "4px",
+                            height: "8px",
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: `${Math.min(pct, 100)}%`,
+                              backgroundColor: color,
+                              borderRadius: "4px",
+                              height: "8px",
+                              transition: "width 0.5s ease",
+                            }}
+                          ></div>
                         </div>
-                        <span style={{ fontSize: "11px", color: color }}>{pct}%</span>
+                        <span style={{ fontSize: "11px", color: color }}>
+                          {pct}%
+                        </span>
                       </>
                     );
                   })()}
@@ -636,35 +585,128 @@ const SalesDashboard = (props) => {
               </tr>
 
               {/* Row 2 - Offsite Activity */}
-              <tr style={{ backgroundColor: "#fff", transition: "background-color 0.2s" }}>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
-                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>Todays Offsite Activity</span>
+              <tr
+                style={{
+                  backgroundColor: "#fff",
+                  transition: "background-color 0.2s",
+                }}
+              >
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                  }}
+                >
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>
+                    Todays Offsite Activity
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", textAlign: "right" }}>
-                  <span style={{ fontWeight: "600", color: "#4e73df", fontSize: "16px" }}>{overall.TodaysOffsiteActivity || 0}</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                    textAlign: "right",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: "600",
+                      color: "#4e73df",
+                      fontSize: "16px",
+                    }}
+                  >
+                    {overall.TodaysOffsiteActivity || 0}
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
-                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>MTD Offsite Activity</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                  }}
+                >
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>
+                    MTD Offsite Activity
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", textAlign: "right" }}>
-                  <span style={{ fontWeight: "600", color: "#1cc88a", fontSize: "16px" }}>{overall.MTDOffsiteActivity || 0}</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                    textAlign: "right",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: "600",
+                      color: "#1cc88a",
+                      fontSize: "16px",
+                    }}
+                  >
+                    {overall.MTDOffsiteActivity || 0}
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
-                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>Target</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                  }}
+                >
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>
+                    Target
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", textAlign: "right" }}>
-                  <span style={{ fontWeight: "600", color: "#858796", fontSize: "16px" }}>{overall.TargetOffsiteActivity || 0}</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                    textAlign: "right",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: "600",
+                      color: "#858796",
+                      fontSize: "16px",
+                    }}
+                  >
+                    {overall.TargetOffsiteActivity || 0}
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                  }}
+                >
                   {(() => {
-                    const pct = calcPercentage(overall.MTDOffsiteActivity, overall.TargetOffsiteActivity);
+                    const pct = calcPercentage(
+                      overall.MTDOffsiteActivity,
+                      overall.TargetOffsiteActivity,
+                    );
                     const color = getProgressColor(pct);
                     return (
                       <>
-                        <div style={{ width: "100%", backgroundColor: "#e9ecef", borderRadius: "4px", height: "8px" }}>
-                          <div style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: color, borderRadius: "4px", height: "8px", transition: "width 0.5s ease" }}></div>
+                        <div
+                          style={{
+                            width: "100%",
+                            backgroundColor: "#e9ecef",
+                            borderRadius: "4px",
+                            height: "8px",
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: `${Math.min(pct, 100)}%`,
+                              backgroundColor: color,
+                              borderRadius: "4px",
+                              height: "8px",
+                              transition: "width 0.5s ease",
+                            }}
+                          ></div>
                         </div>
-                        <span style={{ fontSize: "11px", color: color }}>{pct}%</span>
+                        <span style={{ fontSize: "11px", color: color }}>
+                          {pct}%
+                        </span>
                       </>
                     );
                   })()}
@@ -672,85 +714,286 @@ const SalesDashboard = (props) => {
               </tr>
 
               {/* Row 3 - Perform Jobs */}
-              <tr style={{ backgroundColor: "#f8f9fc", transition: "background-color 0.2s" }}>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
-                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>Todays Perform Jobs</span>
+              <tr
+                style={{
+                  backgroundColor: "#f8f9fc",
+                  transition: "background-color 0.2s",
+                }}
+              >
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                  }}
+                >
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>
+                    Todays Perform Jobs
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", textAlign: "right" }}>
-                  <span style={{ fontWeight: "600", color: "#4e73df", fontSize: "16px" }}>{overall.TodaysPerformJobs || 0}</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                    textAlign: "right",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: "600",
+                      color: "#4e73df",
+                      fontSize: "16px",
+                    }}
+                  >
+                    {overall.TodaysPerformJobs || 0}
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
-                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>MTD Perform Jobs</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                  }}
+                >
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>
+                    MTD Perform Jobs
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", textAlign: "right" }}>
-                  <span style={{ fontWeight: "600", color: "#1cc88a", fontSize: "16px" }}>{overall.MTDPerformJobs || 0}</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                    textAlign: "right",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: "600",
+                      color: "#1cc88a",
+                      fontSize: "16px",
+                    }}
+                  >
+                    {overall.MTDPerformJobs || 0}
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                  }}
+                >
                   <span style={{ color: "#5a5c69", fontSize: "14px" }}></span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", textAlign: "right" }}>
-                  <span style={{ fontWeight: "600", color: "#858796", fontSize: "16px" }}>-</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                    textAlign: "right",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: "600",
+                      color: "#858796",
+                      fontSize: "16px",
+                    }}
+                  >
+                    -
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
-                  <span style={{ fontSize: "11px", color: "#858796" }}>No Target</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                  }}
+                >
+                  <span style={{ fontSize: "11px", color: "#858796" }}>
+                    No Target
+                  </span>
                 </td>
               </tr>
 
               {/* Row 4 - Perform Mandays */}
-              <tr style={{ backgroundColor: "#fff", transition: "background-color 0.2s" }}>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
-                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>Todays Perform Mandays</span>
+              <tr
+                style={{
+                  backgroundColor: "#fff",
+                  transition: "background-color 0.2s",
+                }}
+              >
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                  }}
+                >
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>
+                    Todays Perform Mandays
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", textAlign: "right" }}>
-                  <span style={{ fontWeight: "600", color: "#4e73df", fontSize: "16px" }}>{overall.TodaysPerformMandays || 0}</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                    textAlign: "right",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: "600",
+                      color: "#4e73df",
+                      fontSize: "16px",
+                    }}
+                  >
+                    {overall.TodaysPerformMandays || 0}
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
-                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>MTD Perform Mandays</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                  }}
+                >
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>
+                    MTD Perform Mandays
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", textAlign: "right" }}>
-                  <span style={{ fontWeight: "600", color: "#1cc88a", fontSize: "16px" }}>{overall.MTDPerformMandays || 0}</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                    textAlign: "right",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: "600",
+                      color: "#1cc88a",
+                      fontSize: "16px",
+                    }}
+                  >
+                    {overall.MTDPerformMandays || 0}
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                  }}
+                >
                   <span style={{ color: "#5a5c69", fontSize: "14px" }}></span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0", textAlign: "right" }}>
-                  <span style={{ fontWeight: "600", color: "#858796", fontSize: "16px" }}>-</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                    textAlign: "right",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: "600",
+                      color: "#858796",
+                      fontSize: "16px",
+                    }}
+                  >
+                    -
+                  </span>
                 </td>
-                <td style={{ padding: "12px 20px", borderBottom: "1px solid #e3e6f0" }}>
-                  <span style={{ fontSize: "11px", color: "#858796" }}>No Target</span>
+                <td
+                  style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid #e3e6f0",
+                  }}
+                >
+                  <span style={{ fontSize: "11px", color: "#858796" }}>
+                    No Target
+                  </span>
                 </td>
               </tr>
 
               {/* Row 5 - Revenue */}
-              <tr style={{ backgroundColor: "#f8f9fc", transition: "background-color 0.2s" }}>
+              <tr
+                style={{
+                  backgroundColor: "#f8f9fc",
+                  transition: "background-color 0.2s",
+                }}
+              >
                 <td style={{ padding: "12px 20px" }}>
-                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>Todays Revenue</span>
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>
+                    Todays Revenue
+                  </span>
                 </td>
                 <td style={{ padding: "12px 20px", textAlign: "right" }}>
-                  <span style={{ fontWeight: "600", color: "#4e73df", fontSize: "16px" }}>{overall.TodaysRevenue || 0}</span>
+                  <span
+                    style={{
+                      fontWeight: "600",
+                      color: "#4e73df",
+                      fontSize: "16px",
+                    }}
+                  >
+                    {overall.TodaysRevenue || 0}
+                  </span>
                 </td>
                 <td style={{ padding: "12px 20px" }}>
-                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>MTD Revenue</span>
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>
+                    MTD Revenue
+                  </span>
                 </td>
                 <td style={{ padding: "12px 20px", textAlign: "right" }}>
-                  <span style={{ fontWeight: "600", color: "#1cc88a", fontSize: "16px" }}>{overall.MTDRevenue || 0}</span>
+                  <span
+                    style={{
+                      fontWeight: "600",
+                      color: "#1cc88a",
+                      fontSize: "16px",
+                    }}
+                  >
+                    {overall.MTDRevenue || 0}
+                  </span>
                 </td>
                 <td style={{ padding: "12px 20px" }}>
-                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>Target</span>
+                  <span style={{ color: "#5a5c69", fontSize: "14px" }}>
+                    Target
+                  </span>
                 </td>
                 <td style={{ padding: "12px 20px", textAlign: "right" }}>
-                  <span style={{ fontWeight: "600", color: "#858796", fontSize: "16px" }}>{overall.TargetRevenue || 0}</span>
+                  <span
+                    style={{
+                      fontWeight: "600",
+                      color: "#858796",
+                      fontSize: "16px",
+                    }}
+                  >
+                    {overall.TargetRevenue || 0}
+                  </span>
                 </td>
                 <td style={{ padding: "12px 20px" }}>
                   {(() => {
-                    const pct = calcPercentage(overall.MTDRevenue, overall.TargetRevenue);
+                    const pct = calcPercentage(
+                      overall.MTDRevenue,
+                      overall.TargetRevenue,
+                    );
                     const color = getProgressColor(pct);
                     return (
                       <>
-                        <div style={{ width: "100%", backgroundColor: "#e9ecef", borderRadius: "4px", height: "8px" }}>
-                          <div style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: color, borderRadius: "4px", height: "8px", transition: "width 0.5s ease" }}></div>
+                        <div
+                          style={{
+                            width: "100%",
+                            backgroundColor: "#e9ecef",
+                            borderRadius: "4px",
+                            height: "8px",
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: `${Math.min(pct, 100)}%`,
+                              backgroundColor: color,
+                              borderRadius: "4px",
+                              height: "8px",
+                              transition: "width 0.5s ease",
+                            }}
+                          ></div>
                         </div>
-                        <span style={{ fontSize: "11px", color: color }}>{pct}%</span>
+                        <span style={{ fontSize: "11px", color: color }}>
+                          {pct}%
+                        </span>
                       </>
                     );
                   })()}
@@ -762,7 +1005,7 @@ const SalesDashboard = (props) => {
 
         {/* <!-- ####---THIS CLASS IS USE FOR TABLE GRID---####s --> */}
 
-        <div class="tableTwoColumn">
+        <div className="tableContainer">
           <div>
             <div class="searchAdd">
               <div
@@ -773,7 +1016,7 @@ const SalesDashboard = (props) => {
                   width: "100%",
                 }}
               >
-                <span>Program wise TAT Day</span>
+                <span>By Sales Person</span>
 
                 <button
                   onClick={() => exportToExcelProgramWiseTAT()}
@@ -797,50 +1040,9 @@ const SalesDashboard = (props) => {
               columns={columnListByProgram}
               height="530px"
               layout="fitData"
-              initialSort={[
-                //set the initial sort order of the data
-                { column: "AuditCount", dir: "desc" },
-              ]}
-            />
-          </div>
-
-          <div>
-            <div class="searchAdd">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                }}
-              >
-                <span>Buyer wise TAT Day</span>
-                <button
-                  onClick={() => exportToExcelBuyerWiseTATDay()}
-                  style={{
-                    padding: "0px 16px",
-                    backgroundColor: "#28a745",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    // marginTop: "20px",
-                  }}
-                >
-                  Export to Excel
-                </button>
-              </div>
-            </div>
-            <ReactTabulator
-              ref={tableRefByBuyer}
-              data={dataListByBuyer.data ? dataListByBuyer.data : []}
-              columns={columnListByBuyer}
-              height="530px"
-              layout="fitData"
-              initialSort={[
-                //set the initial sort order of the data
-                { column: "AuditCount", dir: "desc" },
-              ]}
+              options={{
+                headerWordWrap: true, // Apply to all headers
+              }}
             />
           </div>
         </div>
