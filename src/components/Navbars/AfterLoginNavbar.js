@@ -42,7 +42,7 @@ function AfterLoginNavbar(props) {
   const menuParentClick = (menuParentName) => {
     // console.log("menuParentName: ", menuParentName);
     // console.log("settingsToogle: ", settingsToogle);
-    
+
     if (menuParentName == "dashboard") {
       setDashboardToogle(!dashboardToogle);
     } else if (menuParentName == "Settings") {
@@ -95,7 +95,9 @@ function AfterLoginNavbar(props) {
                     <li>
                       <a
                         href="javascript:void(0)"
-                        onClick={() => props.history.push("reportreviewdashboard")}
+                        onClick={() =>
+                          props.history.push("reportreviewdashboard")
+                        }
                       >
                         Report Review Dashboard
                       </a>
@@ -106,18 +108,28 @@ function AfterLoginNavbar(props) {
                     <li>
                       <a
                         href="javascript:void(0)"
-                        onClick={() => props.history.push("programandbuyerwisetat")}
+                        onClick={() =>
+                          props.history.push("programandbuyerwisetat")
+                        }
                       >
                         Program & Buyer wise TAT
                       </a>
                     </li>
                   )}
-              
+
+                  {menuShowPermision("salesdashboard") === 1 && (
+                    <li>
+                      <a
+                        href="javascript:void(0)"
+                        onClick={() => props.history.push("salesdashboard")}
+                      >
+                        Sales Dashboard
+                      </a>
+                    </li>
+                  )}
                 </ul>
               </li>
             )}
-
-
 
             {menuShowPermision("settings") === 1 && (
               <li
@@ -129,7 +141,7 @@ function AfterLoginNavbar(props) {
                 <ul
                   className={`dropdownList ${settingsToogle ? "show" : "hide"}`}
                 >
-                {menuShowPermision("programcategory") === 1 && (
+                  {menuShowPermision("programcategory") === 1 && (
                     <li>
                       <a
                         href="javascript:void(0)"
@@ -307,7 +319,7 @@ function AfterLoginNavbar(props) {
                       </a>
                     </li>
                   )}
-                     {menuShowPermision("state") === 1 && (
+                  {menuShowPermision("state") === 1 && (
                     <li>
                       <a
                         href="javascript:void(0)"
@@ -317,7 +329,7 @@ function AfterLoginNavbar(props) {
                       </a>
                     </li>
                   )}
-                   {menuShowPermision("invoicetype") === 1 && (
+                  {menuShowPermision("invoicetype") === 1 && (
                     <li>
                       <a
                         href="javascript:void(0)"
@@ -473,11 +485,13 @@ function AfterLoginNavbar(props) {
                     </li>
                   )}
 
-                   {menuShowPermision("salespersoninputreport") === 1 && (
+                  {menuShowPermision("salespersoninputreport") === 1 && (
                     <li>
                       <a
                         href="javascript:void(0)"
-                        onClick={() => props.history.push("salespersoninputreport")}
+                        onClick={() =>
+                          props.history.push("salespersoninputreport")
+                        }
                       >
                         Sales Person Input Report
                       </a>
