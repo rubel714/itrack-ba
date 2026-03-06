@@ -542,7 +542,7 @@ const SalesDashboard = (props) => {
                     {overall.TargetOnsiteActivity || 0}
                   </span>
                 </td>
-                <td
+                {/* <td
                   style={{
                     padding: "12px 20px",
                     borderBottom: "1px solid #e3e6f0",
@@ -581,7 +581,7 @@ const SalesDashboard = (props) => {
                       </>
                     );
                   })()}
-                </td>
+                </td> */}
               </tr>
 
               {/* Row 2 - Offsite Activity */}
@@ -672,7 +672,7 @@ const SalesDashboard = (props) => {
                     {overall.TargetOffsiteActivity || 0}
                   </span>
                 </td>
-                <td
+                {/* <td
                   style={{
                     padding: "12px 20px",
                     borderBottom: "1px solid #e3e6f0",
@@ -710,7 +710,7 @@ const SalesDashboard = (props) => {
                       </>
                     );
                   })()}
-                </td>
+                </td> */}
               </tr>
 
               {/* Row 3 - Perform Jobs */}
@@ -799,7 +799,7 @@ const SalesDashboard = (props) => {
                     -
                   </span>
                 </td>
-                <td
+                {/* <td
                   style={{
                     padding: "12px 20px",
                     borderBottom: "1px solid #e3e6f0",
@@ -808,7 +808,7 @@ const SalesDashboard = (props) => {
                   <span style={{ fontSize: "11px", color: "#858796" }}>
                     No Target
                   </span>
-                </td>
+                </td> */}
               </tr>
 
               {/* Row 4 - Perform Mandays */}
@@ -897,7 +897,7 @@ const SalesDashboard = (props) => {
                     -
                   </span>
                 </td>
-                <td
+                {/* <td
                   style={{
                     padding: "12px 20px",
                     borderBottom: "1px solid #e3e6f0",
@@ -906,7 +906,7 @@ const SalesDashboard = (props) => {
                   <span style={{ fontSize: "11px", color: "#858796" }}>
                     No Target
                   </span>
-                </td>
+                </td> */}
               </tr>
 
               {/* Row 5 - Revenue */}
@@ -929,7 +929,7 @@ const SalesDashboard = (props) => {
                       fontSize: "16px",
                     }}
                   >
-                    {overall.TodaysRevenue || 0}
+                    {(overall.TodaysRevenue || 0).toFixed(2)}
                   </span>
                 </td>
                 <td style={{ padding: "12px 20px" }}>
@@ -945,7 +945,7 @@ const SalesDashboard = (props) => {
                       fontSize: "16px",
                     }}
                   >
-                    {overall.MTDRevenue || 0}
+                    {(overall.MTDRevenue || 0).toFixed(2)}
                   </span>
                 </td>
                 <td style={{ padding: "12px 20px" }}>
@@ -961,14 +961,14 @@ const SalesDashboard = (props) => {
                       fontSize: "16px",
                     }}
                   >
-                    {overall.TargetRevenue || 0}
+                    {(overall.RevenueTarget || 0).toFixed(2)}
                   </span>
                 </td>
-                <td style={{ padding: "12px 20px" }}>
+                {/* <td style={{ padding: "12px 20px" }}>
                   {(() => {
                     const pct = calcPercentage(
                       overall.MTDRevenue,
-                      overall.TargetRevenue,
+                      overall.RevenueTarget,
                     );
                     const color = getProgressColor(pct);
                     return (
@@ -997,7 +997,7 @@ const SalesDashboard = (props) => {
                       </>
                     );
                   })()}
-                </td>
+                </td> */}
               </tr>
             </tbody>
           </table>

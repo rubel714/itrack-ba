@@ -167,87 +167,85 @@ function getOverallSummary($data)
 		$dbh = new Db();
 
 		$StartDate = trim($data->StartDate);
-		$EndDate = trim($data->EndDate) . " 23:59:59";
-		$Today = date('Y-m-d');
-		$TodayEnd = $Today . " 23:59:59";
+		$EndDate = trim($data->EndDate);
+		$EndDateWithTime = trim($data->EndDate) . " 23:59:59";
+
 
 		// Get today's onsite activity
 		$query = "SELECT COUNT(*) as cnt FROM t_transaction 
-				  WHERE DATE(CreatedDate) = '$Today' AND AuditTypeId = 1;";
+				  WHERE DATE(TransactionDate) = '$EndDate' AND AuditTypeId = 1;";
 		$result = $dbh->query($query);
 		$TodaysOnsiteActivity = $result[0]['cnt'] ?? 0;
 
 		// Get MTD onsite activity
 		$query = "SELECT COUNT(*) as cnt FROM t_transaction 
-				  WHERE (CreatedDate BETWEEN '$StartDate' AND '$EndDate') AND AuditTypeId = 1;";
+				  WHERE (TransactionDate BETWEEN '$StartDate' AND '$EndDateWithTime') AND AuditTypeId = 1;";
 		$result = $dbh->query($query);
 		$MTDOnsiteActivity = $result[0]['cnt'] ?? 0;
 
-		// Get target onsite activity (from t_target or hardcoded for now)
-		$query = "SELECT COALESCE(SUM(TargetValue), 0) as target FROM t_target 
-				  WHERE TargetTypeId = 1 AND YEAR(TargetDate) = YEAR('$StartDate') AND MONTH(TargetDate) = MONTH('$StartDate');";
+		// Get target onsite and offsite activity
+		$query = "SELECT COALESCE(SUM(OnSiteTarget), 0) as OnSiteTarget, COALESCE(SUM(OffSiteTarget), 0) as OffSiteTarget, 
+				COALESCE(SUM(RevenueTarget), 0) as RevenueTarget
+				  FROM t_member_target 
+				  WHERE DATE(CONCAT(YearId, '-', MonthId, '-01')) between '$StartDate' AND '$EndDate';";
 		$result = $dbh->query($query);
-		$TargetOnsiteActivity = $result[0]['target'] ?? 0;
+		$TargetOnsiteActivity = $result[0]['OnSiteTarget'] ?? 0;
+		$TargetOffsiteActivity = $result[0]['OffSiteTarget'] ?? 0;
+		$RevenueTarget = $result[0]['RevenueTarget'] ?? 0;
+
 
 		// Get today's offsite activity
 		$query = "SELECT COUNT(*) as cnt FROM t_transaction 
-				  WHERE DATE(CreatedDate) = '$Today' AND AuditTypeId = 2;";
+				  WHERE DATE(TransactionDate) = '$EndDate' AND AuditTypeId = 2;";
 		$result = $dbh->query($query);
 		$TodaysOffsiteActivity = $result[0]['cnt'] ?? 0;
 
 		// Get MTD offsite activity
 		$query = "SELECT COUNT(*) as cnt FROM t_transaction 
-				  WHERE (CreatedDate BETWEEN '$StartDate' AND '$EndDate') AND AuditTypeId = 2;";
+				  WHERE (TransactionDate BETWEEN '$StartDate' AND '$EndDateWithTime') AND AuditTypeId = 2;";
 		$result = $dbh->query($query);
 		$MTDOffsiteActivity = $result[0]['cnt'] ?? 0;
 
-		// Get target offsite activity
-		$query = "SELECT COALESCE(SUM(TargetValue), 0) as target FROM t_target 
-				  WHERE TargetTypeId = 2 AND YEAR(TargetDate) = YEAR('$StartDate') AND MONTH(TargetDate) = MONTH('$StartDate');";
-		$result = $dbh->query($query);
-		$TargetOffsiteActivity = $result[0]['target'] ?? 0;
 
-		// Get today's perform jobs
+
+		// Get today's perform jobs. t_leadstatus = 5 = Performed
 		$query = "SELECT COUNT(*) as cnt FROM t_transaction 
-				  WHERE DATE(AuditEndDate) = '$Today';";
+				  WHERE DATE(TransactionDate) = '$EndDate' AND LeadStatusId = 5;";
 		$result = $dbh->query($query);
 		$TodaysPerformJobs = $result[0]['cnt'] ?? 0;
 
 		// Get MTD perform jobs
 		$query = "SELECT COUNT(*) as cnt FROM t_transaction 
-				  WHERE (AuditEndDate BETWEEN '$StartDate' AND '$EndDate');";
+				  WHERE (TransactionDate BETWEEN '$StartDate' AND '$EndDateWithTime') AND LeadStatusId = 5;";
 		$result = $dbh->query($query);
 		$MTDPerformJobs = $result[0]['cnt'] ?? 0;
 
+
+
 		// Get today's perform mandays
-		$query = "SELECT COALESCE(SUM(ManDays), 0) as total FROM t_transaction 
-				  WHERE DATE(AuditEndDate) = '$Today';";
+		$query = "SELECT COALESCE(SUM(ManDay), 0) as total FROM t_transaction 
+				  WHERE DATE(TransactionDate) = '$EndDate' AND LeadStatusId = 5;";
 		$result = $dbh->query($query);
 		$TodaysPerformMandays = $result[0]['total'] ?? 0;
 
 		// Get MTD perform mandays
-		$query = "SELECT COALESCE(SUM(ManDays), 0) as total FROM t_transaction 
-				  WHERE (AuditEndDate BETWEEN '$StartDate' AND '$EndDate');";
+		$query = "SELECT COALESCE(SUM(ManDay), 0) as total FROM t_transaction 
+				  WHERE (TransactionDate BETWEEN '$StartDate' AND '$EndDateWithTime') AND LeadStatusId = 5;";
 		$result = $dbh->query($query);
 		$MTDPerformMandays = $result[0]['total'] ?? 0;
 
 		// Get today's revenue
-		$query = "SELECT COALESCE(SUM(Revenue), 0) as total FROM t_transaction 
-				  WHERE DATE(ReleaseDate) = '$Today';";
+		$query = "SELECT COALESCE(SUM(RevenueBDT), 0) as total FROM t_transaction 
+				  WHERE DATE(ReleaseDate) = '$EndDate';";
 		$result = $dbh->query($query);
 		$TodaysRevenue = $result[0]['total'] ?? 0;
 
 		// Get MTD revenue
-		$query = "SELECT COALESCE(SUM(Revenue), 0) as total FROM t_transaction 
-				  WHERE (ReleaseDate BETWEEN '$StartDate' AND '$EndDate');";
+		$query = "SELECT COALESCE(SUM(RevenueBDT), 0) as total FROM t_transaction 
+				  WHERE (ReleaseDate BETWEEN '$StartDate' AND '$EndDateWithTime');";
 		$result = $dbh->query($query);
 		$MTDRevenue = $result[0]['total'] ?? 0;
 
-		// Get target revenue
-		$query = "SELECT COALESCE(SUM(TargetValue), 0) as target FROM t_target 
-				  WHERE TargetTypeId = 3 AND YEAR(TargetDate) = YEAR('$StartDate') AND MONTH(TargetDate) = MONTH('$StartDate');";
-		$result = $dbh->query($query);
-		$TargetRevenue = $result[0]['target'] ?? 0;
 
 		$returnData = [
 			"success" => 1,
@@ -262,11 +260,11 @@ function getOverallSummary($data)
 				"TargetOffsiteActivity" => (int)$TargetOffsiteActivity,
 				"TodaysPerformJobs" => (int)$TodaysPerformJobs,
 				"MTDPerformJobs" => (int)$MTDPerformJobs,
-				"TodaysPerformMandays" => (float)$TodaysPerformMandays,
-				"MTDPerformMandays" => (float)$MTDPerformMandays,
+				"TodaysPerformMandays" => (int)$TodaysPerformMandays,
+				"MTDPerformMandays" => (int)$MTDPerformMandays,
 				"TodaysRevenue" => (float)$TodaysRevenue,
 				"MTDRevenue" => (float)$MTDRevenue,
-				"TargetRevenue" => (float)$TargetRevenue
+				"RevenueTarget" => (float)$RevenueTarget
 			]
 		];
 	} catch (PDOException $e) {
