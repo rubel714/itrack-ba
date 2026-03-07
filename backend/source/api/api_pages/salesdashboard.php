@@ -26,93 +26,108 @@ function getDataList($data)
 		$dbh = new Db();
 
 		$StartDate = trim($data->StartDate);
-		$EndDate = trim($data->EndDate) . " 23:59:59";
+		$EndDate = trim($data->EndDate);
+		$EndDateWithTime = trim($data->EndDate) . " 23:59:59";
 
-		$query = "SELECT a.TransactionId, a.ProgramId, b.ProgramName, b.TATDayTypeId, 0 ReportReleased, 0 CurrentTAT, 
-		b.StandardTATDay, a.AuditEndDate, a.ReleaseDate, 0 CalDiffDaysAuditEndDateReleaseDate
-			FROM `t_transaction` a
-			INNER JOIN t_program b ON a.ProgramId=b.ProgramId
-			where (a.ReleaseDate between '$StartDate' and '$EndDate')
-			and a.AuditEndDate is not null
-			and a.ReleaseDate is not null;";
-		$resultdata = $dbh->query($query);
-		// echo $query;
-		// exit;
+		// Get all sales persons (members)
+		$query = "SELECT MemberId, MemberName FROM t_member WHERE IsActive = 1 ORDER BY MemberName;";
+		$members = $dbh->query($query);
+
 		$dataList = array();
-		foreach ($resultdata as $row) {
 
-			$StandardTAT = date("Y-m-d");
-			$StrategicTAT = date("Y-m-d");
+		foreach ($members as $member) {
+			$MemberId = $member['MemberId'];
+			$MemberName = $member['MemberName'];
 
-			$AuditEndDate = $row['AuditEndDate'];
-			$ReleaseDate = $row['ReleaseDate'];
-			$TATDayTypeId = $row['TATDayTypeId'];
-			$StandardTATDay = $row['StandardTATDay'];
-			$ProgramName = $row['ProgramName'];
+			// Today's Onsite Activity (AuditTypeId = 1)
+			$query = "SELECT COUNT(*) as cnt FROM t_transaction 
+					  WHERE DATE(TransactionDate) = '$EndDate' AND AuditTypeId = 1 AND MemberId = $MemberId;";
+			$result = $dbh->query($query);
+			$TodaysOnsiteActivity = $result[0]['cnt'] ?? 0;
 
-			if ($TATDayTypeId == 1) {
-				//Calendar day
-				if ($AuditEndDate !== $ReleaseDate) {
-					// $days = (new DateTime($AuditEndDate))->diff(new DateTime($ReleaseDate))->days;
-					// $row['CalDiffDaysAuditEndDateReleaseDate'] = $days;
-					$diff = (new DateTime($AuditEndDate))->diff(new DateTime($ReleaseDate));
-					$row['CalDiffDaysAuditEndDateReleaseDate'] = (int)$diff->format("%R%a"); //-15 or +15
-				}
+			// MTD Onsite Activity
+			$query = "SELECT COUNT(*) as cnt FROM t_transaction 
+					  WHERE (TransactionDate BETWEEN '$StartDate' AND '$EndDateWithTime') AND AuditTypeId = 1 AND MemberId = $MemberId;";
+			$result = $dbh->query($query);
+			$MTDOnsiteActivity = $result[0]['cnt'] ?? 0;
 
-				// $StandardTATDate = date_create($AuditEndDate);
-				// date_add($StandardTATDate, date_interval_create_from_date_string("$StandardTATDay days"));
-				// $StandardTAT = date_format($StandardTATDate, "Y-m-d");
+			// Today's Offsite Activity (AuditTypeId = 2)
+			$query = "SELECT COUNT(*) as cnt FROM t_transaction 
+					  WHERE DATE(TransactionDate) = '$EndDate' AND AuditTypeId = 2 AND MemberId = $MemberId;";
+			$result = $dbh->query($query);
+			$TodaysOffsiteActivity = $result[0]['cnt'] ?? 0;
 
-				// $StrategicTATDate = date_create($AuditEndDate);
-				// date_add($StrategicTATDate, date_interval_create_from_date_string("$StrategiceTATDay days"));
-				// $StrategicTAT = date_format($StrategicTATDate, "Y-m-d");
-			} else if ($TATDayTypeId == 2) {
-				//working day
+			// MTD Offsite Activity
+			$query = "SELECT COUNT(*) as cnt FROM t_transaction 
+					  WHERE (TransactionDate BETWEEN '$StartDate' AND '$EndDateWithTime') AND AuditTypeId = 2 AND MemberId = $MemberId;";
+			$result = $dbh->query($query);
+			$MTDOffsiteActivity = $result[0]['cnt'] ?? 0;
 
-				//================== Start for StandardTATDay==========================
-				// $AuditEndDate = date_create($AuditEndDate);
-				// $ReleaseDate = date_create($ReleaseDate);
+			// Today's Perform Jobs (LeadStatusId = 5)
+			$query = "SELECT COUNT(*) as cnt FROM t_transaction 
+					  WHERE DATE(TransactionDate) = '$EndDate' AND LeadStatusId = 5 AND MemberId = $MemberId;";
+			$result = $dbh->query($query);
+			$TodaysPerformJobs = $result[0]['cnt'] ?? 0;
 
-				$workingDays = 0;
-				while ($AuditEndDate < $ReleaseDate) {
-					// Move to next day
-					$AuditEndDate = date('Y-m-d', strtotime($AuditEndDate . ' +1 day'));
+			// MTD Perform Jobs
+			$query = "SELECT COUNT(*) as cnt FROM t_transaction 
+					  WHERE (TransactionDate BETWEEN '$StartDate' AND '$EndDateWithTime') AND LeadStatusId = 5 AND MemberId = $MemberId;";
+			$result = $dbh->query($query);
+			$MTDPerformJobs = $result[0]['cnt'] ?? 0;
 
-					$sql = "select COUNT(*) as cnt	from t_holiday where DayType = 'holiday' and HoliDate = '$AuditEndDate';";
-					$resultdata1 = $dbh->query($sql);
-					if ($resultdata1[0]['cnt'] > 0) {
-						continue; // skip holiday
-					}
+			// Today's Perform Mandays
+			$query = "SELECT COALESCE(SUM(ManDay), 0) as total FROM t_transaction 
+					  WHERE DATE(TransactionDate) = '$EndDate' AND LeadStatusId = 5 AND MemberId = $MemberId;";
+			$result = $dbh->query($query);
+			$TodaysPerformMandays = $result[0]['total'] ?? 0;
 
-					// Count valid working day
-					$workingDays++;
-				}
+			// MTD Perform Mandays
+			$query = "SELECT COALESCE(SUM(ManDay), 0) as total FROM t_transaction 
+					  WHERE (TransactionDate BETWEEN '$StartDate' AND '$EndDateWithTime') AND LeadStatusId = 5 AND MemberId = $MemberId;";
+			$result = $dbh->query($query);
+			$MTDPerformMandays = $result[0]['total'] ?? 0;
 
-				$row['CalDiffDaysAuditEndDateReleaseDate'] = $workingDays;
-				//================== End for StandardTATDay========================== 
+			// Today's Revenue
+			$query = "SELECT COALESCE(SUM(RevenueBDT), 0) as total FROM t_transaction 
+					  WHERE DATE(ReleaseDate) = '$EndDate' AND MemberId = $MemberId;";
+			$result = $dbh->query($query);
+			$TodaysRevenue = $result[0]['total'] ?? 0;
 
-			}
+			// MTD Revenue
+			$query = "SELECT COALESCE(SUM(RevenueBDT), 0) as total FROM t_transaction 
+					  WHERE (ReleaseDate BETWEEN '$StartDate' AND '$EndDateWithTime') AND MemberId = $MemberId;";
+			$result = $dbh->query($query);
+			$MTDRevenue = $result[0]['total'] ?? 0;
 
-			$dataList[] = $row;
-		}
+			// Targets from t_member_target
+			$query = "SELECT COALESCE(SUM(OnSiteTarget), 0) as OnSiteTarget, 
+					  COALESCE(SUM(OffSiteTarget), 0) as OffSiteTarget, 
+					  COALESCE(SUM(RevenueTarget), 0) as RevenueTarget
+					  FROM t_member_target 
+					  WHERE MemberId = $MemberId 
+					  AND DATE(CONCAT(YearId, '-', MonthId, '-01')) BETWEEN '$StartDate' AND '$EndDate';";
+			$result = $dbh->query($query);
+			$TargetOnsiteActivity = $result[0]['OnSiteTarget'] ?? 0;
+			$TargetOffsiteActivity = $result[0]['OffSiteTarget'] ?? 0;
+			$RevenueTarget = $result[0]['RevenueTarget'] ?? 0;
 
-
-		$dataListMatrix = GroupByProgramArray($dataList);
-
-
-		$dataListMatrixFinal = array();
-
-		$totalCurrentTAT = 0;
-		$totalReportReleased = 0;
-		foreach ($dataListMatrix as $row) {
-
-			if ($row['CalDiffDaysAuditEndDateReleaseDate'] > 0 && $row['ReportReleased'] > 0) {
-				$row['CurrentTAT'] = round($row['CalDiffDaysAuditEndDateReleaseDate'] / $row['ReportReleased'], 2);
-
-				$totalCurrentTAT += $row['CalDiffDaysAuditEndDateReleaseDate'];
-				$totalReportReleased += $row['ReportReleased'];
-			}
-			$dataListMatrixFinal[] = $row;
+			$dataList[] = [
+				"MemberId" => (int)$MemberId,
+				"SalesPersonName" => $MemberName,
+				"TodaysOnsiteActivity" => (int)$TodaysOnsiteActivity,
+				"MTDOnsiteActivity" => (int)$MTDOnsiteActivity,
+				"TargetOnsiteActivity" => (int)$TargetOnsiteActivity,
+				"TodaysOffsiteActivity" => (int)$TodaysOffsiteActivity,
+				"MTDOffsiteActivity" => (int)$MTDOffsiteActivity,
+				"TargetOffsiteActivity" => (int)$TargetOffsiteActivity,
+				"TodaysPerformJobs" => (int)$TodaysPerformJobs,
+				"MTDPerformJobs" => (int)$MTDPerformJobs,
+				"TodaysPerformMandays" => (float)$TodaysPerformMandays,
+				"MTDPerformMandays" => (float)$MTDPerformMandays,
+				"TodaysRevenue" => (float)$TodaysRevenue,
+				"MTDRevenue" => (float)$MTDRevenue,
+				"RevenueTarget" => (float)$RevenueTarget
+			];
 		}
 
 		$returnData = [
@@ -120,9 +135,7 @@ function getDataList($data)
 			"status" => 200,
 			"message" => "",
 			"datalist" => [
-				"data" => $dataListMatrixFinal,
-				"TotalCurrentTAT" => $totalCurrentTAT,
-				"TotalReportReleased" => $totalReportReleased
+				"data" => $dataList
 			]
 		];
 	} catch (PDOException $e) {
@@ -132,33 +145,6 @@ function getDataList($data)
 	return $returnData;
 }
 
-function GroupByProgramArray($ArrayBase)
-{
-	$result = [];
-	foreach ($ArrayBase as $row) {
-		$key = $row['ProgramId'];
-
-		if (!isset($result[$key])) {
-			$result[$key] = [
-				"ProgramId" => $row['ProgramId'],
-				"ProgramName" => $row['ProgramName'],
-				"ReportReleased" => 0,
-				"CurrentTAT" => 0,
-				"StandardTATDay" => $row['StandardTATDay'], // usually same per program
-				"CalDiffDaysAuditEndDateReleaseDate" => 0
-			];
-		}
-
-		$result[$key]['ReportReleased'] += 1;
-		// $result[$key]['CurrentTAT'] += $row['CurrentTAT'];
-		$result[$key]['CalDiffDaysAuditEndDateReleaseDate'] += $row['CalDiffDaysAuditEndDateReleaseDate'];
-	}
-
-	// Reindex array (optional)
-	// $array2 = array_values($result);
-
-	return $result;
-}
 
  
 function getOverallSummary($data)

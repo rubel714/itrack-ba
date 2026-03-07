@@ -60,27 +60,40 @@ const SalesDashboard = (props) => {
       }
 
       const exportData = tableRefByProgram.current.table.getData("active"); // Gets data in current sorted/filtered order
-      const columns = columnListByProgram || [];
 
       if (exportData.length === 0) {
         alert("No data to export");
         return;
       }
 
+      // Flatten nested columns
+      const flattenColumns = (cols) => {
+        let flatCols = [];
+        cols.forEach((col) => {
+          if (col.columns) {
+            flatCols = flatCols.concat(flattenColumns(col.columns));
+          } else if (col.field) {
+            flatCols.push(col);
+          }
+        });
+        return flatCols;
+      };
+
+      const columns = flattenColumns(columnListByProgram);
+
       // Prepare data for export
       const worksheetData = [];
 
       // Add title row
       const titleRow = [
-        `Program wise TAT Day (${moment(StartDate).format(
+        `Sales Dashboard (${moment(StartDate).format(
           "MMM DD, YYYY",
         )} - ${moment(EndDate).format("MMM DD, YYYY")})`,
       ];
-      // const titleRow = ["Program wise TAT Day"];
       worksheetData.push(titleRow);
 
       // Add headers
-      const headers = columns.map((col) => col.title || col.field || "");
+      const headers = columns.map((col) => col.title?.replace(/<br\/>/g, " ") || col.field || "");
       worksheetData.push(headers);
 
       // Add data rows
@@ -93,13 +106,17 @@ const SalesDashboard = (props) => {
       });
 
       // Calculate and add totals row
-      const totalsRow = columns.map((col) => {
+      const totalsRow = columns.map((col, index) => {
         if (col.bottomCalc === "sum") {
           // Calculate sum for this column
           const sum = exportData.reduce((acc, row) => {
             const value = parseFloat(row[col.field]) || 0;
             return acc + value;
           }, 0);
+          // Round revenue columns to 2 decimals
+          if (col.field.includes("Revenue") || col.field.includes("Target")) {
+            return parseFloat(sum.toFixed(2));
+          }
           return sum;
         }
         if (col.bottomCalc === "avg") {
@@ -110,14 +127,7 @@ const SalesDashboard = (props) => {
           const avg = values.reduce((a, b) => a + b, 0) / (values.length || 1);
           return parseFloat(avg.toFixed(2));
         }
-        // Handle custom bottomCalc functions
-        if (typeof col.bottomCalc === "function") {
-          const values = exportData.map(
-            (row) => parseFloat(row[col.field]) || 0,
-          );
-          return col.bottomCalc(values, exportData, col.bottomCalcParams || {});
-        }
-        return col.field === "ProgramName" ? "Total:" : ""; // Add "Total:" label in first text column
+        return index === 0 ? "Total:" : "";
       });
       worksheetData.push(totalsRow);
 
@@ -178,7 +188,7 @@ const SalesDashboard = (props) => {
       XLSX.utils.book_append_sheet(wb, ws, "Data");
 
       // Generate file name with date
-      const fileName = `Program_wise_TAT_Day_${moment().format(
+      const fileName = `Sales_Dashboard_${moment().format(
         "YYYY-MM-DD-H-m-s",
       )}.xlsx`;
 
@@ -205,122 +215,133 @@ const SalesDashboard = (props) => {
 
   const columnListByProgram = [
     {
-      field: "ProgramName",
+      field: "SalesPersonName",
       title: "Sales Person",
       hozAlign: "left",
       headerHozAlign: "left",
       width: "150",
     },
     {
-      title: "Today Status", // Spanning header
-
+      title: "Today Status",
       hozAlign: "center",
       headerHozAlign: "center",
       columns: [
         {
-          field: "ReportReleased",
+          field: "TodaysOnsiteActivity",
           title: "Onsite<br/>Activity",
           hozAlign: "right",
           headerHozAlign: "right",
-          // width: "90",
+          bottomCalc: "sum",
         },
         {
-          field: "CurrentTAT",
+          field: "TodaysOffsiteActivity",
           title: "Offsite<br/>Activity",
           hozAlign: "right",
           headerHozAlign: "right",
-          // width: "90",
+          bottomCalc: "sum",
         },
         {
-          field: "CurrentTAT",
+          field: "TodaysPerformJobs",
           title: "Perform<br/>Jobs",
           hozAlign: "right",
           headerHozAlign: "right",
-          // width: "88",
+          bottomCalc: "sum",
         },
         {
-          field: "CurrentTAT",
+          field: "TodaysPerformMandays",
           title: "Perform<br/>Mandays",
           hozAlign: "right",
           headerHozAlign: "right",
-          // width: "95",
+          bottomCalc: "sum",
         },
         {
-          field: "CurrentTAT",
+          field: "TodaysRevenue",
           title: "Revenue",
           hozAlign: "right",
           headerHozAlign: "right",
-          // width: "93", 
+          bottomCalc: "sum",
+          formatter: "money",
+          formatterParams: { precision: 2 },
+          bottomCalcFormatter: "money",
+          bottomCalcFormatterParams: { precision: 2 },
         },
       ],
     },
     {
-      title: "MTD Activity", // Another spanning header
-      hozAlign: "center",
-      headerHozAlign: "center",
-       columns: [
-        {
-          field: "ReportReleased",
-          title: "Onsite<br/>Activity",
-          hozAlign: "right",
-          headerHozAlign: "right",
-          // width: "90",
-        },
-        {
-          field: "CurrentTAT",
-          title: "Offsite<br/>Activity",
-          hozAlign: "right",
-          headerHozAlign: "right",
-          // width: "90",
-        },
-        {
-          field: "CurrentTAT",
-          title: "Perform<br/>Jobs",
-          hozAlign: "right",
-          headerHozAlign: "right",
-          // width: "88",
-        },
-        {
-          field: "CurrentTAT",
-          title: "Perform<br/>Mandays",
-          hozAlign: "right",
-          headerHozAlign: "right",
-          // width: "95",
-        },
-        {
-          field: "CurrentTAT",
-          title: "Revenue",
-          hozAlign: "right",
-          headerHozAlign: "right",
-          // width: "93", 
-        },
-      ],
-    },
-    {
-      title: "Target", // Another spanning header
+      title: "MTD Activity",
       hozAlign: "center",
       headerHozAlign: "center",
       columns: [
         {
-          field: "StandardTATDay",
+          field: "MTDOnsiteActivity",
           title: "Onsite<br/>Activity",
           hozAlign: "right",
           headerHozAlign: "right",
-          // width: "90",
+          bottomCalc: "sum",
         },
         {
-          field: "StandardTATDay",
+          field: "MTDOffsiteActivity",
           title: "Offsite<br/>Activity",
           hozAlign: "right",
           headerHozAlign: "right",
-          // width: "90",
+          bottomCalc: "sum",
         },
         {
-          field: "StandardTATDay",
+          field: "MTDPerformJobs",
+          title: "Perform<br/>Jobs",
+          hozAlign: "right",
+          headerHozAlign: "right",
+          bottomCalc: "sum",
+        },
+        {
+          field: "MTDPerformMandays",
+          title: "Perform<br/>Mandays",
+          hozAlign: "right",
+          headerHozAlign: "right",
+          bottomCalc: "sum",
+        },
+        {
+          field: "MTDRevenue",
           title: "Revenue",
           hozAlign: "right",
           headerHozAlign: "right",
-          // width: "93",
+          bottomCalc: "sum",
+          formatter: "money",
+          formatterParams: { precision: 2 },
+          bottomCalcFormatter: "money",
+          bottomCalcFormatterParams: { precision: 2 },
+        },
+      ],
+    },
+    {
+      title: "Target",
+      hozAlign: "center",
+      headerHozAlign: "center",
+      columns: [
+        {
+          field: "TargetOnsiteActivity",
+          title: "Onsite<br/>Activity",
+          hozAlign: "right",
+          headerHozAlign: "right",
+          bottomCalc: "sum",
+        },
+        {
+          field: "TargetOffsiteActivity",
+          title: "Offsite<br/>Activity",
+          hozAlign: "right",
+          headerHozAlign: "right",
+          bottomCalc: "sum",
+        },
+        {
+          field: "RevenueTarget",
+          title: "Revenue",
+          hozAlign: "right",
+          headerHozAlign: "right",
+          bottomCalc: "sum",
+          formatter: "money",
+          formatterParams: { precision: 2 },
+          bottomCalcFormatter: "money",
+          bottomCalcFormatterParams: { precision: 2 },
         },
       ],
     },
@@ -393,7 +414,7 @@ const SalesDashboard = (props) => {
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
         <div class="searchAdd">
           <div>
-            <label>Release Start Date</label>
+            <label>Start Date</label>
             <div class="">
               <input
                 type="date"
@@ -406,7 +427,7 @@ const SalesDashboard = (props) => {
           </div>
 
           <div>
-            <label>Release End Date</label>
+            <label>End Date</label>
             <div class="">
               <input
                 type="date"
@@ -1036,9 +1057,9 @@ const SalesDashboard = (props) => {
             </div>
             <ReactTabulator
               ref={tableRefByProgram}
-              data={dataList.data ? dataList.data : []}
+              data={dataList?.data ? dataList.data : []}
               columns={columnListByProgram}
-              height="530px"
+              height="400px"
               layout="fitData"
               options={{
                 headerWordWrap: true, // Apply to all headers
