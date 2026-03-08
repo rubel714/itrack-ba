@@ -253,6 +253,10 @@ const SalesDashboard = (props) => {
           hozAlign: "right",
           headerHozAlign: "right",
           bottomCalc: "sum",
+          formatter: "money",
+          formatterParams: { precision: 2 },
+          bottomCalcFormatter: "money",
+          bottomCalcFormatterParams: { precision: 2 },
         },
         {
           field: "TodaysRevenue",
@@ -299,6 +303,10 @@ const SalesDashboard = (props) => {
           hozAlign: "right",
           headerHozAlign: "right",
           bottomCalc: "sum",
+          formatter: "money",
+          formatterParams: { precision: 2 },
+          bottomCalcFormatter: "money",
+          bottomCalcFormatterParams: { precision: 2 },
         },
         {
           field: "MTDRevenue",
