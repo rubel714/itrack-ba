@@ -20,6 +20,8 @@ const ProgramWiseRevenueStatus = (props) => {
   const serverpage = "programwiserevenuestatus"; // this is .php server page
   const tableRefByProgram = useRef(null);
   const tableRefByBuyer = useRef(null);
+  const tableRefYTDStatus = useRef(null);
+  const tableRefLostRevenue = useRef(null);
 
   const { useState } = React;
   const [bFirst, setBFirst] = useState(true);
@@ -29,8 +31,7 @@ const ProgramWiseRevenueStatus = (props) => {
   // const [errorObject, setErrorObject] = useState({});
   const UserInfo = LoginUserInfo();
 
-  const [StartDate, setStartDate] = useState(moment().format("YYYY-MM-01"));
-  const [EndDate, setEndDate] = useState(moment().format("YYYY-MM-DD"));
+  const [StartDate, setStartDate] = useState(moment().format("YYYY-MM-DD"));
   // const [EndDate, setEndDate] = useState(
   //   moment().add(30, "days").format("YYYY-MM-DD")
   // );
@@ -41,16 +42,28 @@ const ProgramWiseRevenueStatus = (props) => {
   const { isLoading, data: dataList, error, ExecuteQuery } = ExecuteQueryHook(); //Fetch data
   const {
     isLoading: isLoading1,
-    data: dataListByBuyer,
+    data: dataListMTDStatusRevenue,
     error1,
     ExecuteQuery: ExecuteQueryByBuyer,
+  } = ExecuteQueryHook(); //Fetch data
+  const {
+    isLoading: isLoading2,
+    data: dataListYTDStatus,
+    error2,
+    ExecuteQuery: ExecuteQueryYTDStatus,
+  } = ExecuteQueryHook(); //Fetch data
+  const {
+    isLoading: isLoading3,
+    data: dataListLostRevenue,
+    error3,
+    ExecuteQuery: ExecuteQueryLostRevenue,
   } = ExecuteQueryHook(); //Fetch data
 
   /* =====Start of Excel Export Code==== */
   const EXCEL_EXPORT_URL = process.env.REACT_APP_API_URL;
 
   // Export Tabulator data to Excel
-  const exportToExcelProgramWiseTAT = () => {
+  const exportToExcelTodayStatus = () => {
     try {
       // Get the sorted data from the Tabulator instance
       if (!tableRefByProgram.current) {
@@ -59,7 +72,7 @@ const ProgramWiseRevenueStatus = (props) => {
       }
 
       const exportData = tableRefByProgram.current.table.getData("active"); // Gets data in current sorted/filtered order
-      const columns = columnListByProgram || [];
+      const columns = columnListTodayStatus || [];
 
       if (exportData.length === 0) {
         alert("No data to export");
@@ -71,11 +84,10 @@ const ProgramWiseRevenueStatus = (props) => {
 
       // Add title row
       const titleRow = [
-        `Program wise Revenue Status (${moment(StartDate).format(
+        `Today Status (${moment(StartDate).format(
           "MMM DD, YYYY",
-        )} - ${moment(EndDate).format("MMM DD, YYYY")})`,
+        )})`,
       ];
-      // const titleRow = ["Program wise Revenue Status"];
       worksheetData.push(titleRow);
 
       // Add headers
@@ -187,7 +199,7 @@ const ProgramWiseRevenueStatus = (props) => {
     }
   };
 
-  const exportToExcelBuyerWiseTATDay = () => {
+  const exportToExcelMTDStatusRevenue = () => {
     try {
       // Get the sorted data from the Tabulator instance
       if (!tableRefByBuyer.current) {
@@ -196,7 +208,7 @@ const ProgramWiseRevenueStatus = (props) => {
       }
 
       const exportData = tableRefByBuyer.current.table.getData("active"); // Gets data in current sorted/filtered order
-      const columns = columnListByBuyer || [];
+      const columns = columnListMTDStatusRevenue || [];
 
       if (exportData.length === 0) {
         alert("No data to export");
@@ -208,11 +220,10 @@ const ProgramWiseRevenueStatus = (props) => {
 
       // Add title row
       const titleRow = [
-        `Buyer wise Revenue Status (${moment(StartDate).format(
+        `MTD Status (Revenue) (${moment(StartDate).format(
           "MMM DD, YYYY",
-        )} - ${moment(EndDate).format("MMM DD, YYYY")})`,
-      ];
-      // const titleRow = ["Buyer wise Revenue Status"];
+        )})`,
+      ]; 
       worksheetData.push(titleRow);
 
       // Add headers
@@ -312,11 +323,193 @@ const ProgramWiseRevenueStatus = (props) => {
       XLSX.utils.book_append_sheet(wb, ws, "Data");
 
       // Generate file name with date
-      const fileName = `Buyer_wise_Revenue_Status_${moment().format(
+      const fileName = `MTD_Status_Revenue_${moment().format(
         "YYYY-MM-DD-H-m-s",
       )}.xlsx`;
 
       // Save file
+      XLSX.writeFile(wb, fileName);
+    } catch (error) {
+      console.error("Export error:", error);
+      alert("Error exporting to Excel: " + error.message);
+    }
+  };
+
+  const exportToExcelYTDStatus = () => {
+    try {
+      if (!tableRefYTDStatus.current) {
+        alert("Table not initialized");
+        return;
+      }
+
+      const exportData = tableRefYTDStatus.current.table.getData("active");
+      const columns = columnListYTDStatus || [];
+
+      if (exportData.length === 0) {
+        alert("No data to export");
+        return;
+      }
+
+      const worksheetData = [];
+
+      const titleRow = [`YTD Status (${moment(StartDate).format("MMM DD, YYYY")})` ];
+      worksheetData.push(titleRow);
+
+      const headers = columns.map((col) => col.title || col.field || "");
+      worksheetData.push(headers);
+
+      exportData.forEach((row) => {
+        const rowData = columns.map((col) => {
+          const field = col.field;
+          return row[field] !== undefined ? row[field] : "";
+        });
+        worksheetData.push(rowData);
+      });
+
+      const totalsRow = columns.map((col) => {
+        if (col.bottomCalc === "sum") {
+          const sum = exportData.reduce((acc, row) => {
+            const value = parseFloat(row[col.field]) || 0;
+            return acc + value;
+          }, 0);
+          return sum;
+        }
+        if (col.bottomCalc === "avg") {
+          const values = exportData.map((row) => parseFloat(row[col.field]) || 0);
+          const avg = values.reduce((a, b) => a + b, 0) / (values.length || 1);
+          return parseFloat(avg.toFixed(2));
+        }
+        if (typeof col.bottomCalc === "function") {
+          const values = exportData.map((row) => parseFloat(row[col.field]) || 0);
+          return col.bottomCalc(values, exportData, col.bottomCalcParams || {});
+        }
+        return col.field === "ProgramCategoryName" ? "Total:" : "";
+      });
+      worksheetData.push(totalsRow);
+
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+
+      const range = XLSX.utils.decode_range(ws["!ref"]);
+      const totalRowIndex = worksheetData.length - 1;
+      const lastColIndex = range.e.c;
+
+      const titleCell = XLSX.utils.encode_cell({ r: 0, c: 0 });
+      if (ws[titleCell]) {
+        ws[titleCell].s = {
+          font: { bold: true, sz: 14 },
+          alignment: { horizontal: "center", vertical: "center" },
+        };
+      }
+      ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: lastColIndex } }];
+
+      for (let col = range.s.c; col <= range.e.c; col++) {
+        const headerCell = XLSX.utils.encode_cell({ r: 1, c: col });
+        if (ws[headerCell]) {
+          ws[headerCell].s = { font: { bold: true } };
+        }
+        const totalCell = XLSX.utils.encode_cell({ r: totalRowIndex, c: col });
+        if (ws[totalCell]) {
+          ws[totalCell].s = {
+            font: { bold: true },
+            alignment: { horizontal: col === 0 ? "left" : "right" },
+          };
+        }
+      }
+
+      XLSX.utils.book_append_sheet(wb, ws, "Data");
+      const fileName = `YTD_Status_${moment().format("YYYY-MM-DD-H-m-s")}.xlsx`;
+      XLSX.writeFile(wb, fileName);
+    } catch (error) {
+      console.error("Export error:", error);
+      alert("Error exporting to Excel: " + error.message);
+    }
+  };
+
+  const exportToExcelLostRevenue = () => {
+    try {
+      if (!tableRefLostRevenue.current) {
+        alert("Table not initialized");
+        return;
+      }
+
+      const exportData = tableRefLostRevenue.current.table.getData("active");
+      const columns = columnListLostRevenue || [];
+
+      if (exportData.length === 0) {
+        alert("No data to export");
+        return;
+      }
+
+      const worksheetData = [];
+
+      const titleRow = [`Lost Revenue (${moment(StartDate).format("MMM DD, YYYY")})` ];
+      worksheetData.push(titleRow);
+
+      const headers = columns.map((col) => col.title || col.field || "");
+      worksheetData.push(headers);
+
+      exportData.forEach((row) => {
+        const rowData = columns.map((col) => {
+          const field = col.field;
+          return row[field] !== undefined ? row[field] : "";
+        });
+        worksheetData.push(rowData);
+      });
+
+      const totalsRow = columns.map((col) => {
+        if (col.bottomCalc === "sum") {
+          const sum = exportData.reduce((acc, row) => {
+            const value = parseFloat(row[col.field]) || 0;
+            return acc + value;
+          }, 0);
+          return sum;
+        }
+        if (col.bottomCalc === "avg") {
+          const values = exportData.map((row) => parseFloat(row[col.field]) || 0);
+          const avg = values.reduce((a, b) => a + b, 0) / (values.length || 1);
+          return parseFloat(avg.toFixed(2));
+        }
+        if (typeof col.bottomCalc === "function") {
+          const values = exportData.map((row) => parseFloat(row[col.field]) || 0);
+          return col.bottomCalc(values, exportData, col.bottomCalcParams || {});
+        }
+        return col.field === "ProgramCategoryName" ? "Total:" : "";
+      });
+      worksheetData.push(totalsRow);
+
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+
+      const range = XLSX.utils.decode_range(ws["!ref"]);
+      const totalRowIndex = worksheetData.length - 1;
+      const lastColIndex = range.e.c;
+
+      const titleCell = XLSX.utils.encode_cell({ r: 0, c: 0 });
+      if (ws[titleCell]) {
+        ws[titleCell].s = {
+          font: { bold: true, sz: 14 },
+          alignment: { horizontal: "center", vertical: "center" },
+        };
+      }
+      ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: lastColIndex } }];
+
+      for (let col = range.s.c; col <= range.e.c; col++) {
+        const headerCell = XLSX.utils.encode_cell({ r: 1, c: col });
+        if (ws[headerCell]) {
+          ws[headerCell].s = { font: { bold: true } };
+        }
+        const totalCell = XLSX.utils.encode_cell({ r: totalRowIndex, c: col });
+        if (ws[totalCell]) {
+          ws[totalCell].s = {
+            font: { bold: true },
+            alignment: { horizontal: col === 0 ? "left" : "right" },
+          };
+        }
+      }
+
+      XLSX.utils.book_append_sheet(wb, ws, "Data");
+      const fileName = `Lost_Revenue_${moment().format("YYYY-MM-DD-H-m-s")}.xlsx`;
       XLSX.writeFile(wb, fileName);
     } catch (error) {
       console.error("Export error:", error);
@@ -351,26 +544,22 @@ const ProgramWiseRevenueStatus = (props) => {
     if (name === "StartDate") {
       setStartDate(value);
     }
-
-    if (name === "EndDate") {
-      setEndDate(value);
-    }
   };
 
-  const columnListByProgram = [
+  const columnListTodayStatus = [
     // { field: "rownumber", label: "SL", align: "center", width: "3%" },
 
     {
-      field: "ProgramName",
-      title: "Program",
+      field: "ProgramCategoryName",
+      title: "Programs Category",
       hozAlign: "left",
       headerHozAlign: "left",
       // filter: true,
-      width: "200",
+      width: "160",
     },
     {
-      field: "ReportReleased",
-      title: "Report Released",
+      field: "RevenueGBPK",
+      title: "Revenue (GBPK)",
       hozAlign: "right",
       headerHozAlign: "right",
       // filter: true,
@@ -378,116 +567,170 @@ const ProgramWiseRevenueStatus = (props) => {
       bottomCalc: "sum",
     },
     {
-      field: "CurrentTAT",
-      title: "Current TAT",
+      field: "NoOfJobs",
+      title: "No. of Jobs",
       hozAlign: "right",
       headerHozAlign: "right",
       // filter: true,
       width: "120",
-      // bottomCalc: "avg",
-      bottomCalc: function (values, data, calcParams) {
-        if (dataList.TotalCurrentTAT && dataList.TotalReportReleased) {
-          return (
-            dataList.TotalCurrentTAT / dataList.TotalReportReleased
-          ).toFixed(2);
-        } else {
-          return 0;
-        }
-      },
-
-      bottomCalcFormatterParams: {
-        precision: 2,
-      },
+      bottomCalc: "sum",
     },
     {
-      field: "StandardTATDay",
-      title: "Standard TAT",
+      field: "NoOfMDs",
+      title: "No. of MDs",
       hozAlign: "right",
       headerHozAlign: "right",
       // filter: true,
       width: "130",
-      bottomCalc: "avg",
-      bottomCalcFormatterParams: {
-        precision: 2,
-      },
+      bottomCalc: "sum",
     },
   ];
 
-  const columnListByBuyer = [
+  const columnListMTDStatusRevenue = [
     // { field: "rownumber", label: "SL", align: "center", width: "3%" },
 
     {
-      field: "BuyerName",
-      title: "Buyer Name",
+      field: "ProgramCategoryName",
+      title: "Programs Category ",
       hozAlign: "left",
       headerHozAlign: "left",
       // filter: true,
-      width: "200",
+      width: "140",
     },
     {
-      field: "ReportReleased",
-      title: "Report Released",
+      field: "PerformedRevenue",
+      title: "Performed Revenue",
       hozAlign: "right",
       headerHozAlign: "right",
       // filter: true,
+      width: "110",
+      bottomCalc: "sum",
+    },
+    {
+      field: "ConfirmedRevenue",
+      title: "Confirmed Revenue",
+      hozAlign: "right",
+      headerHozAlign: "right",
+      // filter: true,
+      width: "110",
+      bottomCalc: "sum",
+    },
+    {
+      field: "InprogressRevenue",
+      title: "In-progress Revenue",
+      hozAlign: "right",
+      headerHozAlign: "right",
+      // filter: true,
+      width: "110",
+      bottomCalc: "sum",
+    },
+        {
+      field: "TotalRevenue",
+      title: "Total Revenue",
+      hozAlign: "right",
+      headerHozAlign: "right",
+      // filter: true,
+      width: "85",
+      bottomCalc: "sum",
+    },
+  ];
+
+  const columnListYTDStatus = [
+    {
+      field: "ProgramCategoryName",
+      title: "Programs Category",
+      hozAlign: "left",
+      headerHozAlign: "left",
+      width: "140",
+    },
+    {
+      field: "PerformedRevenue",
+      title: "Performed Revenue",
+      hozAlign: "right",
+      headerHozAlign: "right",
       width: "150",
       bottomCalc: "sum",
     },
     {
-      field: "CurrentTAT",
-      title: "Current TAT",
+      field: "PerformedJobs",
+      title: "Performed Jobs",
       hozAlign: "right",
       headerHozAlign: "right",
-      // filter: true,
-      width: "120",
-      // bottomCalc: "avg",
-      bottomCalc: function (values, data, calcParams) {
-        if (
-          dataList.TotalCurrentTAT &&
-          dataList.TotalReportReleased
-        ) {
-          return (
-            dataList.TotalCurrentTAT /
-            dataList.TotalReportReleased
-          ).toFixed(2);
-        } else {
-          return 0;
-        }
-      },
-      bottomCalcFormatterParams: {
-        precision: 2,
-      },
+      width: "150",
+      bottomCalc: "sum",
     },
     {
-      field: "StandardTATDay",
-      title: "Standard TAT",
+      field: "PerformedManday",
+      title: "Performed Manday",
       hozAlign: "right",
       headerHozAlign: "right",
-      // filter: true,
-      width: "130",
-      // bottomCalc: "avg",
-      bottomCalc: function (values, data, calcParams) {
-        return dataListByBuyer.AverageStandardTAT;
-      },
-      bottomCalcFormatterParams: {
-        precision: 2,
-      },
+      width: "150",
+      bottomCalc: "sum",
     },
   ];
 
+
+
+  
+  const columnListLostRevenue = [
+    {
+      field: "ProgramCategoryName",
+      title: "Programs Category",
+      hozAlign: "left",
+      headerHozAlign: "left",
+      width: "130",
+    },
+    {
+      field: "MTDNoOfJob",
+      title: "MTD Jobs",
+      hozAlign: "right",
+      headerHozAlign: "right",
+      width: "105",
+      bottomCalc: "sum",
+    },
+    {
+      field: "MTDRevenueBDT",
+      title: "MTD Revenue",
+      hozAlign: "right",
+      headerHozAlign: "right",
+      width: "120",
+      bottomCalc: "sum",
+    },
+    {
+      field: "YTDNoOfJob",
+      title: "YTD Jobs",
+      hozAlign: "right",
+      headerHozAlign: "right",
+      width: "100",
+      bottomCalc: "sum",
+    },
+    {
+      field: "YTDRevenueBDT",
+      title: "YTD Revenue",
+      hozAlign: "right",
+      headerHozAlign: "right",
+      width: "120",
+      bottomCalc: "sum",
+    },
+  ];
+  
   React.useEffect(() => {}, []);
 
   if (bFirst) {
     /**First time call for datalist */
     getDataList();
-    getDataByBuyerList();
+    getDataMTDStatusRevenueList();
+    getYTDStatusList();
+    getLostRevenueList();
     setBFirst(false);
   }
 
   useEffect(() => {
     getDataList();
-    getDataByBuyerList();
-  }, [StartDate, EndDate]);
+    getDataMTDStatusRevenueList();
+    getYTDStatusList();
+    getLostRevenueList();
+  }, [StartDate]);
 
   /**Get data for table list */
   function getDataList() {
@@ -496,23 +739,45 @@ const ProgramWiseRevenueStatus = (props) => {
       lan: language(),
       UserId: UserInfo.UserId,
       StartDate: StartDate,
-      EndDate: EndDate,
     };
 
     ExecuteQuery(serverpage, params);
   }
 
   /**Get data for table list */
-  function getDataByBuyerList() {
+  function getDataMTDStatusRevenueList() {
     let params = {
-      action: "getDataByBuyerList",
+      action: "getDataMTDStatusRevenueList",
       lan: language(),
       UserId: UserInfo.UserId,
       StartDate: StartDate,
-      EndDate: EndDate,
     };
 
     ExecuteQueryByBuyer(serverpage, params);
+  }
+
+  /**Get data for YTD Status table */
+  function getYTDStatusList() {
+    let params = {
+      action: "getYTDStatusList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+      StartDate: StartDate,
+    };
+
+    ExecuteQueryYTDStatus(serverpage, params);
+  }
+
+  /**Get data for Lost Revenue table */
+  function getLostRevenueList() {
+    let params = {
+      action: "getLostRevenueList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+      StartDate: StartDate,
+    };
+
+    ExecuteQueryLostRevenue(serverpage, params);
   }
 
   return (
@@ -526,26 +791,13 @@ const ProgramWiseRevenueStatus = (props) => {
         {/* <!-- TABLE SEARCH AND GROUP ADD --> */}
         <div class="searchAdd">
           <div>
-            <label>Release Start Date</label>
+            <label>Date</label>
             <div class="">
               <input
                 type="date"
                 id="StartDate"
                 name="StartDate"
                 value={StartDate}
-                onChange={(e) => handleChangeFilterDate(e)}
-              />
-            </div>
-          </div>
-
-          <div>
-            <label>Release End Date</label>
-            <div class="">
-              <input
-                type="date"
-                id="EndDate"
-                name="EndDate"
-                value={EndDate}
                 onChange={(e) => handleChangeFilterDate(e)}
               />
             </div>
@@ -565,10 +817,10 @@ const ProgramWiseRevenueStatus = (props) => {
                   width: "100%",
                 }}
               >
-                <span>Program wise Revenue Status</span>
+                <span>Today Status</span>
 
                 <button
-                  onClick={() => exportToExcelProgramWiseTAT()}
+                  onClick={() => exportToExcelTodayStatus()}
                   style={{
                     padding: "0px 16px",
                     backgroundColor: "#28a745",
@@ -586,8 +838,8 @@ const ProgramWiseRevenueStatus = (props) => {
             <ReactTabulator
               ref={tableRefByProgram}
               data={dataList.data ? dataList.data : []}
-              columns={columnListByProgram}
-              height="530px"
+              columns={columnListTodayStatus}
+              height="220px"
               layout="fitData"
               initialSort={[
                 //set the initial sort order of the data
@@ -606,9 +858,9 @@ const ProgramWiseRevenueStatus = (props) => {
                   width: "100%",
                 }}
               >
-                <span>Buyer wise Revenue Status</span>
+                <span>MTD Status (Revenue)</span>
                 <button
-                  onClick={() => exportToExcelBuyerWiseTATDay()}
+                  onClick={() => exportToExcelMTDStatusRevenue()}
                   style={{
                     padding: "0px 16px",
                     backgroundColor: "#28a745",
@@ -625,13 +877,93 @@ const ProgramWiseRevenueStatus = (props) => {
             </div>
             <ReactTabulator
               ref={tableRefByBuyer}
-              data={dataListByBuyer.data ? dataListByBuyer.data : []}
-              columns={columnListByBuyer}
-              height="530px"
+              data={dataListMTDStatusRevenue.data ? dataListMTDStatusRevenue.data : []}
+              columns={columnListMTDStatusRevenue}
+              height="220px"
               layout="fitData"
               initialSort={[
                 //set the initial sort order of the data
                 { column: "AuditCount", dir: "desc" },
+              ]}
+            />
+          </div>
+        </div>
+
+        {/* <!-- ####---SECOND ROW OF TABLES---#### --> */}
+        <div class="tableTwoColumn">
+          <div>
+            <div class="searchAdd">
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: "100%",
+                }}
+              >
+                <span>YTD Status</span>
+                <button
+                  onClick={() => exportToExcelYTDStatus()}
+                  style={{
+                    padding: "0px 16px",
+                    backgroundColor: "#28a745",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Export to Excel
+                </button>
+              </div>
+            </div>
+            <ReactTabulator
+              ref={tableRefYTDStatus}
+              data={dataListYTDStatus.data ? dataListYTDStatus.data : []}
+              columns={columnListYTDStatus}
+              height="220px"
+              layout="fitData"
+              initialSort={[
+                { column: "PerformedRevenue", dir: "desc" },
+              ]}
+            />
+          </div>
+
+          <div>
+            {/* Placeholder for 2nd table */}
+            <div class="searchAdd">
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: "100%",
+                }}
+              >
+                <span>Lost (Revenue)</span>
+                <button
+                  onClick={() => exportToExcelLostRevenue()}
+                  style={{
+                    padding: "0px 16px",
+                    backgroundColor: "#28a745",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Export to Excel
+                </button>
+              </div>
+            </div>
+            <ReactTabulator
+              ref={tableRefLostRevenue}
+              data={dataListLostRevenue.data ? dataListLostRevenue.data : []}
+              columns={columnListLostRevenue}
+              height="220px"
+              layout="fitData"
+              initialSort={[
+                { column: "YTDRevenue", dir: "desc" },
               ]}
             />
           </div>

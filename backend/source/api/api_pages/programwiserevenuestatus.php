@@ -10,8 +10,14 @@ switch ($task) {
 	case "getDataList":
 		$returnData = getDataList($data);
 		break;
-	case "getDataByBuyerList":
-		$returnData = getDataByBuyerList($data);
+	case "getDataMTDStatusRevenueList":
+		$returnData = getDataMTDStatusRevenueList($data);
+		break;
+	case "getYTDStatusList":
+		$returnData = getYTDStatusList($data);
+		break;
+	case "getLostRevenueList":
+		$returnData = getLostRevenueList($data);
 		break;
 
 	default:
@@ -25,103 +31,37 @@ function getDataList($data)
 		$dbh = new Db();
 
 		$StartDate = trim($data->StartDate);
-		$EndDate = trim($data->EndDate) . " 23:59:59";
 
-		$query = "SELECT a.TransactionId, a.ProgramId, b.ProgramName, b.TATDayTypeId, 0 ReportReleased, 0 CurrentTAT, 
-		b.StandardTATDay, a.AuditEndDate, a.ReleaseDate, 0 CalDiffDaysAuditEndDateReleaseDate
-			FROM `t_transaction` a
-			INNER JOIN t_program b ON a.ProgramId=b.ProgramId
-			where (a.ReleaseDate between '$StartDate' and '$EndDate')
-			and a.AuditEndDate is not null
-			and a.ReleaseDate is not null;";
+		$query = "SELECT w.ProgramCategoryName,
+			IFNULL(SUM(w.RevenueBDT), 0) as RevenueGBPK,
+			IFNULL(SUM(w.NoOfJobs), 0) as NoOfJobs,
+			IFNULL(SUM(w.NoOfMDs), 0) as NoOfMDs
+			FROM (
+				SELECT pc.ProgramCategoryName, t.RevenueBDT, 1 as NoOfJobs, 0 as NoOfMDs
+				FROM t_programcategory pc
+				INNER JOIN t_program p ON pc.ProgramCategoryId = p.ProgramCategoryId
+				INNER JOIN t_transaction t ON p.ProgramId = t.ProgramId
+				WHERE DATE(t.AuditStartDate) = '$StartDate'
+
+				UNION ALL
+
+				SELECT pc.ProgramCategoryName, 0 as RevenueBDT, 0 as NoOfJobs, 1 as NoOfMDs
+				FROM t_transaction_auditor_assign taa
+				INNER JOIN t_transaction tt ON taa.TransactionId = tt.TransactionId
+				INNER JOIN t_program p ON tt.ProgramId = p.ProgramId
+				INNER JOIN t_programcategory pc ON p.ProgramCategoryId = pc.ProgramCategoryId
+				WHERE DATE(taa.AssignDate) = '$StartDate'
+			) w
+			GROUP BY w.ProgramCategoryName;";
+		
 		$resultdata = $dbh->query($query);
-		// echo $query;
-		// exit;
-		$dataList = array();
-		foreach ($resultdata as $row) {
-
-			$StandardTAT = date("Y-m-d");
-			$StrategicTAT = date("Y-m-d");
-
-			$AuditEndDate = $row['AuditEndDate'];
-			$ReleaseDate = $row['ReleaseDate'];
-			$TATDayTypeId = $row['TATDayTypeId'];
-			$StandardTATDay = $row['StandardTATDay'];
-			$ProgramName = $row['ProgramName'];
-
-			if ($TATDayTypeId == 1) {
-				//Calendar day
-				if ($AuditEndDate !== $ReleaseDate) {
-					// $days = (new DateTime($AuditEndDate))->diff(new DateTime($ReleaseDate))->days;
-					// $row['CalDiffDaysAuditEndDateReleaseDate'] = $days;
-					$diff = (new DateTime($AuditEndDate))->diff(new DateTime($ReleaseDate));
-					$row['CalDiffDaysAuditEndDateReleaseDate'] = (int)$diff->format("%R%a"); //-15 or +15
-				}
-
-				// $StandardTATDate = date_create($AuditEndDate);
-				// date_add($StandardTATDate, date_interval_create_from_date_string("$StandardTATDay days"));
-				// $StandardTAT = date_format($StandardTATDate, "Y-m-d");
-
-				// $StrategicTATDate = date_create($AuditEndDate);
-				// date_add($StrategicTATDate, date_interval_create_from_date_string("$StrategiceTATDay days"));
-				// $StrategicTAT = date_format($StrategicTATDate, "Y-m-d");
-			} else if ($TATDayTypeId == 2) {
-				//working day
-
-				//================== Start for StandardTATDay==========================
-				// $AuditEndDate = date_create($AuditEndDate);
-				// $ReleaseDate = date_create($ReleaseDate);
-
-				$workingDays = 0;
-				while ($AuditEndDate < $ReleaseDate) {
-					// Move to next day
-					$AuditEndDate = date('Y-m-d', strtotime($AuditEndDate . ' +1 day'));
-
-					$sql = "select COUNT(*) as cnt	from t_holiday where DayType = 'holiday' and HoliDate = '$AuditEndDate';";
-					$resultdata1 = $dbh->query($sql);
-					if ($resultdata1[0]['cnt'] > 0) {
-						continue; // skip holiday
-					}
-
-					// Count valid working day
-					$workingDays++;
-				}
-
-				$row['CalDiffDaysAuditEndDateReleaseDate'] = $workingDays;
-				//================== End for StandardTATDay========================== 
-
-			}
-
-			$dataList[] = $row;
-		}
-
-
-		$dataListMatrix = GroupByProgramArray($dataList);
-
-
-		$dataListMatrixFinal = array();
-
-		$totalCurrentTAT = 0;
-		$totalReportReleased = 0;
-		foreach ($dataListMatrix as $row) {
-
-			if ($row['CalDiffDaysAuditEndDateReleaseDate'] > 0 && $row['ReportReleased'] > 0) {
-				$row['CurrentTAT'] = round($row['CalDiffDaysAuditEndDateReleaseDate'] / $row['ReportReleased'], 2);
-
-				$totalCurrentTAT += $row['CalDiffDaysAuditEndDateReleaseDate'];
-				$totalReportReleased += $row['ReportReleased'];
-			}
-			$dataListMatrixFinal[] = $row;
-		}
 
 		$returnData = [
 			"success" => 1,
 			"status" => 200,
 			"message" => "",
 			"datalist" => [
-				"data" => $dataListMatrixFinal,
-				"TotalCurrentTAT" => $totalCurrentTAT,
-				"TotalReportReleased" => $totalReportReleased
+				"data" => $resultdata
 			]
 		];
 	} catch (PDOException $e) {
@@ -131,149 +71,39 @@ function getDataList($data)
 	return $returnData;
 }
 
-function GroupByProgramArray($ArrayBase)
-{
-	$result = [];
-	foreach ($ArrayBase as $row) {
-		$key = $row['ProgramId'];
-
-		if (!isset($result[$key])) {
-			$result[$key] = [
-				"ProgramId" => $row['ProgramId'],
-				"ProgramName" => $row['ProgramName'],
-				"ReportReleased" => 0,
-				"CurrentTAT" => 0,
-				"StandardTATDay" => $row['StandardTATDay'], // usually same per program
-				"CalDiffDaysAuditEndDateReleaseDate" => 0
-			];
-		}
-
-		$result[$key]['ReportReleased'] += 1;
-		// $result[$key]['CurrentTAT'] += $row['CurrentTAT'];
-		$result[$key]['CalDiffDaysAuditEndDateReleaseDate'] += $row['CalDiffDaysAuditEndDateReleaseDate'];
-	}
-
-	// Reindex array (optional)
-	// $array2 = array_values($result);
-
-	return $result;
-}
-
-function getDataByBuyerList($data)
+ 
+function getDataMTDStatusRevenueList($data)
 {
 	try {
 		$dbh = new Db();
 
 		$StartDate = trim($data->StartDate);
-		$EndDate = trim($data->EndDate) . " 23:59:59";
+		$Year = date('Y', strtotime($StartDate));
+		$Month = date('m', strtotime($StartDate));
 
-		$query = "SELECT a.TransactionId, a.ProgramId, b.ProgramName,a.BuyerId, c.BuyerName, b.TATDayTypeId,
-		 0 ReportReleased, 0 CurrentTAT, 
-		b.StandardTATDay, a.AuditEndDate, a.ReleaseDate, 0 CalDiffDaysAuditEndDateReleaseDate
-			FROM `t_transaction` a
-			INNER JOIN t_program b ON a.ProgramId=b.ProgramId
-			INNER JOIN t_buyer c ON a.BuyerId=c.BuyerId
-			where (a.ReleaseDate between '$StartDate' and '$EndDate')
-			and a.AuditEndDate is not null
-			and a.ReleaseDate is not null;";
+		$query = "SELECT pc.ProgramCategoryName,
+			case when t.LeadStatusId = 1 then IFNULL(SUM(t.RevenueBDT), 0) else 0 end as InprogressRevenue,
+			case when t.LeadStatusId = 2 then IFNULL(SUM(t.RevenueBDT), 0) else 0 end as ConfirmedRevenue,
+			case when t.LeadStatusId = 5 then IFNULL(SUM(t.RevenueBDT), 0) else 0 end as PerformedRevenue,
+			IFNULL(SUM(t.RevenueBDT), 0) as TotalRevenue
+			FROM t_programcategory pc
+			INNER JOIN t_program p ON pc.ProgramCategoryId = p.ProgramCategoryId
+			INNER JOIN t_transaction t ON p.ProgramId = t.ProgramId 
+				AND YEAR(t.AuditStartDate) = '$Year'
+				AND MONTH(t.AuditStartDate) = '$Month'
+				AND t.LeadStatusId IN (1, 2, 5) -- Assuming 1= In-progress, 2= Confirmed, 5= Performed
+			GROUP BY pc.ProgramCategoryName;";
+		
 		$resultdata = $dbh->query($query);
-		// echo $query;
-		// exit;
-
-		$dataList = array();
-		$programWiseTAT = array();
-		foreach ($resultdata as $row) {
-
-			$StandardTAT = date("Y-m-d");
-			$StrategicTAT = date("Y-m-d");
-
-			$AuditEndDate = $row['AuditEndDate'];
-			$ReleaseDate = $row['ReleaseDate'];
-			$TATDayTypeId = $row['TATDayTypeId'];
-			$StandardTATDay = $row['StandardTATDay'];
-
-			$programWiseTAT[$row['ProgramId']] = $row['StandardTATDay'];
-
-
-			if ($TATDayTypeId == 1) {
-				//Calendar day
-				if ($AuditEndDate !== $ReleaseDate) {
-					$diff = (new DateTime($AuditEndDate))->diff(new DateTime($ReleaseDate));
-					$row['CalDiffDaysAuditEndDateReleaseDate'] = (int)$diff->format("%R%a"); //-15 or +15
-				}
-
-			} else if ($TATDayTypeId == 2) {
-				//working day
-
-				//================== Start for StandardTATDay==========================
-				$workingDays = 0;
-				while ($AuditEndDate < $ReleaseDate) {
-					// Move to next day
-					$AuditEndDate = date('Y-m-d', strtotime($AuditEndDate . ' +1 day'));
-
-					$sql = "select COUNT(*) as cnt	from t_holiday where DayType = 'holiday' and HoliDate = '$AuditEndDate';";
-					$resultdata1 = $dbh->query($sql);
-					if ($resultdata1[0]['cnt'] > 0) {
-						continue; // skip holiday
-					}
-
-					// Count valid working day
-					$workingDays++;
-				}
-
-				$row['CalDiffDaysAuditEndDateReleaseDate'] = $workingDays;
-				//================== End for StandardTATDay==========================
-
-			}
-
-			$dataList[] = $row;
-		}
-
-		// echo "<pre>";
-		// print_r($dataList);
-		// echo "</pre>";
-		// exit;
-
-		$dataListMatrix = GroupByBuyerArray($dataList);
-
-		$dataListMatrixFinal = array();
-		$totalReportReleased = 0;
-		$totalCurrentTAT = 0;
-
-		foreach ($dataListMatrix as $row) {
-
-			if ($row['CalDiffDaysAuditEndDateReleaseDate'] > 0 && $row['ReportReleased'] > 0) {
-				$row['CurrentTAT'] = round($row['CalDiffDaysAuditEndDateReleaseDate'] / $row['ReportReleased'], 2);
-			}
-
-			if ($row['StandardTATDay'] > 0 && $row['ReportReleased'] > 0) {
-				$row['StandardTATDay'] = round($row['StandardTATDay'] / $row['ReportReleased'], 2);
-			}
-
-			$dataListMatrixFinal[] = $row;
-		}
-
-
-		$totalReportReleased = array_sum(array_column($dataListMatrixFinal, 'ReportReleased'));
-		$totalCurrentTAT = array_sum(array_column($dataListMatrixFinal, 'CurrentTAT'));
-
-		$averageStandardTAT = count($programWiseTAT) > 0 ? round(array_sum($programWiseTAT) / count($programWiseTAT), 2) : 0;
 
 		$returnData = [
 			"success" => 1,
 			"status" => 200,
 			"message" => "",
-			// "datalist" => $dataListMatrixFinal
 			"datalist" => [
-				"data" => $dataListMatrixFinal,
-				"TotalCurrentTAT" => $totalCurrentTAT,
-				"TotalReportReleased" => $totalReportReleased,
-				"AverageStandardTAT" => $averageStandardTAT
+				"data" => $resultdata
 			]
 		];
-
-		
-
 	} catch (PDOException $e) {
 		$returnData = msg(0, 500, $e->getMessage());
 	}
@@ -282,31 +112,104 @@ function getDataByBuyerList($data)
 }
 
 
-function GroupByBuyerArray($ArrayBase)
+function getYTDStatusList($data)
 {
-	$result = [];
-	foreach ($ArrayBase as $row) {
-		$key = $row['BuyerId'];
+	try {
+		$dbh = new Db();
 
-		if (!isset($result[$key])) {
-			$result[$key] = [
-				"BuyerId" => $row['BuyerId'],
-				"BuyerName" => $row['BuyerName'],
-				"ReportReleased" => 0,
-				"CurrentTAT" => 0,
-				"StandardTATDay" => 0, // usually same per program
-				"CalDiffDaysAuditEndDateReleaseDate" => 0
-			];
-		}
+		$StartDate = trim($data->StartDate);
+		$Year = date('Y', strtotime($StartDate));
 
-		$result[$key]['ReportReleased'] += 1;
-		$result[$key]['CurrentTAT'] += $row['CurrentTAT'];
-		$result[$key]['StandardTATDay'] += $row['StandardTATDay'];
-		$result[$key]['CalDiffDaysAuditEndDateReleaseDate'] += $row['CalDiffDaysAuditEndDateReleaseDate'];
+		$query = "SELECT w.ProgramCategoryName,
+			IFNULL(SUM(w.RevenueBDT), 0) as PerformedRevenue,
+			IFNULL(SUM(w.PerformedJobs), 0) as PerformedJobs,
+			IFNULL(SUM(w.PerformedManday), 0) as PerformedManday
+			FROM (
+		
+				SELECT pc.ProgramCategoryName, t.RevenueBDT, 1 as PerformedJobs, 0 as PerformedManday
+				FROM t_programcategory pc
+				INNER JOIN t_program p ON pc.ProgramCategoryId = p.ProgramCategoryId
+				INNER JOIN t_transaction t ON p.ProgramId = t.ProgramId 
+				Where YEAR(t.AuditStartDate) = '$Year'
+				AND t.LeadStatusId = 5 -- Assuming 1= In-progress, 2= Confirmed, 5= Performed
+
+				UNION ALL
+
+				SELECT pc.ProgramCategoryName, 0 as PerformedRevenue, 0 as PerformedJobs, 1 as PerformedManday
+				FROM t_transaction_auditor_assign taa 
+				inner join t_transaction tt on taa.TransactionId = tt.TransactionId
+				INNER JOIN t_program p ON tt.ProgramId = p.ProgramId
+				INNER JOIN t_programcategory pc ON p.ProgramCategoryId = pc.ProgramCategoryId
+				WHERE YEAR(taa.AssignDate) = '$Year' 
+				AND tt.LeadStatusId = 5 -- Assuming 5= Performed
+				) w
+			GROUP BY ProgramCategoryName;";
+		
+		$resultdata = $dbh->query($query);
+
+		$returnData = [
+			"success" => 1,
+			"status" => 200,
+			"message" => "",
+			"datalist" => [
+				"data" => $resultdata
+			]
+		];
+	} catch (PDOException $e) {
+		$returnData = msg(0, 500, $e->getMessage());
 	}
 
-	// Reindex array (optional)
-	// $array2 = array_values($result);
+	return $returnData;
+}
 
-	return $result;
+function getLostRevenueList($data)
+{
+	try {
+		$dbh = new Db();
+
+		$StartDate = trim($data->StartDate);
+		$Year = date('Y', strtotime($StartDate));
+		$Month = date('m', strtotime($StartDate));
+
+		$query = "SELECT w.ProgramCategoryName,
+			IFNULL(SUM(w.MTDRevenueBDT), 0) as MTDRevenueBDT,
+			IFNULL(SUM(w.MTDNoOfJob), 0) as MTDNoOfJob,
+			IFNULL(SUM(w.YTDRevenueBDT), 0) as YTDRevenueBDT,
+			IFNULL(SUM(w.YTDNoOfJob), 0) as YTDNoOfJob
+			FROM (
+		
+				SELECT pc.ProgramCategoryName, t.RevenueBDT as MTDRevenueBDT, 1 as MTDNoOfJob, 0 as YTDRevenueBDT, 0 as YTDNoOfJob
+				FROM t_programcategory pc
+				INNER JOIN t_program p ON pc.ProgramCategoryId = p.ProgramCategoryId
+				INNER JOIN t_transaction t ON p.ProgramId = t.ProgramId 
+				AND MONTH(t.AuditStartDate) = '$Month'
+				AND t.LeadStatusId = 11 -- Assuming 11= Lost
+
+				UNION ALL
+
+				SELECT pcb.ProgramCategoryName, 0 AS MTDRevenueBDT, 0 AS MTDNoOfJob, tb.RevenueBDT AS YTDRevenueBDT, 1 AS YTDNoOfJob 
+				FROM t_programcategory pcb
+				INNER JOIN t_program pb ON pcb.ProgramCategoryId = pb.ProgramCategoryId 
+				INNER JOIN t_transaction tb ON pb.ProgramId = tb.ProgramId
+				WHERE YEAR(tb.AuditStartDate) = '$Year' 
+				AND tb.LeadStatusId = 11 -- Assuming 11= Lost 
+
+				) w
+			GROUP BY ProgramCategoryName;";
+
+		$resultdata = $dbh->query($query);
+
+		$returnData = [
+			"success" => 1,
+			"status" => 200,
+			"message" => "",
+			"datalist" => [
+				"data" => $resultdata
+			]
+		];
+	} catch (PDOException $e) {
+		$returnData = msg(0, 500, $e->getMessage());
+	}
+
+	return $returnData;
 }
