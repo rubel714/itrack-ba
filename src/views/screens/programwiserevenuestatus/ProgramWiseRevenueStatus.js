@@ -160,6 +160,14 @@ const ProgramWiseRevenueStatus = (props) => {
           };
         }
 
+        // Right align data rows for numeric columns
+        for (let row = 2; row < totalRowIndex; row++) {
+          const dataCell = XLSX.utils.encode_cell({ r: row, c: col });
+          if (ws[dataCell] && col > 0) {
+            ws[dataCell].s = { alignment: { horizontal: "right" } };
+          }
+        }
+
         // Bold totals row (last row) with right alignment
         const totalCell = XLSX.utils.encode_cell({ r: totalRowIndex, c: col });
         if (ws[totalCell]) {
@@ -296,6 +304,14 @@ const ProgramWiseRevenueStatus = (props) => {
           };
         }
 
+        // Right align data rows for numeric columns
+        for (let row = 2; row < totalRowIndex; row++) {
+          const dataCell = XLSX.utils.encode_cell({ r: row, c: col });
+          if (ws[dataCell] && col > 0) {
+            ws[dataCell].s = { alignment: { horizontal: "right" } };
+          }
+        }
+
         // Bold totals row (last row) with right alignment
         const totalCell = XLSX.utils.encode_cell({ r: totalRowIndex, c: col });
         if (ws[totalCell]) {
@@ -408,6 +424,13 @@ const ProgramWiseRevenueStatus = (props) => {
         if (ws[headerCell]) {
           ws[headerCell].s = { font: { bold: true } };
         }
+        // Right align data rows for numeric columns
+        for (let row = 2; row < totalRowIndex; row++) {
+          const dataCell = XLSX.utils.encode_cell({ r: row, c: col });
+          if (ws[dataCell] && col > 0) {
+            ws[dataCell].s = { alignment: { horizontal: "right" } };
+          }
+        }
         const totalCell = XLSX.utils.encode_cell({ r: totalRowIndex, c: col });
         if (ws[totalCell]) {
           ws[totalCell].s = {
@@ -499,6 +522,13 @@ const ProgramWiseRevenueStatus = (props) => {
         if (ws[headerCell]) {
           ws[headerCell].s = { font: { bold: true } };
         }
+        // Right align data rows for numeric columns
+        for (let row = 2; row < totalRowIndex; row++) {
+          const dataCell = XLSX.utils.encode_cell({ r: row, c: col });
+          if (ws[dataCell] && col > 0) {
+            ws[dataCell].s = { alignment: { horizontal: "right" } };
+          }
+        }
         const totalCell = XLSX.utils.encode_cell({ r: totalRowIndex, c: col });
         if (ws[totalCell]) {
           ws[totalCell].s = {
@@ -565,6 +595,10 @@ const ProgramWiseRevenueStatus = (props) => {
       // filter: true,
       width: "150",
       bottomCalc: "sum",
+      formatter: "money",
+      formatterParams: { precision: 2 },
+      bottomCalcFormatter: "money",
+      bottomCalcFormatterParams: { precision: 2 },
     },
     {
       field: "NoOfJobs",
@@ -574,6 +608,10 @@ const ProgramWiseRevenueStatus = (props) => {
       // filter: true,
       width: "120",
       bottomCalc: "sum",
+      formatter: "money",
+      formatterParams: { precision: 2 },
+      bottomCalcFormatter: "money",
+      bottomCalcFormatterParams: { precision: 2 },
     },
     {
       field: "NoOfMDs",
@@ -583,6 +621,10 @@ const ProgramWiseRevenueStatus = (props) => {
       // filter: true,
       width: "130",
       bottomCalc: "sum",
+      formatter: "money",
+      formatterParams: { precision: 2 },
+      bottomCalcFormatter: "money",
+      bottomCalcFormatterParams: { precision: 2 },
     },
   ];
 
@@ -605,6 +647,10 @@ const ProgramWiseRevenueStatus = (props) => {
       // filter: true,
       width: "110",
       bottomCalc: "sum",
+      formatter: "money",
+      formatterParams: { precision: 2 },
+      bottomCalcFormatter: "money",
+      bottomCalcFormatterParams: { precision: 2 },
     },
     {
       field: "ConfirmedRevenue",
@@ -614,6 +660,10 @@ const ProgramWiseRevenueStatus = (props) => {
       // filter: true,
       width: "110",
       bottomCalc: "sum",
+      formatter: "money",
+      formatterParams: { precision: 2 },
+      bottomCalcFormatter: "money",
+      bottomCalcFormatterParams: { precision: 2 },
     },
     {
       field: "InprogressRevenue",
@@ -623,8 +673,12 @@ const ProgramWiseRevenueStatus = (props) => {
       // filter: true,
       width: "110",
       bottomCalc: "sum",
+      formatter: "money",
+      formatterParams: { precision: 2 },
+      bottomCalcFormatter: "money",
+      bottomCalcFormatterParams: { precision: 2 },
     },
-        {
+    {
       field: "TotalRevenue",
       title: "Total Revenue",
       hozAlign: "right",
@@ -632,6 +686,10 @@ const ProgramWiseRevenueStatus = (props) => {
       // filter: true,
       width: "85",
       bottomCalc: "sum",
+      formatter: "money",
+      formatterParams: { precision: 2 },
+      bottomCalcFormatter: "money",
+      bottomCalcFormatterParams: { precision: 2 },
     },
   ];
 
@@ -650,6 +708,10 @@ const ProgramWiseRevenueStatus = (props) => {
       headerHozAlign: "right",
       width: "150",
       bottomCalc: "sum",
+      formatter: "money",
+      formatterParams: { precision: 2 },
+      bottomCalcFormatter: "money",
+      bottomCalcFormatterParams: { precision: 2 },
     },
     {
       field: "PerformedJobs",
@@ -658,6 +720,10 @@ const ProgramWiseRevenueStatus = (props) => {
       headerHozAlign: "right",
       width: "150",
       bottomCalc: "sum",
+      formatter: "money",
+      formatterParams: { precision: 2 },
+      bottomCalcFormatter: "money",
+      bottomCalcFormatterParams: { precision: 2 },
     },
     {
       field: "PerformedManday",
@@ -666,6 +732,10 @@ const ProgramWiseRevenueStatus = (props) => {
       headerHozAlign: "right",
       width: "150",
       bottomCalc: "sum",
+      formatter: "money",
+      formatterParams: { precision: 2 },
+      bottomCalcFormatter: "money",
+      bottomCalcFormatterParams: { precision: 2 },
     },
   ];
 
@@ -687,6 +757,10 @@ const ProgramWiseRevenueStatus = (props) => {
       headerHozAlign: "right",
       width: "105",
       bottomCalc: "sum",
+      formatter: "money",
+      formatterParams: { precision: 2 },
+      bottomCalcFormatter: "money",
+      bottomCalcFormatterParams: { precision: 2 },
     },
     {
       field: "MTDRevenueBDT",
@@ -695,6 +769,10 @@ const ProgramWiseRevenueStatus = (props) => {
       headerHozAlign: "right",
       width: "120",
       bottomCalc: "sum",
+      formatter: "money",
+      formatterParams: { precision: 2 },
+      bottomCalcFormatter: "money",
+      bottomCalcFormatterParams: { precision: 2 },
     },
     {
       field: "YTDNoOfJob",
@@ -703,6 +781,10 @@ const ProgramWiseRevenueStatus = (props) => {
       headerHozAlign: "right",
       width: "100",
       bottomCalc: "sum",
+      formatter: "money",
+      formatterParams: { precision: 2 },
+      bottomCalcFormatter: "money",
+      bottomCalcFormatterParams: { precision: 2 },
     },
     {
       field: "YTDRevenueBDT",
@@ -711,6 +793,10 @@ const ProgramWiseRevenueStatus = (props) => {
       headerHozAlign: "right",
       width: "120",
       bottomCalc: "sum",
+      formatter: "money",
+      formatterParams: { precision: 2 },
+      bottomCalcFormatter: "money",
+      bottomCalcFormatterParams: { precision: 2 },
     },
   ];
   
