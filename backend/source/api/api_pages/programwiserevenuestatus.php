@@ -37,22 +37,35 @@ function getDataList($data)
 			IFNULL(SUM(w.NoOfJobs), 0) as NoOfJobs,
 			IFNULL(SUM(w.NoOfMDs), 0) as NoOfMDs
 			FROM (
-				SELECT pc.ProgramCategoryName, t.RevenueBDT, 1 as NoOfJobs, 0 as NoOfMDs
+				SELECT pc.ProgramCategoryName, t.RevenueBDT, 1 as NoOfJobs, t.ManDay as NoOfMDs
 				FROM t_programcategory pc
 				INNER JOIN t_program p ON pc.ProgramCategoryId = p.ProgramCategoryId
 				INNER JOIN t_transaction t ON p.ProgramId = t.ProgramId
 				WHERE DATE(t.AuditStartDate) = '$StartDate'
-
-				UNION ALL
-
-				SELECT pc.ProgramCategoryName, 0 as RevenueBDT, 0 as NoOfJobs, 1 as NoOfMDs
-				FROM t_transaction_auditor_assign taa
-				INNER JOIN t_transaction tt ON taa.TransactionId = tt.TransactionId
-				INNER JOIN t_program p ON tt.ProgramId = p.ProgramId
-				INNER JOIN t_programcategory pc ON p.ProgramCategoryId = pc.ProgramCategoryId
-				WHERE DATE(taa.AssignDate) = '$StartDate'
 			) w
 			GROUP BY w.ProgramCategoryName;";
+
+		// $query = "SELECT w.ProgramCategoryName,
+		// 	IFNULL(SUM(w.RevenueBDT), 0) as RevenueGBPK,
+		// 	IFNULL(SUM(w.NoOfJobs), 0) as NoOfJobs,
+		// 	IFNULL(SUM(w.NoOfMDs), 0) as NoOfMDs
+		// 	FROM (
+		// 		SELECT pc.ProgramCategoryName, t.RevenueBDT, 1 as NoOfJobs, 0 as NoOfMDs
+		// 		FROM t_programcategory pc
+		// 		INNER JOIN t_program p ON pc.ProgramCategoryId = p.ProgramCategoryId
+		// 		INNER JOIN t_transaction t ON p.ProgramId = t.ProgramId
+		// 		WHERE DATE(t.AuditStartDate) = '$StartDate'
+
+		// 		UNION ALL
+
+		// 		SELECT pc.ProgramCategoryName, 0 as RevenueBDT, 0 as NoOfJobs, 1 as NoOfMDs
+		// 		FROM t_transaction_auditor_assign taa
+		// 		INNER JOIN t_transaction tt ON taa.TransactionId = tt.TransactionId
+		// 		INNER JOIN t_program p ON tt.ProgramId = p.ProgramId
+		// 		INNER JOIN t_programcategory pc ON p.ProgramCategoryId = pc.ProgramCategoryId
+		// 		WHERE DATE(taa.AssignDate) = '$StartDate'
+		// 	) w
+		// 	GROUP BY w.ProgramCategoryName;";
 		
 		$resultdata = $dbh->query($query);
 
@@ -126,24 +139,39 @@ function getYTDStatusList($data)
 			IFNULL(SUM(w.PerformedManday), 0) as PerformedManday
 			FROM (
 		
-				SELECT pc.ProgramCategoryName, t.RevenueBDT, 1 as PerformedJobs, 0 as PerformedManday
+				SELECT pc.ProgramCategoryName, t.RevenueBDT, 1 as PerformedJobs, t.Manday as PerformedManday
 				FROM t_programcategory pc
 				INNER JOIN t_program p ON pc.ProgramCategoryId = p.ProgramCategoryId
 				INNER JOIN t_transaction t ON p.ProgramId = t.ProgramId 
 				Where YEAR(t.AuditStartDate) = '$Year'
-				AND t.LeadStatusId = 5 -- Assuming 1= In-progress, 2= Confirmed, 5= Performed
-
-				UNION ALL
-
-				SELECT pc.ProgramCategoryName, 0 as PerformedRevenue, 0 as PerformedJobs, 1 as PerformedManday
-				FROM t_transaction_auditor_assign taa 
-				inner join t_transaction tt on taa.TransactionId = tt.TransactionId
-				INNER JOIN t_program p ON tt.ProgramId = p.ProgramId
-				INNER JOIN t_programcategory pc ON p.ProgramCategoryId = pc.ProgramCategoryId
-				WHERE YEAR(taa.AssignDate) = '$Year' 
-				AND tt.LeadStatusId = 5 -- Assuming 5= Performed
+				AND t.LeadStatusId = 5 -- Assuming 5= Performed
 				) w
 			GROUP BY ProgramCategoryName;";
+			
+		// $query = "SELECT w.ProgramCategoryName,
+		// 	IFNULL(SUM(w.RevenueBDT), 0) as PerformedRevenue,
+		// 	IFNULL(SUM(w.PerformedJobs), 0) as PerformedJobs,
+		// 	IFNULL(SUM(w.PerformedManday), 0) as PerformedManday
+		// 	FROM (
+		
+		// 		SELECT pc.ProgramCategoryName, t.RevenueBDT, 1 as PerformedJobs, 0 as PerformedManday
+		// 		FROM t_programcategory pc
+		// 		INNER JOIN t_program p ON pc.ProgramCategoryId = p.ProgramCategoryId
+		// 		INNER JOIN t_transaction t ON p.ProgramId = t.ProgramId 
+		// 		Where YEAR(t.AuditStartDate) = '$Year'
+		// 		AND t.LeadStatusId = 5 -- Assuming 1= In-progress, 2= Confirmed, 5= Performed
+
+		// 		UNION ALL
+
+		// 		SELECT pc.ProgramCategoryName, 0 as PerformedRevenue, 0 as PerformedJobs, 1 as PerformedManday
+		// 		FROM t_transaction_auditor_assign taa 
+		// 		inner join t_transaction tt on taa.TransactionId = tt.TransactionId
+		// 		INNER JOIN t_program p ON tt.ProgramId = p.ProgramId
+		// 		INNER JOIN t_programcategory pc ON p.ProgramCategoryId = pc.ProgramCategoryId
+		// 		WHERE YEAR(taa.AssignDate) = '$Year' 
+		// 		AND tt.LeadStatusId = 5 -- Assuming 5= Performed
+		// 		) w
+		// 	GROUP BY ProgramCategoryName;";
 		
 		$resultdata = $dbh->query($query);
 
