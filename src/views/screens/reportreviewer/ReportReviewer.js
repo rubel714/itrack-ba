@@ -763,6 +763,15 @@ const ReportReviewer = (props) => {
       filter: true,
       width: "6%",
     },
+    {
+      field: "ReleaseDate",
+      label: "Release Date",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "6%",
+    },
     // {
     //   field: "ReportReleasedStatus",
     //   label: "Released Status",

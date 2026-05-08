@@ -1,5 +1,5 @@
 <?php
-define("DB_NAME", "itrack_ba_db");
+define("DB_NAME", "itrack_ba_db1");
 define("DB_USER", "root");
 define("DB_PASSWORD", "");
 define("DB_SERVER", "localhost");
