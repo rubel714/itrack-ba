@@ -512,6 +512,19 @@ function AfterLoginNavbar(props) {
                       </a>
                     </li>
                   )}
+
+                  {menuShowPermision("tatmissingreport") === 1 && (
+                    <li>
+                      <a
+                        href="javascript:void(0)"
+                        onClick={() =>
+                          props.history.push("tatmissingreport")
+                        }
+                      >
+                        TAT Missing Report
+                      </a>
+                    </li>
+                  )}
                 </ul>
               </li>
             )}
