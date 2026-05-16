@@ -1122,45 +1122,42 @@ function TatMissingReportExport()
 	$StartDate = $_REQUEST['StartDate'];
 	$EndDate = $_REQUEST['EndDate'] . " 23-59-59";
 
-	$sql = "SELECT b.ActivityName, DATE(a.`TransactionDate`) TransactionDate,e.ProgramName,
-	a.ExpireDate, a.OpportunityDate, a.TentativeOfferPrice, a.CertificateBody,f.UserName as CoordinatorName, g.AuditStageName,
-	h.LeadStatusName,a.ManDay,i.BuyerName,j.DepartmentName,k.MemberName,a.Remarks,a.AssessmentNo,a.AuditStartDate,a.AuditEndDate,a.ReportWritingDate,
-		a.InvoiceTo,a.ReportReceivedDate,a.StandardTAT,a.StrategicTAT,a.ReportReleaseStatus,a.ReleaseDate
+	//OverdueDays =  this is only working days
+	$sql = "SELECT c.FactoryName,e.ProgramName,f.UserName as CoordinatorName,
+		g.AuditStageName,i.BuyerName,a.AssessmentNo,a.AuditStartDate,a.AuditEndDate,
+		j.AuditorName as ReportWriter,a.ReportReceivedDate,	k.UserName as LocalReviewer,a.StandardTAT,a.ReleaseDate,
+		(DATEDIFF(a.ReleaseDate, a.StandardTAT) - (SELECT COUNT(m.HolyDayId) FROM t_holiday m WHERE m.DayType ='holiday' AND m.HoliDate BETWEEN a.StandardTAT AND a.ReleaseDate)) as OverdueDays
+
 	   FROM `t_transaction` a
-	   INNER JOIN `t_activity` b ON a.`ActivityId` = b.`ActivityId`
 	   LEFT JOIN `t_factory` c ON a.`FactoryId` = c.`FactoryId`
-	   LEFT JOIN `t_factorygroup` d ON c.`FactoryGroupId` = d.`FactoryGroupId`
 	   LEFT JOIN `t_program` e ON a.`ProgramId` = e.`ProgramId`
 	   LEFT JOIN `t_users` f ON a.`CoordinatorId` = f.`UserId`
 	   LEFT JOIN `t_auditstage` g ON a.`AuditStageId` = g.`AuditStageId`
-	   LEFT JOIN `t_leadstatus` h ON a.`LeadStatusId` = h.`LeadStatusId`
 	   LEFT JOIN `t_buyer` i ON a.`BuyerId` = i.`BuyerId`
-	   LEFT JOIN `t_department` j ON a.`DepartmentId` = j.`DepartmentId`
-	   LEFT JOIN `t_member` k ON a.`MemberId` = k.`MemberId`
-	   LEFT JOIN `t_users` l ON a.`UserId` = l.`UserId`
-	   LEFT JOIN `t_state` m ON a.`StateId` = m.`StateId` 
-		where a.StrategicTAT is not null 
+	   LEFT JOIN `t_auditor` j ON a.`ReportWriterId` = j.`AuditorId`
+	   LEFT JOIN `t_users` k ON a.`LocalReviewerId` = k.`UserId`
+		where a.StandardTAT is not null 
 		and a.ReleaseDate is not null 
-		and a.ReleaseDate > a.StrategicTAT
-		and (a.StrategicTAT between '$StartDate' and '$EndDate')
-		ORDER BY a.`StrategicTAT` ASC, a.InvoiceNo ASC;";
+		and a.ReleaseDate > a.StandardTAT
+		and (a.ReleaseDate between '$StartDate' and '$EndDate')
+		ORDER BY a.`ReleaseDate` ASC;";
 
 
-	$tableProperties["query_field"] = array("ActivityName", "TransactionDate", "ProgramName", "ExpireDate", "OpportunityDate", "TentativeOfferPrice", "CertificateBody", "CoordinatorName", "AuditStageName", "LeadStatusName", "ManDay", "BuyerName",  "DepartmentName", "MemberName", "Remarks", "AssessmentNo", "AuditStartDate", "AuditEndDate", "ReportWritingDate", "InvoiceTo", "ReportReceivedDate", "StandardTAT", "StrategicTAT", "ReportReleaseStatus", "ReleaseDate");
-	$tableProperties["table_header"] = array("Activity", "Input Date", "Program", "Expire Date", "Opportunity Date", "Tentative Offer Price", "Certificate Body", "Coordinator", "Audit Stage", "Lead Status", "Manday(s)", "Buyer", "Department", "Member", "Business Type", "Assessment No", "Audit Start Date", "Audit End Date", "Report Writing Date", "Invoice Number", "Report Received Date", "Standard TAT", "Strategic TAT", "Report Release Status", "Release Date");
-	$tableProperties["align"] = array("left", "left", "left", "left", "left", "right", "left", "left", "left", "left", "right", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left");
-	$tableProperties["width_print_pdf"] = array("10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%"); //when exist serial then here total 95% and 5% use for serial
-	$tableProperties["width_excel"] = array("15", "15", "15", "15", "15", "18", "20", "20", "20", "20", "15", "20", "20", "20", "20", "20", "20", "20", "20", "20", "20", "15", "15", "20", "15");
-	$tableProperties["precision"] = array("string", "string", "string", "string", "string", 0, "string", "string", "string", "string", 0, "string", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string"); //string,date,datetime,0,1,2,3,4
-	$tableProperties["total"] = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); //not total=0, total=1
-	$tableProperties["color_code"] = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); //colorcode field = 1 not color code field = 0
+	$tableProperties["query_field"] = array("FactoryName","ProgramName", "CoordinatorName", "AuditStageName", "BuyerName", "AssessmentNo", "AuditStartDate", "AuditEndDate", "ReportWriter", "ReportReceivedDate", "LocalReviewer",  "StandardTAT", "ReleaseDate", "OverdueDays");
+	$tableProperties["table_header"] = array("Factory Name", "Program", "Coordinator", "Audit Stage", "Buyer", "Assessment No", "Audit Start Date", "Audit End Date", "Report Writer", "Report Received Date", "Local Reviewer", "Standard TAT", "Release Date", "Overdue Days");
+	$tableProperties["align"] = array("left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "left", "center");
+	$tableProperties["width_print_pdf"] = array("10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%"); //when exist serial then here total 95% and 5% use for serial
+	$tableProperties["width_excel"] = array("15", "15", "15", "15", "15", "18", "15", "15", "20", "20", "15", "15", "15", "15");
+	$tableProperties["precision"] = array("string", "string", "string", "string", "string",  "string", "string", "string", "string", "string", "string", "string", "string", 0); //string,date,datetime,0,1,2,3,4
+	$tableProperties["total"] = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); //not total=0, total=1
+	$tableProperties["color_code"] = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); //colorcode field = 1 not color code field = 0
 	$tableProperties["header_logo"] = 0; //include header left and right logo. 0 or 1
 	$tableProperties["footer_signatory"] = 0; //include footer signatory. 0 or 1
 
 	//Report header list
 	$tableProperties["header_list"][0] = $siteTitle;
 	$tableProperties["header_list"][1] = 'TAT Missing Report';
-	// $tableProperties["header_list"][1] = 'Heading 2';
+	$tableProperties["header_list"][2] = 'Release Date: '.$_REQUEST['StartDate'] .' to '.$_REQUEST['EndDate'];
 
 	//Report save name. Not allow any type of special character
 	$tableProperties["report_save_name"] = 'TAT_Missing_Report';

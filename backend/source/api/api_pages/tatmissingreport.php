@@ -25,33 +25,27 @@ function getDataList($data)
 		$StartDate = trim($data->StartDate);
 		$EndDate = trim($data->EndDate) . " 23-59-59";
 
-		$query = "SELECT a.TransactionId AS id,a.TransactionTypeId,DATE(a.`TransactionDate`) TransactionDate,
-		a.InvoiceNo,a.ActivityId,b.ActivityName,a.FactoryId,c.FactoryName,
-		a.FactoryAddress,a.FactoryContactPerson,a.FactoryContactPersonPhone,a.FactoryContactPersonEmail,a.StateId,
-		d.FactoryGroupName,	a.ProgramId,e.ProgramName,a.ExpireDate,a.OpportunityDate,a.TentativeOfferPrice,
-		a.CertificateBody,a.CoordinatorId,f.UserName as CoordinatorName, a.AuditStageId, g.AuditStageName,
-		a.LeadStatusId, h.LeadStatusName,a.ManDay,a.BuyerId,i.BuyerName,a.NextFollowupDate,
-		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks,a.StatusId, a.StatusId as CurrStatusId
-		,l.UserName as SalesEntryUserName,a.Comments,m.StateName,a.AssessmentNo,a.AuditStartDate,a.AuditEndDate,a.ReportWritingDate,
-		a.InvoiceTo,a.ReportReceivedDate,a.StandardTAT,a.StrategicTAT,a.ReportReleaseStatus,a.ReleaseDate
+
+		//OverdueDays =  this is only working days
+		$query = "SELECT a.TransactionId AS id,c.FactoryName,e.ProgramName,f.UserName as CoordinatorName,
+		g.AuditStageName,i.BuyerName,a.AssessmentNo,a.AuditStartDate,a.AuditEndDate,
+		j.AuditorName as ReportWriter,a.ReportReceivedDate,	k.UserName as LocalReviewer,
+		a.StandardTAT,a.ReleaseDate,
+		(DATEDIFF(a.ReleaseDate, a.StandardTAT) - (SELECT COUNT(m.HolyDayId) FROM t_holiday m WHERE m.DayType ='holiday' AND m.HoliDate BETWEEN a.StandardTAT AND a.ReleaseDate)) as OverdueDays
+
 	   FROM `t_transaction` a
-	   INNER JOIN `t_activity` b ON a.`ActivityId` = b.`ActivityId`
 	   LEFT JOIN `t_factory` c ON a.`FactoryId` = c.`FactoryId`
-	   LEFT JOIN `t_factorygroup` d ON c.`FactoryGroupId` = d.`FactoryGroupId`
 	   LEFT JOIN `t_program` e ON a.`ProgramId` = e.`ProgramId`
 	   LEFT JOIN `t_users` f ON a.`CoordinatorId` = f.`UserId`
 	   LEFT JOIN `t_auditstage` g ON a.`AuditStageId` = g.`AuditStageId`
-	   LEFT JOIN `t_leadstatus` h ON a.`LeadStatusId` = h.`LeadStatusId`
 	   LEFT JOIN `t_buyer` i ON a.`BuyerId` = i.`BuyerId`
-	   LEFT JOIN `t_department` j ON a.`DepartmentId` = j.`DepartmentId`
-	   LEFT JOIN `t_member` k ON a.`MemberId` = k.`MemberId`
-	   LEFT JOIN `t_users` l ON a.`UserId` = l.`UserId`
-	   LEFT JOIN `t_state` m ON a.`StateId` = m.`StateId` 
-		where a.StrategicTAT is not null 
+	   LEFT JOIN `t_auditor` j ON a.`ReportWriterId` = j.`AuditorId`
+	   LEFT JOIN `t_users` k ON a.`LocalReviewerId` = k.`UserId`
+		where a.StandardTAT is not null 
 		and a.ReleaseDate is not null 
-		and a.ReleaseDate > a.StrategicTAT
-		and (a.StrategicTAT between '$StartDate' and '$EndDate')
-		ORDER BY a.`StrategicTAT` ASC, a.InvoiceNo ASC;";
+		and a.ReleaseDate > a.StandardTAT
+		and (a.ReleaseDate between '$StartDate' and '$EndDate')
+		ORDER BY a.`ReleaseDate` ASC;";
 
 		$resultdata = $dbh->query($query);
 
