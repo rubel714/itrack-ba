@@ -90,14 +90,14 @@ const TatMissingReport = (props) => {
       title: "Factory Name",
       hozAlign: "left",
       width: "150",
-      //   headerFilter:"input"
+      headerFilter:"input"
     },
     {
       field: "ProgramName",
       title: "Program",
       hozAlign: "left",
       width: "100",
-      //  headerFilter:"input"
+      headerFilter:"input"
     },
 
     {
@@ -105,84 +105,84 @@ const TatMissingReport = (props) => {
       title: "Coordinator",
       hozAlign: "left",
       width: "115",
-      //   headerFilter:"input"
+      headerFilter:"input"
     },
     {
       field: "AuditStageName",
       title: "Audit Stage",
       hozAlign: "left",
       width: "115",
-      //   headerFilter:"input"
+      headerFilter:"input"
     },
     {
       field: "BuyerName",
       title: "Buyer",
       hozAlign: "left",
       width: "140",
-      //   headerFilter:"input"
+      headerFilter:"input"
     },
     {
       field: "AssessmentNo",
       title: "Assessment No",
       hozAlign: "left",
       width: "130",
-      // headerFilter:"input"
+      headerFilter:"input"
     },
     {
       field: "AuditStartDate",
       title: "Audit Star Date",
       hozAlign: "left",
       width: "130",
-      // headerFilter:"input"
+      headerFilter:"input"
     },
     {
       field: "AuditEndDate",
       title: "Audit End Date",
       hozAlign: "left",
       width: "130",
-      // headerFilter:"input"
+      headerFilter:"input"
     },
     {
       field: "ReportWriter",
       title: "Report Writer",
       hozAlign: "left",
       width: "150",
-      // headerFilter:"input"
+      headerFilter:"input"
     },
     {
       field: "ReportReceivedDate",
       title: "Report Received Date",
       hozAlign: "left",
       width: "140",
-      // headerFilter:"input"
+      headerFilter:"input"
     },
     {
       field: "LocalReviewer",
       title: "Local Reviewer",
       hozAlign: "left",
       width: "145",
-      // headerFilter:"input"
+      headerFilter:"input"
     },
     {
       field: "StandardTAT",
       title: "Standard TAT",
       hozAlign: "left",
       width: "125",
-      // headerFilter:"input"
+      headerFilter:"input"
     }, 
     {
       field: "ReleaseDate",
       title: "Release Date",
       hozAlign: "left",
       width: "120",
-      // headerFilter:"input"
+      headerFilter:"input"
     },
         {
       field: "OverdueDays",
       title: "Overdue Days",
       hozAlign: "center",
       width: "100",
-      // headerFilter:"input"
+      headerFilter:"input"
     },
   ];
 
