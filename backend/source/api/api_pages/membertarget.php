@@ -36,6 +36,8 @@ function getDataList($data)
 			m.MemberName,
 			mt.OnSiteTarget,
 			mt.OffSiteTarget,
+			mt.ReCertificationRevenueTarget,
+			mt.NewCertificationRevenueTarget,
 			mt.RevenueTarget,
 			mt.MemberTargetId
 		FROM t_member m
@@ -60,6 +62,19 @@ $resultdata = $dbh->query($query);
 	return $returnData;
 }
 
+function normalizeTargetValue($value)
+{
+	if ($value === null || $value === '' || $value === '0') {
+		return null;
+	}
+
+	if (is_numeric($value) && (float)$value === 0.0) {
+		return null;
+	}
+
+	return $value;
+}
+
 function saveTargets($data)
 {
 	if ($_SERVER["REQUEST_METHOD"] != "POST") {
@@ -78,17 +93,21 @@ function saveTargets($data)
 
 		foreach ($targets as $target) {
 			$MemberId = $target->id;
-			$OnSiteTarget = isset($target->OnSiteTarget) ? $target->OnSiteTarget : null;
-			$OffSiteTarget = isset($target->OffSiteTarget) ? $target->OffSiteTarget : null;
-			$RevenueTarget = isset($target->RevenueTarget) ? $target->RevenueTarget : null;
+			$OnSiteTarget = normalizeTargetValue(isset($target->OnSiteTarget) ? $target->OnSiteTarget : null);
+			$OffSiteTarget = normalizeTargetValue(isset($target->OffSiteTarget) ? $target->OffSiteTarget : null);
+			$ReCertificationRevenueTarget = normalizeTargetValue(isset($target->ReCertificationRevenueTarget) ? $target->ReCertificationRevenueTarget : null);
+			$NewCertificationRevenueTarget = normalizeTargetValue(isset($target->NewCertificationRevenueTarget) ? $target->NewCertificationRevenueTarget : null);
+			$RevenueTarget = ($ReCertificationRevenueTarget === null && $NewCertificationRevenueTarget === null)
+				? null
+				: (float)($ReCertificationRevenueTarget ?? 0) + (float)($NewCertificationRevenueTarget ?? 0);
 			$MemberTargetId = isset($target->MemberTargetId) ? $target->MemberTargetId : null;
 
 			if (empty($MemberTargetId)) {
 				// Insert new record
 				$q = new insertq();
 				$q->table = 't_member_target';
-				$q->columns = ['MemberId', 'YearId', 'MonthId', 'OnSiteTarget', 'OffSiteTarget', 'RevenueTarget'];
-				$q->values = [$MemberId, $YearId, $MonthId, $OnSiteTarget, $OffSiteTarget, $RevenueTarget];
+				$q->columns = ['MemberId', 'YearId', 'MonthId', 'OnSiteTarget', 'OffSiteTarget', 'ReCertificationRevenueTarget', 'NewCertificationRevenueTarget', 'RevenueTarget'];
+				$q->values = [$MemberId, $YearId, $MonthId, $OnSiteTarget, $OffSiteTarget, $ReCertificationRevenueTarget, $NewCertificationRevenueTarget, $RevenueTarget];
 				$q->pks = ['MemberTargetId'];
 				$q->bUseInsetId = false;
 				$q->build_query();
@@ -97,8 +116,8 @@ function saveTargets($data)
 				// Update existing record
 				$u = new updateq();
 				$u->table = 't_member_target';
-				$u->columns = ['OnSiteTarget', 'OffSiteTarget', 'RevenueTarget'];
-				$u->values = [$OnSiteTarget, $OffSiteTarget, $RevenueTarget];
+				$u->columns = ['OnSiteTarget', 'OffSiteTarget', 'ReCertificationRevenueTarget', 'NewCertificationRevenueTarget', 'RevenueTarget'];
+				$u->values = [$OnSiteTarget, $OffSiteTarget, $ReCertificationRevenueTarget, $NewCertificationRevenueTarget, $RevenueTarget];
 				$u->pks = ['MemberTargetId'];
 				$u->pk_values = [$MemberTargetId];
 				$u->build_query();

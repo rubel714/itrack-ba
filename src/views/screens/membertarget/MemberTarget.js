@@ -92,13 +92,13 @@ const MemberTarget = (props) => {
       field: "MemberName",
       title: "Member Name",
       hozAlign: "left",
-      width: "200",
+      width: "180",
     },
     {
       field: "OnSiteTarget",
       title: "OnSite Target",
       hozAlign: "right",
-      width: "150",
+      width: "135",
       editor: "number",
       editorParams: {
         min: 0,
@@ -112,7 +112,7 @@ const MemberTarget = (props) => {
       field: "OffSiteTarget",
       title: "OffSite Target",
       hozAlign: "right",
-      width: "150",
+      width: "130",
       editor: "number",
       editorParams: {
         min: 0,
@@ -123,17 +123,58 @@ const MemberTarget = (props) => {
       },
     },
     {
-      field: "RevenueTarget",
-      title: "Revenue Target",
+      field: "ReCertificationRevenueTarget",
+      title: "Re-Certification Revenue Target",
       hozAlign: "right",
-      width: "150",
+      width: "260",
       editor: "number",
       editorParams: {
         min: 0,
         step: 1,
       },
       formatter: function (cell) {
-        return cell.getValue();// parseFloat(cell.getValue() || 0).toFixed(0);
+        return cell.getValue();
+      },
+      cellEdited: function (cell) {
+        const row = cell.getRow();
+        const reCert = parseFloat(row.getData().ReCertificationRevenueTarget ?? 0) || 0;
+        const newCert = parseFloat(row.getData().NewCertificationRevenueTarget ?? 0) || 0;
+        row.getCell("RevenueTarget").setValue(reCert + newCert);
+      },
+    },
+    {
+      field: "NewCertificationRevenueTarget",
+      title: "New Certification Revenue Target",
+      hozAlign: "right",
+      width: "260",
+      editor: "number",
+      editorParams: {
+        min: 0,
+        step: 1,
+      },
+      formatter: function (cell) {
+        return cell.getValue();
+      },
+      cellEdited: function (cell) {
+        const row = cell.getRow();
+        const reCert = parseFloat(row.getData().ReCertificationRevenueTarget ?? 0) || 0;
+        const newCert = parseFloat(row.getData().NewCertificationRevenueTarget ?? 0) || 0;
+        row.getCell("RevenueTarget").setValue(reCert + newCert);
+      },
+    },
+    {
+      field: "RevenueTarget",
+      title: "Revenue Target",
+      hozAlign: "right",
+      width: "150",
+      formatter: function (cell) {
+        return parseFloat(cell.getValue() ?? 0).toFixed(0);
+      },
+      editable: false,
+      mutator: function (value, data) {
+        const reCert = parseFloat(data.ReCertificationRevenueTarget ?? 0) || 0;
+        const newCert = parseFloat(data.NewCertificationRevenueTarget ?? 0) || 0;
+        return reCert + newCert;
       },
     },
   ];
@@ -182,9 +223,24 @@ const MemberTarget = (props) => {
     }
   };
   
+  const normalizeTargetValue = (value) => {
+    if (value === null || value === undefined || value === "") {
+      return null;
+    }
+
+    const numericValue = Number(value);
+    return Number.isFinite(numericValue) && numericValue === 0 ? null : value;
+  };
+
   const saveTargets = () => {
     // Get data from tabulator
     const tableData = tableRef.current ? tableRef.current.table.getData() : dataList;
+    const normalizedTargets = (tableData || []).map((row) => ({
+      ...row,
+      ReCertificationRevenueTarget: normalizeTargetValue(row.ReCertificationRevenueTarget),
+      NewCertificationRevenueTarget: normalizeTargetValue(row.NewCertificationRevenueTarget),
+      RevenueTarget: normalizeTargetValue(row.RevenueTarget),
+    }));
 
     let params = {
       action: "saveTargets",
@@ -192,7 +248,7 @@ const MemberTarget = (props) => {
       UserId: UserInfo.UserId,
       YearName: currYearName,
       MonthId: currMonthId,
-      targets: tableData,
+      targets: normalizedTargets,
     };
 
     apiCall.post(serverpage, { params }, apiOption()).then((res) => {
