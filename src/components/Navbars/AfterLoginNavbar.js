@@ -210,6 +210,17 @@ function AfterLoginNavbar(props) {
                     </li>
                   )}
 
+                  {menuShowPermision("programcategorytarget") === 1 && (
+                    <li>
+                      <a
+                        href="javascript:void(0)"
+                        onClick={() => props.history.push("programcategorytarget")}
+                      >
+                        Assign Program Category wise Target
+                      </a>
+                    </li>
+                  )}
+
                   {menuShowPermision("factorygroups") === 1 && (
                     <li>
                       <a
