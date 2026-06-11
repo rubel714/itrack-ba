@@ -82,6 +82,9 @@ switch ($task) {
 	case "getMemberList":
 		$returnData = getMemberList($data);
 		break;
+	case "getAllMemberList":
+		$returnData = getAllMemberList($data);
+		break;
 	case "getCountryList":
 		$returnData = getCountryList($data);
 		break;
@@ -732,6 +735,33 @@ function getMemberList($data)
 		$query = "SELECT a.`MemberId` id, a.MemberName `name`
 	 			 	FROM t_member a
 					where (a.DepartmentId = $DepartmentId)
+					ORDER BY a.MemberName;";
+
+		$resultdata = $dbh->query($query);
+
+		$returnData = [
+			"success" => 1,
+			"status" => 200,
+			"message" => "",
+			"datalist" => $resultdata
+		];
+	} catch (PDOException $e) {
+		$returnData = msg(0, 500, $e->getMessage());
+	}
+
+	return $returnData;
+}
+
+
+function getAllMemberList($data)
+{
+	
+    $DepartmentId = trim($data->DepartmentId);
+	try {
+		$dbh = new Db();
+		$query = "SELECT a.`MemberId` id, a.MemberName `name`
+	 			 	FROM t_member a
+					where (a.DepartmentId = $DepartmentId OR $DepartmentId=0)
 					ORDER BY a.MemberName;";
 
 		$resultdata = $dbh->query($query);

@@ -31,6 +31,8 @@ const SalesDashboard = (props) => {
 
   const [StartDate, setStartDate] = useState(moment().format("YYYY-MM-01"));
   const [EndDate, setEndDate] = useState(moment().format("YYYY-MM-DD"));
+  const [MemberId, setMemberId] = useState(0);
+  const [MemberList, setMemberList] = useState([]);
   // const [EndDate, setEndDate] = useState(
   //   moment().add(30, "days").format("YYYY-MM-DD")
   // );
@@ -207,9 +209,11 @@ const SalesDashboard = (props) => {
     if (name === "StartDate") {
       setStartDate(value);
     }
-
     if (name === "EndDate") {
       setEndDate(value);
+    }
+    if (name === "MemberId") {
+      setMemberId(value ? parseInt(value) : 0);
     }
   };
 
@@ -355,7 +359,9 @@ const SalesDashboard = (props) => {
     },
   ];
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    getMemberList();
+  }, []);
 
   if (bFirst) {
     /**First time call for datalist */
@@ -367,7 +373,19 @@ const SalesDashboard = (props) => {
   useEffect(() => {
     getDataList();
     getOverallSummary();
-  }, [StartDate, EndDate]);
+  }, [StartDate, EndDate, MemberId]);
+
+  function getMemberList() {
+    let params = {
+      action: "getAllMemberList",
+      lan: language(),
+      UserId: UserInfo.UserId,
+      DepartmentId: 0,
+    };
+    apiCall.post("combo_generic", { params }, apiOption()).then((res) => {
+      setMemberList(res.data.datalist || []);
+    });
+  }
 
   /**Get data for table list */
   function getDataList() {
@@ -377,6 +395,7 @@ const SalesDashboard = (props) => {
       UserId: UserInfo.UserId,
       StartDate: StartDate,
       EndDate: EndDate,
+      MemberId: MemberId,
     };
 
     ExecuteQuery(serverpage, params);
@@ -390,6 +409,7 @@ const SalesDashboard = (props) => {
       UserId: UserInfo.UserId,
       StartDate: StartDate,
       EndDate: EndDate,
+      MemberId: MemberId,
     };
 
     ExecuteQueryOverall(serverpage, params);
@@ -444,6 +464,25 @@ const SalesDashboard = (props) => {
                 value={EndDate}
                 onChange={(e) => handleChangeFilterDate(e)}
               />
+            </div>
+          </div>
+
+          <div>
+            <label>Sales Person</label>
+            <div class="">
+              <select
+                id="MemberId"
+                name="MemberId"
+                value={MemberId}
+                onChange={(e) => handleChangeFilterDate(e)}
+              >
+                <option value="">All</option>
+                {MemberList.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.name}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
