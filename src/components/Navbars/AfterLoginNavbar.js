@@ -117,7 +117,7 @@ function AfterLoginNavbar(props) {
                     </li>
                   )}
 
-                
+
                   {menuShowPermision("salesdashboard") === 1 && (
                     <li>
                       <a
@@ -129,7 +129,8 @@ function AfterLoginNavbar(props) {
                     </li>
                   )}
 
-                    {menuShowPermision("programwiserevenuestatus") === 1 && (
+
+                  {menuShowPermision("programwiserevenuestatus") === 1 && (
                     <li>
                       <a
                         href="javascript:void(0)"
@@ -138,6 +139,20 @@ function AfterLoginNavbar(props) {
                         }
                       >
                         Program Wise Revenue Status
+                      </a>
+                    </li>
+                  )}
+
+
+                  {menuShowPermision("salesachievementdashboard") === 1 && (
+                    <li>
+                      <a
+                        href="javascript:void(0)"
+                        onClick={() =>
+                          props.history.push("salesachievementdashboard")
+                        }
+                      >
+                        Sales Achievement Dashboard
                       </a>
                     </li>
                   )}
