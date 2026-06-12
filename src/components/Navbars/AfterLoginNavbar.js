@@ -157,6 +157,19 @@ function AfterLoginNavbar(props) {
                     </li>
                   )}
 
+                  {menuShowPermision("programcategoryachievementdashboard") === 1 && (
+                    <li>
+                      <a
+                        href="javascript:void(0)"
+                        onClick={() =>
+                          props.history.push("programcategoryachievementdashboard")
+                        }
+                      >
+                        Program Category Achievement Dashboard
+                      </a>
+                    </li>
+                  )}
+
                 </ul>
               </li>
             )}

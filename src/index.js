@@ -22,6 +22,7 @@ import ReportReviewDashboard from "views/screens/reportreviewdashboard/index.js"
 import ProgramAndBuyerWiseTat from "views/screens/programandbuyerwisetat/index.js";
 import SalesDashboard from "views/screens/salesdashboard/index.js";
 import SalesAchievementDashboard from "views/screens/salesachievementdashboard/index.js";
+import ProgramCategoryAchievementDashboard from "views/screens/programcategoryachievementdashboard/index.js";
 import ProgramWiseRevenueStatus from "views/screens/programwiserevenuestatus/index.js";
 
 
@@ -102,6 +103,7 @@ ReactDOM.render(
             <Route path="/programandbuyerwisetat" render={(props) => <ProgramAndBuyerWiseTat {...props} />} />
             <Route path="/salesdashboard" render={(props) => <SalesDashboard {...props} />} />
             <Route path="/salesachievementdashboard" render={(props) => <SalesAchievementDashboard {...props} />} />
+            <Route path="/programcategoryachievementdashboard" render={(props) => <ProgramCategoryAchievementDashboard {...props} />} />
             <Route path="/programwiserevenuestatus" render={(props) => <ProgramWiseRevenueStatus {...props} />} />
 
             <Route path="/businessline" render={(props) => <BusinessLine {...props} />} />
