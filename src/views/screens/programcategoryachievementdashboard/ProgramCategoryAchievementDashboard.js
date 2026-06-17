@@ -53,80 +53,132 @@ const ProgramCategoryAchievementDashboard = (props) => {
       const monthName = selectedMonth ? selectedMonth.name : currMonthId;
 
       const wb = XLSX.utils.book_new();
-
       const worksheetData = [];
 
-      // Title row
+      // Total columns: 19 (0-indexed 0..18)
+      const lastCol = 18;
+
+      // Row 0: Title
       worksheetData.push([
         `Program Category Achievement Dashboard - ${monthName} ${currYearName}`,
       ]);
 
-      // Header rows (2 rows for merged column groups)
+      // Row 1: Column group headers
       worksheetData.push([
-        "#",
-        "Program Category",
-        "ReCertification Revenue",
-        "",
-        "New Certification Revenue",
-        "",
-        "Total",
-        "",
+        "#",                   // col 0
+        "Program Category",    // col 1
+        "Budget CM",           // col 2 (spans 2-4)
+        "", "",
+        "Actual PY",           // col 5 (spans 5-7)
+        "", "",
+        "Last Days\nConfirmation", // col 8
+        "MTD Performed",       // col 9
+        "CM Scheduled",        // col 10
+        "CM Confirmed",        // col 11
+        "In-progress",         // col 12
+        "Pipeline",            // col 13
+        "MTD Revenue",         // col 14 (spans 14-16)
+        "", "",
+        "MTG\n(Budget)",       // col 17
+        "Budget vs\nMTD Ach",  // col 18
       ]);
+
+      // Row 2: Sub-headers
       worksheetData.push([
-        "",
-        "",
-        "Target",
-        "Achievement",
-        "Target",
-        "Achievement",
-        "Target",
-        "Achievement",
+        "",  // col 0
+        "",  // col 1
+        "Re-Cert",  "New-Cert", "Total",    // Budget CM
+        "Re-Cert",  "New-Cert", "Total",    // Actual PY
+        "",  // Last Days Confirmation
+        "",  // MTD Performed
+        "",  // CM Scheduled
+        "",  // CM Confirmed
+        "",  // In-progress
+        "",  // Pipeline
+        "Re-Cert",  "New-Cert", "Total",    // MTD Revenue
+        "",  // MTG
+        "",  // Budget vs MTD Ach
       ]);
 
       // Data rows
       exportData.forEach((row, idx) => {
+        const ach = row.BudgetVsMTDAch != null ? row.BudgetVsMTDAch.toFixed(2) + "%" : "0.00%";
         worksheetData.push([
           idx + 1,
-          row.ProgramCategoryName || "",
-          row.ReCertTarget || 0,
-          row.ReCertAchievement || 0,
-          row.NewCertTarget || 0,
-          row.NewCertAchievement || 0,
-          row.TotalCertTarget || 0,
-          row.TotalCertAchievement || 0,
+          row.ProgramCategoryName       || "",
+          row.BudgetCMReCert            || 0,
+          row.BudgetCMNewCert           || 0,
+          row.BudgetCMTotal             || 0,
+          row.ActualPYReCert            || 0,
+          row.ActualPYNewCert           || 0,
+          row.ActualPYTotal             || 0,
+          row.LastDaysConfirmation      || 0,
+          row.MTDPerformed              || 0,
+          row.CMScheduled               || 0,
+          row.CMConfirmed               || 0,
+          row.InProgress                || 0,
+          row.Pipeline                  || 0,
+          row.MTDRevenueReCert          || 0,
+          row.MTDRevenueNewCert         || 0,
+          row.MTDRevenueTotal           || 0,
+          row.MTGBudget                 || 0,
+          ach,
         ]);
       });
 
       // Totals row
-      const sum = (field) =>
+      const sumField = (field) =>
         exportData.reduce((acc, r) => acc + (parseFloat(r[field]) || 0), 0);
+      const totalMTDRevenue = sumField("MTDRevenueTotal");
+      const totalBudgetCM   = sumField("BudgetCMTotal");
+      const totalMTG        = totalMTDRevenue - totalBudgetCM;
+      const totalAch        = totalBudgetCM > 0
+        ? ((totalMTDRevenue / totalBudgetCM) * 100).toFixed(2) + "%"
+        : "0.00%";
+
       worksheetData.push([
-        "Total",
-        "",
-        parseFloat(sum("ReCertTarget").toFixed(2)),
-        parseFloat(sum("ReCertAchievement").toFixed(2)),
-        parseFloat(sum("NewCertTarget").toFixed(2)),
-        parseFloat(sum("NewCertAchievement").toFixed(2)),
-        parseFloat(sum("TotalCertTarget").toFixed(2)),
-        parseFloat(sum("TotalCertAchievement").toFixed(2)),
+        "Total", "",
+        parseFloat(sumField("BudgetCMReCert").toFixed(2)),
+        parseFloat(sumField("BudgetCMNewCert").toFixed(2)),
+        parseFloat(totalBudgetCM.toFixed(2)),
+        parseFloat(sumField("ActualPYReCert").toFixed(2)),
+        parseFloat(sumField("ActualPYNewCert").toFixed(2)),
+        parseFloat(sumField("ActualPYTotal").toFixed(2)),
+        parseFloat(sumField("LastDaysConfirmation").toFixed(2)),
+        parseFloat(sumField("MTDPerformed").toFixed(2)),
+        parseFloat(sumField("CMScheduled").toFixed(2)),
+        parseFloat(sumField("CMConfirmed").toFixed(2)),
+        parseFloat(sumField("InProgress").toFixed(2)),
+        parseFloat(sumField("Pipeline").toFixed(2)),
+        parseFloat(sumField("MTDRevenueReCert").toFixed(2)),
+        parseFloat(sumField("MTDRevenueNewCert").toFixed(2)),
+        parseFloat(totalMTDRevenue.toFixed(2)),
+        parseFloat(totalMTG.toFixed(2)),
+        totalAch,
       ]);
 
       const ws = XLSX.utils.aoa_to_sheet(worksheetData);
-
       const totalRows = worksheetData.length;
-      const lastCol = 7; // 0-indexed, column H
 
-      // Merges
       ws["!merges"] = [
         { s: { r: 0, c: 0 }, e: { r: 0, c: lastCol } }, // title
         { s: { r: 1, c: 0 }, e: { r: 2, c: 0 } },       // #
         { s: { r: 1, c: 1 }, e: { r: 2, c: 1 } },       // Program Category
-        { s: { r: 1, c: 2 }, e: { r: 1, c: 3 } },       // ReCert group
-        { s: { r: 1, c: 4 }, e: { r: 1, c: 5 } },       // NewCert group
-        { s: { r: 1, c: 6 }, e: { r: 1, c: 7 } },       // Total group
+        { s: { r: 1, c: 2 }, e: { r: 1, c: 4 } },       // Budget CM group
+        { s: { r: 1, c: 5 }, e: { r: 1, c: 7 } },       // Actual PY group
+        { s: { r: 1, c: 8  }, e: { r: 2, c: 8  } },     // Last Days Confirmation
+        { s: { r: 1, c: 9  }, e: { r: 2, c: 9  } },     // MTD Performed
+        { s: { r: 1, c: 10 }, e: { r: 2, c: 10 } },     // CM Scheduled
+        { s: { r: 1, c: 11 }, e: { r: 2, c: 11 } },     // CM Confirmed
+        { s: { r: 1, c: 12 }, e: { r: 2, c: 12 } },     // In-progress
+        { s: { r: 1, c: 13 }, e: { r: 2, c: 13 } },     // Pipeline
+        { s: { r: 1, c: 14 }, e: { r: 1, c: 16 } },     // MTD Revenue group
+        { s: { r: 1, c: 17 }, e: { r: 2, c: 17 } },     // MTG (Budget)
+        { s: { r: 1, c: 18 }, e: { r: 2, c: 18 } },     // Budget vs MTD Ach
+        { s: { r: totalRows - 1, c: 0 }, e: { r: totalRows - 1, c: 1 } }, // Totals label
       ];
 
-      // Style title
+      // Style: title
       if (ws["A1"]) {
         ws["A1"].s = {
           font: { bold: true, sz: 14 },
@@ -134,42 +186,53 @@ const ProgramCategoryAchievementDashboard = (props) => {
         };
       }
 
-      // Style header rows
+      // Style: header rows
       for (let c = 0; c <= lastCol; c++) {
-        ["B", "C"].forEach((rowLabel, rowOffset) => {
-          const cell = XLSX.utils.encode_cell({ r: 1 + rowOffset, c });
+        [1, 2].forEach((rowIdx) => {
+          const cell = XLSX.utils.encode_cell({ r: rowIdx, c });
           if (ws[cell]) {
             ws[cell].s = {
               font: { bold: true },
-              alignment: { horizontal: "center" },
+              alignment: { horizontal: "center", vertical: "center", wrapText: true },
               fill: { fgColor: { rgb: "D3E4F5" } },
             };
           }
         });
       }
 
-      // Style totals row
+      // Style: totals row
       const totalRowIdx = totalRows - 1;
       for (let c = 0; c <= lastCol; c++) {
         const cell = XLSX.utils.encode_cell({ r: totalRowIdx, c });
         if (ws[cell]) {
           ws[cell].s = {
             font: { bold: true },
-            alignment: { horizontal: c === 0 ? "left" : "right" },
+            alignment: { horizontal: c <= 1 ? "left" : "right" },
           };
         }
       }
 
       // Column widths
       ws["!cols"] = [
-        { wch: 6 },
-        { wch: 26 },
-        { wch: 14 },
-        { wch: 14 },
-        { wch: 16 },
-        { wch: 16 },
-        { wch: 12 },
-        { wch: 14 },
+        { wch: 5  }, // #
+        { wch: 22 }, // Program Category
+        { wch: 14 }, // BudgetCM ReCert
+        { wch: 14 }, // BudgetCM NewCert
+        { wch: 14 }, // BudgetCM Total
+        { wch: 14 }, // ActualPY ReCert
+        { wch: 14 }, // ActualPY NewCert
+        { wch: 14 }, // ActualPY Total
+        { wch: 14 }, // Last Days Confirmation
+        { wch: 14 }, // MTD Performed
+        { wch: 14 }, // CM Scheduled
+        { wch: 14 }, // CM Confirmed
+        { wch: 14 }, // In-progress
+        { wch: 12 }, // Pipeline
+        { wch: 14 }, // MTDRevenue ReCert
+        { wch: 14 }, // MTDRevenue NewCert
+        { wch: 14 }, // MTDRevenue Total
+        { wch: 14 }, // MTG (Budget)
+        { wch: 14 }, // Budget vs MTD Ach
       ];
 
       XLSX.utils.book_append_sheet(wb, ws, "Achievement");
@@ -183,102 +246,110 @@ const ProgramCategoryAchievementDashboard = (props) => {
   };
   /* =====End of Excel Export Code==== */
 
+  const moneyCol = (field, title, width = 130) => ({
+    field,
+    title,
+    hozAlign: "right",
+    headerHozAlign: "center",
+    width,
+    bottomCalc: "sum",
+    formatter: "money",
+    formatterParams: { precision: 2 },
+    bottomCalcFormatter: "money",
+    bottomCalcFormatterParams: { precision: 2 },
+  });
+
   const columnList = [
     {
       field: "rownumber",
       title: "#",
       hozAlign: "center",
       headerHozAlign: "center",
-      width: 55,
+      width: 50,
       formatter: "rownum",
+      frozen: true,
     },
     {
       field: "ProgramCategoryName",
       title: "Program Category",
       hozAlign: "left",
       headerHozAlign: "left",
-      width: 200,
+      width: 180,
+      frozen: true,
     },
     {
-      title: "ReCertification Revenue",
+      title: "Budget CM",
       hozAlign: "center",
       headerHozAlign: "center",
       columns: [
-        {
-          field: "ReCertTarget",
-          title: "Target",
-          hozAlign: "right",
-          headerHozAlign: "right",
-          width: 130,
-          bottomCalc: "sum",
-        },
-        {
-          field: "ReCertAchievement",
-          title: "Achievement",
-          hozAlign: "right",
-          headerHozAlign: "right",
-          width: 130,
-          bottomCalc: "sum",
-          formatter: "money",
-          formatterParams: { precision: 2 },
-          bottomCalcFormatter: "money",
-          bottomCalcFormatterParams: { precision: 2 },
-        },
+        moneyCol("BudgetCMReCert",  "Re-Cert", 90),
+        moneyCol("BudgetCMNewCert", "New-Cert", 90),
+        moneyCol("BudgetCMTotal",   "Total", 85),
       ],
     },
     {
-      title: "New Certification Revenue",
+      title: "Actual PY",
       hozAlign: "center",
       headerHozAlign: "center",
       columns: [
-        {
-          field: "NewCertTarget",
-          title: "Target",
-          hozAlign: "right",
-          headerHozAlign: "right",
-          width: 130,
-          bottomCalc: "sum",
-        },
-        {
-          field: "NewCertAchievement",
-          title: "Achievement",
-          hozAlign: "right",
-          headerHozAlign: "right",
-          width: 130,
-          bottomCalc: "sum",
-          formatter: "money",
-          formatterParams: { precision: 2 },
-          bottomCalcFormatter: "money",
-          bottomCalcFormatterParams: { precision: 2 },
-        },
+        moneyCol("ActualPYReCert",  "Re-Cert", 90),
+        moneyCol("ActualPYNewCert", "New-Cert", 90),
+        moneyCol("ActualPYTotal",   "Total", 85),
       ],
     },
     {
-      title: "Total",
+      field: "LastDaysConfirmation",
+      title: "Last Days\nConfirmation",
+      hozAlign: "right",
+      headerHozAlign: "center",
+      width: 120,
+      bottomCalc: "sum",
+      formatter: "money",
+      formatterParams: { precision: 2 },
+      bottomCalcFormatter: "money",
+      bottomCalcFormatterParams: { precision: 2 },
+    },
+    moneyCol("MTDPerformed", "MTD Performed", 130),
+    moneyCol("CMScheduled",  "CM Scheduled",  130),
+    moneyCol("CMConfirmed",  "CM Confirmed",  130),
+    moneyCol("InProgress",   "In-progress",   130),
+    moneyCol("Pipeline",     "Pipeline",      100),
+    {
+      title: "MTD Revenue",
       hozAlign: "center",
       headerHozAlign: "center",
       columns: [
-        {
-          field: "TotalCertTarget",
-          title: "Target",
-          hozAlign: "right",
-          headerHozAlign: "right",
-          width: 130,
-          bottomCalc: "sum",
-        },
-        {
-          field: "TotalCertAchievement",
-          title: "Achievement",
-          hozAlign: "right",
-          headerHozAlign: "right",
-          width: 130,
-          bottomCalc: "sum",
-          formatter: "money",
-          formatterParams: { precision: 2 },
-          bottomCalcFormatter: "money",
-          bottomCalcFormatterParams: { precision: 2 },
-        },
+        moneyCol("MTDRevenueReCert",  "Re-Cert", 90),
+        moneyCol("MTDRevenueNewCert", "New-Cert", 90),
+        moneyCol("MTDRevenueTotal",   "Total", 85),
       ],
+    },
+    {
+      field: "MTGBudget",
+      title: "MTG\n(Budget)",
+      hozAlign: "right",
+      headerHozAlign: "center",
+      width: 130,
+      bottomCalc: "sum",
+      formatter: "money",
+      formatterParams: { precision: 2 },
+      bottomCalcFormatter: "money",
+      bottomCalcFormatterParams: { precision: 2 },
+    },
+    {
+      field: "BudgetVsMTDAch",
+      title: "Budget vs\nMTD Ach",
+      hozAlign: "right",
+      headerHozAlign: "center",
+      width: 120,
+      formatter: (cell) => {
+        const val = parseFloat(cell.getValue()) || 0;
+        return val.toFixed(2) + "%";
+      },
+      bottomCalc: (values) => {
+        const total = values.reduce((s, v) => s + (parseFloat(v) || 0), 0);
+        return total > 0 ? (total / values.length).toFixed(2) + "%" : "0.00%";
+      },
     },
   ];
 
