@@ -33,7 +33,7 @@ function getDataList($data)
 		a.FactoryAddress,a.FactoryContactPerson,a.FactoryContactPersonPhone,a.FactoryContactPersonEmail,a.FactoryHoliday,
 		d.FactoryGroupName,	a.ProgramId,e.ProgramName,a.ExpireDate,a.OpportunityDate,a.TentativeOfferPrice,
 		a.CertificateBody,a.CoordinatorId,f.UserName as CoordinatorName, a.AuditStageId, g.AuditStageName,
-		a.LeadStatusId, h.LeadStatusName,a.ManDay,a.BuyerId,i.BuyerName,a.NextFollowupDate,
+		a.LeadStatusId, h.LeadStatusName,a.ConfirmationDate,a.ManDay,a.BuyerId,i.BuyerName,a.NextFollowupDate,
 		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks,a.Comments
 		, a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, a.CountryId, a.LeadAuditorId, REPLACE(a.TeamAuditorIds, '".'"'."', '') as TeamAuditorId, a.AuditTypeId, 
 		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId,a.ReportWritingDate, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT, 
@@ -83,6 +83,7 @@ function dataAddEdit($data)
 		$id = $data->rowData->id;
 
 		$LeadStatusId = $data->rowData->LeadStatusId ? $data->rowData->LeadStatusId : null;
+		$ConfirmationDate = $data->rowData->ConfirmationDate ? $data->rowData->ConfirmationDate : null;
 		$PaymentStatus = $data->rowData->PaymentStatus ? $data->rowData->PaymentStatus : "No";
 		$AuditFee = $data->rowData->AuditFee ? $data->rowData->AuditFee : null;
 		$OPE = $data->rowData->OPE ? $data->rowData->OPE : null;
@@ -104,8 +105,8 @@ function dataAddEdit($data)
 
 			$u = new updateq();
 			$u->table = 't_transaction';
-			$u->columns = ['LeadStatusId','PaymentStatus','AuditFee','OPE','OthersAmount','PINo','RevenueBDT','InvoiceTo','NameofApplicant','InvoiceAddress','InvoiceEmail','InvoiceMobile','Discount','InvStatusId','InvoiceComments',"LastInvoiceUpdateUserId","LastUpdateUserId"];
-			$u->values = [$LeadStatusId,$PaymentStatus,$AuditFee,$OPE,$OthersAmount,$PINo,$RevenueBDT,$InvoiceTo,$NameofApplicant,$InvoiceAddress,$InvoiceEmail,$InvoiceMobile,$Discount,$InvStatusId,$InvoiceComments,$UserId,$UserId];
+			$u->columns = ['LeadStatusId','ConfirmationDate','PaymentStatus','AuditFee','OPE','OthersAmount','PINo','RevenueBDT','InvoiceTo','NameofApplicant','InvoiceAddress','InvoiceEmail','InvoiceMobile','Discount','InvStatusId','InvoiceComments',"LastInvoiceUpdateUserId","LastUpdateUserId"];
+			$u->values = [$LeadStatusId,$ConfirmationDate,$PaymentStatus,$AuditFee,$OPE,$OthersAmount,$PINo,$RevenueBDT,$InvoiceTo,$NameofApplicant,$InvoiceAddress,$InvoiceEmail,$InvoiceMobile,$Discount,$InvStatusId,$InvoiceComments,$UserId,$UserId];
 			$u->pks = ['TransactionId'];
 			$u->pk_values = [$id];
 			$u->build_query();

@@ -56,7 +56,7 @@ function getDataList($data)
 		a.FactoryAddress,a.FactoryContactPerson,a.FactoryContactPersonPhone,a.FactoryContactPersonEmail,ifnull(a.FactoryHoliday,'') FactoryHoliday,		
 		d.FactoryGroupName,	a.ProgramId,e.ProgramName,a.ExpireDate,a.OpportunityDate,a.TentativeOfferPrice,
 		a.CertificateBody,a.CoordinatorId,f.UserName as CoordinatorName, a.AuditStageId, g.AuditStageName,
-		a.LeadStatusId, h.LeadStatusName,a.ManDay,a.BuyerId,i.BuyerName,a.NextFollowupDate,
+		a.LeadStatusId, h.LeadStatusName,a.ConfirmationDate,a.ManDay,a.BuyerId,i.BuyerName,a.NextFollowupDate,
 		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks,a.Comments,l.UserName as SalesEntryUserName
 		, a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, a.CountryId, a.LeadAuditorId, 
 		
@@ -166,6 +166,7 @@ function dataAddEdit($data)
 		$CoordinatorId = $data->rowData->CoordinatorId ? $data->rowData->CoordinatorId : null;
 		$AuditStageId = $data->rowData->AuditStageId ? $data->rowData->AuditStageId : null;
 		$LeadStatusId = $data->rowData->LeadStatusId ? $data->rowData->LeadStatusId : null;
+		$ConfirmationDate = $data->rowData->ConfirmationDate ? $data->rowData->ConfirmationDate : null;
 		$ManDay = $data->rowData->ManDay ? $data->rowData->ManDay : null;
 		$BuyerId = $data->rowData->BuyerId ? $data->rowData->BuyerId : null;
 		$NextFollowupDate = $data->rowData->NextFollowupDate ? $data->rowData->NextFollowupDate : null;
@@ -437,6 +438,7 @@ function dataAddEdit($data)
 				'CoordinatorId',
 				'AuditStageId',
 				'LeadStatusId',
+				'ConfirmationDate',
 				'ManDay',
 				'BuyerId',
 				'NextFollowupDate',
@@ -490,6 +492,7 @@ function dataAddEdit($data)
 				$CoordinatorId,
 				$AuditStageId,
 				$LeadStatusId,
+				$ConfirmationDate,
 				$ManDay,
 				$BuyerId,
 				$NextFollowupDate,

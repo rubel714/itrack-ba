@@ -1406,6 +1406,16 @@ const Invoice = (props) => {
                   <TextField {...params} variant="standard" fullWidth />
                 )}
               />
+              <label>Confirmation Date</label>
+              <input
+                type="date"
+                id="ConfirmationDate"
+                name="ConfirmationDate"
+                disabled={permissionType == 1}
+                placeholder="Enter Confirmation Date"
+                value={currentRow.ConfirmationDate}
+                onChange={(e) => handleChange(e)}
+              />
               <label>Manday(s)</label>
               <input
                 type="number"

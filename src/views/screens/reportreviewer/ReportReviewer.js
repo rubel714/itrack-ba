@@ -772,15 +772,15 @@ const ReportReviewer = (props) => {
       filter: true,
       width: "6%",
     },
-    // {
-    //   field: "ReportReleasedStatus",
-    //   label: "Released Status",
-    //   align: "left",
-    //   visible: true,
-    //   sort: true,
-    //   filter: true,
-    //   width: "5%",
-    // },
+    {
+      field: "ReportResult",
+      label: "Report Status Remarks",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "5%",
+    },
     {
       field: "custom",
       label: "Action",
@@ -1472,6 +1472,17 @@ const ReportReviewer = (props) => {
                 renderInput={(params) => (
                   <TextField {...params} variant="standard" fullWidth />
                 )}
+              />
+
+              <label>Confirmation Date</label>
+              <input
+                type="date"
+                id="ConfirmationDate"
+                name="ConfirmationDate"
+                disabled={permissionType == 1}
+                placeholder="Enter Confirmation Date"
+                value={currentRow.ConfirmationDate}
+                onChange={(e) => handleChange(e)}
               />
 
               <label>Manday(s)</label>
@@ -2433,7 +2444,7 @@ const ReportReviewer = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Report Result</label>
+              <label>Report Status Remarks</label>
               <input
                 type="text"
                 id="ReportResult"
@@ -2441,7 +2452,7 @@ const ReportReviewer = (props) => {
                 disabled={permissionType == 1}
                 // disabled={true}
                 // class={errorObject.ReportResult}
-                placeholder="Enter Report Result"
+                placeholder="Enter Report Status Remarks"
                 value={currentRow.ReportResult}
                 onChange={(e) => handleChange(e)}
               />

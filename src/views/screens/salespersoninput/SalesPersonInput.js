@@ -1277,6 +1277,19 @@ const SalesPersonInput = (props) => {
                 )}
               />
 
+              
+              <label>Confirmation Date</label>
+              <input
+                type="date"
+                id="ConfirmationDate"
+                name="ConfirmationDate"
+                disabled={currentRow.StatusId == 5 || permissionType == 1}
+                // class={errorObject.ExpireDate}
+                placeholder="Enter Confirmation Date"
+                value={currentRow.ConfirmationDate}
+                onChange={(e) => handleChange(e)}
+              />
+
               <label>Manday(s) *</label>
               <input
                 type="number"
