@@ -66,6 +66,12 @@ function getDataList($data)
 					THEN t.RevenueBDT ELSE 0 END
 				), 0) AS ActualPYTotal,
 
+				-- Last Days Confirmation: t.ConfirmationDate = system yesterday
+				COALESCE(SUM(
+					CASE WHEN DATE(t.ConfirmationDate) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+					THEN t.RevenueBDT ELSE 0 END
+				), 0) AS LastDaysConfirmation,
+
 				-- MTD Performed: LeadStatusId IN (5,14,12,13,15,16,20,17), selected month/year
 				COALESCE(SUM(
 					CASE WHEN t.LeadStatusId NOT IN (9,11)
@@ -168,7 +174,7 @@ function getDataList($data)
 				"ActualPYReCert"       => (float)$row['ActualPYReCert'],
 				"ActualPYNewCert"      => (float)$row['ActualPYNewCert'],
 				"ActualPYTotal"        => (float)$row['ActualPYTotal'],
-				"LastDaysConfirmation" => 0,
+				"LastDaysConfirmation" => (float)$row['LastDaysConfirmation'],
 				"MTDPerformed"         => (float)$row['MTDPerformed'],
 				"CMScheduled"          => (float)$row['CMScheduled'],
 				"CMConfirmed"          => (float)$row['CMConfirmed'],
