@@ -87,7 +87,7 @@ const CoordinatorInput = (props) => {
 
   const [TeamAuditorList, setTeamAuditorList] = useState(null);
   const [currTeamAuditorId, setCurrTeamAuditorId] = useState([]);
-  console.log('currTeamAuditorId: ', currTeamAuditorId);
+  console.log("currTeamAuditorId: ", currTeamAuditorId);
 
   const [AuditTypeList, setAuditTypeList] = useState(null);
   const [currAuditTypeId, setCurrAuditTypeId] = useState(null);
@@ -705,8 +705,18 @@ const CoordinatorInput = (props) => {
     let isValid = true;
     validateFields.map((field) => {
       if (!currentRow[field]) {
-        errorData[field] = " validation-style ";
-        isValid = false;
+        if (
+          (field == "AuditFee" ||
+            field == "OPE" ||
+            field == "OthersAmount" ||
+            field == "RevenueBDT") &&
+          currentRow[field] === 0
+        ) {
+          //This is valid
+        } else {
+          errorData[field] = " validation-style ";
+          isValid = false;
+        }
       }
     });
     setErrorObject(errorData);
@@ -1193,18 +1203,17 @@ const CoordinatorInput = (props) => {
   }
 
   function teamAuditorAssignModalCallback(assignedMembers) {
-
-    console.log('assignedMembers: ', assignedMembers);
+    console.log("assignedMembers: ", assignedMembers);
     // if (assignedMembers.length > 0) {
-      let data = { ...currentRow };
-      let assignedIds = assignedMembers.map((am) => am.AuditorId);
-      console.log('assignedIds: ', assignedIds);
-      data["TeamAuditorId"] = assignedIds;
-      // data["TeamAuditorId"] = [8,11,46,25];
-      // setCurrentRow(data);
-      setCurrTeamAuditorId(assignedIds);
-      // setCurrTeamAuditorId([8,11,46,25]);
-      setCurrentRow(data);
+    let data = { ...currentRow };
+    let assignedIds = assignedMembers.map((am) => am.AuditorId);
+    console.log("assignedIds: ", assignedIds);
+    data["TeamAuditorId"] = assignedIds;
+    // data["TeamAuditorId"] = [8,11,46,25];
+    // setCurrentRow(data);
+    setCurrTeamAuditorId(assignedIds);
+    // setCurrTeamAuditorId([8,11,46,25]);
+    setCurrentRow(data);
     // }
 
     setShowTeamAuditorAssignModal(false);

@@ -197,11 +197,11 @@ function dataAddEdit($data)
 		$ReportWriterId = $data->rowData->ReportWriterId ? $data->rowData->ReportWriterId : null;
 		$ReportWritingDate = $data->rowData->ReportWritingDate ? $data->rowData->ReportWritingDate : null;
 		$NoOfEmployee = $data->rowData->NoOfEmployee ? $data->rowData->NoOfEmployee : null;
-		$AuditFee = $data->rowData->AuditFee ? $data->rowData->AuditFee : null;
-		$OPE = $data->rowData->OPE ? $data->rowData->OPE : null;
-		$OthersAmount = $data->rowData->OthersAmount ? $data->rowData->OthersAmount : null;
+		$AuditFee = $data->rowData->AuditFee ? $data->rowData->AuditFee : 0;
+		$OPE = $data->rowData->OPE ? $data->rowData->OPE : 0;
+		$OthersAmount = $data->rowData->OthersAmount ? $data->rowData->OthersAmount : 0;
 		$PINo = $data->rowData->PINo ? $data->rowData->PINo : null;
-		$RevenueBDT = $data->rowData->RevenueBDT ? $data->rowData->RevenueBDT : null;
+		$RevenueBDT = $data->rowData->RevenueBDT ? $data->rowData->RevenueBDT : 0;
 		$Discount = $data->rowData->Discount ? $data->rowData->Discount : null;
 		$AttachedDocuments = $data->rowData->AttachedDocuments ? $data->rowData->AttachedDocuments : [];
 		$IsSendMail = $data->rowData->IsSendMail ? $data->rowData->IsSendMail : 0;
