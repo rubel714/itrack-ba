@@ -183,7 +183,7 @@ function dataAddEdit($data)
 		$FactoryContactPersonEmail = $data->rowData->FactoryContactPersonEmail ? $data->rowData->FactoryContactPersonEmail : null;
 		$FactoryHoliday = $data->rowData->FactoryHoliday ? $data->rowData->FactoryHoliday : null;
 
-		$AssessmentNo = $data->rowData->AssessmentNo ? $data->rowData->AssessmentNo : null;
+		$AssessmentNo = $data->rowData->AssessmentNo ? $data->rowData->AssessmentNo : 0;
 		$AuditStartDate = $data->rowData->AuditStartDate ? $data->rowData->AuditStartDate : null;
 		$AuditEndDate = $data->rowData->AuditEndDate ? $data->rowData->AuditEndDate : null;
 		$CountryId = $data->rowData->CountryId ? $data->rowData->CountryId : null;
@@ -196,11 +196,11 @@ function dataAddEdit($data)
 		$PaymentStatus = $data->rowData->PaymentStatus ? $data->rowData->PaymentStatus : "No";
 		$ReportWriterId = $data->rowData->ReportWriterId ? $data->rowData->ReportWriterId : null;
 		$ReportWritingDate = $data->rowData->ReportWritingDate ? $data->rowData->ReportWritingDate : null;
-		$NoOfEmployee = $data->rowData->NoOfEmployee ? $data->rowData->NoOfEmployee : null;
+		$NoOfEmployee = $data->rowData->NoOfEmployee ? $data->rowData->NoOfEmployee : 0;
 		$AuditFee = $data->rowData->AuditFee ? $data->rowData->AuditFee : 0;
 		$OPE = $data->rowData->OPE ? $data->rowData->OPE : 0;
 		$OthersAmount = $data->rowData->OthersAmount ? $data->rowData->OthersAmount : 0;
-		$PINo = $data->rowData->PINo ? $data->rowData->PINo : null;
+		$PINo = $data->rowData->PINo ? $data->rowData->PINo : 0;
 		$RevenueBDT = $data->rowData->RevenueBDT ? $data->rowData->RevenueBDT : 0;
 		$Discount = $data->rowData->Discount ? $data->rowData->Discount : null;
 		$AttachedDocuments = $data->rowData->AttachedDocuments ? $data->rowData->AttachedDocuments : [];
