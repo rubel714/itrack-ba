@@ -65,7 +65,7 @@ function getDataList($data)
 	
 		
 		a.AuditTypeId, 
-		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId,a.ReportWritingDate, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT, 
+		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId,a.ReportWritingDate, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT,a.PoundRate,a.RevenuePound, 
 		a.AuditBook, a.AttachedDocuments, a.IsSendMail,a.StateId,m.StateName,a.FileUploaded,a.ReportSentToCustomer,a.Discount
 	   FROM `t_transaction` a
 	   INNER JOIN `t_activity` b ON a.`ActivityId` = b.`ActivityId`
@@ -202,6 +202,8 @@ function dataAddEdit($data)
 		$OthersAmount = $data->rowData->OthersAmount ? $data->rowData->OthersAmount : 0;
 		$PINo = $data->rowData->PINo ? $data->rowData->PINo : 0;
 		$RevenueBDT = $data->rowData->RevenueBDT ? $data->rowData->RevenueBDT : 0;
+		$PoundRate = $data->rowData->PoundRate ? $data->rowData->PoundRate : 0;
+		$RevenuePound = $data->rowData->RevenuePound ? $data->rowData->RevenuePound : 0;
 		$Discount = $data->rowData->Discount ? $data->rowData->Discount : null;
 		$AttachedDocuments = $data->rowData->AttachedDocuments ? $data->rowData->AttachedDocuments : [];
 		$IsSendMail = $data->rowData->IsSendMail ? $data->rowData->IsSendMail : 0;
@@ -464,6 +466,8 @@ function dataAddEdit($data)
 				"OthersAmount",
 				"PINo",
 				"RevenueBDT",
+				"PoundRate",
+				"RevenuePound",
 				"Discount",
 				"AttachedDocuments",
 				"AuditBook",
@@ -518,6 +522,8 @@ function dataAddEdit($data)
 				$OthersAmount,
 				$PINo,
 				$RevenueBDT,
+				$PoundRate,
+				$RevenuePound,
 				$Discount,
 				json_encode($AttachedDocumentsArr),
 				$AuditBook,

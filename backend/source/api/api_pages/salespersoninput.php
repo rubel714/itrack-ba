@@ -118,6 +118,10 @@ function dataAddEdit($data)
 
 
 		try {
+			$dbh = new Db();
+			$ClientId = 1;
+			$PoundRate = $dbh->single("SELECT PoundRate FROM t_client WHERE ClientId = $ClientId LIMIT 1;");
+
 			$aQuerys = array();
 			if ($id == "") {
 				$q = new insertq();
@@ -152,7 +156,8 @@ function dataAddEdit($data)
 					'UserId',
 					'LastSalesInputUpdateUserId',
 					'StatusId',
-					'LastUpdateUserId'
+					'LastUpdateUserId',
+					'PoundRate'
 				];
 				$q->values = [
 					$TransactionTypeId,
@@ -184,7 +189,8 @@ function dataAddEdit($data)
 					$UserId,
 					$UserId,
 					$CurrStatusId,
-					$UserId
+					$UserId,
+					$PoundRate
 				];
 				$q->pks = ['TransactionId'];
 				$q->bUseInsetId = true;

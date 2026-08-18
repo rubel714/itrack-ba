@@ -145,18 +145,18 @@ const CoordinatorInput = (props) => {
 
     window.open(
       finalUrl +
-        "?action=CoordinatorInputExport" +
-        "&reportType=excel" +
-        "&StartDate=" +
-        StartDate +
-        "&EndDate=" +
-        EndDate +
-        "&UserId=" +
-        UserInfo.UserId +
-        "&RoleId=" +
-        UserInfo.RoleId[0] +
-        "&TimeStamp=" +
-        Date.now(),
+      "?action=CoordinatorInputExport" +
+      "&reportType=excel" +
+      "&StartDate=" +
+      StartDate +
+      "&EndDate=" +
+      EndDate +
+      "&UserId=" +
+      UserInfo.UserId +
+      "&RoleId=" +
+      UserInfo.RoleId[0] +
+      "&TimeStamp=" +
+      Date.now(),
     );
   };
   /* =====End of Excel Export Code==== */
@@ -502,6 +502,17 @@ const CoordinatorInput = (props) => {
         parseFloat(currentRow.OPE || 0) +
         parseFloat(value || 0);
       data["RevenueBDT"] = RevenueBDT;
+    }
+
+    if (
+      name == "RevenueBDT" ||
+      name == "PoundRate" ||
+      name == "AuditFee" ||
+      name == "OPE" ||
+      name == "OthersAmount"
+    ) {
+      data["RevenuePound"] =
+        parseFloat(data.RevenueBDT || 0) * parseFloat(data.PoundRate || 0);
     }
 
     setCurrentRow(data);
@@ -1293,9 +1304,8 @@ const CoordinatorInput = (props) => {
                 disableClearable
                 disabled={permissionType == 1}
                 // disabled={true}
-                className={`chosen_dropdown ${
-                  errorObject.ActivityId ? errorObject.ActivityId : ""
-                }`}
+                className={`chosen_dropdown ${errorObject.ActivityId ? errorObject.ActivityId : ""
+                  }`}
                 id="ActivityId"
                 name="ActivityId"
                 autoComplete
@@ -1306,10 +1316,10 @@ const CoordinatorInput = (props) => {
                 value={
                   ActivityList
                     ? ActivityList[
-                        ActivityList.findIndex(
-                          (list) => list.id === currActivityId,
-                        )
-                      ]
+                    ActivityList.findIndex(
+                      (list) => list.id === currActivityId,
+                    )
+                    ]
                     : null
                 }
                 onChange={(event, valueobj) =>
@@ -1335,9 +1345,8 @@ const CoordinatorInput = (props) => {
                 disabled={permissionType == 1}
                 // disabled={true}
                 // className="chosen_dropdown"
-                className={`chosen_dropdown ${
-                  errorObject.FactoryId ? errorObject.FactoryId : ""
-                }`}
+                className={`chosen_dropdown ${errorObject.FactoryId ? errorObject.FactoryId : ""
+                  }`}
                 id="FactoryId"
                 name="FactoryId"
                 autoComplete
@@ -1348,10 +1357,10 @@ const CoordinatorInput = (props) => {
                 value={
                   FactoryList
                     ? FactoryList[
-                        FactoryList.findIndex(
-                          (list) => list.id === currFactoryId,
-                        )
-                      ]
+                    FactoryList.findIndex(
+                      (list) => list.id === currFactoryId,
+                    )
+                    ]
                     : null
                 }
                 onChange={(event, valueobj) =>
@@ -1379,13 +1388,13 @@ const CoordinatorInput = (props) => {
                 value={
                   currFactoryId
                     ? FactoryList[
-                        FactoryList.findIndex(
-                          (list) => list.id === currFactoryId,
-                        )
-                      ].FactoryGroupName
+                      FactoryList.findIndex(
+                        (list) => list.id === currFactoryId,
+                      )
+                    ].FactoryGroupName
                     : ""
                 }
-                // onChange={(e) => handleChange(e)}
+              // onChange={(e) => handleChange(e)}
               />
 
               <label>Factory Address *</label>
@@ -1407,9 +1416,8 @@ const CoordinatorInput = (props) => {
                 disabled={permissionType == 1}
                 // disabled={true}
                 // className="chosen_dropdown"
-                className={`chosen_dropdown ${
-                  errorObject.StateId ? errorObject.StateId : ""
-                }`}
+                className={`chosen_dropdown ${errorObject.StateId ? errorObject.StateId : ""
+                  }`}
                 id="StateId"
                 name="StateId"
                 autoComplete
@@ -1420,8 +1428,8 @@ const CoordinatorInput = (props) => {
                 value={
                   StateList
                     ? StateList[
-                        StateList.findIndex((list) => list.id === currStateId)
-                      ]
+                    StateList.findIndex((list) => list.id === currStateId)
+                    ]
                     : null
                 }
                 onChange={(event, valueobj) =>
@@ -1480,9 +1488,8 @@ const CoordinatorInput = (props) => {
                   disabled={permissionType == 1}
                   value={currDays.length > 0 ? currDays.split(",") : []}
                   onChange={handleChangeMulpleCboDays}
-                  className={`chosen_dropdown ${
-                    errorObject.FactoryHoliday ? errorObject.FactoryHoliday : ""
-                  }`}
+                  className={`chosen_dropdown ${errorObject.FactoryHoliday ? errorObject.FactoryHoliday : ""
+                    }`}
                   title={currDays ? currDays : ""}
                   renderValue={(selected) =>
                     (DaysList || [])
@@ -1513,9 +1520,8 @@ const CoordinatorInput = (props) => {
                 disableClearable
                 disabled={permissionType == 1}
                 // className="chosen_dropdown"
-                className={`chosen_dropdown ${
-                  errorObject.ProgramId ? errorObject.ProgramId : ""
-                }`}
+                className={`chosen_dropdown ${errorObject.ProgramId ? errorObject.ProgramId : ""
+                  }`}
                 id="ProgramId"
                 name="ProgramId"
                 autoComplete
@@ -1526,10 +1532,10 @@ const CoordinatorInput = (props) => {
                 value={
                   ProgramList
                     ? ProgramList[
-                        ProgramList.findIndex(
-                          (list) => list.id === currProgramId,
-                        )
-                      ]
+                    ProgramList.findIndex(
+                      (list) => list.id === currProgramId,
+                    )
+                    ]
                     : null
                 }
                 onChange={(event, valueobj) =>
@@ -1601,9 +1607,8 @@ const CoordinatorInput = (props) => {
                 disableClearable
                 disabled={permissionType == 1}
                 // disabled={true}
-                className={`chosen_dropdown ${
-                  errorObject.CoordinatorId ? errorObject.CoordinatorId : ""
-                }`}
+                className={`chosen_dropdown ${errorObject.CoordinatorId ? errorObject.CoordinatorId : ""
+                  }`}
                 id="CoordinatorId"
                 name="CoordinatorId"
                 autoComplete
@@ -1614,10 +1619,10 @@ const CoordinatorInput = (props) => {
                 value={
                   CoordinatorList
                     ? CoordinatorList[
-                        CoordinatorList.findIndex(
-                          (list) => list.id === currCoordinatorId,
-                        )
-                      ]
+                    CoordinatorList.findIndex(
+                      (list) => list.id === currCoordinatorId,
+                    )
+                    ]
                     : null
                 }
                 onChange={(event, valueobj) =>
@@ -1646,19 +1651,18 @@ const CoordinatorInput = (props) => {
                 id="AuditStageId"
                 name="AuditStageId"
                 autoComplete
-                className={`chosen_dropdown ${
-                  errorObject.AuditStageId ? errorObject.AuditStageId : ""
-                }`}
+                className={`chosen_dropdown ${errorObject.AuditStageId ? errorObject.AuditStageId : ""
+                  }`}
                 options={AuditStageList ? AuditStageList : []}
                 getOptionLabel={(option) => option.name}
                 defaultValue={{ id: 0, name: "Select Audit Stage" }}
                 value={
                   AuditStageList
                     ? AuditStageList[
-                        AuditStageList.findIndex(
-                          (list) => list.id === currAuditStageId,
-                        )
-                      ]
+                    AuditStageList.findIndex(
+                      (list) => list.id === currAuditStageId,
+                    )
+                    ]
                     : null
                 }
                 onChange={(event, valueobj) =>
@@ -1683,9 +1687,8 @@ const CoordinatorInput = (props) => {
                 disableClearable
                 disabled={permissionType == 1}
                 // disabled={true}
-                className={`chosen_dropdown ${
-                  errorObject.LeadStatusId ? errorObject.LeadStatusId : ""
-                }`}
+                className={`chosen_dropdown ${errorObject.LeadStatusId ? errorObject.LeadStatusId : ""
+                  }`}
                 id="LeadStatusId"
                 name="LeadStatusId"
                 autoComplete
@@ -1696,10 +1699,10 @@ const CoordinatorInput = (props) => {
                 value={
                   LeadStatusList
                     ? LeadStatusList[
-                        LeadStatusList.findIndex(
-                          (list) => list.id === currLeadStatusId,
-                        )
-                      ]
+                    LeadStatusList.findIndex(
+                      (list) => list.id === currLeadStatusId,
+                    )
+                    ]
                     : null
                 }
                 onChange={(event, valueobj) =>
@@ -1748,9 +1751,8 @@ const CoordinatorInput = (props) => {
                 disabled={permissionType == 1}
                 // disabled={true}
                 // className="chosen_dropdown"
-                className={`chosen_dropdown ${
-                  errorObject.BuyerId ? errorObject.BuyerId : ""
-                }`}
+                className={`chosen_dropdown ${errorObject.BuyerId ? errorObject.BuyerId : ""
+                  }`}
                 id="BuyerId"
                 name="BuyerId"
                 autoComplete
@@ -1761,8 +1763,8 @@ const CoordinatorInput = (props) => {
                 value={
                   BuyerList
                     ? BuyerList[
-                        BuyerList.findIndex((list) => list.id === currBuyerId)
-                      ]
+                    BuyerList.findIndex((list) => list.id === currBuyerId)
+                    ]
                     : null
                 }
                 onChange={(event, valueobj) =>
@@ -1795,10 +1797,10 @@ const CoordinatorInput = (props) => {
                 value={
                   DepartmentList
                     ? DepartmentList[
-                        DepartmentList.findIndex(
-                          (list) => list.id === currDepartmentId,
-                        )
-                      ]
+                    DepartmentList.findIndex(
+                      (list) => list.id === currDepartmentId,
+                    )
+                    ]
                     : null
                 }
                 onChange={(event, valueobj) =>
@@ -1823,9 +1825,8 @@ const CoordinatorInput = (props) => {
                 disableClearable
                 disabled={permissionType == 1}
                 // disabled={true}
-                className={`chosen_dropdown ${
-                  errorObject.MemberId ? errorObject.MemberId : ""
-                }`}
+                className={`chosen_dropdown ${errorObject.MemberId ? errorObject.MemberId : ""
+                  }`}
                 id="MemberId"
                 name="MemberId"
                 autoComplete
@@ -1836,8 +1837,8 @@ const CoordinatorInput = (props) => {
                 value={
                   MemberList
                     ? MemberList[
-                        MemberList.findIndex((list) => list.id === currMemberId)
-                      ]
+                    MemberList.findIndex((list) => list.id === currMemberId)
+                    ]
                     : ""
                 }
                 onChange={(event, valueobj) =>
@@ -1871,9 +1872,8 @@ const CoordinatorInput = (props) => {
                 autoHighlight
                 disableClearable
                 disabled={permissionType == 1}
-                className={`chosen_dropdown ${
-                  errorObject.Remarks ? errorObject.Remarks : ""
-                }`}
+                className={`chosen_dropdown ${errorObject.Remarks ? errorObject.Remarks : ""
+                  }`}
                 id="Remarks"
                 name="Remarks"
                 autoComplete
@@ -1884,8 +1884,8 @@ const CoordinatorInput = (props) => {
                 value={
                   RemarksList
                     ? RemarksList[
-                        RemarksList.findIndex((list) => list.id === currRemarks)
-                      ]
+                    RemarksList.findIndex((list) => list.id === currRemarks)
+                    ]
                     : null
                 }
                 onChange={(event, valueobj) =>
@@ -1967,9 +1967,8 @@ const CoordinatorInput = (props) => {
                 autoHighlight
                 disableClearable
                 disabled={permissionType == 1}
-                className={`chosen_dropdown ${
-                  errorObject.CountryId ? errorObject.CountryId : ""
-                }`}
+                className={`chosen_dropdown ${errorObject.CountryId ? errorObject.CountryId : ""
+                  }`}
                 id="CountryId"
                 name="CountryId"
                 autoComplete
@@ -1980,10 +1979,10 @@ const CoordinatorInput = (props) => {
                 value={
                   CountryList
                     ? CountryList[
-                        CountryList.findIndex(
-                          (list) => list.id === currCountryId,
-                        )
-                      ]
+                    CountryList.findIndex(
+                      (list) => list.id === currCountryId,
+                    )
+                    ]
                     : null
                 }
                 onChange={(event, valueobj) =>
@@ -2004,9 +2003,8 @@ const CoordinatorInput = (props) => {
                 autoHighlight
                 disableClearable
                 disabled={permissionType == 1}
-                className={`chosen_dropdown ${
-                  errorObject.LeadAuditorId ? errorObject.LeadAuditorId : ""
-                }`}
+                className={`chosen_dropdown ${errorObject.LeadAuditorId ? errorObject.LeadAuditorId : ""
+                  }`}
                 id="LeadAuditorId"
                 name="LeadAuditorId"
                 autoComplete
@@ -2017,10 +2015,10 @@ const CoordinatorInput = (props) => {
                 value={
                   LeadAuditorList
                     ? LeadAuditorList[
-                        LeadAuditorList.findIndex(
-                          (list) => list.id === currLeadAuditorId,
-                        )
-                      ]
+                    LeadAuditorList.findIndex(
+                      (list) => list.id === currLeadAuditorId,
+                    )
+                    ]
                     : null
                 }
                 onChange={(event, valueobj) =>
@@ -2087,9 +2085,8 @@ const CoordinatorInput = (props) => {
                 autoHighlight
                 disableClearable
                 disabled={permissionType == 1}
-                className={`chosen_dropdown ${
-                  errorObject.AuditTypeId ? errorObject.AuditTypeId : ""
-                }`}
+                className={`chosen_dropdown ${errorObject.AuditTypeId ? errorObject.AuditTypeId : ""
+                  }`}
                 id="AuditTypeId"
                 name="AuditTypeId"
                 autoComplete
@@ -2100,10 +2097,10 @@ const CoordinatorInput = (props) => {
                 value={
                   AuditTypeList
                     ? AuditTypeList[
-                        AuditTypeList.findIndex(
-                          (list) => list.id === currAuditTypeId,
-                        )
-                      ]
+                    AuditTypeList.findIndex(
+                      (list) => list.id === currAuditTypeId,
+                    )
+                    ]
                     : null
                 }
                 onChange={(event, valueobj) =>
@@ -2153,9 +2150,8 @@ const CoordinatorInput = (props) => {
                 autoHighlight
                 disableClearable
                 disabled={permissionType == 1}
-                className={`chosen_dropdown ${
-                  errorObject.ReportWriterId ? errorObject.ReportWriterId : ""
-                }`}
+                className={`chosen_dropdown ${errorObject.ReportWriterId ? errorObject.ReportWriterId : ""
+                  }`}
                 id="ReportWriterId"
                 name="ReportWriterId"
                 autoComplete
@@ -2178,10 +2174,10 @@ const CoordinatorInput = (props) => {
                 value={
                   AuditorList
                     ? AuditorList[
-                        AuditorList.findIndex(
-                          (list) => list.id === currReportWriterId,
-                        )
-                      ]
+                    AuditorList.findIndex(
+                      (list) => list.id === currReportWriterId,
+                    )
+                    ]
                     : null
                 }
                 onChange={(event, valueobj) =>
@@ -2290,14 +2286,14 @@ const CoordinatorInput = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Revenue (BDT) *</label>
+              <label>Revenue *</label>
               <input
                 type="number"
                 id="RevenueBDT"
                 name="RevenueBDT"
                 disabled={permissionType == 1}
                 className={errorObject.RevenueBDT}
-                placeholder="Enter Revenue BDT"
+                placeholder="Enter Revenue"
                 value={currentRow.RevenueBDT}
                 onChange={(e) => handleChange(e)}
               />
@@ -2312,6 +2308,32 @@ const CoordinatorInput = (props) => {
                 // class={errorObject.Discount}
                 placeholder="Enter Discount"
                 value={currentRow.Discount}
+                onChange={(e) => handleChange(e)}
+              />
+
+
+              <label>Pound Rate</label>
+              <input
+                type="number"
+                id="PoundRate"
+                name="PoundRate"
+                disabled={permissionType == 1}
+                // className={errorObject.PoundRate}
+                placeholder="Enter Pound Rate"
+                value={currentRow.PoundRate}
+                onChange={(e) => handleChange(e)}
+              />
+
+
+              <label>Revenue Pound</label>
+              <input
+                type="number"
+                id="RevenuePound"
+                name="RevenuePound"
+                disabled={permissionType == 1}
+                // className={errorObject.RevenuePound}
+                placeholder="Enter Revenue Pound"
+                value={currentRow.RevenuePound}
                 onChange={(e) => handleChange(e)}
               />
 

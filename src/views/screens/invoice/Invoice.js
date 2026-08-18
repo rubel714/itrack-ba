@@ -414,6 +414,40 @@ const Invoice = (props) => {
     const { name, value } = e.target;
     let data = { ...currentRow };
     data[name] = value;
+
+    if (name == "AuditFee") {
+      let RevenueBDT =
+        parseFloat(value || 0) +
+        parseFloat(currentRow.OPE || 0) +
+        parseFloat(currentRow.OthersAmount || 0);
+      data["RevenueBDT"] = RevenueBDT;
+    }
+    if (name == "OPE") {
+      let RevenueBDT =
+        parseFloat(currentRow.AuditFee || 0) +
+        parseFloat(value || 0) +
+        parseFloat(currentRow.OthersAmount || 0);
+      data["RevenueBDT"] = RevenueBDT;
+    }
+    if (name == "OthersAmount") {
+      let RevenueBDT =
+        parseFloat(currentRow.AuditFee || 0) +
+        parseFloat(currentRow.OPE || 0) +
+        parseFloat(value || 0);
+      data["RevenueBDT"] = RevenueBDT;
+    }
+
+    if (
+      name == "RevenueBDT" ||
+      name == "PoundRate" ||
+      name == "AuditFee" ||
+      name == "OPE" ||
+      name == "OthersAmount"
+    ) {
+      data["RevenuePound"] =
+        parseFloat(data.RevenueBDT || 0) * parseFloat(data.PoundRate || 0);
+    }
+
     setCurrentRow(data);
     setErrorObject({ ...errorObject, [name]: null });
   };
@@ -691,7 +725,25 @@ const Invoice = (props) => {
     },
     {
       field: "RevenueBDT",
-      label: "Revenue (BDT)",
+      label: "Revenue",
+      align: "right",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "5%",
+    },
+    {
+      field: "PoundRate",
+      label: "Pound Rate",
+      align: "right",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "5%",
+    },
+    {
+      field: "RevenuePound",
+      label: "Revenue Pound",
       align: "right",
       visible: true,
       sort: true,
@@ -851,6 +903,8 @@ const Invoice = (props) => {
       AuditFee: "",
       OPE: "",
       PINo: "",
+      PoundRate: "",
+      RevenuePound: "",
       AttachedDocuments: "",
       AuditTypeId: "",
       IsSendMail: 0,
@@ -1933,7 +1987,7 @@ const Invoice = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Revenue (BDT)</label>
+              <label>Revenue</label>
               <input
                 type="number"
                 id="RevenueBDT"
@@ -1944,6 +1998,29 @@ const Invoice = (props) => {
                 value={currentRow.RevenueBDT}
                 onChange={(e) => handleChange(e)}
               />
+
+              <label>Pound Rate</label>
+              <input
+                type="number"
+                id="PoundRate"
+                name="PoundRate"
+                disabled={permissionType == 1}
+                placeholder="Enter Pound Rate"
+                value={currentRow.PoundRate}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Revenue Pound</label>
+              <input
+                type="number"
+                id="RevenuePound"
+                name="RevenuePound"
+                disabled={permissionType == 1}
+                placeholder="Enter Revenue Pound"
+                value={currentRow.RevenuePound}
+                onChange={(e) => handleChange(e)}
+              />
+
               <label>PI No</label>
               <input
                 type="text"

@@ -46,7 +46,7 @@ function getDataList($data)
 		a.LeadStatusId, h.LeadStatusName,a.ConfirmationDate,a.ManDay,a.BuyerId,i.BuyerName,a.NextFollowupDate,
 		a.DepartmentId,j.DepartmentName,a.MemberId,k.MemberName,a.Remarks,a.Comments
 		, a.AssessmentNo, a.AuditStartDate, a.AuditEndDate, a.CountryId, a.LeadAuditorId, REPLACE(a.TeamAuditorIds, '".'"'."', '') as TeamAuditorId, a.AuditTypeId, 
-		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId,a.ReportWritingDate, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT, 
+		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId,a.ReportWritingDate, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT,a.PoundRate,a.RevenuePound, 
 		a.AuditBook,a.AttachedDocuments, a.IsSendMail,a.FileUploaded,a.ReportSentToCustomer,a.StateId, a.ReportReleaseStatus,
 
 		a.InvoiceTo, a.NameofApplicant, a.InvoiceAddress, a.InvoiceEmail, a.InvoiceMobile, a.Discount,a.InvStatusId ,s.InvStatusName,a.ReleaseDate,a.InvoiceComments

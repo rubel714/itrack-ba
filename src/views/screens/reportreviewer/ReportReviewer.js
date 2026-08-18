@@ -900,6 +900,8 @@ const ReportReviewer = (props) => {
       AuditFee: "",
       OPE: "",
       PINo: "",
+      PoundRate: "",
+      RevenuePound: "",
       AttachedDocuments: "",
       AuditTypeId: "",
       IsSendMail: 0,
@@ -2003,7 +2005,7 @@ const ReportReviewer = (props) => {
                 onChange={(e) => handleChange(e)}
               />
 
-              <label>Revenue (BDT)</label>
+              <label>Revenue</label>
               <input
                 type="number"
                 id="RevenueBDT"
@@ -2012,6 +2014,28 @@ const ReportReviewer = (props) => {
                 // class={errorObject.RevenueBDT}
                 placeholder="Enter Revenue BDT"
                 value={currentRow.RevenueBDT}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Pound Rate</label>
+              <input
+                type="number"
+                id="PoundRate"
+                name="PoundRate"
+                disabled={true}
+                placeholder="Enter Pound Rate"
+                value={currentRow.PoundRate}
+                onChange={(e) => handleChange(e)}
+              />
+
+              <label>Revenue Pound</label>
+              <input
+                type="number"
+                id="RevenuePound"
+                name="RevenuePound"
+                disabled={true}
+                placeholder="Enter Revenue Pound"
+                value={currentRow.RevenuePound}
                 onChange={(e) => handleChange(e)}
               />
 
