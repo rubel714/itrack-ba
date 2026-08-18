@@ -33,11 +33,11 @@ function getDataList($data)
 		$StartDate = trim($data->StartDate);
 
 		$query = "SELECT w.ProgramCategoryName,
-			IFNULL(SUM(w.RevenueBDT), 0) as RevenueGBPK,
+			IFNULL(SUM(w.RevenuePound), 0) as RevenueGBPK,
 			IFNULL(SUM(w.NoOfJobs), 0) as NoOfJobs,
 			IFNULL(SUM(w.NoOfMDs), 0) as NoOfMDs
 			FROM (
-				SELECT pc.ProgramCategoryName, t.RevenueBDT, 1 as NoOfJobs, t.ManDay as NoOfMDs
+				SELECT pc.ProgramCategoryName, t.RevenuePound, 1 as NoOfJobs, t.ManDay as NoOfMDs
 				FROM t_programcategory pc
 				INNER JOIN t_program p ON pc.ProgramCategoryId = p.ProgramCategoryId
 				INNER JOIN t_transaction t ON p.ProgramId = t.ProgramId
@@ -46,11 +46,11 @@ function getDataList($data)
 			GROUP BY w.ProgramCategoryName;";
 
 		// $query = "SELECT w.ProgramCategoryName,
-		// 	IFNULL(SUM(w.RevenueBDT), 0) as RevenueGBPK,
+		// 	IFNULL(SUM(w.RevenuePound), 0) as RevenueGBPK,
 		// 	IFNULL(SUM(w.NoOfJobs), 0) as NoOfJobs,
 		// 	IFNULL(SUM(w.NoOfMDs), 0) as NoOfMDs
 		// 	FROM (
-		// 		SELECT pc.ProgramCategoryName, t.RevenueBDT, 1 as NoOfJobs, 0 as NoOfMDs
+		// 		SELECT pc.ProgramCategoryName, t.RevenuePound, 1 as NoOfJobs, 0 as NoOfMDs
 		// 		FROM t_programcategory pc
 		// 		INNER JOIN t_program p ON pc.ProgramCategoryId = p.ProgramCategoryId
 		// 		INNER JOIN t_transaction t ON p.ProgramId = t.ProgramId
@@ -58,7 +58,7 @@ function getDataList($data)
 
 		// 		UNION ALL
 
-		// 		SELECT pc.ProgramCategoryName, 0 as RevenueBDT, 0 as NoOfJobs, 1 as NoOfMDs
+		// 		SELECT pc.ProgramCategoryName, 0 as RevenuePound, 0 as NoOfJobs, 1 as NoOfMDs
 		// 		FROM t_transaction_auditor_assign taa
 		// 		INNER JOIN t_transaction tt ON taa.TransactionId = tt.TransactionId
 		// 		INNER JOIN t_program p ON tt.ProgramId = p.ProgramId
@@ -95,10 +95,10 @@ function getDataMTDStatusRevenueList($data)
 		$Month = date('m', strtotime($StartDate));
 
 		$query = "SELECT pc.ProgramCategoryName,
-			case when t.LeadStatusId = 1 then IFNULL(SUM(t.RevenueBDT), 0) else 0 end as InprogressRevenue,
-			case when t.LeadStatusId = 2 then IFNULL(SUM(t.RevenueBDT), 0) else 0 end as ConfirmedRevenue,
-			case when t.LeadStatusId = 5 then IFNULL(SUM(t.RevenueBDT), 0) else 0 end as PerformedRevenue,
-			IFNULL(SUM(t.RevenueBDT), 0) as TotalRevenue
+			case when t.LeadStatusId = 1 then IFNULL(SUM(t.RevenuePound), 0) else 0 end as InprogressRevenue,
+			case when t.LeadStatusId = 2 then IFNULL(SUM(t.RevenuePound), 0) else 0 end as ConfirmedRevenue,
+			case when t.LeadStatusId = 5 then IFNULL(SUM(t.RevenuePound), 0) else 0 end as PerformedRevenue,
+			IFNULL(SUM(t.RevenuePound), 0) as TotalRevenue
 			FROM t_programcategory pc
 			INNER JOIN t_program p ON pc.ProgramCategoryId = p.ProgramCategoryId
 			INNER JOIN t_transaction t ON p.ProgramId = t.ProgramId 
@@ -134,12 +134,12 @@ function getYTDStatusList($data)
 		$Year = date('Y', strtotime($StartDate));
 
 		$query = "SELECT w.ProgramCategoryName,
-			IFNULL(SUM(w.RevenueBDT), 0) as PerformedRevenue,
+			IFNULL(SUM(w.RevenuePound), 0) as PerformedRevenue,
 			IFNULL(SUM(w.PerformedJobs), 0) as PerformedJobs,
 			IFNULL(SUM(w.PerformedManday), 0) as PerformedManday
 			FROM (
 		
-				SELECT pc.ProgramCategoryName, t.RevenueBDT, 1 as PerformedJobs, t.Manday as PerformedManday
+				SELECT pc.ProgramCategoryName, t.RevenuePound, 1 as PerformedJobs, t.Manday as PerformedManday
 				FROM t_programcategory pc
 				INNER JOIN t_program p ON pc.ProgramCategoryId = p.ProgramCategoryId
 				INNER JOIN t_transaction t ON p.ProgramId = t.ProgramId 
@@ -149,12 +149,12 @@ function getYTDStatusList($data)
 			GROUP BY ProgramCategoryName;";
 			
 		// $query = "SELECT w.ProgramCategoryName,
-		// 	IFNULL(SUM(w.RevenueBDT), 0) as PerformedRevenue,
+		// 	IFNULL(SUM(w.RevenuePound), 0) as PerformedRevenue,
 		// 	IFNULL(SUM(w.PerformedJobs), 0) as PerformedJobs,
 		// 	IFNULL(SUM(w.PerformedManday), 0) as PerformedManday
 		// 	FROM (
 		
-		// 		SELECT pc.ProgramCategoryName, t.RevenueBDT, 1 as PerformedJobs, 0 as PerformedManday
+		// 		SELECT pc.ProgramCategoryName, t.RevenuePound, 1 as PerformedJobs, 0 as PerformedManday
 		// 		FROM t_programcategory pc
 		// 		INNER JOIN t_program p ON pc.ProgramCategoryId = p.ProgramCategoryId
 		// 		INNER JOIN t_transaction t ON p.ProgramId = t.ProgramId 
@@ -206,7 +206,7 @@ function getLostRevenueList($data)
 			IFNULL(SUM(w.YTDNoOfJob), 0) as YTDNoOfJob
 			FROM (
 		
-				SELECT pc.ProgramCategoryName, t.RevenueBDT as MTDRevenueBDT, 1 as MTDNoOfJob, 0 as YTDRevenueBDT, 0 as YTDNoOfJob
+				SELECT pc.ProgramCategoryName, t.RevenuePound as MTDRevenueBDT, 1 as MTDNoOfJob, 0 as YTDRevenueBDT, 0 as YTDNoOfJob
 				FROM t_programcategory pc
 				INNER JOIN t_program p ON pc.ProgramCategoryId = p.ProgramCategoryId
 				INNER JOIN t_transaction t ON p.ProgramId = t.ProgramId 
@@ -215,7 +215,7 @@ function getLostRevenueList($data)
 
 				UNION ALL
 
-				SELECT pcb.ProgramCategoryName, 0 AS MTDRevenueBDT, 0 AS MTDNoOfJob, tb.RevenueBDT AS YTDRevenueBDT, 1 AS YTDNoOfJob 
+				SELECT pcb.ProgramCategoryName, 0 AS MTDRevenueBDT, 0 AS MTDNoOfJob, tb.RevenuePound AS YTDRevenueBDT, 1 AS YTDNoOfJob 
 				FROM t_programcategory pcb
 				INNER JOIN t_program pb ON pcb.ProgramCategoryId = pb.ProgramCategoryId 
 				INNER JOIN t_transaction tb ON pb.ProgramId = tb.ProgramId

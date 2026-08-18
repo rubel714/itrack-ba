@@ -93,13 +93,13 @@ function getDataList($data)
 			$MTDPerformMandays = $result[0]['total'] ?? 0;
 
 			// Today's Revenue
-			$query = "SELECT COALESCE(SUM(RevenueBDT), 0) as total FROM t_transaction 
+			$query = "SELECT COALESCE(SUM(RevenuePound), 0) as total FROM t_transaction 
 					  WHERE DATE(ReleaseDate) = '$EndDate' AND MemberId = $MemberId;";
 			$result = $dbh->query($query);
 			$TodaysRevenue = $result[0]['total'] ?? 0;
 
 			// MTD Revenue
-			$query = "SELECT COALESCE(SUM(RevenueBDT), 0) as total FROM t_transaction 
+			$query = "SELECT COALESCE(SUM(RevenuePound), 0) as total FROM t_transaction 
 					  WHERE (ReleaseDate BETWEEN '$StartDate' AND '$EndDateWithTime') AND MemberId = $MemberId;";
 			$result = $dbh->query($query);
 			$MTDRevenue = $result[0]['total'] ?? 0;
@@ -228,13 +228,13 @@ function getOverallSummary($data)
 		$MTDPerformMandays = $result[0]['total'] ?? 0;
 
 		// Get today's revenue
-		$query = "SELECT COALESCE(SUM(RevenueBDT), 0) as total FROM t_transaction 
+		$query = "SELECT COALESCE(SUM(RevenuePound), 0) as total FROM t_transaction 
 				  WHERE DATE(ReleaseDate) = '$EndDate'$memberFilter;";
 		$result = $dbh->query($query);
 		$TodaysRevenue = $result[0]['total'] ?? 0;
 
 		// Get MTD revenue
-		$query = "SELECT COALESCE(SUM(RevenueBDT), 0) as total FROM t_transaction 
+		$query = "SELECT COALESCE(SUM(RevenuePound), 0) as total FROM t_transaction 
 				  WHERE (ReleaseDate BETWEEN '$StartDate' AND '$EndDateWithTime')$memberFilter;";
 		$result = $dbh->query($query);
 		$MTDRevenue = $result[0]['total'] ?? 0;

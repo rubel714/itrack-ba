@@ -49,27 +49,27 @@ function getDataList($data)
 					          AND YEAR(t.AuditStartDate) = $PYYearId
 					          AND MONTH(t.AuditStartDate) = $MonthId
 					          AND t.Remarks = 'Re-Certificate'
-					THEN t.RevenueBDT ELSE 0 END
+					THEN t.RevenuePound ELSE 0 END
 				), 0) AS ActualPYReCert,
 				COALESCE(SUM(
 					CASE WHEN t.LeadStatusId NOT IN (9,11)
 					          AND YEAR(t.AuditStartDate) = $PYYearId
 					          AND MONTH(t.AuditStartDate) = $MonthId
 					          AND t.Remarks = 'New'
-					THEN t.RevenueBDT ELSE 0 END
+					THEN t.RevenuePound ELSE 0 END
 				), 0) AS ActualPYNewCert,
 				COALESCE(SUM(
 					CASE WHEN t.LeadStatusId NOT IN (9,11)
 					          AND YEAR(t.AuditStartDate) = $PYYearId
 					          AND MONTH(t.AuditStartDate) = $MonthId
 					          AND t.Remarks IN ('New','Re-Certificate')
-					THEN t.RevenueBDT ELSE 0 END
+					THEN t.RevenuePound ELSE 0 END
 				), 0) AS ActualPYTotal,
 
 				-- Last Days Confirmation: t.ConfirmationDate = system yesterday
 				COALESCE(SUM(
 					CASE WHEN DATE(t.ConfirmationDate) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
-					THEN t.RevenueBDT ELSE 0 END
+					THEN t.RevenuePound ELSE 0 END
 				), 0) AS LastDaysConfirmation,
 
 				-- MTD Performed: LeadStatusId IN (5,14,12,13,15,16,20,17), selected month/year
@@ -78,7 +78,7 @@ function getDataList($data)
 					          AND YEAR(t.AuditStartDate) = $YearId
 					          AND MONTH(t.AuditStartDate) = $MonthId
 					          AND t.LeadStatusId IN (5,14,12,13,15,16,20,17)
-					THEN t.RevenueBDT ELSE 0 END
+					THEN t.RevenuePound ELSE 0 END
 				), 0) AS MTDPerformed,
 
 				-- CM Scheduled: LeadStatusId = 19, selected month/year
@@ -87,7 +87,7 @@ function getDataList($data)
 					          AND YEAR(t.AuditStartDate) = $YearId
 					          AND MONTH(t.AuditStartDate) = $MonthId
 					          AND t.LeadStatusId = 19
-					THEN t.RevenueBDT ELSE 0 END
+					THEN t.RevenuePound ELSE 0 END
 				), 0) AS CMScheduled,
 
 				-- CM Confirmed: LeadStatusId = 2, selected month/year
@@ -96,21 +96,21 @@ function getDataList($data)
 					          AND YEAR(t.AuditStartDate) = $YearId
 					          AND MONTH(t.AuditStartDate) = $MonthId
 					          AND t.LeadStatusId = 2
-					THEN t.RevenueBDT ELSE 0 END
+					THEN t.RevenuePound ELSE 0 END
 				), 0) AS CMConfirmed,
 
 				-- In-progress: LeadStatusId = 1, all time (no date filter)
 				COALESCE(SUM(
 					CASE WHEN t.LeadStatusId NOT IN (9,11)
 					          AND t.LeadStatusId = 1
-					THEN t.RevenueBDT ELSE 0 END
+					THEN t.RevenuePound ELSE 0 END
 				), 0) AS InProgress,
 
 				-- Pipeline: LeadStatusId = 7, all time (no date filter)
 				COALESCE(SUM(
 					CASE WHEN t.LeadStatusId NOT IN (9,11)
 					          AND t.LeadStatusId = 7
-					THEN t.RevenueBDT ELSE 0 END
+					THEN t.RevenuePound ELSE 0 END
 				), 0) AS Pipeline,
 
 				-- MTD Revenue (selected month/year, split by Remarks, exclude LeadStatusId IN 9,11)
@@ -119,21 +119,21 @@ function getDataList($data)
 					          AND YEAR(t.AuditStartDate) = $YearId
 					          AND MONTH(t.AuditStartDate) = $MonthId
 					          AND t.Remarks = 'Re-Certificate'
-					THEN t.RevenueBDT ELSE 0 END
+					THEN t.RevenuePound ELSE 0 END
 				), 0) AS MTDRevenueReCert,
 				COALESCE(SUM(
 					CASE WHEN t.LeadStatusId NOT IN (9,11)
 					          AND YEAR(t.AuditStartDate) = $YearId
 					          AND MONTH(t.AuditStartDate) = $MonthId
 					          AND t.Remarks = 'New'
-					THEN t.RevenueBDT ELSE 0 END
+					THEN t.RevenuePound ELSE 0 END
 				), 0) AS MTDRevenueNewCert,
 				COALESCE(SUM(
 					CASE WHEN t.LeadStatusId NOT IN (9,11)
 					          AND YEAR(t.AuditStartDate) = $YearId
 					          AND MONTH(t.AuditStartDate) = $MonthId
 					          AND t.Remarks IN ('New','Re-Certificate')
-					THEN t.RevenueBDT ELSE 0 END
+					THEN t.RevenuePound ELSE 0 END
 				), 0) AS MTDRevenueTotal
 
 			FROM t_programcategory pc
