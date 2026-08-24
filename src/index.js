@@ -15,6 +15,7 @@ import LoginPage from "views/screens/LoginPage.js";
 // import ResetPassword from "views/screens/ResetPasswordPage";
 // import DashboardPage from "views/screens/DashboardPage";
 import MyProfile from "views/screens/myprofile/index.js";
+import Options from "views/screens/options/index.js";
 import CheckPermission from "views/screens/CheckPermission.js";
 // import Dashboard from "views/screens/dashboard/index.js";
 
@@ -96,6 +97,7 @@ ReactDOM.render(
             {/* <Route path="/reset-password" render={(props) => <ResetPassword {...props} />} /> */}
             {/* <Route path="/dashboard" render={(props) => <DashboardPage {...props} />} /> */}
       			<Route path="/myprofileweb" render={(props) => <MyProfile {...props} />} />
+            <Route path="/options" render={(props) => <Options {...props} />} />
             <Route path="/check-permission" render={(props) => <CheckPermission {...props} />} />
 
             {/* <Route path="/dashboard" render={(props) => <Dashboard {...props} />} /> */}

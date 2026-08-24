@@ -393,6 +393,19 @@ function AfterLoginNavbar(props) {
                       </a>
                     </li>
                   )}
+
+                  {menuShowPermision("options") === 1 && (
+                    <li>
+                      <a
+                        href="javascript:void(0)"
+                        onClick={() => props.history.push("options")}
+                      >
+                        Options
+                      </a>
+                    </li>
+                  )}
+
+
                 </ul>
               </li>
             )}
@@ -591,6 +604,7 @@ function AfterLoginNavbar(props) {
                     My Profile
                   </a>
                 </li>
+
 
                 <li>
                   <a
@@ -928,6 +942,16 @@ function AfterLoginNavbar(props) {
                       My Profile
                     </a>
                   </li>
+                  {menuShowPermision("settingsweb") === 1 && (
+                    <li>
+                      <a
+                        href="javascript:void(0)"
+                        onClick={() => props.history.push("settings")}
+                      >
+                        Settings
+                      </a>
+                    </li>
+                  )}
                   <li>
                     <a
                       href="javascript:void(0)"
