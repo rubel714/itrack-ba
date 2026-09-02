@@ -692,6 +692,15 @@ const ReportReviewer = (props) => {
     //   width: "6%",
     // },
     {
+      field: "BuyerName",
+      label: "Buyer",
+      align: "left",
+      visible: true,
+      sort: true,
+      filter: true,
+      width: "6%",
+    },
+    {
       field: "AssessmentNo",
       label: "Assessment No",
       align: "left",
