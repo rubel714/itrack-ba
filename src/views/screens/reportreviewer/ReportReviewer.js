@@ -623,7 +623,7 @@ const ReportReviewer = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      // width: "12%",
+      width: "14%",
     },
     {
       field: "ProgramName",
@@ -632,7 +632,7 @@ const ReportReviewer = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "7%",
+      width: "5%",
     },
 
     // {
@@ -671,7 +671,7 @@ const ReportReviewer = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "7%",
+      width: "6%",
     },
     // {
     //   field: "BuyerName",
@@ -734,7 +734,7 @@ const ReportReviewer = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "8%",
+      width: "7%",
     },
     {
       field: "ReportReleaseStatus",
@@ -752,7 +752,7 @@ const ReportReviewer = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "7%",
+      width: "6%",
     },
     {
       field: "StandardTAT",
@@ -779,7 +779,7 @@ const ReportReviewer = (props) => {
       visible: true,
       sort: true,
       filter: true,
-      width: "6%",
+      width: "5%",
     },
     {
       field: "ReportResult",
@@ -792,8 +792,8 @@ const ReportReviewer = (props) => {
     },
     {
       field: "custom",
-      label: "Action",
-      width: "5%",
+      label: "A",
+      width: "2%",
       align: "center",
       visible: true,
       sort: false,
