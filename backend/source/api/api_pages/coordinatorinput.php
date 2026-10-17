@@ -809,7 +809,8 @@ function FilesUpload($data)
 
 function ConvertCSVFile($TransactionId, $name, $extention, $filebase64_string)
 {
-	$targetDir = '../../../image/transaction/' . $TransactionId;
+	// $targetDir = '../../../image/transaction/' . $TransactionId;
+	$targetDir = STORAGE_PATH . 'image/transaction/' . $TransactionId;
 
 	if (!file_exists($targetDir)) {
 		mkdir($targetDir, 0777, true);

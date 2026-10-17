@@ -286,13 +286,13 @@ function deleteData($data)
 function ConvertFile($base64_string, $prefix, $extention = null)
 {
 
-	$path = "../../../image/transaction/" . $prefix;
+	$path = STORAGE_PATH . "image/transaction/" . $prefix;
 
 	if (!file_exists($path)) {
 		mkdir($path, 0777, true);
 	}
 
-	$targetDir = '../../../image/transaction/' . $prefix;
+	$targetDir = STORAGE_PATH . 'image/transaction/' . $prefix;
 	$exploded = explode(',', $base64_string, 2);
 	if (!$extention) {
 		$extention = explode(';', explode('/', $exploded[0])[1])[0];
@@ -307,13 +307,13 @@ function ConvertFile($base64_string, $prefix, $extention = null)
 function ConvertImage($base64_string, $prefix)
 {
 
-	$path = "../../../image/transaction/" . $prefix;
+	$path = STORAGE_PATH . "image/transaction/" . $prefix;
 
 	if (!file_exists($path)) {
 		mkdir($path, 0777, true);
 	}
 
-	$targetDir = '../../../image/transaction/' . $prefix;
+	$targetDir = STORAGE_PATH . 'image/transaction/' . $prefix;
 	$exploded = explode(',', $base64_string, 2);
 	$extention = explode(';', explode('/', $exploded[0])[1])[0];
 	$decoded = base64_decode($exploded[1]);

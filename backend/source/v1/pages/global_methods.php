@@ -46,13 +46,13 @@ function convertAppToDBDateTime($appDate)
 function ConvertFileAPI($base64_string, $prefix, $extention = null)
 {
 
-	$path = "../../../image/transaction/" . $prefix;
+	$path = STORAGE_PATH . "image/transaction/" . $prefix;
 
 	if (!file_exists($path)) {
 		mkdir($path, 0777, true);
 	}
 
-	$targetDir = '../../../image/transaction/' . $prefix;
+	$targetDir = STORAGE_PATH . 'image/transaction/' . $prefix;
 	$exploded = explode(',', $base64_string, 2);
 	if (!$extention) {
 		$extention = explode(';', explode('/', $exploded[0])[1])[0];
@@ -67,13 +67,13 @@ function ConvertFileAPI($base64_string, $prefix, $extention = null)
 function ConvertImageAPI($base64_string, $prefix, $extention = null)
 {
 
-	$path = "../../../image/transaction/" . $prefix;
+	$path = STORAGE_PATH . "image/transaction/" . $prefix;
 
 	if (!file_exists($path)) {
 		mkdir($path, 0777, true);
 	}
 
-	$targetDir = '../../../image/transaction/' . $prefix;
+	$targetDir = STORAGE_PATH . 'image/transaction/' . $prefix;
 	$exploded = explode(',', $base64_string, 2);
 	if (!$extention) {
 		$extention = explode(';', explode('/', $exploded[0])[1])[0];

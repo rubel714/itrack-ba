@@ -214,7 +214,7 @@ try {
 
     // [{"name":"spaider.png","extention":"png","size":17820,"status":"","file":""},{"name":"Correction.txt","extention":"txt","size":504,"status":"","file":""}]
     $AttachedDocuments = json_decode($AttachedDocuments);
-    $path = '../../../image/transaction/' . $TransactionId . '/';
+    $path = STORAGE_PATH . 'image/transaction/' . $TransactionId . '/';
     foreach ($AttachedDocuments as $attobj) {
         $mail->addAttachment($path . $attobj->name);
     }

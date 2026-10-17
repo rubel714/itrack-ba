@@ -10,12 +10,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["file"])) {
 	//$targetDir = "./../../../media/";
 
 	if (($_POST["formName"]) == "userProfile") {
-		$targetDir = "./../../../image/user/";
+		$targetDir = STORAGE_PATH . "image/user/";
 	}
 	else if (($_POST["formName"]) == "receive") {
-		$targetDir = "./../../../image/receive/";
+		$targetDir = STORAGE_PATH . "image/receive/";
 	}else if (($_POST["formName"]) == "transactionImg") {
-		$targetDir = "./../../../image/transaction/";
+		$targetDir = STORAGE_PATH . "image/transaction/";
 	}
 
 

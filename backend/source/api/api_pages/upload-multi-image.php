@@ -1,7 +1,7 @@
 <?php
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES) && count($_FILES)>0) {
-	$targetDir = "./../../../image/transaction/";
+	$targetDir = STORAGE_PATH . "image/transaction/";
 
 	if (!is_dir($targetDir)) {
 		mkdir($targetDir, 0755, true);

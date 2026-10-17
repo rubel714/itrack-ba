@@ -43,7 +43,8 @@ const FactoryAddEditModal = (props) => {
 
   // const { isLoading, data: dataList, error, ExecuteQuery } = ExecuteQueryHook(); //Fetch data
 
-  const baseUrl = process.env.REACT_APP_FRONT_URL;
+  
+  const baseUrl = process.env.REACT_APP_STORAGE_URL;
   const [previewImage, setPreviewImage] = useState(
     `${baseUrl}image/user/placeholder.png`
   );

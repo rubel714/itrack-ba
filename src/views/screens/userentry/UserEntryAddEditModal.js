@@ -42,7 +42,7 @@ const UserEntryAddEditModal = (props) => {
   const [RoleList, setRoleList] = useState(null);
   const [currRoleId, setCurrRoleId] = useState(null);
 
-  const baseUrl = process.env.REACT_APP_FRONT_URL;
+  const baseUrl = process.env.REACT_APP_STORAGE_URL;
   const [previewImage, setPreviewImage] = useState(
     `${baseUrl}image/user/placeholder.png`
   );

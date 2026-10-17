@@ -10,7 +10,7 @@ function AfterLoginNavbar(props) {
   const [auditToogle, setAuditToogle] = React.useState(false);
   const [reportsToogle, setReportsToogle] = React.useState(false);
 
-  const baseUrl = process.env.REACT_APP_FRONT_URL;
+  const baseUrl = process.env.REACT_APP_STORAGE_URL;
   // const [previewImage, setPreviewImage] = useState(
   //   `${baseUrl}image/user/placeholder.png`
   // );
