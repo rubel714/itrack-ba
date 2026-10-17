@@ -318,7 +318,6 @@ function ConvertImage($base64_string, $prefix)
 	$extention = explode(';', explode('/', $exploded[0])[1])[0];
 	$decoded = base64_decode($exploded[1]);
 	$output_file = $prefix . "_" . date("Y_m_d_H_i_s") . "_" . rand(1, 9999) . "." . $extention;
-	// $output_file = date("Y_m_d_H_i_s") . rand(1, 9999) . "." . $extention;
 	/**Image file name */
 	file_put_contents($targetDir . "/" . $output_file, $decoded);
 	return $output_file;
