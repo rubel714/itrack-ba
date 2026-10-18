@@ -1,4 +1,62 @@
 
+=================Web .env=====JS===========================================
+FAST_REFRESH = false
+CHOKIDAR_USEPOLLING=true
+REACT_APP_BASE_NAME=/itrackba
+REACT_APP_API_URL=http://175.29.124.231/itrackba/backend/
+REACT_APP_FRONT_URL=http://175.29.124.231/itrackba/
+REACT_APP_STORAGE_URL=http://175.29.124.231/storage/itrackba/
+
+=================Web .env=====PHP===========================================
+<?php
+define("DB_NAME", "itrack_ba_db");
+define("DB_USER", "root");
+define("DB_PASSWORD", "P@ss!w0rId2N$5T@r");
+define("DB_SERVER", "localhost");
+define("sitetitleeng", "iTrack BA");
+define("reportsitetitleeng", "iTrack BA");
+define("STORAGE_PATH", $_SERVER['DOCUMENT_ROOT'] . '/storage/itrackba/');
+define("STORAGE_PATH_URL", "http://175.29.124.231/storage/itrackba/");
+define("domainurl", "http://175.29.124.231/itrackba/");
+define("loginonlyadmin", "0");  /*0=production mode, 1=maintanance mode*/
+?>
+
+
+
+
+
+
+
+
+
+=================Local .env= JS===============================================
+FAST_REFRESH = false
+CHOKIDAR_USEPOLLING=true
+REACT_APP_BASE_NAME=
+REACT_APP_API_URL=http://localhost:8080/itrack-ba/backend/
+REACT_APP_FRONT_URL= http://localhost:3000/itrack-ba/
+REACT_APP_STORAGE_URL= http://localhost:8080/storage/itrackba/
+
+
+=================Local .env= PHP===============================================
+<?php
+define("DB_NAME", "itrack_ba_db1");
+define("DB_USER", "root");
+define("DB_PASSWORD", "");
+define("DB_SERVER", "localhost");
+define("sitetitleeng", "iTrack BA");
+define("domainurl", "http://localhost");
+define("reportsitetitleeng", "iTrack BA");
+define("loginonlyadmin", "0");  /*0=production mode, 1=maintanance mode*/
+define("STORAGE_PATH", $_SERVER['DOCUMENT_ROOT'] . '/storage/itrackba/');
+define("STORAGE_PATH_URL", "http://localhost/storage/itrackba/");
+?>
+
+
+
+
+
+
 =================Domai================================================
 URL: https://itrackba.ng-ssl.com
 User: admin
@@ -7,13 +65,7 @@ Password: Net@pp096
 Mail: do_not_reply@ng-ssl.com
 Password: zz2X40U92sDsHqa9
 
-=================Local .env================================================
 
-FAST_REFRESH = false
-CHOKIDAR_USEPOLLING=true
-REACT_APP_BASE_NAME=
-REACT_APP_API_URL=http://localhost/itrack-ba/backend/
-REACT_APP_FRONT_URL= http://localhost/itrack-ba/
 
 
 =================Local env.php================================================
@@ -36,12 +88,6 @@ REACT_APP_API_URL=https://itrackba.ng-ssl.com/backend/
 REACT_APP_FRONT_URL=https://itrackba.ng-ssl.com/
 
 
-=================Web .env================================================
-FAST_REFRESH = false
-CHOKIDAR_USEPOLLING=true
-REACT_APP_BASE_NAME=
-REACT_APP_API_URL=http://175.29.124.231/backend/
-REACT_APP_FRONT_URL=http://175.29.124.231
 
 
 =================Web env.php================================================

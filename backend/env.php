@@ -7,6 +7,6 @@ define("sitetitleeng", "iTrack BA");
 define("domainurl", "http://localhost");
 define("reportsitetitleeng", "iTrack BA");
 define("loginonlyadmin", "0");  /*0=production mode, 1=maintanance mode*/
-define("STORAGE_PATH", $_SERVER['DOCUMENT_ROOT'] . '/storage/itrack-ba/');
-define("STORAGE_PATH_URL", "http://localhost/storage/itrack-ba/");
+define("STORAGE_PATH", $_SERVER['DOCUMENT_ROOT'] . '/storage/itrackba/');
+define("STORAGE_PATH_URL", "http://localhost/storage/itrackba/");
 ?>
