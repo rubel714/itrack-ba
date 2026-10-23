@@ -65,7 +65,7 @@ function getDataList($data)
 	
 		
 		a.AuditTypeId, 
-		a.Window,a.WindowEnd, a.PaymentStatus, a.ReportWriterId,a.ReportWritingDate, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT,a.PoundRate,a.RevenuePound, 
+		a.WindowStart,a.WindowEnd, a.PaymentStatus, a.ReportWriterId,a.ReportWritingDate, a.NoOfEmployee, a.AuditFee, a.OPE,a.OthersAmount, a.PINo, a.RevenueBDT,a.PoundRate,a.RevenuePound, 
 		a.AuditBook, a.AttachedDocuments, a.IsSendMail,a.StateId,m.StateName,a.FileUploaded,a.ReportSentToCustomer,a.Discount
 	   FROM `t_transaction` a
 	   INNER JOIN `t_activity` b ON a.`ActivityId` = b.`ActivityId`
@@ -191,7 +191,7 @@ function dataAddEdit($data)
 		// $TeamAuditorId = $data->rowData->TeamAuditorId ? $data->rowData->TeamAuditorId : null;
 		$TeamAuditorId = $data->rowData->TeamAuditorId ? $data->rowData->TeamAuditorId : [];
 		$AuditTypeId = $data->rowData->AuditTypeId ? $data->rowData->AuditTypeId : null;
-		$Window = $data->rowData->Window ? $data->rowData->Window : null;
+		$WindowStart = $data->rowData->WindowStart ? $data->rowData->WindowStart : null;
 		$WindowEnd = $data->rowData->WindowEnd ? $data->rowData->WindowEnd : null;
 		$PaymentStatus = $data->rowData->PaymentStatus ? $data->rowData->PaymentStatus : "No";
 		$ReportWriterId = $data->rowData->ReportWriterId ? $data->rowData->ReportWriterId : null;
@@ -455,7 +455,7 @@ function dataAddEdit($data)
 				"LeadAuditorId",
 				"TeamAuditorIds",
 				"AuditTypeId",
-				"Window",
+				"WindowStart",
 				"WindowEnd",
 				"PaymentStatus",
 				"ReportWriterId",
@@ -511,7 +511,7 @@ function dataAddEdit($data)
 				$LeadAuditorId,
 				json_encode($TeamAuditorId),
 				$AuditTypeId,
-				$Window,
+				$WindowStart,
 				$WindowEnd,
 				$PaymentStatus,
 				$ReportWriterId,

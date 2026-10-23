@@ -1021,7 +1021,7 @@ const CoordinatorInput = (props) => {
       TeamAuditorId: "",
       TeamAuditorIds: "",
       AuditTypeId: "",
-      Window: "",
+      WindowStart: "",
       WindowEnd: "",
       PaymentStatus: "No",
       ReportWriterId: "",
@@ -2122,12 +2122,12 @@ const CoordinatorInput = (props) => {
               <label>Window Start</label>
               <input
                 type="date"
-                id="Window"
-                name="Window"
+                id="WindowStart"
+                name="WindowStart"
                 disabled={permissionType == 1}
-                // class={errorObject.Window}
+                // class={errorObject.WindowStart}
                 placeholder="Enter Window Start"
-                value={currentRow.Window}
+                value={currentRow.WindowStart}
                 onChange={(e) => handleChange(e)}
               />
 

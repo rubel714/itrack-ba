@@ -900,7 +900,7 @@ const ReportReviewer = (props) => {
       LeadAuditorId: "",
       TeamAuditorId: "",
       AuditTypeId: "",
-      Window: "",
+      WindowStart: "",
       PaymentStatus: "No",
       ReportWriterId: "",
 
@@ -1868,12 +1868,12 @@ const ReportReviewer = (props) => {
               <label>Window Start</label>
               <input
                 type="date"
-                id="Window"
-                name="Window"
+                id="WindowStart"
+                name="WindowStart"
                 disabled={true}
                 // class={errorObject.Window}
                 placeholder="Enter Window Start"
-                value={currentRow.Window}
+                value={currentRow.WindowStart}
                 onChange={(e) => handleChange(e)}
               />
 

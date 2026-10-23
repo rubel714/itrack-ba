@@ -37,7 +37,7 @@ try {
         case when a.AuditEndDate is not null then DATE_FORMAT(a.AuditEndDate, '%d-%b-%Y') else '' end AuditEndDate,
         b.FactoryName,c.BuyerName,d.ProgramName,e.AuditStageName,a.ManDay,a.Remarks,f.LeadStatusName,
 
-        case when a.Window is not null then DATE_FORMAT(a.Window, '%d-%b-%Y') else '' end Window
+        case when a.WindowStart is not null then DATE_FORMAT(a.WindowStart, '%d-%b-%Y') else '' end WindowStart
         ,case when a.WindowEnd is not null then DATE_FORMAT(a.WindowEnd, '%d-%b-%Y') else '' end WindowEnd,
         g.AuditorName as ReportWriterName,
         case when a.ReportWritingDate is not null then DATE_FORMAT(a.ReportWritingDate, '%d-%b-%Y') else '' end ReportWritingDate,
@@ -86,17 +86,17 @@ try {
     $ManDay = $resultdata[0]['ManDay'];
     $Remarks = $resultdata[0]['Remarks'];
     $LeadStatusName = $resultdata[0]['LeadStatusName'];
-    $Window = $resultdata[0]['Window'];
+    $WindowStart = $resultdata[0]['WindowStart'];
     $WindowEnd = $resultdata[0]['WindowEnd'];
     $ReportWriterName = $resultdata[0]['ReportWriterName'];
     $ReportWritingDate = $resultdata[0]['ReportWritingDate'];
     $CountryName = $resultdata[0]['CountryName'];
 
      $WindowDates = "";
-    if($Window && $WindowEnd){
-        $WindowDates = "$Window - $WindowEnd";
-    }else if($Window){
-        $WindowDates = $Window;
+    if($WindowStart && $WindowEnd){
+        $WindowDates = "$WindowStart - $WindowEnd";
+    }else if($WindowStart){
+        $WindowDates = $WindowStart;
     }else if($WindowEnd){
         $WindowDates = $WindowEnd;
     }
