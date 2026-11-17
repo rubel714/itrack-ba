@@ -8,6 +8,7 @@ import {
   Email,
   Remove,
   SendOutlined,
+  Block,
 } from "@material-ui/icons";
 import { Button } from "../../../components/CustomControl/Button";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -952,6 +953,16 @@ const CoordinatorInput = (props) => {
           }}
         />
 
+        {Number(rowData.LeadStatusId) !== 9 && (
+          <Block
+            className={"table-view-icon"}
+            titleAccess="Cancel"
+            onClick={() => {
+              cancelLead(rowData);
+            }}
+          />
+        )}
+
         {/* <DeleteOutline
           className={"table-delete-icon"}
           onClick={() => {
@@ -1163,6 +1174,53 @@ const CoordinatorInput = (props) => {
       }
     });
   };
+
+  const cancelLead = (rowData) => {
+    swal({
+      title: "Are you sure?",
+      text: "Lead Status will be set to Cancelled.",
+      icon: "warning",
+      buttons: {
+        confirm: {
+          text: "OK",
+          value: true,
+          visible: true,
+          className: "",
+          closeModal: true,
+        },
+        cancel: {
+          text: "No",
+          value: null,
+          visible: true,
+          className: "",
+          closeModal: true,
+        },
+      },
+      dangerMode: true,
+    }).then((allowAction) => {
+      if (allowAction) {
+        cancelLeadApi(rowData);
+      }
+    });
+  };
+
+  function cancelLeadApi(rowData) {
+    let params = {
+      action: "cancelLead",
+      lan: language(),
+      UserId: UserInfo.UserId,
+      rowData: rowData,
+    };
+
+    apiCall.post(serverpage, { params }, apiOption()).then((res) => {
+      props.openNoticeModal({
+        isOpen: true,
+        msg: res.data.message,
+        msgtype: res.data.success,
+      });
+      getDataList();
+    });
+  }
 
   function deleteApi(rowData) {
     let params = {

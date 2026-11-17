@@ -22,6 +22,9 @@ switch ($task) {
 	case "deleteData":
 		$returnData = deleteData($data);
 		break;
+	case "cancelLead":
+		$returnData = cancelLead($data);
+		break;
 	case "deleteMemberDateAssignData":
 		$returnData = deleteMemberDateAssignData($data);
 		break;
@@ -658,6 +661,52 @@ function MemberDateAssignDataAddEdit($data)
 	}
 }
 
+
+
+
+function cancelLead($data)
+{
+	if ($_SERVER["REQUEST_METHOD"] != "POST") {
+		return $returnData = msg(0, 404, 'Page Not Found!');
+	} elseif (!isset($data->rowData->id)) {
+		$fields = ['fields' => ['id']];
+		return $returnData = msg(0, 422, 'Please Fill in all Required Fields!', $fields);
+	} else {
+
+		$id = $data->rowData->id;
+		$lan = trim($data->lan);
+		$UserId = trim($data->UserId);
+
+		try {
+			$LeadStatusId = 9;//9 is cancelled lead status id;
+
+			$aQuerys = array();
+			$u = new updateq();
+			$u->table = 't_transaction';
+			$u->columns = ['LeadStatusId'];
+			$u->values = [$LeadStatusId];
+			$u->pks = ['TransactionId'];
+			$u->pk_values = [$id];
+			$u->build_query();
+			$aQuerys[] = $u;
+
+			$res = exec_query($aQuerys, $UserId, $lan);
+			$success = ($res['msgType'] == 'success') ? 1 : 0;
+			$status = ($res['msgType'] == 'success') ? 200 : 500;
+
+			$returnData = [
+				"success" => $success,
+				"status" => $status,
+				"UserId" => $UserId,
+				"message" => $success ? 'Lead Status set to Cancelled' : $res['msg']
+			];
+		} catch (PDOException $e) {
+			$returnData = msg(0, 500, $e->getMessage());
+		}
+
+		return $returnData;
+	}
+}
 
 
 

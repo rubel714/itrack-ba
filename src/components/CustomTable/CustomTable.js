@@ -7,7 +7,7 @@ function CustomTable({
   rows,
   actioncontrol,
   ispagination = true,
-  paginationsize = 20,
+  paginationsize = 40,
   params = {},
 }) {
   // const columns2 = [
