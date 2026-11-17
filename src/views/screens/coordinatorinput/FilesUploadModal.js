@@ -56,44 +56,37 @@ const FilesUploadModal = (props) => {
   );
 
   const handleFileChange = (e) => {
-    let file = e.target.files[0];
-    let name = file.name;
-    let size = file.size;
-    let extention = name.split(".").pop();
-
-    console.log("file: ", file);
-    console.log("name: ", name);
-    console.log("size: ", size);
-
-    if (file) {
-      let reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (event) => {
-        console.log("selectedFile---: ", selectedFile);
-
-        let obj = {
-          name: name,
-          extention: extention,
-          size: size,
-          status: "new",
-          file: event.target.result,
-        };
-
-        let data;
-        // if(selectedFile != '[]'){
-        data = selectedFile ? [...selectedFile] : [];
-        console.log("data: ", data);
-
-        data.push(obj);
-        // }else{
-        //   data = obj;
-        // }
-        console.log("data: ", data);
-
-        setSelectedFile(data);
-        // setSelectedFile(event.target.result);
-      };
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) {
+      return;
     }
+
+    Promise.all(
+      files.map(
+        (file) =>
+          new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              resolve({
+                name: file.name,
+                extention: file.name.split(".").pop(),
+                size: file.size,
+                status: "new",
+                file: event.target.result,
+              });
+            };
+            reader.onerror = () => reject(reader.error);
+            reader.readAsDataURL(file);
+          })
+      )
+    ).then((newFiles) => {
+      setSelectedFile((prev) => {
+        const data = Array.isArray(prev) ? [...prev] : [];
+        return data.concat(newFiles);
+      });
+    });
+
+    e.target.value = "";
   };
 
   function handleUpload() {
@@ -178,11 +171,11 @@ const FilesUploadModal = (props) => {
                 <br></br>
                 <Input
                   type="file"
-                  // multiple
                   onChange={(e) => handleFileChange(e)}
                   fullWidth
                   className={classes.input}
                   inputProps={{
+                    multiple: true,
                     style: {
                       height: "100px",
                     },
