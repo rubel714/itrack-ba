@@ -81,7 +81,7 @@ try {
         case when a.ReportWritingDate is not null then DATE_FORMAT(a.ReportWritingDate, '%d-%b-%Y') else '' end ReportWritingDate,
         
         a.FactoryAddress,a.FactoryContactPersonPhone,a.FactoryContactPerson
-        ,a.FactoryContactPersonEmail,a.FactoryHoliday,h.CountryName,i.StateName
+        ,a.FactoryContactPersonEmail,a.FactoryHoliday,h.CountryName,i.StateName,j.AuditTypeName
 
         from t_transaction a
         INNER JOIN t_factory b ON a.FactoryId=b.FactoryId
@@ -92,6 +92,8 @@ try {
         LEFT JOIN t_auditor g ON a.ReportWriterId=g.AuditorId
         LEFT JOIN t_country h ON a.CountryId=h.CountryId 
         LEFT JOIN t_state i ON a.StateId=i.StateId 
+        LEFT JOIN t_audittype j ON a.AuditTypeId=j.AuditTypeId 
+        
         where a.TransactionId=$TransactionId";
     $resultdata = $dbh->query($sql);
     $CoordinatorId = $resultdata[0]['CoordinatorId'];
@@ -129,7 +131,7 @@ try {
     $ReportWriterName = $resultdata[0]['ReportWriterName'];
     $ReportWritingDate = $resultdata[0]['ReportWritingDate'];
     $CountryName = $resultdata[0]['CountryName'];
-
+    $AuditTypeName = $resultdata[0]['AuditTypeName'];
      $WindowDates = "";
     if($WindowStart && $WindowEnd){
         $WindowDates = "$WindowStart - $WindowEnd";
@@ -297,8 +299,8 @@ try {
                         <td>$ManDay</td>
                     </tr>
                     <tr>
-                        <td>Business Type</td>
-                        <td>$Remarks</td>
+                        <td>Audit Type</td>
+                        <td>$AuditTypeName</td>
                         <td>Status</td>
                         <td>$LeadStatusName</td>
                     </tr>
