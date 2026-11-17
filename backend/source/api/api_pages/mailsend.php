@@ -6,6 +6,44 @@ require 'phpmailer/vendor/autoload.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 $mail = new PHPMailer(true);
+$bodyHTML = '';
+
+function saveEmailLog($UserId, $TransactionId, $mail, $emailBody, $sendStatus, $errorMessage)
+{
+    try {
+        $parts = array();
+        $emailSubject = '';
+        if ($mail) {
+            foreach ($mail->getToAddresses() as $row) {
+                if (!empty($row[0])) {
+                    $parts[] = 'To: ' . $row[0];
+                }
+            }
+            foreach ($mail->getCcAddresses() as $row) {
+                if (!empty($row[0])) {
+                    $parts[] = 'CC: ' . $row[0];
+                }
+            }
+            $emailSubject = $mail->Subject;
+        }
+
+        $logDb = new Db();
+        $sql = "INSERT INTO t_email_log
+            (UserId, LogDate, TransactionId, EmailAddress, EmailSubject, EmailBody, SendStatus, ErrorMessage)
+            VALUES
+            (:UserId, NOW(), :TransactionId, :EmailAddress, :EmailSubject, :EmailBody, :SendStatus, :ErrorMessage)";
+        $logDb->query($sql, array(
+            'UserId' => (int) $UserId,
+            'TransactionId' => ($TransactionId !== null && $TransactionId !== '') ? (int) $TransactionId : null,
+            'EmailAddress' => implode(', ', $parts),
+            'EmailSubject' => $emailSubject,
+            'EmailBody' => $emailBody,
+            'SendStatus' => $sendStatus,
+            'ErrorMessage' => $errorMessage
+        ));
+    } catch (\Exception $e) {
+    }
+}
 
 try {
     $dbh = new Db();
@@ -357,12 +395,16 @@ try {
         $aQuerys[] = $u;
         exec_query($aQuerys, $UserId, $lan);
 
+        saveEmailLog($UserId, $TransactionId, $mail, $bodyHTML, 'Success', '');
+
         $returnData = [
             "success" => 1,
             "status" => 200,
             "message" => "Mail Sent Successfully"
         ];
     } else {
+        saveEmailLog($UserId, $TransactionId, $mail, $bodyHTML, 'Fail', $mail->ErrorInfo);
+
         $returnData = [
             "success" => $success,
             "status" => $status,
@@ -375,6 +417,7 @@ try {
 
 } catch (Exception $e) {
     // echo "Error: {$mail->ErrorInfo}";
+    saveEmailLog($UserId, $TransactionId, $mail, isset($bodyHTML) ? $bodyHTML : '', 'Fail', $mail->ErrorInfo);
     $returnData = [
         "success" => 0,
         "status" => 200,
